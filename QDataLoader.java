@@ -50,6 +50,7 @@ public class QDataLoader extends DefaultHandler {
   List defaultTriggers = new ArrayList();
   String content;
   Cue curQ;
+  EventTemplate curTemplate;
   
   public void startElement(String uri, String localName, 
 			   String qName, Attributes attributes) {
@@ -76,18 +77,20 @@ public class QDataLoader extends DefaultHandler {
     } else if (qName.equals("note-on")) {
       int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
       int n = _noteNameToMidi(attributes.getValue("note"));
-      triggers.add ( Trigger.createNoteOnTrigger( ch, n ) );
+      curTemplate = EventTemplate.createNoteOnEventTemplate( ch, n );
     } else if (qName.equals("note-off")) {
       int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
       int n = _noteNameToMidi(attributes.getValue("note"));
-      triggers.add ( Trigger.createNoteOffTrigger( ch, n ) );
-      /*    } else if (qName.equals("foot")) {
+      curTemplate = EventTemplate.createNoteOffEventTemplate( ch, n );
+    } else if (qName.equals("control-change")) {
       int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
-      trigger = Trigger.createFootTrigger( ch );*/
-    } else if (qName.equals("note-off")) {
+      String control = attributes.getValue("control");
+      String thresh = attributes.getValue("threshold");
+      curTemplate = EventTemplate.createControlEventTemplate( ch, control, thresh );
+      /*    } else if (qName.equals("clear")) {
       int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
       int d = Integer.parseInt(attributes.getValue("duration")) - 1;
-      triggers.add ( Trigger.createClearTrigger( ch, d ) );
+      curTemplate = EventTemplate.createClearEventTemplate( ch, d ) ); */
     }
   }
   
@@ -106,6 +109,10 @@ public class QDataLoader extends DefaultHandler {
     } else if (qName.equals("setup-events")) {
       qdata.setSetupEvents(eventSet);
       eventSet = new ArrayList();
+
+    } else if (qName.equals("trigger")) {
+      Trigger t = new Trigger(curTemplate);
+      triggers.add(t);
 
     } else if (qName.equals( "cue" )) {
       ArrayList l = new ArrayList();
