@@ -33,7 +33,7 @@ public class Qualm {
   }
 
   private static void usage() {
-    System.out.println("Usage: java qualm.Qualm [-o <output>] [-i <input>] [-l] [-h] <filename>");
+    System.out.println("Usage: java qualm.Qualm <options> <filename>");
     System.out.println("  --output <out>");
     System.out.println("  -o <out>       Sets output ALSA port.");
     System.out.println("  --input <in>");

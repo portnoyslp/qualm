@@ -1,5 +1,5 @@
-<!ELEMENT qualm-data (title?,midi-channels, patches,
-	  default-trigger?, reverse-trigger?, setup-events?, map-events*, cue+)>
+<!ELEMENT qualm-data (title?,midi-channels, patches, global?, 
+	  start-events?, cue+)>
 <!ELEMENT title (#PCDATA)>
 <!ELEMENT midi-channels (channel+)>
 <!ELEMENT channel (#PCDATA)>
@@ -20,25 +20,27 @@
 	  id ID #REQUIRED>
 <!--
      <patches>
-       <patch num="1">Nice Piano</patch>
-       <patch num="2">TremStr/Str</patch>
-       <patch num="5">Organ</patch>
+       <patch num="1" id="p1">Nice Piano</patch>
+       <patch num="2" id="p2">TremStr/Str</patch>
+       <patch num="5" id="p5">Organ</patch>
      </patches>
 -->
 
-<!ELEMENT default-trigger (trigger+)>
-<!ELEMENT reverse-trigger (trigger+)>
-<!ELEMENT setup-events (event+)>
+<!ELEMENT global (trigger|map-events)*>
+<!ELEMENT start-events (program-change+)>
 <!ELEMENT map-events (map-from,map-to)>
-<!ELEMENT map-from (event)>
-<!ELEMENT map-to (event)>
+<!ELEMENT map-from (note-on|note-off|control-change|program-change)>
+<!ELEMENT map-to (note-on|note-off|control-change|program-change)>
+<!ELEMENT events (note-on|note-off|control-change|program-change)+>
 
-<!ELEMENT cue (trigger*, event+)>
+<!ELEMENT cue (trigger|events|map-events)*>
 <!ATTLIST cue song CDATA #REQUIRED measure CDATA #REQUIRED>
-<!ELEMENT trigger (note-on|note-off|control-change|clear)>
+<!ELEMENT trigger (note-on|note-off|control-change|program-change|clear)>
 <!ATTLIST trigger
 	  delay CDATA #IMPLIED
-	  override CDATA #IMPLIED>
+	  override IDREF #IMPLIED
+	  reverse (yes) #IMPLIED
+	  id ID #IMPLIED>
 <!ELEMENT note-on EMPTY>
 <!ATTLIST note-on 
 	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED
@@ -51,13 +53,12 @@
 <!ATTLIST control-change
 	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED
 	  control CDATA #REQUIRED
-	  threshold CDATA #REQUIRED>
+	  threshold CDATA #IMPLIED>
 <!ELEMENT clear EMPTY>
 <!ATTLIST clear 
 	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED 
 	  duration CDATA #REQUIRED>
 
-<!ELEMENT event (program-change)>
 <!ELEMENT program-change EMPTY>
 <!ATTLIST program-change
 	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED 
