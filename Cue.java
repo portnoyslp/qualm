@@ -11,6 +11,8 @@ public class Cue implements Comparable {
 
   public Cue( String s, String m ) { song=s; measure=m; }
   public Cue( String ts ) { 
+    if (ts.indexOf(".") == -1) 
+      ts += ".0";
     String s1 = ts.substring(0,ts.indexOf("."));
     String m1 = ts.substring(ts.lastIndexOf(".")+1);
     song=s1;
