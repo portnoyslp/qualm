@@ -1,5 +1,6 @@
 XML DTD:
-<!ELEMENT qualm-data (midi-channels, patches, cues)>
+<!ELEMENT qualm-data (title?,midi-channels, patches, cues)>
+<!ELEMENT title (#PCDATA)>
 <!ELEMENT midi-channels (channel+)>
 <!ELEMENT channel (#PCDATA)>
 <!ATTLIST channel num CDATA #REQUIRED>

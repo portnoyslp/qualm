@@ -22,10 +22,6 @@ public class Qualm {
 	.setMessage( ShortMessage.PROGRAM_CHANGE, midiChannel, 5, 0 );
       receiver.send(patchChange, -1);
 
-      try {
-	Thread.sleep(10000);
-      } catch (InterruptedException e) { }
-
     } catch (InvalidMidiDataException e) {
       System.out.println(e);
     }
@@ -125,6 +121,13 @@ public class Qualm {
     } catch (MidiUnavailableException mue) {
       System.out.println(mue); 
     } catch (InterruptedException ie) { }
+
+
+    System.out.println( "Testing file read" );
+    QDataLoader qdl = new QDataLoader();
+    QData data = qdl.readFile( new java.io.File( "batboy.xml" ));
+    data.dump();
+    
 
     System.exit(0);
   }
