@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<!DOCTYPE qualm-data SYSTEM "qualm.dtd">
+<!DOCTYPE qualm-data SYSTEM "http://portnoy.org/qualm.dtd">
 <qualm-data>
   <title>Bat Boy Keyboard II</title>
   <midi-channels>
-    <channel num="1">Main Keyboard</channel>
-    <channel num="2">Auxiliary Keyboard</channel>
+    <channel num="1">Lower Keyboard</channel>
+    <channel num="2">Upper Keyboard</channel>
     <channel num="10">Drum Kit</channel>
   </midi-channels>
   <patches>
@@ -23,7 +23,7 @@
     <patch num="127">Artoo</patch>
   </patches>
   <default-trigger>
-    <trigger><note-on channel="1" note="c8"/></trigger>
+    <trigger><control-change channel="3" control="4" threshold="10"/></trigger>
   </default-trigger>
   <reverse-trigger>
     <trigger><note-on channel="1" note="c-1"/></trigger>

@@ -31,7 +31,7 @@
 
 <!ELEMENT cue (trigger?, event+)>
 <!ATTLIST cue song CDATA #REQUIRED measure CDATA #REQUIRED>
-<!ELEMENT trigger (note-on|note-off|foot|clear)>
+<!ELEMENT trigger (note-on|note-off|control-change|clear)>
 <!ATTLIST trigger
 	  delay CDATA #IMPLIED>
 <!ELEMENT note-on EMPTY>
@@ -42,9 +42,11 @@
 <!ATTLIST note-off 
 	  channel CDATA #REQUIRED 
 	  note CDATA #REQUIRED>
-<!ELEMENT foot EMPTY>
-<!ATTLIST foot 
-	  channel CDATA #REQUIRED>
+<!ELEMENT control EMPTY>
+<!ATTLIST control-change
+	  channel CDATA #REQUIRED
+	  control CDATA #REQUIRED
+	  threshold CDATA #REQUIRED>
 <!ELEMENT clear EMPTY>
 <!ATTLIST clear 
 	  channel CDATA #REQUIRED 
