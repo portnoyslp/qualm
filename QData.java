@@ -11,10 +11,11 @@ public class QData {
   String[] patches;
   Collection reverseTriggers;
   Collection setupEvents;
+  Collection mapEvents;
   SortedSet cues;
   String title;
 
-  public QData( ) {  
+  public QData( ) {
     title = null;
     channels = new String[16];
     patches = new String[128];
@@ -62,5 +63,5 @@ public class QData {
    
     System.out.println("  qs:" + cues);
   }
- 	      
+  
 } 

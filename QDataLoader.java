@@ -138,7 +138,7 @@ public class QDataLoader extends DefaultHandler {
       "c","c#","d","d#","e","f","f#","g","g#","a","a#","b"
     });
 
-  private int _noteNameToMidi ( String noteName ) {
+  private static int _noteNameToMidi ( String noteName ) {
     try {
       return Integer.parseInt( noteName );
     } catch (NumberFormatException nfe) {
@@ -186,14 +186,8 @@ public class QDataLoader extends DefaultHandler {
   
 
   public static void main(String[] args) {
-    String file = "batboy-k2.xml";
-    if (args.length > 0)
-      file = args[0];
-
-    QDataLoader qdl = new QDataLoader();
-    QData data = qdl.readFile( new java.io.File( "batboy-k2.xml" ));
-    data.dump();
-
+    for(int i=0; i<args.length; i++)
+      System.out.println(args[i] + "=>" + _noteNameToMidi(args[i]));
   }
 
 }

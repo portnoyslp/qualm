@@ -108,6 +108,39 @@ public class QController implements Receiver {
   public void reversePatch() {
     sendEvents( advancer.reversePatch() );
   }
+
+  public void sendSysExclusive( byte[] bytes ) {
+    try {
+      // we're going to break this up into 256-byte segments and send those individually.
+      if (bytes[0] != (byte) 0xF0) 
+	throw new IllegalArgumentException( "Message doesn't start with 0xF0");
+      
+      int LENGTH = 256;
+      byte tempbytes[] = new byte[LENGTH];
+      int offset = 0;
+      while (offset<bytes.length) {
+	// copy into temp buffer
+	for (int i=0; i<LENGTH && i+offset<bytes.length; i++)
+	  tempbytes[i] = bytes[i+offset];
+	
+	SysexMessage sxm = new SysexMessage();
+	if (offset == 0) {
+	  sxm.setMessage( tempbytes, (offset+LENGTH>bytes.length ? 
+				      bytes.length-offset : LENGTH));
+	} else {
+	  sxm.setMessage( SysexMessage.SPECIAL_SYSTEM_EXCLUSIVE,
+			  tempbytes, (offset+LENGTH>bytes.length ? 
+				      bytes.length-offset : LENGTH));
+	}	  
+	midiOut.send(sxm, -1);
+
+	offset+=LENGTH;
+      }
+
+    } catch (InvalidMidiDataException imde) {
+      throw new IllegalArgumentException( imde.getMessage() );
+    }
+  }
   
   public void send(MidiMessage midiMessage, long l) {
     // OK, we've received a message.  Check the triggers.

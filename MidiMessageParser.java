@@ -1,7 +1,6 @@
 package qualm;
 
-import javax.sound.midi.MidiMessage;
-import javax.sound.midi.ShortMessage;
+import javax.sound.midi.*;
 
 /**
  * Converts MidiMessages into Strings.
@@ -10,6 +9,10 @@ import javax.sound.midi.ShortMessage;
 public class MidiMessageParser {
   
   public static String messageToString(MidiMessage mm) {
+    if (mm instanceof SysexMessage) {
+      return "[SYSEX length=" + ((SysexMessage)mm).getData().length + "]";
+    }
+
     if (mm instanceof ShortMessage) {
       ShortMessage sm = (ShortMessage) mm;
       int channel = sm.getChannel();
@@ -32,8 +35,6 @@ public class MidiMessageParser {
 	cStr = "ProgramChange"; break;
       case ShortMessage.POLY_PRESSURE:
 	cStr = "PolyPressure"; break;
-      case ShortMessage.PITCH_BEND:
-	cStr = "PitchBend"; break;
       case ShortMessage.MIDI_TIME_CODE:
 	cStr = "MidiTimeCode"; break;
       case ShortMessage.SONG_POSITION_POINTER:

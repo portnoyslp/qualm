@@ -136,6 +136,11 @@
     <event><program-change channel="4" patch="95"/></event>
   </setup-events>
 
+  <map-events>
+    <map-from><event><control-change channel="1" type="soft"/></event></map-from>
+    <map-to><event><control-change channel="2" type="soft"/></event></map-to>
+  </map-events>
+ 
   <cue song="1a" measure="10">
     <event><program-change channel="1" patch="3"/></event>
   </cue>
@@ -614,6 +619,11 @@
   </cue>
   <cue song="29" measure="24">
     <event><program-change channel="1" patch="94"/></event>
+    <event><program-change channel="2" patch="5"/></event>
+  </cue>
+
+  <cue song="30" measure="1">
+    <event><program-change channel="1" patch="1"/></event>
     <event><program-change channel="2" patch="5"/></event>
   </cue>
 
