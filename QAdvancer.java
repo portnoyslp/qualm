@@ -9,19 +9,15 @@ import java.util.List;
 
 
 /**
- * QAdvancer.java
- *
- *
- * Created: Thu Jan 15 09:49:05 2004
- *
-   */
+ * QAdvancer
+ */
 public class QAdvancer {
 
   QData qdata;
 
   Cue currentCue;
   Cue pendingCue;
- 
+
   public QAdvancer( QData d ) {
     qdata = d;
     currentCue = null;
@@ -41,11 +37,21 @@ public class QAdvancer {
     SortedSet cueset = qdata.getCues();
     SortedSet head = cueset.headSet(newQ);
     
+    
     // set the new current cue
     if (head.size() == 0) {
       currentCue = null;
     } else {
-      currentCue = (Cue)head.last();
+      try {
+	currentCue = (Cue)head.last();
+	// if our target cue equals the next one, then use it instead.
+	Cue nextQ = findNextCue( currentCue );
+	if (newQ.equals( nextQ )) {
+	  currentCue = nextQ;
+	}
+      } catch (Exception e) {
+	e.printStackTrace();
+      }
     }
     pendingCue = findNextCue( currentCue );
 
@@ -155,11 +161,6 @@ public class QAdvancer {
 	out.add(events[i]);
     }
     return out;
-
   }
 
-
 }
-
-
-
