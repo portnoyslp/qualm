@@ -112,7 +112,7 @@ public class QController implements Receiver {
   public void send(MidiMessage midiMessage, long l) {
     // OK, we've received a message.  Check the triggers.
     if (debugMIDI) 
-      System.out.println(midiMessage);
+      System.out.println( MidiMessageParser.messageToString(midiMessage) );
 
     if (ignoreEvents()) 
       return;
