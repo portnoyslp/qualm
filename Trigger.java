@@ -42,7 +42,12 @@ public class Trigger {
 
   private String[] names = { "NoteOn", "NoteOff", "Control", "Clear" };
   public String toString() {
-    return "trig[" + names[type-1] + "/" + channel + "/" + extra1 + "]";
+    String name = null;
+    if (type == ShortMessage.NOTE_ON) { name = "NoteOn"; }
+    if (type == ShortMessage.NOTE_OFF) { name = "NoteOff"; }
+    if (type == ShortMessage.CONTROL_CHANGE) { name = "Control"; } 
+    if (type == CLEAR) { name = "Clear"; }
+    return "trig[" + name + "/" + channel + "/" + extra1 + "]";
   }
 
   public boolean match(MidiMessage m) {
