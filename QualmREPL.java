@@ -76,7 +76,9 @@ public class QualmREPL extends Thread {
   public void processLine( String line ) {
     readlineHandlesPrompt = true;
 
-    if (line == null || line.trim().equals("") ) {
+    if (line == null || line.trim().equals("") ||
+	line.trim().startsWith("\\") ||
+	line.trim().startsWith("]")) {
       qc.advancePatch();
     } else {
 
