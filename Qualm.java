@@ -46,7 +46,7 @@ public class Qualm {
     System.out.println("\n If only one port is specified, an attempt will be made to open the\nport for both input and output.  If no port is specified, 'UM-1' will\nbe used.");
   }
     
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
 
     String inputPort = null;
     String outputPort = null;
@@ -160,14 +160,20 @@ public class Qualm {
 	  System.out.println ("  " + info.getName() + " [" + cName +"]");
 	
 	// Is this a port we want?
+	MidiDevice md = null;
+	try {
+	  md = MidiSystem.getMidiDevice(info);
+	} catch (MidiUnavailableException mue) { }
+
 	if (cName.indexOf(inputPort) != -1 ||
-	    info.getName().indexOf(inputPort) != -1) 
+	    info.getName().indexOf(inputPort) != -1 &&
+	    md!=null && md.getMaxTransmitters() > 0) 
 	  inputInfo = info;
 	
 	if (cName.indexOf(outputPort) != -1 ||
-	    info.getName().indexOf(outputPort) != -1) 
+	    info.getName().indexOf(outputPort) != -1 &&
+	    md!=null && md.getMaxReceivers() > 0) 
 	  outputInfo = info;
-	
       }
 
       if (listPorts) 
@@ -190,7 +196,16 @@ public class Qualm {
     // Load the qualm file
     System.out.println("loading " + inputFilename + "...");
     QDataLoader qdl = new QDataLoader();
-    QData data = qdl.readFile( new java.io.File( inputFilename ));
+    QData data;
+
+    if (inputFilename.startsWith("http:") ||
+	inputFilename.startsWith("ftp:") ||
+	inputFilename.startsWith("file:")) {
+      // assume we have a URL
+      data = qdl.readSource( new org.xml.sax.InputSource(inputFilename));
+    } else {
+      data = qdl.readFile( new java.io.File( inputFilename ));
+    }
 
     if ( data == null && !debugMIDI ) {
       System.out.println("No readable files; exiting");

@@ -36,6 +36,15 @@ public class QDataLoader extends DefaultHandler {
       return null;
     }
   }
+  public QData readSource( org.xml.sax.InputSource f ) {
+    try {
+      parser.parse( f, this );
+      return qdata;
+    } catch (Exception e) {
+      System.out.println("Couldn't parse " + f + ": " + e);
+      return null;
+    }
+  }
   
   /* DefaultHandler overrides */
   
