@@ -1,3 +1,5 @@
+<?xml version="1.0"?>
+<!DOCTYPE qualm-data SYSTEM "qualm.dtd">
 <qualm-data>
   <title>Bat Boy Keyboard II</title>
   <midi-channels>
@@ -8,22 +10,20 @@
   <patches>
     <patch num="1">Nice Piano</patch>
     <patch num="2">TremStr/Str</patch>
+    <patch num="3">FuzzClav/Str</patch>
+    <patch num="4">Rhodes</patch>
     <patch num="5">Organ</patch>
   </patches>
-<!--
-<!ELEMENT cues (cue+)>
-<!ELEMENT cue (trigger, event+)>
-<!ATTLIST cue song CDATA #REQUIRED measure CDATA #REQUIRED>
-<!ELEMENT trigger (note-on|note-off|foot|clear)>
-<!ATTLIST delay CDATA #IMPLIED>
-<!ELEMENT note-on EMPTY>
-<!ATTLIST note-on channel CDATA #REQUIRED note CDATA #REQUIRED>
-<!ATTLIST note-off channel CDATA #REQUIRED note CDATA #REQUIRED>
-<!ATTLIST foot channel CDATA #REQUIRED>
-<!ATTLIST clear channel CDATA #REQUIRED>
+  <default-trigger><trigger><foot channel="1"/></trigger></default-trigger>
+  <setup-events>
+    <event><program-change channel="1" patch="1"/></event>
+    <event><program-change channel="2" patch="5"/></event>
+  </setup-events>
 
-<!ELEMENT event (program-change)>
-<!ELEMENT program-change EMPTY>
-<!ELEMENT channel CDATA #REQUIRED patch CDATA #REQUIRED>
--->
+  <cue song="1a" measure="10">
+    <event><program-change channel="1" patch="3"/></event>
+  </cue>
+  <cue song="2" measure="17">
+    <event><program-change channel="1" patch="4"/></event>
+  </cue>
 </qualm-data>
