@@ -75,7 +75,7 @@
     <patch  num="62">Str/Fl+Glock</patch> <!-- Fat Strings / C6+ -->
     <patch  num="63">Tmp/TStr/Hns</patch> <!-- TmpRoll F#1 / -D4 / Hn Eb4-A4 / 8vb A#4+ -->
     <patch  num="64">Tmp/Hns+Str</patch>  <!-- Tmp -C2 / Str only -Eb3 -->
-    <patch  num="65">Horns+Organ<patch>   <!-- Layered -->
+    <patch  num="65">Horns+Organ</patch>   <!-- Layered -->
     <patch  num="66">Tmp/Tuba/Hns</patch> <!-- Tmp -E3 / F3-E4 / sfz FHns F4+ -->
     <patch  num="67">Org/Marc+Brs</patch> <!-- -C#4  / D4+ (Str loco+12/Brs-12) -->
     <patch  num="68">Hard Org/Brs</patch> <!-- Org -C4 / C#4+ (hard organ/brass) -->
