@@ -3,10 +3,6 @@ package qualm;
 import javax.sound.midi.*;
 import java.util.*;
 
-/**
- * 
- *
- */
 public class QController implements Receiver {
 
   Receiver midiOut;
@@ -16,6 +12,22 @@ public class QController implements Receiver {
     midiOut = out;
     triggers = new HashMap();
     advancer = new QAdvancer( data );
+    // set up triggers
+    addCurrentTrigger();
+    addReverseTrigger();
+    buildTriggerCache();
+  }
+
+  public QData getQData() { return advancer.getQData(); }
+  public Cue getCurrentCue() { return advancer.getCurrentCue(); }
+  public Cue getPendingCue() { return advancer.getPendingCue(); }
+
+  QualmREPL REPL = null;
+  public QualmREPL getREPL() {
+    return REPL;
+  }
+  public void setREPL(QualmREPL newREPL) {
+    this.REPL = newREPL;
   }
 
   private void sendEvents( Collection c ) {
@@ -23,6 +35,11 @@ public class QController implements Receiver {
     while(i.hasNext()) {
       ProgramChangeEvent pce = (ProgramChangeEvent)i.next();
       sendPatchChange(pce);
+    }
+
+    // update print loop
+    if (REPL != null) {
+      REPL.updateCue();
     }
   }
 
@@ -60,16 +77,22 @@ public class QController implements Receiver {
   public void send(MidiMessage midiMessage, long l) {
     // OK, we've received a message.  Check the triggers.
     for (int i=0;i<cachedTriggers.length;i++) {
+      boolean triggered = false;
+
       Trigger trig = cachedTriggers[i];
       if (trig.match(midiMessage)) {
-	// call the method
+	triggered = true;
 	String action = (String)triggers.get(trig);
-	if (trig.equals("advance")) {
+	
+	// remove the trigger
+	removeTrigger(trig);
+
+	// call the appropriate action
+	if (action.equals("advance")) {
 	  sendEvents( advancer.advancePatch() );
-	  removeTrigger( trig );
 	  addCurrentTrigger();
 	}
-	else if (trig.equals( "reverse" )) {
+	else if (action.equals( "reverse" )) {
 	  sendEvents( advancer.reversePatch() );
 	  triggers = new HashMap();
 	  addReverseTrigger();
@@ -77,8 +100,9 @@ public class QController implements Receiver {
 	else 
 	  throw new RuntimeException("Unknown action " + action);
 
-	removeTrigger(trig);
       }
+      if (triggered)
+	buildTriggerCache();
     }
     // no match, just ignore the message.
   }
@@ -90,26 +114,30 @@ public class QController implements Receiver {
   private void buildTriggerCache() {
     List l = new ArrayList();
     l.addAll(triggers.keySet());
-    cachedTriggers = (Trigger[]) l.toArray(cachedTriggers);
+    cachedTriggers = (Trigger[]) l.toArray(new Trigger[]{});
   }
 
   private void addTrigger( Trigger t, String action ) {
     triggers.put(t, action);
-    buildTriggerCache();
   }
 
   private void removeTrigger( Trigger t ) {
     triggers.remove(t);
-    buildTriggerCache();
   }
 
   private void addReverseTrigger() {
-    addTrigger( advancer.getQData().getReverseTrigger(), "reverse" );
+    Trigger t = advancer.getQData().getReverseTrigger();
+    if (t!=null)
+      addTrigger( t, "reverse" );
   }
 
   private void addCurrentTrigger() {
-    addTrigger( advancer.getCurrentCue().getTrigger(), "advance" );
+    Cue cue = advancer.getPendingCue();
+    if (cue != null) {
+      Trigger t = cue.getTrigger(); 
+      addTrigger( t, "advance" );
+    } else System.out.println("No pending cue trigger found.");
+
   }
  
-  
 } // QController

@@ -108,6 +108,7 @@ public class QDataLoader extends DefaultHandler {
 
     } else if (qName.equals( "cue" )) {
       curQ.setTrigger ( (trigger==null ? defaultTrigger : trigger) );
+      trigger = null;
       curQ.setEvents(eventSet);
       eventSet = new ArrayList();
       qdata.addCue( curQ );

@@ -1,4 +1,5 @@
-all: build
+all: 
+	/usr/bin/ant -emacs all
 
-build:
-	javac *.java
+test:
+	/usr/bin/ant test

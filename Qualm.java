@@ -3,33 +3,10 @@ package qualm;
 import javax.sound.midi.*;
 import java.util.*;
 import java.io.*;
+import gnu.getopt.Getopt;
 
 public class Qualm {
   
-  Receiver receiver;
-  int midiChannel = 2; // MIDI CH3
-
-  public Qualm(Receiver rec) { 
-    receiver = rec;
-    System.out.println( rec );
-  }
-  
-  public void sendPatchChange() {
-    MidiMessage patchChange = new ShortMessage();
-
-    try {
-      ((ShortMessage)patchChange)
-	.setMessage( ShortMessage.PROGRAM_CHANGE, midiChannel, 5, 0 );
-      receiver.send(patchChange, -1);
-
-    } catch (InvalidMidiDataException e) {
-      System.out.println(e);
-    }
-  }
-
-
-
-
   public static Map parseALSAClients() {
     Map ret = new HashMap();
     String filename = "/proc/asound/seq/clients";
@@ -54,13 +31,59 @@ public class Qualm {
     return ret;
   }
 
+  private static void usage() {
+    System.out.println("Usage: java qualm.Qualm [-o <output>] [-i <input>] [-l] [-h] <filename>");
+    System.out.println("   -o <output>  Sets output ALSA port.");
+    System.out.println("   -i <input>   Sets input ALSA port.");
+    System.out.println("   -l           List all ALSA MIDI ports and exit.");
+    System.out.println("   -h           Prints this message.");
+    System.out.println("   <filename>   The Qualm filename to execute.");
+    System.out.println("\n If only one port is specified, an attempt will be made to open the\nport for both input and output.  If no port is specified, 'UM-1' will\nbe used.");
+  }
+    
   public static void main(String[] args) {
 
-    String searchForPort = "UM-1";
-    if (args.length > 0) {
-      searchForPort = args[0];
+    String inputPort = null;
+    String outputPort = null;
+    boolean listPorts = false;
+
+    // handle argument list
+    Getopt g = new Getopt("Qualm", args, "o:i:hl");
+    int c;
+    while ((c = g.getopt()) != -1) {
+      switch(c)
+	{
+	case 'i':
+	  inputPort = g.getOptarg();
+	  break;
+	case 'o':
+	  outputPort = g.getOptarg();
+	  break;
+	case 'l':
+	  listPorts = true;
+	  break;
+	case 'h':
+	  usage();
+	  System.exit(0);
+	}
     }
 
+    if (g.getOptind() == args.length && !listPorts) {
+      System.out.println("No filename given.");
+      System.exit(0);
+    }
+    String inputFilename = null;
+    if (!listPorts)
+      inputFilename = args[g.getOptind()];
+
+    // set ports
+    if (inputPort == null && outputPort == null) 
+      inputPort="UM-1";
+    if (outputPort == null) 
+      outputPort = inputPort;
+    if (inputPort == null)
+      inputPort = outputPort;
+    
     MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
     if (infos.length == 0) {
       System.out.println( "No MIDI devices found.  Exiting." );
@@ -81,9 +104,12 @@ public class Qualm {
     }
 
     Map clientMap = Qualm.parseALSAClients();
-    MidiDevice.Info selectedInfo = null;
+    MidiDevice.Info inputInfo = null;
+    MidiDevice.Info outputInfo = null;
 
-    System.out.println("ALSA MIDI ports:");
+    if (listPorts) 
+      System.out.println("ALSA MIDI ports:");
+
     Iterator i = midiports.iterator();
     while (i.hasNext()) {
       MidiDevice.Info info = (MidiDevice.Info)i.next();
@@ -92,43 +118,65 @@ public class Qualm {
       dev = dev.substring(0, dev.lastIndexOf( ':' ));
       Integer cNum = new Integer(dev);
       String cName = (String)clientMap.get(cNum);
-      System.out.println ("  " + info.getName() + " [" + cName +"]");
 
-      // we like the one connected to what we want...
-      if (cName.indexOf(searchForPort) != -1 ||
-	  info.getName().indexOf(searchForPort) != -1) 
-	selectedInfo = info;
-
-    }
-
-    if (selectedInfo == null) {
-      System.out.println("Couldn't find right output.");
-      System.exit(1);
+      if (listPorts)
+	System.out.println ("  " + info.getName() + " [" + cName +"]");
+	
+      // Is this a port we want?
+      if (cName.indexOf(inputPort) != -1 ||
+	  info.getName().indexOf(inputPort) != -1) 
+	inputInfo = info;
+      
+      if (cName.indexOf(outputPort) != -1 ||
+	  info.getName().indexOf(outputPort) != -1) 
+	outputInfo = info;
+      
     }
     
-    System.out.println("Using " + selectedInfo);
+    if (listPorts) 
+      System.exit(0);
+
+    if (inputInfo == null) {
+      System.out.println("Unable to load input port named " + inputPort);
+      System.exit(1);
+    }
+    if (outputInfo == null) {
+      System.out.println("Unable to load output port named " + outputPort);
+      System.exit(1);
+    }
+
+    // get the transmitter and receiver
+    Transmitter midiIn = null;
+    Receiver midiOut = null;
+
+    // Load the qualm file
+    System.out.println("loading " + inputFilename + "...");
+    QDataLoader qdl = new QDataLoader();
+    QData data = qdl.readFile( new java.io.File( inputFilename ));
+
     try {
-      MidiDevice dev = MidiSystem.getMidiDevice( selectedInfo );
-      dev.open();
+      MidiDevice inDevice = MidiSystem.getMidiDevice( inputInfo );
+      MidiDevice outDevice = MidiSystem.getMidiDevice( outputInfo );
+      inDevice.open();
+      outDevice.open();
+      
+      midiIn = inDevice.getTransmitter();
+      midiOut = outDevice.getReceiver();
 
-      Qualm q = new Qualm( dev.getReceiver() );
-      q.sendPatchChange();
+      // open a receiver with the right data file.
+      QController qc = new QController( midiOut, data );
 
-      System.out.println("Patch change sent.");
-      dev.close();
-      System.out.println("Closed device");
+      // Start a read-eval-print loop as well.  The REPL will do a
+      // System.exit when all is done.
 
-      // wait a second before exiting
-      Thread.currentThread().sleep(1000);
+      new QualmREPL( qc ).start();
+      
+      // connect the transmitter to the receiver.
+      midiIn.setReceiver( qc );
 
     } catch (MidiUnavailableException mue) {
       System.out.println(mue); 
-    } catch (InterruptedException ie) { }
-
-
-    
-
-    System.exit(0);
+    }
   }
 
 }

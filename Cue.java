@@ -27,7 +27,8 @@ public class Cue implements Comparable {
   public void setEvents(Collection t) { events=t; }
 
   public String getCueNumber() { return song + "." + measure; }
-  public String toString() { return "Q[" + getCueNumber() + "]"; }
+  public String toString() { return "Q[" + getCueNumber() + "(" + 
+			       getTrigger() + ")]"; }
 
   public int compareTimeStamps( String s1, String m1, 
 				String s2, String m2 ) {

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<project name="qualm" default="all">
+
+  <path id="classpath">
+    <pathelement location="/usr/share/java/gnu-getopt.jar"/>
+    <pathelement location="/usr/share/java/libreadline-java.jar"/>
+    <pathelement location=".."/>
+  </path>
+
+  <target name="all" depends="compile"
+	  description="Build the system"/>
+
+  <target name="compile">
+    <javac srcdir=".">
+      <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <target name="test" depends="all">
+    <java classname="qualm.Qualm">
+      <classpath refid="classpath"/>
+      <arg value="batboy-k2.xml"/>
+    </java>
+  </target>
+
+</project>

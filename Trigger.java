@@ -57,6 +57,7 @@ public class Trigger {
 	  extra == sm.getData1() )
 	return true;
     }
+    
     return false;
   }
   

@@ -28,6 +28,7 @@
     <event><program-change channel="1" patch="3"/></event>
   </cue>
   <cue song="2" measure="17">
-    <event><program-change channel="1" patch="4"/></event>
+    <event><program-change channel="2" patch="4"/></event>
+    <event><program-change channel="1" patch="1"/></event>
   </cue>
 </qualm-data>
