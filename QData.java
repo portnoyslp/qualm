@@ -7,14 +7,20 @@ import java.util.*;
  */
 
 public class QData {
-  public String[] channels;
-  public String[] patches;
-  public SortedSet cues;
+  String[] channels;
+  String[] patches;
+  SortedSet cues;
+  String title;
+
   public QData( ) {  
+    title = null;
     channels = new String[16];
     patches = new String[128];
     cues = new TreeSet();
   } 
+
+  public String getTitle() { return title; }
+  public void setTitle(String t) { title=t; }
 
   public void addMidiChannel( int num, String desc ) {
     channels[num] = desc;
@@ -29,7 +35,7 @@ public class QData {
   }
 
   public void dump() {
-    System.out.println("Data dump");
+    System.out.println("Data dump for " + getTitle());
     System.out.println("  ch:" + Arrays.asList(channels));
     System.out.println("  pl:" + Arrays.asList(patches));
     System.out.println("  qs:" + cues);

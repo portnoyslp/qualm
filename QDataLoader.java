@@ -49,6 +49,7 @@ public class QDataLoader extends DefaultHandler {
     if (qName.equals("channel")) {
       // dealing with a midi-channel definition
       auxValue[0] = attributes.getValue("num");
+
     } else if (qName.equals("patch")) {
       // patch name
       auxValue[0] = attributes.getValue("num");
@@ -57,12 +58,17 @@ public class QDataLoader extends DefaultHandler {
   }
   
   public void endElement(String uri, String localName, String qName) {
-    if (qName.equals("channel")) {
+    if (qName.equals("title") {
+      qdata.setTitle(content);
+    
+    } else if (qName.equals("channel")) {
       // dealing with a midi-channel definition
       qdata.addMidiChannel( Integer.parseInt(auxValue[0])-1, content );
+
     } else if (qName.equals("patch")) {
       // patch name; ignoring channel
       qdata.addPatch( Integer.parseInt(auxValue[0])-1, content );
+
     }
   }
   public void characters(char[] ch, int start, int length) {
