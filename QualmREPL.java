@@ -56,12 +56,25 @@ public class QualmREPL extends Thread {
   }
 
   boolean dontInterrupt = false;
-  public void updateCue() {
+  public void updateCue( Collection c ) {
     // signal new cue...If we could interrupt the readline call, that
     // would be best, but instead we'll just print the new prompt
     // string.
     if (!dontInterrupt) {
-      System.out.print( "\n" + promptString() );
+      // end the current line
+      System.out.print( "\n" );
+      // print out the cue changes
+      QData qd = qc.getQData();
+      Iterator iter = c.iterator();
+      while(iter.hasNext()) {
+	ProgramChangeEvent pce = (ProgramChangeEvent)iter.next();
+	int ch = pce.getChannel();
+	int patch = pce.getChannel();
+	System.out.println( qd.getMidiChannels()[ch] + " -> "
+			    qd.getPatches[patch] );
+      }
+      // redo prompt
+      System.out.print( promptString() );
       System.out.flush();
     }
   }

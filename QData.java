@@ -35,6 +35,7 @@ public class QData {
     channels[num] = desc;
   }
   public String[] getMidiChannels() { return channels; }
+  public String[] getPatches() { return patches; }
 
   public void addPatch( int num, String desc ) {
     patches[num] = desc;

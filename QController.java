@@ -37,7 +37,7 @@ public class QController implements Receiver {
 
     // update print loop
     if (REPL != null) {
-      REPL.updateCue();
+      REPL.updateCue( c );
     }
   }
 
