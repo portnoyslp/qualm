@@ -130,10 +130,23 @@ public class QAdvancer {
 
       //Update headset
       headset = headset.headSet( loopQ );
-      if (headset.size() == 0)
-	loopQ=null;
-      else
+      if (headset.size() == 0) {
+	loopQ = null;
+      } else
 	loopQ = (Cue)headset.last();
+    }
+
+    if (loopQ == null) {
+      // get the setupEvents, and do those if needed
+      Iterator iter = qdata.getSetupEvents().iterator();
+      while (iter.hasNext()) {
+	ProgramChangeEvent ev = (ProgramChangeEvent)iter.next();
+	int ch = ev.getChannel();
+	if (events[ch] == null && midiChans[ch] != null) {
+	  events[ch] = ev;
+	  programCount++;
+	}
+      }
     }
 
     List out = new ArrayList();

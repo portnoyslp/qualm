@@ -11,6 +11,8 @@ public class QController implements Receiver {
   public QController( Receiver out, QData data ) {
     midiOut = out;
     advancer = new QAdvancer( data );
+    // send out the presets
+    sendEvents( advancer.getPresets() );
     setupTriggers();
   }
 
