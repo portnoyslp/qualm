@@ -10,12 +10,8 @@ public class QController implements Receiver {
 
   public QController( Receiver out, QData data ) {
     midiOut = out;
-    triggers = new HashMap();
     advancer = new QAdvancer( data );
-    // set up triggers
-    addCurrentTrigger();
-    addReverseTrigger();
-    buildTriggerCache();
+    setupTriggers();
   }
 
   public QData getQData() { return advancer.getQData(); }
@@ -58,7 +54,18 @@ public class QController implements Receiver {
     }
   }
   
+  private void setupTriggers() {
+    // set up triggers
+    triggers = new HashMap();
+    addCurrentTrigger();
+    addReverseTrigger();
+    buildTriggerCache();
+  }
 
+  public void switchToCue( String cuenum ) {
+    sendEvents( advancer.switchToMeasure( cuenum ) );
+    setupTriggers();
+  }
 
   // Implementation of javax.sound.midi.Receiver
 
@@ -136,8 +143,7 @@ public class QController implements Receiver {
     if (cue != null) {
       Trigger t = cue.getTrigger(); 
       addTrigger( t, "advance" );
-    } else System.out.println("No pending cue trigger found.");
-
+    }
   }
  
 } // QController

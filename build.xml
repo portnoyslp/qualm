@@ -16,11 +16,4 @@
     </javac>
   </target>
 
-  <target name="test" depends="all">
-    <java classname="qualm.Qualm">
-      <classpath refid="classpath"/>
-      <arg value="batboy-k2.xml"/>
-    </java>
-  </target>
-
 </project>

@@ -72,8 +72,12 @@ public class QAdvancer {
     // find previous patch
     SortedSet cueset = qdata.getCues();
     SortedSet head = cueset.headSet ( currentCue );
-    Cue lastCue = (Cue)head.last();
-    return switchToMeasure(lastCue.getCueNumber());
+    if (head.size() == 0) {
+      return switchToMeasure( "0.0" );
+    } else {
+      Cue lastCue = (Cue)head.last();
+      return switchToMeasure(lastCue.getCueNumber());
+    }
   }
 
   private Collection getPatchChanges(Cue c) {

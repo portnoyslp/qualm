@@ -16,7 +16,7 @@
   </patches>
   <default-trigger><trigger><foot channel="1"/></trigger></default-trigger>
   <reverse-trigger>
-    <trigger><note-on channel="1" note="c-1"/></trigger>
+    <trigger><note-on channel="1" note="c3"/></trigger>
   </reverse-trigger>
   <setup-events>
     <event><program-change channel="1" patch="1"/></event>
