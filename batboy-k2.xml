@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" standalone='yes'?>
 <!DOCTYPE qualm-data PUBLIC "-//QUALM/DTD Qualm Data//EN" "qualm.dtd">
 <qualm-data>
   <title>Bat Boy Keyboard II</title>
@@ -125,9 +125,10 @@
   </patches>
   <default-trigger>
     <trigger><note-on channel="3" note="0"/></trigger>
+    <trigger><note-on channel="1" note="c8"/></trigger>
   </default-trigger>
   <reverse-trigger>
-    <trigger><note-on channel="1" note="c-1"/></trigger>
+    <trigger><note-on channel="1" note="a0"/></trigger>
   </reverse-trigger>
   <setup-events>
     <event><program-change channel="1" patch="2"/></event>
