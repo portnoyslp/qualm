@@ -5,6 +5,28 @@ import java.util.*;
 import java.io.*;
 
 public class Qualm {
+  
+  Receiver receiver;
+  int midiChannel = 0; // MIDI CH1
+
+  public Qualm(Receiver rec) { 
+    receiver = rec;
+    System.out.println( rec );
+  }
+  
+  public void sendPatchChange() {
+    ShortMessage patchChange = null;
+    try {
+      patchChange = new ShortMessage();
+      patchChange.setMessage( ShortMessage.PROGRAM_CHANGE,
+			      midiChannel, 5, 0 );
+
+      receiver.send(patchChange, -1);
+      receiver.close();
+    } catch (InvalidMidiDataException e) {
+      System.out.println(e);
+    }
+  }
 
   public static Map parseALSAClients() {
     Map ret = new HashMap();
@@ -51,6 +73,7 @@ public class Qualm {
     }
 
     Map clientMap = Qualm.parseALSAClients();
+    MidiDevice.Info selectedInfo = null;
 
     System.out.println("ALSA MIDI ports:");
     Iterator i = midiports.iterator();
@@ -60,9 +83,34 @@ public class Qualm {
       dev = dev.substring(dev.indexOf('(')+1);
       dev = dev.substring(0, dev.lastIndexOf( ':' ));
       Integer cNum = new Integer(dev);
-      System.out.println ("  " + info.getName() + " [" + clientMap.get(cNum)
-			  +"]");
+      String cName = (String)clientMap.get(cNum);
+      System.out.println ("  " + info.getName() + " [" + cName +"]");
+
+      // we like the one connected to UM-1...
+      if (cName.indexOf("UM-1") != -1) 
+	selectedInfo = info;
+
     }
+
+    if (selectedInfo == null) {
+      System.out.println("Couldn't find UM-1 output.");
+      System.exit(1);
+    }
+    
+    System.out.println("Using " + selectedInfo);
+    try { 
+      MidiDevice dev = MidiSystem.getMidiDevice( selectedInfo );
+      Qualm q = new Qualm( dev.getReceiver() );
+      q.sendPatchChange();
+
+      System.out.println("Patch change sent.");
+
+      // wait a second before exiting
+      Thread.currentThread().sleep(1000);
+
+    } catch (MidiUnavailableException mue) {
+      System.out.println(mue); 
+    } catch (InterruptedException ie) { }
 
     System.exit(0);
   }
