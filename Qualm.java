@@ -107,6 +107,8 @@ public class Qualm {
       System.exit(1);
     }
 
+    boolean useAlsa = true;
+
     /* Find ALSA MIDI ports */
     List midiports = new ArrayList();
     for(i = 0; i<infos.length; i++) {
@@ -115,26 +117,38 @@ public class Qualm {
       }
     }
 
+    /* If we found no ALSA ports, then we'll use others */
     if (midiports.size() == 0) {
-      System.out.println("No (ALSA) MIDI ports found.  Exiting." );
+      useAlsa = false;
+      for(i = 0; i<infos.length; i++) 
+	midiports.add(infos[i]);
+    }
+    
+    if (midiports.size() == 0) {
+      System.out.println("No MIDI ports found.  Exiting." );
       System.exit(1);
     }
 
-    Map clientMap = Qualm.parseALSAClients();
+    Map clientMap = null;
+    if (useAlsa) clientMap = Qualm.parseALSAClients();
+
     MidiDevice.Info inputInfo = null;
     MidiDevice.Info outputInfo = null;
 
     if (listPorts) 
-      System.out.println("ALSA MIDI ports:");
+      System.out.println("MIDI ports:");
 
     Iterator iter = midiports.iterator();
     while (iter.hasNext()) {
       MidiDevice.Info info = (MidiDevice.Info)iter.next();
       String dev = info.getName();
-      dev = dev.substring(dev.indexOf('(')+1);
-      dev = dev.substring(0, dev.lastIndexOf( ':' ));
-      Integer cNum = new Integer(dev);
-      String cName = (String)clientMap.get(cNum);
+      String cName = dev;
+      if (useAlsa) {
+	dev = dev.substring(dev.indexOf('(')+1);
+	dev = dev.substring(0, dev.lastIndexOf( ':' ));
+	Integer cNum = new Integer(dev);
+	cName = (String)clientMap.get(cNum);
+      }
 
       if (listPorts)
 	System.out.println ("  " + info.getName() + " [" + cName +"]");
