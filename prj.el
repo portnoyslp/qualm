@@ -1,2 +1,2 @@
-(setq jde-global-classpath '("/work/Music")
-      jde-compile-option-directory "/work/Music")
+(setq jde-global-classpath '("~/Music")
+      jde-compile-option-directory "~/Music")
