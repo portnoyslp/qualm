@@ -138,8 +138,8 @@
   </setup-events>
 
   <map-events>
-    <map-from><event><control-change channel="1" type="soft"/></event></map-from>
-    <map-to><event><control-change channel="2" type="soft"/></event></map-to>
+    <map-from><event><control-change channel="1" control="soft"/></event></map-from>
+    <map-to><event><control-change channel="2" control="soft"/></event></map-to>
   </map-events>
  
   <cue song="1a" measure="10">
