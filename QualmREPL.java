@@ -4,6 +4,8 @@ import java.lang.Thread;
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineLibrary;
 import java.io.*;
+import java.util.Collection;
+import java.util.Iterator;
 
 public class QualmREPL extends Thread {
   QController qc;
@@ -70,8 +72,8 @@ public class QualmREPL extends Thread {
 	ProgramChangeEvent pce = (ProgramChangeEvent)iter.next();
 	int ch = pce.getChannel();
 	int patch = pce.getChannel();
-	System.out.println( qd.getMidiChannels()[ch] + " -> "
-			    qd.getPatches[patch] );
+	System.out.println( qd.getMidiChannels()[ch] + " -> " +
+			    qd.getPatches()[patch] );
       }
       // redo prompt
       System.out.print( promptString() );

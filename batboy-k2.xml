@@ -46,7 +46,7 @@
     <event><program-change channel="1" patch="7"/></event>
   </cue>
   <cue song="3" measure="16">
-    <trigger><note-on channel="2" note="g2"></trigger>
+    <trigger><note-on channel="2" note="g2"/></trigger>
     <event><program-change channel="1" patch="8"/></event>
   </cue>
 
