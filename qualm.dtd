@@ -42,7 +42,7 @@
 <!ATTLIST note-off 
 	  channel CDATA #REQUIRED 
 	  note CDATA #REQUIRED>
-<!ELEMENT control EMPTY>
+<!ELEMENT control-change EMPTY>
 <!ATTLIST control-change
 	  channel CDATA #REQUIRED
 	  control CDATA #REQUIRED
