@@ -59,8 +59,20 @@ public class MidiMessageParser {
 	cStr = "EndOfExclusive"; break;
 
       }
-      return "[" + cStr + " chan:" + (channel+1) +
-	" d1:" + d1 + " d2:" + d2 + "]";
+
+      if (cStr.equals("UNKNOWN")) {
+	// print out the message, in hex
+	String ret = "[DATA: "; 
+	byte[] bytes = mm.getMessage();
+	for(int i = 0; i<bytes.length; i++) {
+	  ret += Integer.toHexString((int) bytes[i]);
+	  if (i<bytes.length-1) ret += " ";
+	}
+	ret += "]";
+	return ret;
+      } else 
+	return "[" + cStr + " chan:" + (channel+1) +
+	  " d1:" + d1 + " d2:" + d2 + "]";
     }
     else return mm.toString();
   }
