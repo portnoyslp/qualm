@@ -123,10 +123,6 @@ public class Qualm {
     } catch (InterruptedException ie) { }
 
 
-    System.out.println( "Testing file read" );
-    QDataLoader qdl = new QDataLoader();
-    QData data = qdl.readFile( new java.io.File( "batboy-k2.xml" ));
-    data.dump();
     
 
     System.exit(0);
