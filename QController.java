@@ -123,6 +123,8 @@ public class QController implements Receiver {
       Trigger trig = cachedTriggers[i];
       if (trig.match(midiMessage)) {
 	triggered = true;
+	setTimeOut();
+
 	String action = (String)triggers.get(trig);
 	
 	// call the appropriate action
@@ -138,9 +140,7 @@ public class QController implements Receiver {
 	  throw new RuntimeException("Unknown action " + action);
 
       }
-      if (triggered) {
-	setTimeOut();
-      }
+      if (triggered) break;
     }
     // no match, just ignore the message.
   }
