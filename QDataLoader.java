@@ -18,7 +18,8 @@ public class QDataLoader extends DefaultHandler {
   
   public QDataLoader() {
     try {
-      parser = SAXParserFactory.newInstance().newSAXParser();
+      SAXParserFactory spf = SAXParserFactory.newInstance();
+      parser = spf.newSAXParser();
     } catch (ParserConfigurationException pce) {
       System.out.println("Could not configure parser: " + pce);
     } catch (org.xml.sax.SAXException se) {
@@ -45,8 +46,8 @@ public class QDataLoader extends DefaultHandler {
   
   String[] auxValue = new String[2];
   List eventSet = new ArrayList();
-  Trigger trigger;
-  Trigger defaultTrigger;
+  List triggers = new ArrayList();
+  List defaultTriggers = new ArrayList();
   String content;
   Cue curQ;
   
@@ -75,18 +76,18 @@ public class QDataLoader extends DefaultHandler {
     } else if (qName.equals("note-on")) {
       int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
       int n = _noteNameToMidi(attributes.getValue("note"));
-      trigger = Trigger.createNoteOnTrigger( ch, n );
+      triggers.add ( Trigger.createNoteOnTrigger( ch, n ) );
     } else if (qName.equals("note-off")) {
       int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
       int n = _noteNameToMidi(attributes.getValue("note"));
-      trigger = Trigger.createNoteOffTrigger( ch, n );
-    } else if (qName.equals("foot")) {
+      triggers.add ( Trigger.createNoteOffTrigger( ch, n ) );
+      /*    } else if (qName.equals("foot")) {
       int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
-      trigger = Trigger.createFootTrigger( ch );
+      trigger = Trigger.createFootTrigger( ch );*/
     } else if (qName.equals("note-off")) {
       int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
       int d = Integer.parseInt(attributes.getValue("duration")) - 1;
-      trigger = Trigger.createClearTrigger( ch, d );
+      triggers.add ( Trigger.createClearTrigger( ch, d ) );
     }
   }
   
@@ -107,19 +108,23 @@ public class QDataLoader extends DefaultHandler {
       eventSet = new ArrayList();
 
     } else if (qName.equals( "cue" )) {
-      curQ.setTrigger ( (trigger==null ? defaultTrigger : trigger) );
-      trigger = null;
+      ArrayList l = new ArrayList();
+      l.addAll(defaultTriggers);
+      l.addAll(triggers);
+      curQ.setTriggers ( l );
+
+      triggers = new ArrayList();
       curQ.setEvents(eventSet);
       eventSet = new ArrayList();
       qdata.addCue( curQ );
 
     } else if (qName.equals("default-trigger")) {
-      defaultTrigger = trigger;
-      trigger = null;
+      defaultTriggers = triggers;
+      triggers = new ArrayList();
 
     } else if (qName.equals("reverse-trigger")) {
-      qdata.setReverseTrigger(trigger);
-      trigger = null;
+      qdata.setReverseTriggers(triggers);
+      triggers = new ArrayList();
     }
 
   }
@@ -128,7 +133,6 @@ public class QDataLoader extends DefaultHandler {
     content = new String(ch,start,length);
   }
   
-
   private static List numList = 
     Arrays.asList( new String[] { 
       "c","c#","d","d#","e","f","f#","g","g#","a","a#","b"

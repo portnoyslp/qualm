@@ -7,6 +7,7 @@ public class QController implements Receiver {
 
   Receiver midiOut;
   QAdvancer advancer;
+  boolean debugMIDI = false;
 
   public QController( Receiver out, QData data ) {
     midiOut = out;
@@ -16,6 +17,8 @@ public class QController implements Receiver {
     sendEvents( advancer.getPresets() );
     setupTriggers();
   }
+
+  public void setDebugMIDI(boolean flag) { debugMIDI=flag; }
 
   public QData getQData() { return advancer.getQData(); }
   public Cue getCurrentCue() { return advancer.getCurrentCue(); }
@@ -61,8 +64,8 @@ public class QController implements Receiver {
   private void setupTriggers() {
     // set up triggers
     triggers = new HashMap();
-    addCurrentTrigger();
-    addReverseTrigger();
+    addCurrentTriggers();
+    addReverseTriggers();
     buildTriggerCache();
   }
 
@@ -108,6 +111,9 @@ public class QController implements Receiver {
   
   public void send(MidiMessage midiMessage, long l) {
     // OK, we've received a message.  Check the triggers.
+    if (debugMIDI) 
+      System.out.println(midiMessage);
+
     if (ignoreEvents()) 
       return;
       
@@ -119,25 +125,20 @@ public class QController implements Receiver {
 	triggered = true;
 	String action = (String)triggers.get(trig);
 	
-	// remove the trigger
-	removeTrigger(trig);
-
 	// call the appropriate action
 	if (action.equals("advance")) {
 	  advancePatch();
-	  addCurrentTrigger();
+	  setupTriggers();
 	}
 	else if (action.equals( "reverse" )) {
 	  reversePatch();
-	  triggers = new HashMap(); // XXX
-	  addReverseTrigger();
+	  setupTriggers();
 	}
 	else 
 	  throw new RuntimeException("Unknown action " + action);
 
       }
       if (triggered) {
-	buildTriggerCache();
 	setTimeOut();
       }
     }
@@ -158,21 +159,22 @@ public class QController implements Receiver {
     triggers.put(t, action);
   }
 
-  private void removeTrigger( Trigger t ) {
-    triggers.remove(t);
-  }
-
-  private void addReverseTrigger() {
-    Trigger t = advancer.getQData().getReverseTrigger();
-    if (t!=null)
+  private void addReverseTriggers() {
+    Iterator iter = advancer.getQData().getReverseTriggers().iterator();
+    while (iter.hasNext()) {
+      Trigger t = (Trigger)iter.next();
       addTrigger( t, "reverse" );
+    }
   }
 
-  private void addCurrentTrigger() {
+  private void addCurrentTriggers() {
     Cue cue = advancer.getPendingCue();
     if (cue != null) {
-      Trigger t = cue.getTrigger(); 
-      addTrigger( t, "advance" );
+      Iterator iter = cue.getTriggers().iterator();
+      while(iter.hasNext()) {
+	Trigger t = (Trigger)iter.next();
+	addTrigger( t, "advance" );
+      }
     }
   }
  

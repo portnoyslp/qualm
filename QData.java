@@ -9,7 +9,7 @@ import java.util.*;
 public class QData {
   String[] channels;
   String[] patches;
-  Trigger reverseTrigger;
+  Collection reverseTriggers;
   Collection setupEvents;
   SortedSet cues;
   String title;
@@ -27,9 +27,8 @@ public class QData {
   public Collection getSetupEvents() { return setupEvents; }
   public void setSetupEvents(Collection s) { setupEvents=s; }
 
-  public Trigger getReverseTrigger() { return reverseTrigger; }
-  public void setReverseTrigger(Trigger s) { reverseTrigger=s; }
-
+  public Collection getReverseTriggers() { return reverseTriggers; }
+  public void setReverseTriggers(Collection s) { reverseTriggers=s; }
 
   public void addMidiChannel( int num, String desc ) {
     channels[num] = desc;
@@ -59,7 +58,7 @@ public class QData {
     System.out.println("  pl:" + out);
 
     System.out.println("  se:" + setupEvents);
-    System.out.println("  rt:" + reverseTrigger);
+    System.out.println("  rt:" + reverseTriggers);
    
     System.out.println("  qs:" + cues);
   }

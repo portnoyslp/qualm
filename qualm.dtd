@@ -25,15 +25,16 @@
      </patches>
 -->
 
-<!ELEMENT default-trigger (trigger)>
-<!ELEMENT reverse-trigger (trigger)>
+<!ELEMENT default-trigger (trigger+)>
+<!ELEMENT reverse-trigger (trigger+)>
 <!ELEMENT setup-events (event+)>
 
-<!ELEMENT cue (trigger?, event+)>
+<!ELEMENT cue (trigger*, event+)>
 <!ATTLIST cue song CDATA #REQUIRED measure CDATA #REQUIRED>
 <!ELEMENT trigger (note-on|note-off|control-change|clear)>
 <!ATTLIST trigger
-	  delay CDATA #IMPLIED>
+	  delay CDATA #IMPLIED
+	  override CDATA #IMPLIED>
 <!ELEMENT note-on EMPTY>
 <!ATTLIST note-on 
 	  channel CDATA #REQUIRED
