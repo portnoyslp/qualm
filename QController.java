@@ -99,6 +99,13 @@ public class QController implements Receiver {
     waitForTime = System.currentTimeMillis() + 1000; 
   }
 
+  public void advancePatch() {
+    sendEvents( advancer.advancePatch() );
+  }
+  public void reversePatch() {
+    sendEvents( advancer.reversePatch() );
+  }
+  
   public void send(MidiMessage midiMessage, long l) {
     // OK, we've received a message.  Check the triggers.
     if (ignoreEvents()) 
@@ -117,12 +124,12 @@ public class QController implements Receiver {
 
 	// call the appropriate action
 	if (action.equals("advance")) {
-	  sendEvents( advancer.advancePatch() );
+	  advancePatch();
 	  addCurrentTrigger();
 	}
 	else if (action.equals( "reverse" )) {
-	  sendEvents( advancer.reversePatch() );
-	  triggers = new HashMap();
+	  reversePatch();
+	  triggers = new HashMap(); // XXX
 	  addReverseTrigger();
 	}
 	else 
