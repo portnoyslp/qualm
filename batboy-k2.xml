@@ -150,7 +150,7 @@
     <event><program-change channel="4" patch="96"/></event>
   </cue>
   <cue song="3" measure="16">
-    <trigger><note-on channel="2" note="g1"/></trigger>
+    <trigger><note-on channel="2" note="g2"/></trigger>
     <event><program-change channel="1" patch="8"/></event>
   </cue>
   <cue song="3" measure="42">
@@ -549,7 +549,7 @@
     <event><program-change channel="1" patch="88"/></event>
     <event><program-change channel="2" patch="58"/></event>
   </cue>
-  <cue song="27" measure="29">
+  <cue song="27" measure="41">
     <event><program-change channel="1" patch="105"/></event>
   </cue>
   <cue song="27" measure="56">
