@@ -15,12 +15,16 @@
     <patch num="5">Organ</patch>
   </patches>
   <default-trigger><trigger><foot channel="1"/></trigger></default-trigger>
+  <reverse-trigger>
+    <trigger><note-on channel="1" note="c-1"/></trigger>
+  </reverse-trigger>
   <setup-events>
     <event><program-change channel="1" patch="1"/></event>
     <event><program-change channel="2" patch="5"/></event>
   </setup-events>
 
   <cue song="1a" measure="10">
+    <trigger><note-on channel="1" note="C4"/></trigger>
     <event><program-change channel="1" patch="3"/></event>
   </cue>
   <cue song="2" measure="17">
