@@ -8,19 +8,19 @@
     <channel num="10">Drum Kit</channel>
   </midi-channels>
   <patches>
-    <patch num="1">Nice Piano</patch>
-    <patch num="2">TremStr/Str</patch>
-    <patch num="3">FuzzClav/Str</patch>
-    <patch num="4">Rhodes</patch>
-    <patch num="5">Organ</patch>
-    <patch num="6">Strings</patch>
-    <patch num="7">Rhodes/Harp</patch>
-    <patch num="8">Bell Synth</patch>
-    <patch num="9">Harp</patch>
-    <patch num="10">Gospel Organ</patch>
-    <patch num="11">Horns</patch>
-    <patch num="12">Congas</patch>
-    <patch num="126">Artoo Sings</patch>
+    <patch   num="1">Nice Piano</patch>
+    <patch   num="2">TremStr/Str</patch>
+    <patch   num="3">Strs/FzzClav</patch>
+    <patch   num="4">Rhodes</patch>
+    <patch   num="5">Organ</patch>
+    <patch   num="6">Strings</patch>
+    <patch   num="7">Rhodes/Harp</patch>
+    <patch   num="8">Bell Synth</patch>
+    <patch   num="9">Harp</patch>
+    <patch  num="10">Gospel Spin</patch>
+    <patch  num="11">Horns</patch>
+    <patch  num="12">Congas</patch>
+    <patch num="127">Artoo</patch>
   </patches>
   <default-trigger>
     <trigger><note-on channel="1" note="c8"/></trigger>
