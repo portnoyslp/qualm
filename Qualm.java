@@ -19,7 +19,7 @@ public class Qualm {
 	
     try {
       ((ShortMessage)patchChange)
-	.setMessage( ShortMessage.PROGRAM_CHANGE, midiChannel, 5 );
+	.setMessage( ShortMessage.PROGRAM_CHANGE, midiChannel, 5, 0 );
       receiver.send(patchChange, -1);
 
       try {
