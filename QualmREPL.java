@@ -45,8 +45,7 @@ public class QualmREPL extends Thread {
     while (true) {
       try {
 	String line = Readline.readline( promptString() );
-	if (line != null)
-	  processLine( line );
+	processLine( line );
       } 
       catch (EOFException e) {
 	break;
@@ -85,17 +84,24 @@ public class QualmREPL extends Thread {
 
   public void processLine( String line ) {
     readlineHandlesPrompt = true;
-    if (line.toLowerCase().equals("quit")) {
-      System.exit(0);
+
+    if (line == null) {
+      qc.advancePatch();
+    } else {
+
+      if (line.toLowerCase().equals("quit")) {
+	System.exit(0);
+      }
+      
+      if (line.toLowerCase().equals("reset")) {
+	// go back to the first cue
+	qc.switchToCue( "0.0" );
+      } else {
+	// go to the cue number named in the line
+	qc.switchToCue( line );
+      }
     }
 
-    if (line.toLowerCase().equals("reset")) {
-      // go back to the first cue
-      qc.switchToCue( "0.0" );
-    } else {
-      // go to the cue number named in the line
-      qc.switchToCue( line );
-    }
     readlineHandlesPrompt = false;
   }
 
