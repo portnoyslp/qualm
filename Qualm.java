@@ -52,7 +52,7 @@ public class Qualm {
     String outputPort = null;
     boolean listPorts = false;
     boolean debugMIDI = false;
-    boolean skipMIDI = true;
+    boolean skipMIDI = false;
 
     // handle argument list
     int i = 0;
@@ -148,7 +148,7 @@ public class Qualm {
       while (iter.hasNext()) {
 	MidiDevice.Info info = (MidiDevice.Info)iter.next();
 	String dev = info.getName();
-	String cName = dev;
+	String cName = info.getDescription();
 	if (useAlsa) {
 	  dev = dev.substring(dev.indexOf('(')+1);
 	  dev = dev.substring(0, dev.lastIndexOf( ':' ));
