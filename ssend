@@ -1,0 +1,2 @@
+:
+dd bs=1 if=$1 of=/dev/snd/midiC0D0
