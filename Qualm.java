@@ -125,7 +125,7 @@ public class Qualm {
 
     System.out.println( "Testing file read" );
     QDataLoader qdl = new QDataLoader();
-    QData data = qdl.readFile( new java.io.File( "batboy.xml" ));
+    QData data = qdl.readFile( new java.io.File( "batboy-k2.xml" ));
     data.dump();
     
 
