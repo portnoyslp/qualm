@@ -13,10 +13,20 @@
     <patch num="3">FuzzClav/Str</patch>
     <patch num="4">Rhodes</patch>
     <patch num="5">Organ</patch>
+    <patch num="6">Strings</patch>
+    <patch num="7">Rhodes/Harp</patch>
+    <patch num="8">Bell Synth</patch>
+    <patch num="9">Harp</patch>
+    <patch num="10">Gospel Organ</patch>
+    <patch num="11">Horns</patch>
+    <patch num="12">Congas</patch>
+    <patch num="126">Artoo Sings</patch>
   </patches>
-  <default-trigger><trigger><foot channel="1"/></trigger></default-trigger>
+  <default-trigger>
+    <trigger><note-on channel="1" note="c8"/></trigger>
+  </default-trigger>
   <reverse-trigger>
-    <trigger><note-on channel="1" note="c3"/></trigger>
+    <trigger><note-on channel="1" note="c-1"/></trigger>
   </reverse-trigger>
   <setup-events>
     <event><program-change channel="1" patch="1"/></event>
@@ -24,11 +34,20 @@
   </setup-events>
 
   <cue song="1a" measure="10">
-    <trigger><note-on channel="1" note="C4"/></trigger>
     <event><program-change channel="1" patch="3"/></event>
   </cue>
   <cue song="2" measure="17">
-    <event><program-change channel="2" patch="4"/></event>
-    <event><program-change channel="1" patch="1"/></event>
+    <event><program-change channel="1" patch="4"/></event>
   </cue>
+  <cue song="2" measure="102">
+    <event><program-change channel="1" patch="6"/></event>
+  </cue>
+  <cue song="3" measure="1">
+    <event><program-change channel="1" patch="7"/></event>
+  </cue>
+  <cue song="3" measure="16">
+    <trigger><note-on channel="2" note="g2"></trigger>
+    <event><program-change channel="1" patch="8"/></event>
+  </cue>
+
 </qualm-data>
