@@ -85,8 +85,25 @@ public class QController implements Receiver {
    * @param midiMessage a <code>MidiMessage</code> value
    * @param l a <code>long</code> value
    */
+  long waitForTime = -1;
+  private boolean ignoreEvents() {
+    if (waitForTime == -1) 
+      return false;
+    if (System.currentTimeMillis() < waitForTime) 
+      return true;
+    
+    waitForTime=-1;
+    return false;
+  }
+  private void setTimeOut() {
+    waitForTime = System.currentTimeMillis() + 1000; 
+  }
+
   public void send(MidiMessage midiMessage, long l) {
     // OK, we've received a message.  Check the triggers.
+    if (ignoreEvents()) 
+      return;
+      
     for (int i=0;i<cachedTriggers.length;i++) {
       boolean triggered = false;
 
@@ -112,8 +129,10 @@ public class QController implements Receiver {
 	  throw new RuntimeException("Unknown action " + action);
 
       }
-      if (triggered)
+      if (triggered) {
 	buildTriggerCache();
+	setTimeOut();
+      }
     }
     // no match, just ignore the message.
   }
