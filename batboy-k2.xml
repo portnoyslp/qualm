@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE qualm-data SYSTEM "http://portnoy.org/qualm.dtd">
+<!DOCTYPE qualm-data SYSTEM "http://portnoy.org/qualm.dtdx">
 <qualm-data>
   <title>Bat Boy Keyboard II</title>
   <midi-channels>
@@ -44,7 +44,7 @@
     <patch  num="34">Rhodes/Str</patch>   <!-- Rhodes thru; -D6/8va above/ -->
     <patch  num="35">Hns/Fl+Xylo</patch>  <!-- -Db4 / D4+ -->
     <patch  num="36">PzBs/TStr/Xy</patch> <!-- Str full + BsE1-F1 / XyloEb4+ -->
-    <patch  num="37">Tmp/Tubas</patch>    <!-- Tmp G1 only -->
+    <patch  num="37">Tmp/Tuba/Hns</patch> <!-- Tmp G1 only / Hns 8vb C4+ -->
     <patch  num="38">Str+Fl+Xylo</patch>  <!-- Layered -->
     <patch  num="39">Tmp/Saxes</patch>    <!-- Tmp D2-C3 -->
     <patch  num="40">Big Brass</patch>    <!-- doubled 8va -->
@@ -59,13 +59,65 @@
     <patch  num="49">Cl+Bsn/TS+Fl</patch> <!-- -Ab4 / A4+ -->
     <patch  num="50">Pizz. Violin</patch>
     <patch  num="51">Vc/FrHns+Str</patch> <!-- -Eb3 / F3+ -->
-    <patch  num="52">Hp+(Str/Cel)</patch>  <!-- Hp thru / Str -Bb6 / Cel C6+ -->
+    <patch  num="52">Hp+(Str/Cel)</patch> <!-- Hp thru / Str -Bb6 / Cel C6+ -->
     <patch  num="53">TSt/Marc/Str</patch> <!-- TSt -E3 / dbl8va F4-F5 / TStr A5 -->
     <patch  num="54">TStr/Harmnic</patch> <!-- TStr -C6 / D6+ -->
     <patch  num="55">sfz Str/Chim</patch> <!-- +Chim G4 above -->
     <patch  num="56">PipeOrg+Str</patch>  <!-- Layered -->
     <patch  num="57">Tmp/TSt/Marc</patch> <!-- TmpRoll G1 / TS 15ma / Marc8vb E4+ -->
     <patch  num="58">TStr+Horns</patch>   <!-- Horns sfp -->
+
+    <!-- ACT II PATCHES -->
+<!-- Update 37 to add Horns8vb above C4 -->
+    <patch  num="59">Rhods/Cl+Str</patch> <!-- Rhodes -D5 / Cl+Str D#5+ -->
+    <patch  num="60">Hp+Winds</patch>     <!-- Layered -->
+    <patch  num="61">FHn+St/Fl+Ob</patch> <!-- (TremStr) -C#5 / 8vb D5+ -->
+    <patch  num="62">Str/Fl+Glock</patch> <!-- Fat Strings / C6+ -->
+    <patch  num="63">Tmp/TStr/Hns</patch> <!-- TmpRoll F#1 / -D4 / Hn Eb4-A4 / 8vb A#4+ -->
+    <patch  num="64">Tmp/Hns+Str</patch>  <!-- Tmp -C2 / Str only -Eb3 -->
+    <patch  num="65">Horns+Organ<patch>   <!-- Layered -->
+    <patch  num="66">Tmp/Tuba/Hns</patch> <!-- Tmp -E3 / F3-E4 / sfz FHns F4+ -->
+    <patch  num="67">Org/Marc+Brs</patch> <!-- -C#4  / D4+ (Str loco+12/Brs-12) -->
+    <patch  num="68">Hard Org/Brs</patch> <!-- Org -C4 / C#4+ (hard organ/brass) -->
+    <patch  num="69">Str/Pno+Hns</patch>  <!-- -C#2 / D3+ -->
+    <patch  num="70">FHns/Tpt</patch>     <!-- Hns -G#4/A4+ -->
+    <patch  num="71">Pno+FHns</patch>     <!-- mp FHns to Eb3 -->
+    <patch  num="72">Tmp/Brass</patch>    <!-- Tmp -G#2 / A2+ Hns (+Tbn-E4/+Tpt above) -->
+    <patch  num="73">Tmp/Hns+Cl</patch>   <!-- TmpRoll (+8va) -C2 / C#2+ -->
+    <patch  num="74">Harp+Bells</patch>   <!-- Bells have delay -->
+    <patch  num="75">Bell/Oboe</patch>    <!-- / E4+ -->
+    <patch  num="76">Horns/Str</patch>    <!-- 8va -B3 / 8vb C4+ -->
+    <patch  num="77">Hns/Marc+Brs</patch> <!-- Hns8va -F5 / Marc F#5+ -->
+    <patch  num="78">TStr/Str+Pcc</patch> <!-- TStr+36 / A4+ -->
+    <patch  num="79">Str+Brass</patch>    <!-- Brass only E5,F5 -->
+    <patch  num="80">Winds/Str</patch>    <!-- Bsn -D4/Cl -D5/Fl - G5/Str above -->
+    <patch  num="81">Pno+Str/Cel</patch>  <!-- Pno+Str8va / Bb5+ Cel -->
+    <patch  num="82">FHn/St/Fl/Gl</patch> <!-- Hn+TS8va -C4 / TSloco+G3-G5 / Fl8vb C5+ / Glock C6+ -->
+    <patch  num="83">Pno/Vln</patch>      <!-- Pno -D6 / D#6+ -->
+    <patch  num="84">Bs/Hns/Bell</patch>  <!-- Bs -G2 / / Bells8vb D#5+ -->
+    <patch  num="85">Brs/Hns/TStr</patch> <!-- -Eb4 / / TStr D#5+ --> 
+    <patch  num="86">E.Horrifying</patch> 
+    <patch  num="87">Accord.+Str</patch>  <!-- Strings8vb -->
+    <patch  num="88">Strings+Gl</patch>   <!-- patch 6 + Glock F5 and up -->
+    <patch  num="89">Tmp+Bs+Pno/S</patch> <!-- Tmp -C2 | Bs+Pno -A2 / Dark Str 8vb E3-B3 -->
+    <patch  num="90">TStr/Hp/Vib</patch>  <!-- TStr -Bb4 / Hp Db5-Db6 / Eb6+ -->
+    <patch  num="91">FrHns+Tbns</patch>   <!-- Layered, doubled 8vb -->
+    <patch  num="92">PzBs/Str</patch>     <!-- PzBs -B2 / C3+ -->
+    <patch  num="93">Cel/Hp</patch>       <!-- celeste+36 -Db4 / Eb4+ -->
+    <patch  num="94">Tmp/Str+Hn</patch>   <!-- Tmp8va -D2 / Str D#2+ / Hn D#2-F#3 / Hn8vb A4+ -->
+
+<!-- DRUM PATCHES -- All are C4 (60) and D4 (62) -->
+    <patch  num="95">LKB/TmpF</patch>     <!-- Tmp on low F -->
+    <patch  num="96">TmpG/TmpD</patch>    <!-- Tmp on low G / hi D -->
+    <patch  num="97">Mark Tree</patch>    <!-- Bell tree, Just on C4 -->
+    <patch  num="98">Tamb/ChimE</patch>   <!-- Chime on E -->
+    <patch  num="99">RevSD/ChimD</patch>  <!-- Reverb synth SD / Chime on D -->
+    <patch num="100">EvilBD/BD</patch>    <!-- Evil reverby BD / Orch BD -->
+    <patch num="101">LKB/TmpE</patch>     <!-- Tmp on lo E -->
+    <patch num="102">Congas</patch>
+    <patch num="103">LKB/ChimeB</patch>   <!-- Chime on lo B -->
+    <patch num="104">LKB/ChimeA</patch>   <!-- dual A chimes (lo and hi) -->
+
     <patch num="127">Artoo</patch>
   </patches>
   <default-trigger>
