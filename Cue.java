@@ -30,6 +30,10 @@ public class Cue implements Comparable {
   public String toString() { return "Q[" + getCueNumber() + "(" + 
 			       getTrigger() + ")]"; }
 
+  public boolean equals( Object x ) {
+    return getCueNumber().equals( ((Cue)x).getCueNumber() );
+  }
+
   /**
    * Compares the two strings by performing a numeric comparison if
    * they are numbers.  Letters are treated so that they are handled
