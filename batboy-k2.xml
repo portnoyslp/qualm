@@ -106,7 +106,8 @@
     <patch  num="93">Cel/Hp</patch>       <!-- celeste+36 -Db4 / Eb4+ -->
     <patch  num="94">Tmp/Str+Hn</patch>   <!-- Tmp8va -D2 / Str D#2+ / Hn D#2-F#3 / Hn8vb A4+ -->
 
-<!-- DRUM PATCHES -- All are C4 (60) and D4 (62) -->
+    <!-- DRUM PATCHES : All are C4 (60) and D4 (62) -->
+
     <patch  num="95">LKB/TmpF</patch>     <!-- Tmp on low F -->
     <patch  num="96">TmpG/TmpD</patch>    <!-- Tmp on low G / hi D -->
     <patch  num="97">Mark Tree</patch>    <!-- Bell tree, Just on C4 -->
