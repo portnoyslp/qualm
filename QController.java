@@ -50,10 +50,19 @@ public class QController implements Receiver {
     MidiMessage patchChange = new ShortMessage();
 
     try {
+      Patch patch = pce.getPatch();
+      if (patch.getBank() != -1) {
+	ShortMessage[] msgs = 
+	  BankSelection.RolandBankSelect( pce.getChannel(),
+					  patch.getBank() );
+	for(int i=0; i<msgs.length; i++)
+	  midiOut.send(msgs[i],-1);
+      }
+
       ((ShortMessage)patchChange)
 	.setMessage( ShortMessage.PROGRAM_CHANGE, 
 		     pce.getChannel(), 
-		     pce.getPatch(), 0 );
+		     pce.getPatch().getNumber(), 0 );
       midiOut.send(patchChange, -1);
     } catch (InvalidMidiDataException e) {
       System.out.println("Unable to send Program Change: " + pce);

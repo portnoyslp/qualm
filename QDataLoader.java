@@ -51,6 +51,7 @@ public class QDataLoader extends DefaultHandler {
   String content;
   Cue curQ;
   EventTemplate curTemplate;
+  Patch patch;
   
   public void startElement(String uri, String localName, 
 			   String qName, Attributes attributes) {
@@ -59,9 +60,10 @@ public class QDataLoader extends DefaultHandler {
       auxValue[0] = attributes.getValue("num");
       
     } else if (qName.equals("patch")) {
-      // patch name
-      auxValue[0] = attributes.getValue("num");
-      auxValue[1] = attributes.getValue("channel");
+      patch = new Patch( attributes.getValue("id"),
+			 Integer.parseInt( attributes.getValue("num")));
+      if (attributes.getValue("bank") != null)
+	patch.setBank( Integer.parseInt( attributes.getValue("bank") ));
 
     } else if (qName.equals("cue")) {
       eventSet = new ArrayList();
@@ -70,8 +72,8 @@ public class QDataLoader extends DefaultHandler {
 
     } else if (qName.equals("program-change")) {
       int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
-      int p = Integer.parseInt(attributes.getValue("patch")) - 1;
-      eventSet.add(new ProgramChangeEvent(ch,p));
+      String patchID = attributes.getValue("patch");
+      eventSet.add(new ProgramChangeEvent(ch, qdata.lookupPatch(patchID)));
 
       // TRIGGERS
     } else if (qName.equals("note-on")) {
@@ -104,7 +106,8 @@ public class QDataLoader extends DefaultHandler {
       
     } else if (qName.equals("patch")) {
       // patch name; ignoring channel
-      qdata.addPatch( Integer.parseInt(auxValue[0])-1, content );
+      patch.setDescription(content);
+      qdata.addPatch( patch );
       
     } else if (qName.equals("setup-events")) {
       qdata.setSetupEvents(eventSet);

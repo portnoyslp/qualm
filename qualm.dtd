@@ -14,9 +14,10 @@
 -->
 <!ELEMENT patches (patch+)>
 <!ELEMENT patch (#PCDATA)>
-<!ATTLIST patch 
+<!ATTLIST patch
 	  num CDATA #REQUIRED
-	  channel CDATA #IMPLIED>
+	  bank CDATA #IMPLIED
+	  id ID #REQUIRED>
 <!--
      <patches>
        <patch num="1">Nice Piano</patch>
@@ -60,5 +61,5 @@
 <!ELEMENT program-change EMPTY>
 <!ATTLIST program-change
 	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED 
-	  patch CDATA #REQUIRED>
+	  patch IDREF #REQUIRED>
 

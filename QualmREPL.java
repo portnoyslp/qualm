@@ -62,9 +62,9 @@ public class QualmREPL extends Thread {
     while(iter.hasNext()) {
       ProgramChangeEvent pce = (ProgramChangeEvent)iter.next();
       int ch = pce.getChannel();
-      int patch = pce.getPatch();
+      Patch patch = pce.getPatch();
       System.out.println( qd.getMidiChannels()[ch] + " -> " +
-			  qd.getPatches()[patch] );
+			  patch.getDescription() );
     }
       // redo prompt
     if (!readlineHandlesPrompt) {
