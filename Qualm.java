@@ -16,7 +16,7 @@ public class Qualm {
   
   public void sendPatchChange() {
     MidiMessage patchChange = new ShortMessage();
-	
+
     try {
       ((ShortMessage)patchChange)
 	.setMessage( ShortMessage.PROGRAM_CHANGE, midiChannel, 5, 0 );
@@ -26,6 +26,9 @@ public class Qualm {
       System.out.println(e);
     }
   }
+
+
+
 
   public static Map parseALSAClients() {
     Map ret = new HashMap();

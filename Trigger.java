@@ -1,5 +1,8 @@
 package qualm;
 
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.ShortMessage;
+
 public class Trigger {
 
   public Trigger () { } 
@@ -35,6 +38,28 @@ public class Trigger {
   public void setDelay(int d) { delay=d; }
   public int getDelay() { return delay; }
 
+  private String[] names = { "NoteOn", "NoteOff", "Foot", "Clear" };
+  public String toString() {
+    return "trig[" + names[type-1] + "/" + channel + "/" + extra + "]";
+  }
+
+  public boolean match(MidiMessage m) {
+    if (m instanceof ShortMessage) {
+      ShortMessage sm = (ShortMessage)m;
+      if (type == NOTE_ON && 
+	  sm.getCommand()==sm.NOTE_ON &&
+	  channel == sm.getChannel() &&
+	  extra == sm.getData1() )
+	return true;
+      if (type == NOTE_OFF && 
+	  sm.getCommand()==sm.NOTE_OFF &&
+	  channel == sm.getChannel() &&
+	  extra == sm.getData1() )
+	return true;
+    }
+    return false;
+  }
+  
   public static int NOTE_ON = 1;
   public static int NOTE_OFF = 2;
   public static int FOOT = 3;

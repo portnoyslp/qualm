@@ -9,7 +9,6 @@ import java.util.*;
 public class QData {
   String[] channels;
   String[] patches;
-  Trigger defaultTrigger;
   Trigger reverseTrigger;
   Collection setupEvents;
   SortedSet cues;
@@ -28,9 +27,6 @@ public class QData {
   public Collection getSetupEvents() { return setupEvents; }
   public void setSetupEvents(Collection s) { setupEvents=s; }
 
-  public Trigger getDefaultTrigger() { return defaultTrigger; }
-  public void setDefaultTrigger(Trigger s) { defaultTrigger=s; }
-
   public Trigger getReverseTrigger() { return reverseTrigger; }
   public void setReverseTrigger(Trigger s) { reverseTrigger=s; }
 
@@ -38,6 +34,7 @@ public class QData {
   public void addMidiChannel( int num, String desc ) {
     channels[num] = desc;
   }
+  public String[] getMidiChannels() { return channels; }
 
   public void addPatch( int num, String desc ) {
     patches[num] = desc;
@@ -46,22 +43,24 @@ public class QData {
   public void addCue( Cue cue ) {
     cues.add(cue);
   }
+  public SortedSet getCues() { return cues; }
 
   public void dump() {
     System.out.println("Data dump for " + getTitle());
     // Create lists of patches, channels.
     List out = new ArrayList();
     for (int i=0; i<channels.length;i++) 
-      if (channels[i]!=null) out.add("(" + i + ") " + channels[i]);
+      if (channels[i]!=null) out.add("(" + i + ")" + channels[i]);
     System.out.println("  ch:" + out);
     out = new ArrayList();
     for (int i=0; i<patches.length;i++) 
-      if (patches[i]!=null) out.add("(" + i + ") " + patches[i]);
+      if (patches[i]!=null) out.add("(" + i + ")" + patches[i]);
     System.out.println("  pl:" + out);
 
     System.out.println("  se:" + setupEvents);
+    System.out.println("  rt:" + reverseTrigger);
    
     System.out.println("  qs:" + cues);
   }
-  		      
+ 	      
 } 

@@ -46,6 +46,7 @@ public class QDataLoader extends DefaultHandler {
   String[] auxValue = new String[2];
   List eventSet = new ArrayList();
   Trigger trigger;
+  Trigger defaultTrigger;
   String content;
   Cue curQ;
   
@@ -73,11 +74,11 @@ public class QDataLoader extends DefaultHandler {
       // TRIGGERS
     } else if (qName.equals("note-on")) {
       int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
-      int n = Integer.parseInt(attributes.getValue("note")) - 1;
+      int n = _noteNameToMidi(attributes.getValue("note"));
       trigger = Trigger.createNoteOnTrigger( ch, n );
     } else if (qName.equals("note-off")) {
       int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
-      int n = Integer.parseInt(attributes.getValue("note")) - 1;
+      int n = _noteNameToMidi(attributes.getValue("note"));
       trigger = Trigger.createNoteOffTrigger( ch, n );
     } else if (qName.equals("foot")) {
       int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
@@ -106,15 +107,15 @@ public class QDataLoader extends DefaultHandler {
       eventSet = new ArrayList();
 
     } else if (qName.equals( "cue" )) {
-      if (trigger!=null) 
-	curQ.setTrigger(trigger);
+      curQ.setTrigger ( (trigger==null ? defaultTrigger : trigger) );
       curQ.setEvents(eventSet);
       eventSet = new ArrayList();
       qdata.addCue( curQ );
 
     } else if (qName.equals("default-trigger")) {
-      qdata.setDefaultTrigger(trigger);
+      defaultTrigger = trigger;
       trigger = null;
+
     } else if (qName.equals("reverse-trigger")) {
       qdata.setReverseTrigger(trigger);
       trigger = null;
@@ -126,6 +127,57 @@ public class QDataLoader extends DefaultHandler {
     content = new String(ch,start,length);
   }
   
+
+  private static List numList = 
+    Arrays.asList( new String[] { 
+      "c","c#","d","d#","e","f","f#","g","g#","a","a#","b"
+    });
+
+  private int _noteNameToMidi ( String noteName ) {
+    try {
+      return Integer.parseInt( noteName );
+    } catch (NumberFormatException nfe) {
+    }
+
+    // convert to lowercase to make our lives easier.
+    noteName = noteName.toLowerCase();
+    
+    // get the key
+    String key = noteName.substring(0,1);
+    noteName = noteName.substring(1);
+    
+    // get the sharp/flat (and convert to just sharps)
+    if (noteName.startsWith("#")) {
+      key = key + "#";
+      noteName = noteName.substring(1);
+    } else if (noteName.startsWith("b")) {
+      // Use # instead of flat
+      char k = key.charAt(0);
+      if (k == 'a') {
+	key = "g#";
+      } else if (k == 'c') {
+	key = "b";
+      } else if (k == 'f') {
+	key = "e";
+      } else {
+	k--;
+	key = new String( new char[] { k } );
+	key = key + "#";
+      }
+      noteName = noteName.substring(1);
+    }
+    // everything else is the octave number.
+    int octave = Integer.parseInt(noteName)+1;
+
+    if (key.equals("e#")) key="f";
+
+    if (key.equals("b#")) {
+      key="c";
+      octave++;
+    }
+    
+    return (octave*12 + numList.indexOf( key ));
+  }
   
 
   public static void main(String[] args) {
