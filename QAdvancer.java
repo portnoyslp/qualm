@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 /**
  * QAdvancer
  */
@@ -36,7 +35,6 @@ public class QAdvancer {
     Cue newQ = new Cue( cueName );
     SortedSet cueset = qdata.getCues();
     SortedSet head = cueset.headSet(newQ);
-    
     
     // set the new current cue
     if (head.size() == 0) {
@@ -104,12 +102,16 @@ public class QAdvancer {
   }
 
 
-  private Collection revertPatchChanges() {
-    // send the patch changes for the current cue.  To do this right,
-    // we need to keep track of which channels have been marked, and
-    // go back through the cues to find the earliest previous program
-    // change for each channel, and then apply those.
+  /**
+   * Send all necessary patch changes to get to the current cue.  To
+   * do this right, we need to keep track of which channels have been
+   * marked, and go back through the cues to find the earliest
+   * previous program change for each channel, and then apply those.
+   *
+   * @return a <code>Collection</code> of
+   * <code>PatchChangeEvent</code> objects. */
 
+  private Collection revertPatchChanges() {
     String[] midiChans = qdata.getMidiChannels();
     int channelCount = 0;
     for(int i=0; i<midiChans.length; i++) 
@@ -124,7 +126,7 @@ public class QAdvancer {
     SortedSet headset = qdata.getCues();
     Cue loopQ = currentCue;
     while ( loopQ != null && programCount < channelCount ) {
-      Iterator iter = currentCue.getEvents().iterator();
+      Iterator iter = loopQ.getEvents().iterator();
       while (iter.hasNext()) {
 	ProgramChangeEvent ev = (ProgramChangeEvent)iter.next();
 	int ch = ev.getChannel();
