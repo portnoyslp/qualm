@@ -4,7 +4,7 @@
 <!ELEMENT midi-channels (channel+)>
 <!ELEMENT channel (#PCDATA)>
 <!ATTLIST channel 
-	  num CDATA #REQUIRED>
+	  num (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED>
 <!--
      <midi-channels>
        <channel num="1">Main Keyboard</channel>
@@ -40,25 +40,25 @@
 	  override CDATA #IMPLIED>
 <!ELEMENT note-on EMPTY>
 <!ATTLIST note-on 
-	  channel CDATA #REQUIRED
+	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED
 	  note CDATA #REQUIRED>
 <!ELEMENT note-off EMPTY>
 <!ATTLIST note-off 
-	  channel CDATA #REQUIRED 
+	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED 
 	  note CDATA #REQUIRED>
 <!ELEMENT control-change EMPTY>
 <!ATTLIST control-change
-	  channel CDATA #REQUIRED
+	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED
 	  control CDATA #REQUIRED
 	  threshold CDATA #REQUIRED>
 <!ELEMENT clear EMPTY>
 <!ATTLIST clear 
-	  channel CDATA #REQUIRED 
+	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED 
 	  duration CDATA #REQUIRED>
 
 <!ELEMENT event (program-change)>
 <!ELEMENT program-change EMPTY>
 <!ATTLIST program-change
-	  channel CDATA #REQUIRED 
+	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED 
 	  patch CDATA #REQUIRED>
 
