@@ -147,6 +147,25 @@ public class QController implements Receiver {
     if (debugMIDI) 
       System.out.println( MidiMessageParser.messageToString(midiMessage) );
 
+    // XXX This is special code, solely for Batboy.  Should be
+    // replaced with a generic mapping facility.
+    if (midiMessage instanceof ShortMessage) {
+      ShortMessage sm = (ShortMessage)midiMessage;
+      if (sm.getCommand() == ShortMessage.CONTROL_CHANGE &&
+	  sm.getChannel() == 0 &&
+	  sm.getData1() == 0x40) {
+	ShortMessage out = new ShortMessage();
+	try {
+	  out.setMessage( ShortMessage.CONTROL_CHANGE, 1, 
+			  0x50, sm.getData2() );
+	  midiOut.send(out, -1);
+	} catch (InvalidMidiDataException imde) {
+	  System.out.println("Unable to create mapped event for " + 
+			     MidiMessageParser.messageToString(midiMessage));
+	}
+      }
+    }
+
     if (ignoreEvents()) 
       return;
       

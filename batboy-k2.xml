@@ -120,6 +120,7 @@
     <patch num="102">Congas</patch>
     <patch num="103">LKB/ChimeB</patch>   <!-- Chime on lo B -->
     <patch num="104">LKB/ChimeA</patch>   <!-- dual A chimes (lo and hi) -->
+    <patch num="107">Tamb/ChimEb</patch>  <!-- Chime on Eb -->
 
     <patch num="127">Artoo</patch>
   </patches>
@@ -355,12 +356,13 @@
     <event><program-change channel="2" patch="9"/></event>
   </cue>
   <cue song="16" measure="1">
+    <event><program-change channel="1" patch="59"/></event>
     <event><program-change channel="2" patch="10"/></event>
     <event><program-change channel="4" patch="98"/></event>
   </cue>
   <cue song="17" measure="1">
-    <event><program-change channel="1" patch="59"/></event>
     <event><program-change channel="2" patch="52"/></event>
+    <event><program-change channel="4" patch="107"/></event>
   </cue>
   <cue song="17" measure="28">
     <event><program-change channel="1" patch="6"/></event>
