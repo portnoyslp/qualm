@@ -1,0 +1,39 @@
+XML DTD:
+<!ELEMENT qualm-data (midi-channels, patches, cues)>
+<!ELEMENT midi-channels (channel+)>
+<!ELEMENT channel (#PCDATA)>
+<!ATTLIST channel num CDATA #REQUIRED>
+<!--
+     <midi-channels>
+       <channel num="1">Main Keyboard</channel>
+       <channel num="2">Auxiliary Keyboard</channel>
+       <channel num="10">Drum Kit</channel>
+     </midi-channels>
+-->
+<!ELEMENT patches (patch+)>
+<!ELEMENT patch (#PCDATA)>
+<!ELEMENT num CDATA #REQUIRED>
+<!ELEMENT channel CDATA #IMPLIED>
+<!--
+     <patches>
+       <patch num="1">Nice Piano</patch>
+       <patch num="2">TremStr/Str</patch>
+       <patch num="5">Organ</patch>
+     </patches>
+-->
+
+<!ELEMENT cues (cue+)>
+<!ELEMENT cue (trigger, event+)>
+<!ATTLIST cue song CDATA #REQUIRED measure CDATA #REQUIRED>
+<!ELEMENT trigger (note-on|note-off|foot|clear)>
+<!ATTLIST delay CDATA #IMPLIED>
+<!ELEMENT note-on EMPTY>
+<!ATTLIST note-on channel CDATA #REQUIRED note CDATA #REQUIRED>
+<!ATTLIST note-off channel CDATA #REQUIRED note CDATA #REQUIRED>
+<!ATTLIST foot channel CDATA #REQUIRED>
+<!ATTLIST clear channel CDATA #REQUIRED>
+
+<!ELEMENT event (program-change)>
+<!ELEMENT program-change EMPTY>
+<!ELEMENT channel CDATA #REQUIRED patch CDATA #REQUIRED>
+
