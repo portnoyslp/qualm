@@ -4,6 +4,7 @@ import javax.sound.midi.*;
 import java.util.*;
 import java.io.*;
 import gnu.getopt.Getopt;
+import gnu.getopt.LongOpt;
 
 public class Qualm {
   
@@ -33,11 +34,14 @@ public class Qualm {
 
   private static void usage() {
     System.out.println("Usage: java qualm.Qualm [-o <output>] [-i <input>] [-l] [-h] <filename>");
-    System.out.println("   -o <output>  Sets output ALSA port.");
-    System.out.println("   -i <input>   Sets input ALSA port.");
-    System.out.println("   -l           List all ALSA MIDI ports and exit.");
-    System.out.println("   -h           Prints this message.");
-    System.out.println("   <filename>   The Qualm filename to execute.");
+    System.out.println("  --output <out>");
+    System.out.println("  -o <out>       Sets output ALSA port.");
+    System.out.println("  --input <in>");
+    System.out.println("  -i <in>        Sets input ALSA port.");
+    System.out.println("  --list | -l    List all ALSA MIDI ports and exit.");
+    System.out.println("  --debugmidi    Print all received MIDI events.");
+    System.out.println("  --help | -h    Prints this message.");
+    System.out.println("  <filename>     The Qualm filename to execute.");
     System.out.println("\n If only one port is specified, an attempt will be made to open the\nport for both input and output.  If no port is specified, 'UM-1' will\nbe used.");
   }
     
@@ -46,13 +50,26 @@ public class Qualm {
     String inputPort = null;
     String outputPort = null;
     boolean listPorts = false;
+    boolean debugMIDI = false;
 
     // handle argument list
-    Getopt g = new Getopt("Qualm", args, "o:i:hl");
+    int i = 0;
+    LongOpt[] longopts = new LongOpt[5];
+    longopts[i++] = new LongOpt("output", LongOpt.REQUIRED_ARGUMENT, null, 'o');
+    longopts[i++] = new LongOpt("input", LongOpt.REQUIRED_ARGUMENT, null, 'i');
+    longopts[i++] = new LongOpt("list", LongOpt.NO_ARGUMENT, null, 'l');
+    longopts[i++] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
+    longopts[i++] = new LongOpt("debugmidi", LongOpt.NO_ARGUMENT, null, 0);
+
+    Getopt g = new Getopt("Qualm", args, "o:i:hl", longopts);
     int c;
     while ((c = g.getopt()) != -1) {
       switch(c)
 	{
+	case 0:
+	  // debugmidi option
+	  debugMIDI = true;
+	  break;
 	case 'i':
 	  inputPort = g.getOptarg();
 	  break;
@@ -92,7 +109,7 @@ public class Qualm {
 
     /* Find ALSA MIDI ports */
     List midiports = new ArrayList();
-    for(int i = 0; i<infos.length; i++) {
+    for(i = 0; i<infos.length; i++) {
       if (infos[i].getName().startsWith("ALSA MIDI")) {
 	midiports.add(infos[i]);
       }
@@ -110,9 +127,9 @@ public class Qualm {
     if (listPorts) 
       System.out.println("ALSA MIDI ports:");
 
-    Iterator i = midiports.iterator();
-    while (i.hasNext()) {
-      MidiDevice.Info info = (MidiDevice.Info)i.next();
+    Iterator iter = midiports.iterator();
+    while (iter.hasNext()) {
+      MidiDevice.Info info = (MidiDevice.Info)iter.next();
       String dev = info.getName();
       dev = dev.substring(dev.indexOf('(')+1);
       dev = dev.substring(0, dev.lastIndexOf( ':' ));
@@ -165,6 +182,8 @@ public class Qualm {
 
       // open a receiver with the right data file.
       QController qc = new QController( midiOut, data );
+      if (debugMIDI)
+	qc.setDebugMIDI(true);
 
       // Start a read-eval-print loop as well.  The REPL will do a
       // System.exit when all is done.
