@@ -1,5 +1,5 @@
 all: 
-	/usr/bin/ant -emacs all
+	ant -emacs all
 
 test:
-	/usr/bin/ant test
+	ant test

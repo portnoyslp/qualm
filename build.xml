@@ -3,7 +3,6 @@
 
   <path id="classpath">
     <pathelement location="/usr/share/java/gnu-getopt.jar"/>
-    <pathelement location="/usr/share/java/libreadline-java.jar"/>
     <pathelement location=".."/>
   </path>
 

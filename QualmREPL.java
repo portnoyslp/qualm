@@ -1,30 +1,18 @@
 package qualm;
 
 import java.lang.Thread;
-import org.gnu.readline.Readline;
-import org.gnu.readline.ReadlineLibrary;
 import java.io.*;
 import java.util.Collection;
 import java.util.Iterator;
 
 public class QualmREPL extends Thread {
   QController qc;
+  BufferedReader reader;
+
   public QualmREPL( QController qc ) {
     this.qc = qc; 
     qc.setREPL(this);
-
-    try { 
-      Readline.load( ReadlineLibrary.GnuReadline );
-    } catch (UnsatisfiedLinkError ignore_me) { }
-    
-    Readline.initReadline("myapp");
-    
-    Runtime.getRuntime()
-      .addShutdownHook(new Thread() {
-	  public void run() {
-	    Readline.cleanup();
-	  }
-	});
+    reader = new BufferedReader( new InputStreamReader( System.in ));
   }
 
   public String promptString() {
@@ -44,7 +32,10 @@ public class QualmREPL extends Thread {
   public void run() {
     while (true) {
       try {
-	String line = Readline.readline( promptString() );
+	System.out.print( promptString() );
+	System.out.flush();
+
+	String line = reader.readLine();
 	processLine( line );
       } 
       catch (EOFException e) {
@@ -85,7 +76,7 @@ public class QualmREPL extends Thread {
   public void processLine( String line ) {
     readlineHandlesPrompt = true;
 
-    if (line == null) {
+    if (line == null || line.trim().equals("") ) {
       qc.advancePatch();
     } else {
 
