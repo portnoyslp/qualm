@@ -7,7 +7,7 @@ import java.io.*;
 public class Qualm {
   
   Receiver receiver;
-  int midiChannel = 0; // MIDI CH1
+  int midiChannel = 2; // MIDI CH3
 
   public Qualm(Receiver rec) { 
     receiver = rec;
@@ -15,14 +15,17 @@ public class Qualm {
   }
   
   public void sendPatchChange() {
-    ShortMessage patchChange = null;
+    MidiMessage patchChange = new ShortMessage();
+	
     try {
-      patchChange = new ShortMessage();
-      patchChange.setMessage( ShortMessage.PROGRAM_CHANGE,
-			      midiChannel, 5, 0 );
-
+      ((ShortMessage)patchChange)
+	.setMessage( ShortMessage.PROGRAM_CHANGE, midiChannel, 5 );
       receiver.send(patchChange, -1);
-      receiver.close();
+
+      try {
+	Thread.sleep(10000);
+      } catch (InterruptedException e) { }
+
     } catch (InvalidMidiDataException e) {
       System.out.println(e);
     }
@@ -53,6 +56,12 @@ public class Qualm {
   }
 
   public static void main(String[] args) {
+
+    String searchForPort = "UM-1";
+    if (args.length > 0) {
+      searchForPort = args[0];
+    }
+
     MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
     if (infos.length == 0) {
       System.out.println( "No MIDI devices found.  Exiting." );
@@ -86,24 +95,29 @@ public class Qualm {
       String cName = (String)clientMap.get(cNum);
       System.out.println ("  " + info.getName() + " [" + cName +"]");
 
-      // we like the one connected to UM-1...
-      if (cName.indexOf("UM-1") != -1) 
+      // we like the one connected to what we want...
+      if (cName.indexOf(searchForPort) != -1 ||
+	  info.getName().indexOf(searchForPort) != -1) 
 	selectedInfo = info;
 
     }
 
     if (selectedInfo == null) {
-      System.out.println("Couldn't find UM-1 output.");
+      System.out.println("Couldn't find right output.");
       System.exit(1);
     }
     
     System.out.println("Using " + selectedInfo);
-    try { 
+    try {
       MidiDevice dev = MidiSystem.getMidiDevice( selectedInfo );
+      dev.open();
+
       Qualm q = new Qualm( dev.getReceiver() );
       q.sendPatchChange();
 
       System.out.println("Patch change sent.");
+      dev.close();
+      System.out.println("Closed device");
 
       // wait a second before exiting
       Thread.currentThread().sleep(1000);
