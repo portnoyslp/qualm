@@ -166,7 +166,6 @@
     <event><program-change channel="2" patch="28"/></event>
   </cue>
   <cue song="8" measure="127">
-    <event><program-change channel="1" patch="27"/></event>
     <event><program-change channel="2" patch="58"/></event>
   </cue>
   <cue song="8" measure="133">
@@ -182,7 +181,6 @@
   </cue>
   <cue song="10" measure="21">
     <event><program-change channel="1" patch="35"/></event>
-    <event><program-change channel="2" patch="31"/></event>
   </cue>
   <cue song="10" measure="77">
     <event><program-change channel="1" patch="32"/></event>
@@ -202,7 +200,6 @@
   </cue>
   <cue song="10" measure="158">
     <event><program-change channel="1" patch="39"/></event>
-    <event><program-change channel="2" patch="6"/></event>
   </cue>
   <cue song="10" measure="170">
     <event><program-change channel="1" patch="29"/></event>
@@ -210,7 +207,6 @@
   </cue>
   <cue song="10" measure="182">
     <event><program-change channel="1" patch="41"/></event>
-    <event><program-change channel="2" patch="40"/></event>
   </cue>
   <cue song="11" measure="1">
     <event><program-change channel="1" patch="4"/></event>
