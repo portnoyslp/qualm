@@ -32,7 +32,6 @@ public class QDataLoader extends DefaultHandler {
       parser.parse( f, this );
       return qdata;
     } catch (Exception e) {
-      e.printStackTrace();
       System.out.println("Couldn't parse " + f + ": " + e);
       return null;
     }
@@ -54,45 +53,78 @@ public class QDataLoader extends DefaultHandler {
   Patch patch;
   
   public void startElement(String uri, String localName, 
-			   String qName, Attributes attributes) {
-    if (qName.equals("channel")) {
-      // dealing with a midi-channel definition
-      auxValue[0] = attributes.getValue("num");
+			   String qName, Attributes attributes) 
+    throws NumberFormatException {
+
+    String currentAttribute = null;
+    String currentElement = "`" + qName + "' element";
+
+    try {
       
-    } else if (qName.equals("patch")) {
-      patch = new Patch( attributes.getValue("id"),
-			 Integer.parseInt( attributes.getValue("num")));
-      if (attributes.getValue("bank") != null)
-	patch.setBank( Integer.parseInt( attributes.getValue("bank") ));
+      if (qName.equals("channel")) {
+	// dealing with a midi-channel definition
+	auxValue[0] = attributes.getValue("num");
+	
+      } else if (qName.equals("patch")) {
+	currentElement = "patch `" + attributes.getValue("id") + "'";
+	currentAttribute = "num";
+	
+	patch = new Patch( attributes.getValue("id"),
+			   Integer.parseInt( attributes.getValue("num")));
+	
+	if (attributes.getValue("bank") != null) {
+	  currentAttribute = "bank";
+	  patch.setBank( Integer.parseInt( attributes.getValue("bank") ));
+	}
+     
 
-    } else if (qName.equals("cue")) {
-      eventSet = new ArrayList();
-      curQ = new Cue( attributes.getValue("song"),
-		      attributes.getValue("measure"));
-
-    } else if (qName.equals("program-change")) {
-      int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
-      String patchID = attributes.getValue("patch");
-      eventSet.add(new ProgramChangeEvent(ch, qdata.lookupPatch(patchID)));
-
-      // TRIGGERS
-    } else if (qName.equals("note-on")) {
-      int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
-      int n = _noteNameToMidi(attributes.getValue("note"));
-      curTemplate = EventTemplate.createNoteOnEventTemplate( ch, n );
-    } else if (qName.equals("note-off")) {
-      int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
-      int n = _noteNameToMidi(attributes.getValue("note"));
-      curTemplate = EventTemplate.createNoteOffEventTemplate( ch, n );
-    } else if (qName.equals("control-change")) {
-      int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
-      String control = attributes.getValue("control");
-      String thresh = attributes.getValue("threshold");
-      curTemplate = EventTemplate.createControlEventTemplate( ch, control, thresh );
-      /*    } else if (qName.equals("clear")) {
-      int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
-      int d = Integer.parseInt(attributes.getValue("duration")) - 1;
-      curTemplate = EventTemplate.createClearEventTemplate( ch, d ) ); */
+      } else if (qName.equals("cue")) {
+	eventSet = new ArrayList();
+	curQ = new Cue( attributes.getValue("song"),
+			attributes.getValue("measure"));
+	
+      } else if (qName.equals("program-change")) {
+	currentElement = "program-change element";
+	if (curQ != null) 
+	  currentElement += " [cue " + curQ.getCueNumber() + "]";
+	currentAttribute = "channel";
+	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
+	String patchID = attributes.getValue("patch");
+	eventSet.add(new ProgramChangeEvent(ch, qdata.lookupPatch(patchID)));
+	
+	// TRIGGERS
+      } else if (qName.equals("note-on")) {
+	currentAttribute = "channel";
+	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
+	currentAttribute = "note";
+	int n = _noteNameToMidi(attributes.getValue("note"));
+	curTemplate = EventTemplate.createNoteOnEventTemplate( ch, n );
+      } else if (qName.equals("note-off")) {
+	currentAttribute = "channel";
+	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
+	currentAttribute = "note";
+	int n = _noteNameToMidi(attributes.getValue("note"));
+	curTemplate = EventTemplate.createNoteOffEventTemplate( ch, n );
+      } else if (qName.equals("control-change")) {
+	currentAttribute = "channel";
+	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
+	String control = attributes.getValue("control");
+	String thresh = attributes.getValue("threshold");
+	curTemplate = EventTemplate.createControlEventTemplate( ch, control, thresh );
+	/* } else if (qName.equals("clear")) {
+	   currentAttribute = "channel";
+	   int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
+	   currentAttribute = "duration";
+	   int d = Integer.parseInt(attributes.getValue("duration")) - 1;
+	   curTemplate = EventTemplate.createClearEventTemplate( ch, d ) ); */
+      }
+    } catch (NumberFormatException nfe) {
+      throw new NumberFormatException( "Could not parse `" + currentAttribute 
+				       + "' attribute for " + currentElement);
+    } catch (NullPointerException npe) {
+      System.out.println("Handling " + currentElement + "/" + currentAttribute);
+      npe.printStackTrace();
+      throw npe;
     }
   }
   

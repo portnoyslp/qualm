@@ -56,14 +56,16 @@ public class QController implements Receiver {
 	  BankSelection.RolandBankSelect( pce.getChannel(),
 					  patch.getBank() );
 	for(int i=0; i<msgs.length; i++)
-	  midiOut.send(msgs[i],-1);
+	  if (midiOut != null)
+	    midiOut.send(msgs[i],-1);
       }
 
       ((ShortMessage)patchChange)
 	.setMessage( ShortMessage.PROGRAM_CHANGE, 
 		     pce.getChannel(), 
 		     pce.getPatch().getNumber(), 0 );
-      midiOut.send(patchChange, -1);
+      if (midiOut != null) 
+	midiOut.send(patchChange, -1);
     } catch (InvalidMidiDataException e) {
       System.out.println("Unable to send Program Change: " + pce);
       System.out.println(e);
@@ -133,7 +135,8 @@ public class QController implements Receiver {
 	try {
 	  out.setMessage( ShortMessage.CONTROL_CHANGE, 1, 
 			  0x50, sm.getData2() );
-	  midiOut.send(out, -1);
+	  if (midiOut != null) 
+	    midiOut.send(out, -1);
 	} catch (InvalidMidiDataException imde) {
 	  System.out.println("Unable to create mapped event for " + 
 			     MidiMessageParser.messageToString(midiMessage));
