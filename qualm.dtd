@@ -1,9 +1,10 @@
-XML DTD:
-<!ELEMENT qualm-data (title?,midi-channels, patches, cues)>
+<!ELEMENT qualm-data (title?,midi-channels, patches,
+	  default-trigger?, reverse-trigger?, setup-events?, cue+)>
 <!ELEMENT title (#PCDATA)>
 <!ELEMENT midi-channels (channel+)>
 <!ELEMENT channel (#PCDATA)>
-<!ATTLIST channel num CDATA #REQUIRED>
+<!ATTLIST channel 
+	  num CDATA #REQUIRED>
 <!--
      <midi-channels>
        <channel num="1">Main Keyboard</channel>
@@ -13,8 +14,9 @@ XML DTD:
 -->
 <!ELEMENT patches (patch+)>
 <!ELEMENT patch (#PCDATA)>
-<!ELEMENT num CDATA #REQUIRED>
-<!ELEMENT channel CDATA #IMPLIED>
+<!ATTLIST patch 
+	  num CDATA #REQUIRED
+	  channel CDATA #IMPLIED>
 <!--
      <patches>
        <patch num="1">Nice Piano</patch>
@@ -23,18 +25,34 @@ XML DTD:
      </patches>
 -->
 
-<!ELEMENT cues (cue+)>
-<!ELEMENT cue (trigger, event+)>
+<!ELEMENT default-trigger (trigger)>
+<!ELEMENT reverse-trigger (trigger)>
+<!ELEMENT setup-events (event+)>
+
+<!ELEMENT cue (trigger?, event+)>
 <!ATTLIST cue song CDATA #REQUIRED measure CDATA #REQUIRED>
 <!ELEMENT trigger (note-on|note-off|foot|clear)>
-<!ATTLIST delay CDATA #IMPLIED>
+<!ATTLIST trigger
+	  delay CDATA #IMPLIED>
 <!ELEMENT note-on EMPTY>
-<!ATTLIST note-on channel CDATA #REQUIRED note CDATA #REQUIRED>
-<!ATTLIST note-off channel CDATA #REQUIRED note CDATA #REQUIRED>
-<!ATTLIST foot channel CDATA #REQUIRED>
-<!ATTLIST clear channel CDATA #REQUIRED>
+<!ATTLIST note-on 
+	  channel CDATA #REQUIRED 
+	  note CDATA #REQUIRED>
+<!ELEMENT note-off EMPTY>
+<!ATTLIST note-off 
+	  channel CDATA #REQUIRED 
+	  note CDATA #REQUIRED>
+<!ELEMENT foot EMPTY>
+<!ATTLIST foot 
+	  channel CDATA #REQUIRED>
+<!ELEMENT clear EMPTY>
+<!ATTLIST clear 
+	  channel CDATA #REQUIRED 
+	  duration CDATA #REQUIRED>
 
 <!ELEMENT event (program-change)>
 <!ELEMENT program-change EMPTY>
-<!ELEMENT channel CDATA #REQUIRED patch CDATA #REQUIRED>
+<!ATTLIST program-change
+	  channel CDATA #REQUIRED 
+	  patch CDATA #REQUIRED>
 
