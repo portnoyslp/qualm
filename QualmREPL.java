@@ -84,10 +84,9 @@ public class QualmREPL extends Thread {
 	System.exit(0);
       }
 
-      if (line.toLowerCase().startsWith("send ")) {
-	String fname = line.substring(line.indexOf(" ")+1);
-	sendSysExcl( fname );
-
+      if (line.toLowerCase().equals("dump")) {
+	qc.getQData().dump();
+      
       } else if (line.toLowerCase().equals("reset")) {
 	// go back to the first cue
 	qc.switchToCue( "0.0" );
@@ -99,39 +98,6 @@ public class QualmREPL extends Thread {
     }
 
     readlineHandlesPrompt = false;
-  }
-
-  private void sendSysExcl( String filename ) {
-    // open the file, and create a byte array with the contents
-
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-    try {
-      FileInputStream fis;
-      fis = new FileInputStream( filename );
-      int b;
-      do {
-	b = fis.read();
-        if (b!=-1) baos.write( b );
-      } while ( b != -1 );
-      fis.close();
-      baos.close();
-
-    } catch (FileNotFoundException fnfe) {
-      System.out.println("Unable to open " + filename);
-      return;
-    } catch (IOException ioe) {
-      System.out.println("Unable to open " + filename);
-      return;
-    }      
-
-    try {
-      qc.sendSysExclusive( baos.toByteArray() );
-      System.out.println("Sent contents of " + filename );
-    } catch (IllegalArgumentException iae) {
-      System.out.println(filename + " did not contain a valid SysExcl message: " + iae.getMessage());
-    }
-    
   }
 
 }
