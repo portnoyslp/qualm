@@ -106,6 +106,7 @@
     <patch  num="93">Cel/Hp</patch>       <!-- celeste+36 -Db4 / Eb4+ -->
     <patch  num="94">Tmp/Str+Hn</patch>   <!-- Tmp8va -D2 / Str D#2+ / Hn D#2-F#3 / Hn8vb A4+ -->
     <patch num="105">Vibes</patch>
+    <patch num="106">Hp/Cel</patch>
 
     <!-- DRUM PATCHES : All are C4 (60) and D4 (62) -->
 
