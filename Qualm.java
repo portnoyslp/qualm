@@ -163,17 +163,25 @@ public class Qualm {
 	MidiDevice md = null;
 	try {
 	  md = MidiSystem.getMidiDevice(info);
-	} catch (MidiUnavailableException mue) { }
+	  	if (listPorts)
+	  		System.out.println("   [trans:" + md.getMaxTransmitters() + " rec:" + md.getMaxReceivers() + "]");
+	} catch (MidiUnavailableException mue) { System.out.println(info.getName() + " unavailable"); }
 
-	if (cName.indexOf(inputPort) != -1 ||
-	    info.getName().indexOf(inputPort) != -1 &&
-	    md!=null && md.getMaxTransmitters() > 0) 
+	if ((cName.indexOf(inputPort) != -1 ||
+	    info.getName().indexOf(inputPort) != -1) &&
+	    md!=null && md.getMaxTransmitters() != 0) {
 	  inputInfo = info;
+	  if (debugMIDI)
+	    System.out.println("Using " + inputInfo.getName() + " (" + cName + ") for input.");
+	}
 	
-	if (cName.indexOf(outputPort) != -1 ||
-	    info.getName().indexOf(outputPort) != -1 &&
-	    md!=null && md.getMaxReceivers() > 0) 
+	if ((cName.indexOf(outputPort) != -1 ||
+	    info.getName().indexOf(outputPort) != -1) &&
+	    md!=null && md.getMaxReceivers() != 0) { 
 	  outputInfo = info;
+	  if (debugMIDI)
+	  	System.out.println("Using " + outputInfo.getName() + " (" + cName + ") for output.");
+	}
       }
 
       if (listPorts) 
@@ -212,15 +220,22 @@ public class Qualm {
       System.exit(1);
     }
 
-    try {
       if (!skipMIDI) {
+      		try {      	
 	MidiDevice inDevice = MidiSystem.getMidiDevice( inputInfo );
-	MidiDevice outDevice = MidiSystem.getMidiDevice( outputInfo );
 	inDevice.open();
-	outDevice.open();
-	
 	midiIn = inDevice.getTransmitter();
+	} catch (MidiUnavailableException mdu1) {
+      			System.out.println("Unable to open device for input:" + mdu1);
+      		}
+      		
+      		try {
+	MidiDevice outDevice = MidiSystem.getMidiDevice( outputInfo );
+	outDevice.open();
 	midiOut = outDevice.getReceiver();
+	} catch (MidiUnavailableException mdu2) {
+      			System.out.println("Unable to open device for output:" + mdu2);
+      		}
       } // !skipMIDI
 
       // open a receiver with the right data file.
@@ -237,9 +252,7 @@ public class Qualm {
       if (!skipMIDI) 
 	midiIn.setReceiver( qc );
 
-    } catch (MidiUnavailableException mue) {
-      System.out.println(mue); 
-    }
+ 
   }
 
 }
