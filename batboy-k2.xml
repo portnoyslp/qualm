@@ -9,34 +9,80 @@
   </midi-channels>
   <patches>
     <patch   num="1">Nice Piano</patch>
-    <patch   num="2">TremStr/Str</patch>
-    <patch   num="3">Strs/FzzClav</patch>
-    <patch   num="4">Rhodes</patch>
+    <patch   num="2">TremStr/Str</patch>  <!-- -C#4 / F4+ -->
+    <patch   num="3">Strs/FzzClav</patch>      
+    <patch   num="4">Rhodes</patch>       
     <patch   num="5">Organ</patch>
     <patch   num="6">Strings</patch>
-    <patch   num="7">Rhodes/Harp</patch>
+    <patch   num="7">Rhodes/Harp</patch>  <!-- 15ma / C5+ --> 
     <patch   num="8">Bell Synth</patch>
     <patch   num="9">Harp</patch>
     <patch  num="10">Gospel Spin</patch>
     <patch  num="11">Horns</patch>
     <patch  num="12">Congas</patch>
+    <patch  num="13">Str/Pno/MBox</patch> <!-- -F#3 / P+MB 8va to G5 / MB loco G#5+ -->
+    <patch  num="14">RSS/Str/FlCl</patch> <!-- RSS to E4/ Bb4-E6 / 8vb G6+ -->
+    <patch  num="15">Str/Cl/Oboe</patch>  <!-- -Eb3 / C5- (ObC#5+) -->
+    <patch  num="16">Oboe</patch>
+    <patch  num="17">Horn/Str/Hrp</patch> <!-- Str all, Hn to F#4, Harp above -->
+    <patch  num="18">Harp+WarmStr</patch> <!-- Layered -->
+    <patch  num="19">Harp+pp Str</patch>  <!-- Layered -->
+    <patch  num="20">Tmp/Hrp/TStr</patch> <!-- Timp -D2, Harp G#2-D4 -->
+    <patch  num="21">Pno+Str/Vibs</patch> <!-- Vibes8vb F5+ -->
+    <patch  num="22">PBs+Vc/Ac+Cl</patch> <!-- PBs/Vc8va -Db3 / Ac/Cl D3+ -->
+    <patch  num="23">Horns/Cl+Str</patch> <!-- Hns8va -G#3 / G4+ -->
+    <patch  num="24">Fl+Str</patch>       <!-- Layered -->
+    <patch  num="25">Str/Cel/Vibe</patch> <!-- Str8va -D3,Cel Vib8vb Bb4+ -->
+    <patch  num="26">Spooky Piano</patch> 
+    <patch  num="27">Strngs+Brass</patch> <!-- Str double 8va -->
+    <patch  num="28">Organ+Picclo</patch> <!-- Layer, Picc8va -->
+    <patch  num="29">Timp/Strings</patch> <!-- Timp8va to G1 -->
+    <patch  num="30">Hns/Harp+Fl</patch>  <!-- -Db4 / D4+ -->
+    <patch  num="31">Harmon Tpt</patch>
+    <patch  num="32">Strngs+Xylo</patch>  <!-- Xylo8va -->
+    <patch  num="33">Celesta</patch>
+    <patch  num="34">Rhodes/Str</patch>   <!-- Rhodes thru; -D6/8va above/ -->
+    <patch  num="35">Hns/Fl+Xylo</patch>  <!-- -Db4 / D4+ -->
+    <patch  num="36">PzBs/TStr/Xy</patch> <!-- Str full + BsE1-F1 / XyloEb4+ -->
+    <patch  num="37">Tmp/Tubas</patch>    <!-- Tmp G1 only -->
+    <patch  num="38">Str+Fl+Xylo</patch>  <!-- Layered -->
+    <patch  num="39">Tmp/Saxes</patch>    <!-- Tmp D2-C3 -->
+    <patch  num="40">Big Brass</patch>    <!-- doubled 8va -->
+    <patch  num="41">Timp/FrHorns</patch> <!-- Timp8va E1-F1 -->
+    <patch  num="42">Warm Pad</patch>
+    <patch  num="43">Hn/StrHrpCel</patch> <!-- Hn -D4 / Cel8va -->
+    <patch  num="44">Harp+Celeste</patch> <!-- Cel 8va -->
+    <patch  num="45">Glassy Pad</patch>
+    <patch  num="46">Str/TStr/Vln</patch> <!-- -E4/TS8va -F#5/ Vln -->
+    <patch  num="47">Rhodes+Reeds</patch>
+    <patch  num="48">Clarinet+Bsn</patch> 
+    <patch  num="49">Cl+Bsn/TS+Fl</patch> <!-- -Ab4 / A4+ -->
+    <patch  num="50">Pizz. Violin</patch>
+    <patch  num="51">Vc/FrHns+Str</patch> <!-- -Eb3 / F3+ -->
+    <patch  num="52">Hp+(Str/Cel)</patch>  <!-- Hp thru / Str -Bb6 / Cel C6+ -->
+    <patch  num="53">TSt/Marc/Str</patch> <!-- TSt -E3 / dbl8va F4-F5 / TStr A5 -->
+    <patch  num="54">TStr/Harmnic</patch> <!-- TStr -C6 / D6+ -->
+    <patch  num="55">sfz Str/Chim</patch> <!-- +Chim G4 above -->
+    <patch  num="56">PipeOrg+Str</patch>  <!-- Layered -->
+    <patch  num="57">Tmp/TSt/Marc</patch> <!-- TmpRoll G1 / TS 15ma / Marc8vb E4+ -->
+    <patch  num="58">TStr+Horns</patch>   <!-- Horns sfp -->
     <patch num="127">Artoo</patch>
   </patches>
   <default-trigger>
-    <trigger><control-change channel="3" control="4" threshold="10"/></trigger>
+    <trigger><note-on channel="3" note="0"/></trigger>
   </default-trigger>
   <reverse-trigger>
     <trigger><note-on channel="1" note="c-1"/></trigger>
   </reverse-trigger>
   <setup-events>
-    <event><program-change channel="1" patch="1"/></event>
+    <event><program-change channel="1" patch="2"/></event>
     <event><program-change channel="2" patch="5"/></event>
   </setup-events>
 
   <cue song="1a" measure="10">
     <event><program-change channel="1" patch="3"/></event>
   </cue>
-  <cue song="2" measure="17">
+  <cue song="2" measure="35">
     <event><program-change channel="1" patch="4"/></event>
   </cue>
   <cue song="2" measure="102">
@@ -46,8 +92,357 @@
     <event><program-change channel="1" patch="7"/></event>
   </cue>
   <cue song="3" measure="16">
-    <trigger><note-on channel="2" note="g2"/></trigger>
     <event><program-change channel="1" patch="8"/></event>
+  </cue>
+  <cue song="3" measure="42">
+    <event><program-change channel="1" patch="34"/></event>
+  </cue>
+  <cue song="3" measure="79">
+    <event><program-change channel="1" patch="8"/></event>
+  </cue>
+  <cue song="3" measure="91">
+    <event><program-change channel="1" patch="4"/></event>
+  </cue>
+  <cue song="3" measure="108">
+    <event><program-change channel="1" patch="2"/></event>
+  </cue>
+  <cue song="4" measure="1">
+    <event><program-change channel="1" patch="13"/></event>
+    <event><program-change channel="2" patch="14"/></event>
+  </cue>
+  <cue song="5" measure="15">
+    <event><program-change channel="1" patch="127"/></event>
+    <event><program-change channel="2" patch="??"/></event>
+  </cue>
+  <cue song="6" measure="1">
+    <event><program-change channel="1" patch="1"/></event>
+  </cue>
+  <cue song="6" measure="9">
+    <event><program-change channel="1" patch="9"/></event>
+  </cue>
+  <cue song="6" measure="22">
+    <event><program-change channel="1" patch="15"/></event>
+    <event><program-change channel="2" patch="16"/></event>
+  </cue>
+  <cue song="6" measure="57">
+    <event><program-change channel="1" patch="6"/></event>
+    <event><program-change channel="2" patch="18"/></event>
+  </cue>
+  <cue song="6" measure="66">
+    <event><program-change channel="1" patch="17"/></event>
+  </cue>
+  <cue song="6" measure="85">
+    <event><program-change channel="1" patch="6"/></event>
+    <event><program-change channel="2" patch="19"/></event>
+  </cue>
+  <cue song="7" measure="1">
+    <event><program-change channel="1" patch="1"/></event>
+  </cue>
+  <cue song="8" measure="1">
+    <event><program-change channel="1" patch="20"/></event>
+  </cue>
+  <cue song="8" measure="26">
+    <event><program-change channel="1" patch="21"/></event>
+  </cue>
+  <cue song="8" measure="40">
+    <event><program-change channel="1" patch="22"/></event>
+    <event><program-change channel="2" patch="18"/></event>
+  </cue>
+  <cue song="8" measure="71">
+    <event><program-change channel="1" patch="23"/></event>
+    <event><program-change channel="2" patch="24"/></event>
+  </cue>
+  <cue song="8" measure="90">
+    <event><program-change channel="1" patch="25"/></event>
+  </cue>
+  <cue song="8" measure="99">
+    <event><program-change channel="1" patch="26"/></event>
+  </cue>
+  <cue song="8" measure="103">
+    <event><program-change channel="1" patch="18"/></event>
+  </cue>
+  <cue song="8" measure="106">
+    <event><program-change channel="1" patch="27"/></event>
+    <event><program-change channel="2" patch="28"/></event>
+  </cue>
+  <cue song="8" measure="127">
+    <event><program-change channel="1" patch="27"/></event>
+    <event><program-change channel="2" patch="58"/></event>
+  </cue>
+  <cue song="8" measure="133">
+    <event><program-change channel="1" patch="29"/></event>
+  </cue>
+  <cue song="9" measure="24">
+    <event><program-change channel="1" patch="6"/></event>
+    <event><program-change channel="2" patch="5"/></event>
+  </cue>
+  <cue song="10" measure="1">
+    <event><program-change channel="1" patch="30"/></event>
+    <event><program-change channel="2" patch="31"/></event>
+  </cue>
+  <cue song="10" measure="21">
+    <event><program-change channel="1" patch="35"/></event>
+    <event><program-change channel="2" patch="31"/></event>
+  </cue>
+  <cue song="10" measure="77">
+    <event><program-change channel="1" patch="32"/></event>
+    <event><program-change channel="2" patch="33"/></event>
+  </cue>
+  <cue song="10" measure="99">
+    <event><program-change channel="1" patch="36"/></event>
+    <event><program-change channel="2" patch="9"/></event>
+  </cue>
+  <cue song="10" measure="117">
+    <event><program-change channel="1" patch="37"/></event>
+    <event><program-change channel="2" patch="38"/></event>
+  </cue>
+  <cue song="10" measure="134">
+    <event><program-change channel="1" patch="11"/></event>
+    <event><program-change channel="2" patch="6"/></event>
+  </cue>
+  <cue song="10" measure="158">
+    <event><program-change channel="1" patch="39"/></event>
+    <event><program-change channel="2" patch="6"/></event>
+  </cue>
+  <cue song="10" measure="170">
+    <event><program-change channel="1" patch="29"/></event>
+    <event><program-change channel="2" patch="40"/></event>
+  </cue>
+  <cue song="10" measure="182">
+    <event><program-change channel="1" patch="41"/></event>
+    <event><program-change channel="2" patch="40"/></event>
+  </cue>
+  <cue song="11" measure="1">
+    <event><program-change channel="1" patch="4"/></event>
+    <event><program-change channel="2" patch="42"/></event>
+  </cue>
+  <cue song="11" measure="19">
+    <event><program-change channel="1" patch="4"/></event>
+    <event><program-change channel="2" patch="5"/></event>
+  </cue>
+  <cue song="12" measure="1">
+    <event><program-change channel="1" patch="43"/></event>
+  </cue>
+  <cue song="12" measure="5">
+    <event><program-change channel="1" patch="33"/></event>
+    <event><program-change channel="2" patch="9"/></event>
+  </cue>
+  <cue song="12" measure="22">
+    <event><program-change channel="1" patch="27"/></event>
+    <event><program-change channel="2" patch="44"/></event>
+  </cue>
+  <cue song="12" measure="29">
+    <event><program-change channel="1" patch="45"/></event>
+  </cue>
+  <cue song="13" measure="1">
+    <event><program-change channel="1" patch="46"/></event>
+  </cue>
+  <cue song="13" measure="43">
+    <event><program-change channel="1" patch="47"/></event>
+  </cue>
+  <cue song="13" measure="81">
+    <event><program-change channel="1" patch="49"/></event>
+    <event><program-change channel="2" patch="50"/></event>
+  </cue>
+  <cue song="13" measure="65">
+    <event><program-change channel="1" patch="49"/></event>
+    <event><program-change channel="2" patch="48"/></event>
+  </cue>
+  <cue song="13" measure="69">
+    <event><program-change channel="1" patch="52"/></event>
+  </cue>
+  <cue song="13" measure="78">
+    <event><program-change channel="1" patch="51"/></event>
+  </cue>
+  <cue song="13" measure="91">
+    <event><program-change channel="1" patch="53"/></event>
+  </cue>
+  <cue song="14" measure="1">
+    <event><program-change channel="1" patch="54"/></event>
+  </cue>
+  <cue song="15" measure="1">
+    <event><program-change channel="1" patch="1"/></event>
+    <event><program-change channel="2" patch="54"/></event>
+  </cue>
+  <cue song="15" measure="27">
+    <event><program-change channel="1" patch="6"/></event>
+    <event><program-change channel="2" patch="5"/></event>
+  </cue>
+  <cue song="15" measure="91">
+    <event><program-change channel="1" patch="6"/></event>
+    <event><program-change channel="2" patch="5"/></event>
+  </cue>
+  <cue song="15a" measure="1">
+    <event><program-change channel="1" patch="1?"/></event>
+  </cue>
+  <cue song="15a" measure="9">
+    <event><program-change channel="1" patch="6"/></event>
+    <event><program-change channel="2" patch="5"/></event>
+  </cue>
+  <cue song="15a" measure="53">
+    <event><program-change channel="1" patch="55"/></event>
+    <event><program-change channel="2" patch="56"/></event>
+  </cue>
+  <cue song="15a" measure="65">
+    <event><program-change channel="1" patch="57"/></event>
+    <event><program-change channel="2" patch="9"/></event>
+  </cue>
+  <cue song="15a" measure="80">
+    <event><program-change channel="1" patch="57"/></event>
+  </cue>
+  <cue song="16" measure="1">
+    <event><program-change channel="1" patch="52"/></event>
+    <event><program-change channel="2" patch="10"/></event>
+  </cue>
+  <!-- <cue song="17" measure="13"></cue> -->
+  <cue song="17" measure="31">
+    <event><program-change channel="1" patch="6"/></event>
+  </cue>
+  <!-- <cue song="17" measure="43"></cue> -->
+  <!-- <cue song="17" measure="60"></cue> -->
+  <!-- <cue song="17" measure="66"></cue> -->
+  <cue song="17" measure="80">
+    <event><program-change channel="1" patch="11"/></event>
+  </cue>
+  <!-- <cue song="17" measure="82"></cue> -->
+  <!-- <cue song="17" measure="96"></cue> -->
+  <!-- <cue song="18" measure="1"></cue> -->
+  <cue song="18" measure="11">
+    <event><program-change channel="2" patch="5"/></event>
+  </cue>
+  <cue song="18a" measure="1">
+    <event><program-change channel="2" patch="10"/></event>
+  </cue>
+  <!-- <cue song="19" measure="a"></cue> -->
+  <!-- <cue song="19" measure="n"></cue> -->
+  <cue song="19" measure="t">
+    <event><program-change channel="1" patch="2?"/></event>
+  </cue>
+  <cue song="19" measure="13">
+    <event><program-change channel="1" patch="11"/></event>
+  </cue>
+  <!-- <cue song="19" measure="24"></cue> -->
+  <!-- <cue song="19" measure="31"></cue> -->
+  <cue song="20" measure="1">
+    <event><program-change channel="2" patch="5"/></event>
+  </cue>
+  <cue song="20" measure="6">
+    <event><program-change channel="2" patch="5"/></event>
+  </cue>
+  <cue song="21" measure="b">
+    <event><program-change channel="2" patch="9"/></event>
+  </cue>
+  <!-- <cue song="21" measure="6"></cue> -->
+  <!-- <cue song="21" measure="12"></cue> -->
+  <cue song="21" measure="25">
+    <event><program-change channel="1" patch="1?"/></event>
+  </cue>
+  <!-- <cue song="21" measure="47"></cue> -->
+  <!-- <cue song="21" measure="58"></cue> -->
+  <!-- <cue song="21" measure="70"></cue> -->
+  <!-- <cue song="21" measure="83"></cue> -->
+  <cue song="21a" measure="1">
+    <event><program-change channel="1" patch="6"/></event>
+  </cue>
+  <!-- <cue song="22" measure="8"></cue> -->
+  <!-- <cue song="22" measure="21"></cue> -->
+  <cue song="22" measure="44">
+    <event><program-change channel="2" patch="12"/></event>
+  </cue>
+  <cue song="22" measure="56">
+    <event><program-change channel="1" patch="11"/></event>
+    <event><program-change channel="2" patch="12"/></event>
+  </cue>
+  <!-- <cue song="22" measure="61"></cue> -->
+  <!-- <cue song="22" measure="67"></cue> -->
+  <!-- <cue song="22" measure="77"></cue> -->
+  <cue song="22" measure="85">
+    <event><program-change channel="1" patch="6"/></event>
+    <event><program-change channel="2" patch="5"/></event>
+  </cue>
+  <!-- <cue song="22" measure="109"></cue> -->
+  <cue song="22" measure="113">
+    <event><program-change channel="1" patch="1"/></event>
+  </cue>
+  <!-- <cue song="22a" measure="1"></cue> -->
+  <!-- <cue song="22a" measure="5"></cue> -->
+  <!-- <cue song="22a" measure="10"></cue> -->
+  <!-- <cue song="22a" measure="21"></cue> -->
+  <!-- <cue song="22" measure="29"></cue> -->
+  <!-- <cue song="22" measure="34"></cue> -->
+  <!-- <cue song="22" measure="36"></cue> -->
+  <!-- <cue song="23" measure="1"></cue> -->
+  <!-- <cue song="23" measure="14"></cue> -->
+  <cue song="23" measure="18">
+    <event><program-change channel="2" patch="5"/></event>
+  </cue>
+  <!-- <cue song="23" measure="31"></cue> -->
+  <!-- <cue song="24" measure="1"></cue> -->
+  <cue song="24" measure="13">
+    <event><program-change channel="1" patch="6"/></event>
+  </cue>
+  <!-- <cue song="24" measure="27"></cue> -->
+  <!-- <cue song="24" measure="38"></cue> -->
+  <!-- <cue song="24" measure="46"></cue> -->
+  <cue song="24" measure="65">
+    <event><program-change channel="1" patch="9"/></event>
+  </cue>
+  <cue song="24" measure="73">
+    <event><program-change channel="1" patch="6"/></event>
+  </cue>
+  <!-- <cue song="24" measure="82"></cue> -->
+  <!-- <cue song="25" measure="1"></cue> -->
+  <!-- <cue song="25" measure="3"></cue> -->
+  <!-- <cue song="25" measure="33"></cue> -->
+  <cue song="26" measure="1">
+    <event><program-change channel="1" patch="2"/></event>
+  </cue>
+  <!-- <cue song="26" measure="6"></cue> -->
+  <!-- <cue song="26" measure="14"></cue> -->
+  <!-- <cue song="26" measure="26"></cue> -->
+  <!-- <cue song="26" measure="30"></cue> -->
+  <!-- <cue song="26" measure="53"></cue> -->
+  <!-- <cue song="26" measure="58"></cue> -->
+  <!-- <cue song="26a" measure="1"></cue> -->
+  <!-- <cue song="27" measure="3"></cue> -->
+  <!-- <cue song="27" measure="19"></cue> -->
+  <!-- <cue song="27" measure="29"></cue> -->
+  <!-- <cue song="27" measure="56"></cue> -->
+  <!-- <cue song="27" measure="58"></cue> -->
+  <!-- <cue song="27" measure="76"></cue> -->
+  <!-- <cue song="27" measure="91"></cue> -->
+  <!-- <cue song="27" measure="111"></cue> -->
+  <!-- <cue song="27" measure="127"></cue> -->
+  <!-- <cue song="27" measure="136"></cue> -->
+  <!-- <cue song="27" measure="145"></cue> -->
+  <!-- <cue song="27" measure="156"></cue> -->
+  <cue song="28" measure="1">
+    <event><program-change channel="1" patch="6"/></event>
+  </cue>
+  <!-- <cue song="28" measure="12"></cue> -->
+  <cue song="28" measure="32">
+    <event><program-change channel="1" patch="6"/></event>
+    <event><program-change channel="2" patch="11"/></event>
+  </cue>
+  <cue song="28" measure="55">
+    <event><program-change channel="1" patch="6"/></event>
+    <event><program-change channel="2" patch="9"/></event>
+  </cue>
+  <!-- <cue song="28" measure="69"></cue> -->
+  <!-- <cue song="28" measure="78"></cue> -->
+  <cue song="28" measure="91">
+    <event><program-change channel="1" patch="6"/></event>
+    <event><program-change channel="2" patch="11"/></event>
+  </cue>
+  <cue song="28a" measure="1">
+    <event><program-change channel="2" patch="11"/></event>
+  </cue>
+  <!-- <cue song="28a" measure="10"></cue> -->
+  <!-- <cue song="29" measure="1"></cue> -->
+  <!-- <cue song="29" measure="17"></cue> -->
+  <!-- <cue song="29" measure="24"></cue> -->
+  <cue song="30" measure="2">
+    <event><program-change channel="2" patch="5"/></event>
   </cue>
 
 </qualm-data>
