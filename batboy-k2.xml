@@ -112,7 +112,7 @@
   </cue>
   <cue song="5" measure="15">
     <event><program-change channel="1" patch="127"/></event>
-    <event><program-change channel="2" patch="??"/></event>
+<!--    <event><program-change channel="2" patch="??"/></event> -->
   </cue>
   <cue song="6" measure="1">
     <event><program-change channel="1" patch="1"/></event>
@@ -273,7 +273,7 @@
     <event><program-change channel="2" patch="5"/></event>
   </cue>
   <cue song="15a" measure="1">
-    <event><program-change channel="1" patch="1?"/></event>
+<!--    <event><program-change channel="1" patch="1?"/></event> -->
   </cue>
   <cue song="15a" measure="9">
     <event><program-change channel="1" patch="6"/></event>
@@ -316,7 +316,7 @@
   <!-- <cue song="19" measure="a"></cue> -->
   <!-- <cue song="19" measure="n"></cue> -->
   <cue song="19" measure="t">
-    <event><program-change channel="1" patch="2?"/></event>
+<!--     <event><program-change channel="1" patch="2?"/></event> -->
   </cue>
   <cue song="19" measure="13">
     <event><program-change channel="1" patch="11"/></event>
@@ -335,7 +335,7 @@
   <!-- <cue song="21" measure="6"></cue> -->
   <!-- <cue song="21" measure="12"></cue> -->
   <cue song="21" measure="25">
-    <event><program-change channel="1" patch="1?"/></event>
+<!--     <event><program-change channel="1" patch="1?"/></event> -->
   </cue>
   <!-- <cue song="21" measure="47"></cue> -->
   <!-- <cue song="21" measure="58"></cue> -->
