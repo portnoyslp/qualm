@@ -75,7 +75,14 @@ public class QAdvancer {
   public Collection reversePatch() {
     // find previous patch
     SortedSet cueset = qdata.getCues();
-    SortedSet head = cueset.headSet ( currentCue );
+    SortedSet head;
+    try { 
+	head = cueset.headSet ( currentCue ) ;
+    } 
+    catch (NullPointerException npe) {
+	return switchToMeasure( "0.0" );
+    }
+
     if (head.size() == 0) {
       return switchToMeasure( "0.0" );
     } else {
