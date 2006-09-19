@@ -21,6 +21,7 @@ public class EventTemplate {
     t.extra1 = note;
     return t;
   }
+
   public static EventTemplate createControlEventTemplate( int ch, String ctrl, 
 							  String thresh ) {
     EventTemplate t = new EventTemplate();
@@ -30,7 +31,39 @@ public class EventTemplate {
     try {
       t.extra1 = Integer.parseInt(ctrl);
     } catch (NumberFormatException nfe) {
-      /* XXX Should parse name into integer */
+      if (ctrl.equals("modulation"))
+	t.extra1 = 1;
+      else if (ctrl.equals("breath")) 
+	t.extra1 = 2;
+      else if (ctrl.equals("foot"))
+	t.extra1 = 4;
+      else if (ctrl.equals("volume"))
+	t.extra1 = 7;
+      else if (ctrl.equals("balance"))
+	t.extra1 = 8;
+      else if (ctrl.equals("pan"))
+	t.extra1 = 10;
+      else if (ctrl.equals("expression"))
+	t.extra1 = 11;
+      else if (ctrl.equals("effect 1"))
+	t.extra1 = 12;
+      else if (ctrl.equals("effect 2"))
+	t.extra1 = 13;
+      else if (ctrl.equals("damper"))
+	t.extra1 = 64;
+      else if (ctrl.equals("sustain"))
+	t.extra1 = 64;
+      else if (ctrl.equals("portamento"))
+	t.extra1 = 65;
+      else if (ctrl.equals("sustenuto"))
+	t.extra1 = 66;
+      else if (ctrl.equals("soft"))
+	t.extra1 = 67;
+      else if (ctrl.equals("legato"))
+	t.extra1 = 68;
+      else 
+	throw new IllegalArgumentException("Cannot parse control change type '" +
+					   ctrl + "'");
     }
 
     if (thresh != null) 

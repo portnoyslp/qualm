@@ -3,12 +3,14 @@
 <!ELEMENT title (#PCDATA)>
 <!ELEMENT midi-channels (channel+)>
 <!ELEMENT channel (#PCDATA)>
-<!ATTLIST channel 
+<!ATTLIST channel
+	  device-type CDATA #IMPLIED
 	  num (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED>
 <!--
      <midi-channels>
        <channel num="1">Main Keyboard</channel>
-       <channel num="2">Auxiliary Keyboard</channel>
+       <channel num="2" 
+		device-type="Roland JV-1080">Auxiliary Keyboard</channel>
        <channel num="10">Drum Kit</channel>
      </midi-channels>
 -->
@@ -31,6 +33,14 @@
 <!ELEMENT map-events (map-from,map-to)>
 <!ELEMENT map-from (note-on|note-off|control-change|program-change)>
 <!ELEMENT map-to (note-on|note-off|control-change|program-change)>
+
+<!-- 
+     <map-events>
+       <map-from><control-change channel="1" control="soft"/></map-from>
+       <map-to><control-change channel="2" control="soft"/></map-to>
+     </map-events>
+-->
+
 <!ELEMENT events (note-on|note-off|control-change|program-change)+>
 
 <!ELEMENT cue (trigger|events|map-events)*>

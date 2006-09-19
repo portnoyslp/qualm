@@ -56,6 +56,7 @@ public class QDataLoader extends DefaultHandler {
   List eventSet = new ArrayList();
   List triggers = new ArrayList();
   List defaultTriggers = new ArrayList();
+  boolean reverseTrigger = false;
   String content;
   Cue curQ;
   EventTemplate curTemplate;
@@ -83,7 +84,7 @@ public class QDataLoader extends DefaultHandler {
 	
 	if (attributes.getValue("bank") != null) {
 	  currentAttribute = "bank";
-	  patch.setBank( Integer.parseInt( attributes.getValue("bank") ));
+	  patch.setBank( attributes.getValue("bank") );
 	}
      
 
@@ -101,6 +102,13 @@ public class QDataLoader extends DefaultHandler {
 	String patchID = attributes.getValue("patch");
 	eventSet.add(new ProgramChangeEvent(ch, qdata.lookupPatch(patchID)));
 	
+      } else if (qName.equals("trigger")) {
+	currentAttribute="reverse";
+	String rev = attributes.getValue("reverse");
+	reverseTrigger = false;
+	if (rev != null && !rev.equals("false"))
+	  reverseTrigger = true;
+
 	// TRIGGERS
       } else if (qName.equals("note-on")) {
 	currentAttribute = "channel";
@@ -150,12 +158,12 @@ public class QDataLoader extends DefaultHandler {
       patch.setDescription(content);
       qdata.addPatch( patch );
       
-    } else if (qName.equals("setup-events")) {
+    } else if (qName.equals("start-events")) {
       qdata.setSetupEvents(eventSet);
       eventSet = new ArrayList();
 
     } else if (qName.equals("trigger")) {
-      Trigger t = new Trigger(curTemplate);
+      Trigger t = new Trigger(curTemplate,reverseTrigger);
       triggers.add(t);
 
     } else if (qName.equals( "cue" )) {
@@ -169,13 +177,10 @@ public class QDataLoader extends DefaultHandler {
       eventSet = new ArrayList();
       qdata.addCue( curQ );
 
-    } else if (qName.equals("default-trigger")) {
+    } else if (qName.equals("global")) {
       defaultTriggers = triggers;
       triggers = new ArrayList();
 
-    } else if (qName.equals("reverse-trigger")) {
-      qdata.setReverseTriggers(triggers);
-      triggers = new ArrayList();
     }
 
   }

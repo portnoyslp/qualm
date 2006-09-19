@@ -51,7 +51,7 @@ public class QController implements Receiver {
 
     try {
       Patch patch = pce.getPatch();
-      if (patch.getBank() != -1) {
+      if (patch.getBank() != null) {
 	ShortMessage[] msgs = 
 	  BankSelection.RolandBankSelect( pce.getChannel(),
 					  patch.getBank() );
@@ -74,9 +74,8 @@ public class QController implements Receiver {
   
   private void setupTriggers() {
     // set up triggers
-    triggers = new HashMap();
+    triggers = new ArrayList();
     addCurrentTriggers();
-    addReverseTriggers();
     buildTriggerCache();
   }
 
@@ -114,9 +113,11 @@ public class QController implements Receiver {
 
   public void advancePatch() {
     sendEvents( advancer.advancePatch() );
+    setupTriggers();
   }
   public void reversePatch() {
     sendEvents( advancer.reversePatch() );
+    setupTriggers();
   }
 
   public void send(MidiMessage midiMessage, long l) {
@@ -155,20 +156,12 @@ public class QController implements Receiver {
 	triggered = true;
 	setTimeOut();
 
-	String action = (String)triggers.get(trig);
-	
 	// call the appropriate action
-	if (action.equals("advance")) {
-	  advancePatch();
-	  setupTriggers();
-	}
-	else if (action.equals( "reverse" )) {
+	if (trig.getReverse()) 
 	  reversePatch();
-	  setupTriggers();
-	}
-	else 
-	  throw new RuntimeException("Unknown action " + action);
-
+	else
+	  advancePatch();
+	
       }
       if (triggered) break;
     }
@@ -177,24 +170,16 @@ public class QController implements Receiver {
 
 
   Trigger cachedTriggers[] = {};
-  Map triggers;
+  List triggers;
 
   private void buildTriggerCache() {
     List l = new ArrayList();
-    l.addAll(triggers.keySet());
+    l.addAll(triggers);
     cachedTriggers = (Trigger[]) l.toArray(new Trigger[]{});
   }
 
-  private void addTrigger( Trigger t, String action ) {
-    triggers.put(t, action);
-  }
-
-  private void addReverseTriggers() {
-    Iterator iter = advancer.getQData().getReverseTriggers().iterator();
-    while (iter.hasNext()) {
-      Trigger t = (Trigger)iter.next();
-      addTrigger( t, "reverse" );
-    }
+  private void addTrigger( Trigger t ) {
+    triggers.add(t);
   }
 
   private void addCurrentTriggers() {
@@ -203,7 +188,7 @@ public class QController implements Receiver {
       Iterator iter = cue.getTriggers().iterator();
       while(iter.hasNext()) {
 	Trigger t = (Trigger)iter.next();
-	addTrigger( t, "advance" );
+	addTrigger( t );
       }
     }
   }

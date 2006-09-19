@@ -8,13 +8,13 @@
     <channel num="4">Drum Kit</channel>
   </midi-channels>
   <patches>
-    <patch   num="1" id="P1">Nice Piano</patch>
-    <patch   num="2" id="P2">TremStr/Str</patch>
-    <patch   num="3" id="P3">Strs/FzzClav</patch>      
-    <patch   num="4" id="P4">Rhodes</patch>       
-    <patch   num="5" id="P5">Organ</patch>
-    <patch  num="95" id="P95">LKB/TmpF</patch>
-    <patch  num="96" id="P96">TmpG/TmpD</patch>
+    <patch id="P1" bank="User" num="1">Nice Piano</patch>
+    <patch id="P2" bank="User" num="2">TremStr/Str</patch>
+    <patch id="P3" bank="User" num="3">Strs/FzzClav</patch>      
+    <patch id="P4" bank="PrA"  num="15">Rhodes</patch>       
+    <patch id="P5" bank="User" num="5">Organ</patch>
+    <patch id="P95" bank="User" num="95">LKB/TmpF</patch>
+    <patch id="P96" bank="User" num="96">TmpG/TmpD</patch>
   </patches>
   <global>
     <trigger><note-on channel="3" note="0"/></trigger>
@@ -38,17 +38,17 @@
     <events><program-change channel="1" patch="P1"/></events>
   </cue>
   <cue song="2" measure="102">
-    <events><program-change channel="1" patch="P5"/></events>
+    <events><program-change channel="1" patch="P4"/></events>
   </cue>
   <cue song="3" measure="1">
     <events>
       <program-change channel="4" patch="P96"/>
-      <program-change channel="1" patch="P3"/>
+      <program-change channel="1" patch="P5"/>
     </events>
   </cue>
   <cue song="3" measure="16">
     <trigger><note-on channel="2" note="g2"/></trigger>
-    <events><program-change channel="2" patch="P4"/></events>
+    <events><program-change channel="2" patch="P3"/></events>
   </cue>
 
 </qualm-data>

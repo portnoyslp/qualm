@@ -2,7 +2,7 @@ package qualm;
 
 public class Patch {
   String id = null;
-  int bank = -1;
+  String bank = null;
   int number = -1;
   String description;
 
@@ -31,7 +31,7 @@ public class Patch {
    * Get the Bank value.
    * @return the Bank value.
    */
-  public int getBank() {
+  public String getBank() {
     return bank;
   }
 
@@ -39,7 +39,7 @@ public class Patch {
    * Set the Bank value.
    * @param newBank The new Bank value.
    */
-  public void setBank(int newBank) {
+  public void setBank(String newBank) {
     this.bank = newBank;
   }
 
