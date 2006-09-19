@@ -21,8 +21,8 @@
     <trigger><note-on channel="1" note="c8"/></trigger>
     <trigger reverse="yes"><note-on channel="1" note="a0"/></trigger>
     <map-events>
-      <map-from><control-change channel="1" control="soft"/></map-from>
-      <map-to><control-change channel="2" control="soft"/></map-to>
+      <map-from><control-change channel="1" control="damper"/></map-from>
+      <map-to><control-change channel="2" control="80"/></map-to>
     </map-events>
   </global>
   <start-events>

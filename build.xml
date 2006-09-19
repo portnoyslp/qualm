@@ -10,7 +10,7 @@
 	  description="Build the system"/>
 
   <target name="compile">
-    <javac debug="true" srcdir=".">
+    <javac debug="true" source="1.4" srcdir=".">
       <classpath refid="classpath"/>
     </javac>
   </target>
