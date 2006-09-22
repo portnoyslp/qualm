@@ -8,6 +8,7 @@ public class Cue implements Comparable {
   String measure;
   Collection triggers;
   Collection events;
+  Collection eventMaps;
 
   public Cue( String s, String m ) { song=s; measure=m; }
   public Cue( String ts ) { 
@@ -24,6 +25,9 @@ public class Cue implements Comparable {
 
   public Collection getTriggers() { return triggers; }
   public void setTriggers(Collection t) { triggers=t; }
+
+  public Collection getEventMaps() { return eventMaps; }
+  public void setEventMaps(Collection t) { eventMaps=t; }
 
   public Collection getEvents() { return events; }
   public void setEvents(Collection t) { events=t; }

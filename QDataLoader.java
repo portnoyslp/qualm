@@ -55,12 +55,15 @@ public class QDataLoader extends DefaultHandler {
   String[] auxValue = new String[2];
   List eventSet = new ArrayList();
   List triggers = new ArrayList();
-  List defaultTriggers = new ArrayList();
+  List globalTriggers = new ArrayList();
+  List globalMaps = new ArrayList();
   boolean reverseTrigger = false;
   String content;
   Cue curQ;
   EventTemplate curTemplate;
   Patch patch;
+  EventMapper curMapper = null;
+  List eventMaps = new ArrayList();
   
   public void startElement(String uri, String localName, 
 			   String qName, Attributes attributes) 
@@ -134,7 +137,13 @@ public class QDataLoader extends DefaultHandler {
 	   currentAttribute = "duration";
 	   int d = Integer.parseInt(attributes.getValue("duration")) - 1;
 	   curTemplate = EventTemplate.createClearEventTemplate( ch, d ) ); */
+
+
+      } else if (qName.equals("map-events")) {
+	curMapper = new EventMapper();
       }
+
+   
     } catch (NumberFormatException nfe) {
       throw new NumberFormatException( "Could not parse `" + currentAttribute 
 				       + "' attribute for " + currentElement);
@@ -166,21 +175,37 @@ public class QDataLoader extends DefaultHandler {
       Trigger t = new Trigger(curTemplate,reverseTrigger);
       triggers.add(t);
 
+    } else if (qName.equals("map-from")) {
+      curMapper.setFromTemplate(curTemplate);
+    } else if (qName.equals("map-to")) {
+      curMapper.setFromTemplate(curTemplate);
+    } else if (qName.equals("map-events")) {
+      eventMaps.add(curMapper);
+
     } else if (qName.equals( "cue" )) {
       ArrayList l = new ArrayList();
-      l.addAll(defaultTriggers);
+      l.addAll(globalTriggers);
       l.addAll(triggers);
       curQ.setTriggers ( l );
 
-      triggers = new ArrayList();
+      ArrayList em = new ArrayList();
+      em.addAll(globalMaps);
+      em.addAll(eventMaps);
+      curQ.setEventMaps(em);
+
       curQ.setEvents(eventSet);
+
+      triggers = new ArrayList();
+      eventMaps = new ArrayList();
       eventSet = new ArrayList();
+
       qdata.addCue( curQ );
 
     } else if (qName.equals("global")) {
-      defaultTriggers = triggers;
+      globalTriggers = triggers;
+      globalMaps = eventMaps;
       triggers = new ArrayList();
-
+      eventMaps = new ArrayList();
     }
 
   }

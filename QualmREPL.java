@@ -92,7 +92,13 @@ public class QualmREPL extends Thread {
       } else if (line.toLowerCase().equals("reset")) {
 	// go back to the first cue
 	qc.switchToCue( "0.0" );
+
+      } else if (line.toLowerCase().equals("showmidi")) {
+	qc.setDebugMIDI(true);
+      } else if (line.toLowerCase().equals("unshowmidi")) {
+	qc.setDebugMIDI(false);
 	
+
       } else {
 	// go to the cue number named in the line
 	qc.switchToCue( line );
