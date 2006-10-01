@@ -54,7 +54,8 @@ public class QController implements Receiver {
       if (patch.getBank() != null) {
 	ShortMessage[] msgs = 
 	  BankSelection.RolandBankSelect( pce.getChannel(),
-					  patch.getBank() );
+					  patch.getBank(),
+					  patch.getNumber());
 	for(int i=0; i<msgs.length; i++)
 	  if (midiOut != null)
 	    midiOut.send(msgs[i],-1);
@@ -63,7 +64,7 @@ public class QController implements Receiver {
       ((ShortMessage)patchChange)
 	.setMessage( ShortMessage.PROGRAM_CHANGE, 
 		     pce.getChannel(), 
-		     pce.getPatch().getNumber(), 0 );
+		     patch.getNumber()%128, 0 );
       if (midiOut != null) 
 	midiOut.send(patchChange, -1);
     } catch (InvalidMidiDataException e) {

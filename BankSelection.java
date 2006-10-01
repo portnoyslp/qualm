@@ -5,7 +5,7 @@ import javax.sound.midi.*;
 public class BankSelection {
   public BankSelection() { }
 
-  public static ShortMessage[] RolandBankSelect(int ch, String bankName)  
+  public static ShortMessage[] RolandBankSelect(int ch, String bankName, int patchNum)  
        throws InvalidMidiDataException {
     int bank = -1;
     // Selecting the right bank
@@ -32,6 +32,13 @@ public class BankSelection {
       } catch (NumberFormatException nfe) {
 	System.out.println("Couldn't parse bank specficiation: " + bankName);
       }
+    }
+
+    // for Roland, if the patchNum is greater than 128, than we're
+    // increasing the bank LSB by one.
+    if (patchNum > 128 &&
+	bankName.indexOf('/')==-1) {
+      bank++;
     }
 
     ShortMessage[] msgs = new ShortMessage[ 2 ];
