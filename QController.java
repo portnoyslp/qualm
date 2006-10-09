@@ -7,20 +7,17 @@ public class QController implements Receiver {
 
   Receiver midiOut;
   QAdvancer advancer;
-  boolean debugMIDI = false;
+  QData qdata;
 
-  public QController( Receiver out, QData data ) {
+  public QController( Receiver out, QStream qstream, QData data ) {
     midiOut = out;
-    advancer = new QAdvancer( data );
+    qdata = data;
+    advancer = new QAdvancer( qstream, data );
 
-    // send out the presets
-    sendEvents( advancer.getPresets() );
     setupTriggers();
   }
 
-  public void setDebugMIDI(boolean flag) { debugMIDI=flag; }
-
-  public QData getQData() { return advancer.getQData(); }
+  public QData getQData() { return qdata; }
   public Cue getCurrentCue() { return advancer.getCurrentCue(); }
   public Cue getPendingCue() { return advancer.getPendingCue(); }
 
@@ -47,30 +44,7 @@ public class QController implements Receiver {
   }
 
   private void sendPatchChange(ProgramChangeEvent pce) {
-    MidiMessage patchChange = new ShortMessage();
-
-    try {
-      Patch patch = pce.getPatch();
-      if (patch.getBank() != null) {
-	ShortMessage[] msgs = 
-	  BankSelection.RolandBankSelect( pce.getChannel(),
-					  patch.getBank(),
-					  patch.getNumber());
-	for(int i=0; i<msgs.length; i++)
-	  if (midiOut != null)
-	    midiOut.send(msgs[i],-1);
-      }
-
-      ((ShortMessage)patchChange)
-	.setMessage( ShortMessage.PROGRAM_CHANGE, 
-		     pce.getChannel(), 
-		     patch.getNumber()%128, 0 );
-      if (midiOut != null) 
-	midiOut.send(patchChange, -1);
-    } catch (InvalidMidiDataException e) {
-      System.out.println("Unable to send Program Change: " + pce);
-      System.out.println(e);
-    }
+    PatchChanger.patchChange(pce, midiOut);
   }
   
   private void setupTriggers() {
@@ -122,10 +96,6 @@ public class QController implements Receiver {
   }
 
   public void send(MidiMessage midiMessage, long l) {
-    // OK, we've received a message.  Check the triggers.
-    if (debugMIDI) 
-      System.out.println( MidiMessageParser.messageToString(midiMessage) );
-
     // Do any of the currently in-effect maps match this event?
     Cue cue = advancer.getPendingCue();
     if (cue != null) {

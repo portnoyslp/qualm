@@ -4,32 +4,57 @@ import java.lang.Thread;
 import java.io.*;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 public class QualmREPL extends Thread {
-  QController qc;
+  ArrayList controllers = new ArrayList();
+  MultiplexReceiver mrec = null;
   BufferedReader reader;
 
-  public QualmREPL( QController qc ) {
-    this.qc = qc; 
-    qc.setREPL(this);
+  public QualmREPL( ) {
     reader = new BufferedReader( new InputStreamReader( System.in ));
   }
 
+  public void setMultiplexReceiver( MultiplexReceiver m ) { mrec = m; }
+
+  public void addController(QController qc) {
+    controllers.add(qc);
+    qc.setREPL(this);
+  }
+
   public String promptString() {
-    Cue curQ = qc.getCurrentCue();
-    Cue pendingQ = qc.getPendingCue();
-    String prompt;
-    if (curQ == null) 
-      prompt="START";
-    else prompt=curQ.getCueNumber();
-    prompt += " [";
-    if (pendingQ == null) 
-      prompt+= "END";
-    else prompt+= pendingQ.getCueNumber();
-    return prompt + "]> ";
+    String prompt="";
+    
+    boolean init = true;
+    Iterator iter = controllers.iterator();
+    while (iter.hasNext()) {
+      if (!init) prompt += "/";
+      init = false;
+
+      QController qc = (QController)iter.next();
+      Cue curQ = qc.getCurrentCue();
+      Cue pendingQ = qc.getPendingCue();
+
+      if (curQ == null) 
+	prompt += "START";
+      else prompt += curQ.getCueNumber();
+
+      prompt += "-";
+
+      if (pendingQ == null) 
+	prompt += "END";
+      else prompt += pendingQ.getCueNumber();
+    }
+
+    return prompt + "> ";
   }
 
   public void run() {
+    // first, we reset the controllers.
+    readlineHandlesPrompt = true;
+    reset();
+    readlineHandlesPrompt = false;
+
     while (true) {
       try {
 	System.out.print( promptString() );
@@ -47,6 +72,10 @@ public class QualmREPL extends Thread {
     }
   }
 
+  private QController mainQC() {
+    return (QController) (controllers.get(0));
+  }
+
   boolean readlineHandlesPrompt = false;
   public void updateCue( Collection c ) {
     // signal new cue...If we could interrupt the readline call, that
@@ -56,8 +85,9 @@ public class QualmREPL extends Thread {
       // end the current line
       System.out.print( "\n" );
     }
+
     // print out the cue changes
-    QData qd = qc.getQData();
+    QData qd = mainQC().getQData();
     Iterator iter = c.iterator();
     while(iter.hasNext()) {
       ProgramChangeEvent pce = (ProgramChangeEvent)iter.next();
@@ -73,13 +103,27 @@ public class QualmREPL extends Thread {
     }
   }
 
+  public void reset() {
+    gotoCue("0.0");
+  }
+
+  public void gotoCue(String cueName) {
+    // send all controllers to the cue number named in the line
+    Iterator iter = controllers.iterator();
+    while (iter.hasNext()) {
+      QController qc = (QController)iter.next();
+      qc.switchToCue( cueName );
+    }
+  }
+
   public void processLine( String line ) {
     readlineHandlesPrompt = true;
 
     if (line == null || line.trim().equals("") ||
 	line.trim().startsWith("\\") ||
 	line.trim().startsWith("]")) {
-      qc.advancePatch();
+      // advance the "mainline" patch
+      mainQC().advancePatch();
     } else {
 
       if (line.toLowerCase().equals("quit")) {
@@ -87,21 +131,18 @@ public class QualmREPL extends Thread {
       }
 
       if (line.toLowerCase().equals("dump")) {
-	qc.getQData().dump();
+	mainQC().getQData().dump();
       
       } else if (line.toLowerCase().equals("reset")) {
-	// go back to the first cue
-	qc.switchToCue( "0.0" );
+	reset();
 
       } else if (line.toLowerCase().equals("showmidi")) {
-	qc.setDebugMIDI(true);
+	mrec.setDebugMIDI(true);
       } else if (line.toLowerCase().equals("unshowmidi")) {
-	qc.setDebugMIDI(false);
+	mrec.setDebugMIDI(false);
 	
-
       } else {
-	// go to the cue number named in the line
-	qc.switchToCue( line );
+	gotoCue(line);
       }
     }
 

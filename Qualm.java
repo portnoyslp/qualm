@@ -238,20 +238,35 @@ public class Qualm {
       }
     } // !skipMIDI
 
-    // open a receiver with the right data file.
-    QController qc = new QController( midiOut, data );
-    if (debugMIDI)
-      qc.setDebugMIDI(true);
-    
-    // Start a read-eval-print loop as well.  The REPL will do a
-    // System.exit when all is done.
-    
-    new QualmREPL( qc ).start();
-      
+
+    // prepare patches properly
+    data.prepareCueStreams();
+
+    MultiplexReceiver mrec = new MultiplexReceiver();
+    if (debugMIDI) mrec.setDebugMIDI(true);
+
+    QualmREPL repl = new QualmREPL();
+    repl.setMultiplexReceiver( mrec );
+
+    // For each cue stream, start a controller
+    boolean first = true;
+    Iterator iter = data.getCueStreams().iterator();
+    while (iter.hasNext()) {
+      QController qc = new QController( midiOut, 
+					(QStream)iter.next(),
+					data );
+
+      repl.addController(qc);
+      mrec.addReceiver(qc);
+    }
+
     // connect the transmitter to the receiver.
-    if (!skipMIDI) 
-      midiIn.setReceiver( qc );
+    if (!skipMIDI)
+      midiIn.setReceiver( mrec );
   
+    // start the REPL
+    repl.start();
+      
   }
 
 }

@@ -33,9 +33,12 @@ public class Cue implements Comparable {
   public void setEvents(Collection t) { events=t; }
 
   public String getCueNumber() { return song + "." + measure; }
-  public String toString() { return "Q[" + getCueNumber() + 
-			       getTriggers() + "]"; }
-
+  
+  public String toString() {
+    return "Q[" + getCueNumber() + getTriggers() + 
+      " => " + getEvents() + "]";
+  }
+  
   public boolean equals( Object x ) {
     return getCueNumber().equals( ((Cue)x).getCueNumber() );
   }

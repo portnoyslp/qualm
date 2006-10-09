@@ -64,6 +64,7 @@ public class QDataLoader extends DefaultHandler {
   Patch patch;
   EventMapper curMapper = null;
   List eventMaps = new ArrayList();
+  QStream qstream;
   
   public void startElement(String uri, String localName, 
 			   String qName, Attributes attributes) 
@@ -89,8 +90,11 @@ public class QDataLoader extends DefaultHandler {
 	  currentAttribute = "bank";
 	  patch.setBank( attributes.getValue("bank") );
 	}
-     
 
+      } else if (qName.equals("cue-stream")) {
+	qstream = new QStream();
+	qstream.setTitle(attributes.getValue("id"));
+     
       } else if (qName.equals("cue")) {
 	eventSet = new ArrayList();
 	curQ = new Cue( attributes.getValue("song"),
@@ -167,10 +171,6 @@ public class QDataLoader extends DefaultHandler {
       patch.setDescription(content);
       qdata.addPatch( patch );
       
-    } else if (qName.equals("start-events")) {
-      qdata.setSetupEvents(eventSet);
-      eventSet = new ArrayList();
-
     } else if (qName.equals("trigger")) {
       Trigger t = new Trigger(curTemplate,reverseTrigger);
       triggers.add(t);
@@ -199,13 +199,17 @@ public class QDataLoader extends DefaultHandler {
       eventMaps = new ArrayList();
       eventSet = new ArrayList();
 
-      qdata.addCue( curQ );
+      qstream.addCue( curQ );
 
     } else if (qName.equals("global")) {
       globalTriggers = triggers;
       globalMaps = eventMaps;
       triggers = new ArrayList();
       eventMaps = new ArrayList();
+      
+    } else if (qName.equals("cue-stream")) {
+      qdata.addCueStream(qstream);
+      qstream = null;
     }
 
   }

@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone='yes'?>
 <!DOCTYPE qualm-data PUBLIC "-//QUALM/DTD Qualm Data//EN" "qualm.dtd">
 <qualm-data>
-  <title>Bat Boy Keyboard II</title>
+  <title>Test File for Qualm</title>
   <midi-channels>
     <channel num="1">Lower Keyboard</channel>
     <channel num="2">Upper Keyboard</channel>
@@ -16,39 +16,45 @@
     <patch id="P95" bank="User" num="95">LKB/TmpF</patch>
     <patch id="P96" bank="User" num="96">TmpG/TmpD</patch>
   </patches>
-  <global>
-    <trigger><note-on channel="3" note="0"/></trigger>
-    <trigger><note-on channel="1" note="c8"/></trigger>
-    <trigger reverse="yes"><note-on channel="1" note="a0"/></trigger>
-    <map-events>
-      <map-from><control-change channel="1" control="damper"/></map-from>
-      <map-to><control-change channel="2" control="80"/></map-to>
-    </map-events>
-  </global>
-  <start-events>
-    <program-change channel="1" patch="P2"/>
-    <program-change channel="2" patch="P5"/>
-    <program-change channel="4" patch="P95"/>
-  </start-events>
- 
-  <cue song="1a" measure="10">
-    <events><program-change channel="1" patch="P3"/></events>
-  </cue>
-  <cue song="2" measure="35">
-    <events><program-change channel="1" patch="P1"/></events>
-  </cue>
-  <cue song="2" measure="102">
-    <events><program-change channel="1" patch="P4"/></events>
-  </cue>
-  <cue song="3" measure="1">
-    <events>
-      <program-change channel="4" patch="P96"/>
-      <program-change channel="1" patch="P5"/>
-    </events>
-  </cue>
-  <cue song="3" measure="16">
-    <trigger><note-on channel="2" note="g2"/></trigger>
-    <events><program-change channel="2" patch="P3"/></events>
-  </cue>
 
+  <cue-stream id="1st Stream">
+    <global>
+      <trigger><note-on channel="1" note="c6"/></trigger>
+      <trigger reverse="yes"><note-on channel="1" note="c2"/></trigger>
+      <map-events>
+	<map-from><control-change channel="1" control="damper"/></map-from>
+	<map-to><control-change channel="2" control="80"/></map-to>
+      </map-events>
+    </global>
+    <cue song="1a" measure="10">
+      <events><program-change channel="1" patch="P3"/></events>
+    </cue>
+    <cue song="2" measure="35">
+      <events><program-change channel="1" patch="P1"/></events>
+    </cue>
+    <cue song="2" measure="102">
+      <events><program-change channel="1" patch="P4"/></events>
+    </cue>
+    <cue song="3" measure="1">
+      <trigger><note-on channel="2" note="g2"/></trigger>
+      <events><program-change channel="2" patch="P3"/></events>
+    </cue>
+    <cue song="3" measure="16">
+      <events>
+	<program-change channel="4" patch="P96"/>
+	<program-change channel="1" patch="P5"/>
+      </events>
+    </cue>
+  </cue-stream>
+  <cue-stream id="2nd Stream">
+    <global>
+      <trigger><note-on channel="2" note="c6"/></trigger>
+    </global>
+    <cue song="1" measure="1">
+      <events><program-change channel="2" patch="P96"/></events>
+    </cue>
+    <cue song="2" measure="10">
+      <events><program-change channel="2" patch="P95"/></events>
+    </cue>
+  </cue-stream>
 </qualm-data>

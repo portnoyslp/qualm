@@ -12,45 +12,46 @@ import java.util.List;
  */
 public class QAdvancer {
 
+  QStream qstream;
   QData qdata;
 
   Cue currentCue;
   Cue pendingCue;
 
-  public QAdvancer( QData d ) {
+  public QAdvancer( QStream s, QData d ) {
+    qstream = s;
     qdata = d;
     currentCue = null;
     pendingCue = findNextCue(null);
   }
 
-  public QData getQData() { return qdata; }
+  public QStream getQStream() { return qstream; }
   public Cue getCurrentCue() { return currentCue; }
   public Cue getPendingCue() { return pendingCue; }
 
-  public Collection getPresets() {
-    return qdata.getSetupEvents();
-  }
-
   public Collection switchToMeasure(String cueName) { 
     Cue newQ = new Cue( cueName );
-    SortedSet cueset = qdata.getCues();
+    SortedSet cueset = qstream.getCues();
     SortedSet head = cueset.headSet(newQ);
-    
+
     // set the new current cue
     if (head.size() == 0) {
-      currentCue = null;
+      // the first cue is always the first in the stream
+      currentCue = (Cue)cueset.first();
     } else {
-      try {
-	currentCue = (Cue)head.last();
-	// if our target cue equals the next one, then use it instead.
-	Cue nextQ = findNextCue( currentCue );
-	if (newQ.equals( nextQ )) {
-	  currentCue = nextQ;
-	}
-      } catch (Exception e) {
-	e.printStackTrace();
-      }
+      currentCue = (Cue)head.last();
     }
+
+    // if our target cue equals the next one, then use it instead.
+    try {
+      Cue nextQ = findNextCue( currentCue );
+      if (newQ.equals( nextQ )) {
+	currentCue = nextQ;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     pendingCue = findNextCue( currentCue );
 
     return revertPatchChanges();
@@ -58,7 +59,6 @@ public class QAdvancer {
   
   public Collection advancePatch() {
     // send the next patch change
-    
     Cue nextCue = findNextCue(currentCue);
     
     // find patch changes
@@ -74,21 +74,32 @@ public class QAdvancer {
 
   public Collection reversePatch() {
     // find previous patch
-    SortedSet cueset = qdata.getCues();
+    SortedSet cueset = qstream.getCues();
     SortedSet head;
     try { 
-	head = cueset.headSet ( currentCue ) ;
+      head = cueset.headSet ( currentCue ) ;
     } 
     catch (NullPointerException npe) {
-	return switchToMeasure( "0.0" );
+      return switchToMeasure( "0.0" );
     }
 
-    if (head.size() == 0) {
+    if (head.size() == 0)
       return switchToMeasure( "0.0" );
-    } else {
-      Cue lastCue = (Cue)head.last();
-      return switchToMeasure(lastCue.getCueNumber());
+
+    Cue previousCue = (Cue)head.last();
+
+    // OK, now we have to back out the patch.  We're going to create
+    // new PCE's which will back out the patch whenever possible.
+    Collection out = new ArrayList();
+    Iterator iter = currentCue.getEvents().iterator();
+    while (iter.hasNext()) {
+      ProgramChangeEvent pce = (ProgramChangeEvent)iter.next();
+      out.add( new ProgramChangeEvent(pce.getChannel(), pce.getPreviousPatch()) );
     }
+
+    pendingCue = currentCue;
+    currentCue = previousCue;
+    return out;
   }
 
   private Collection getPatchChanges(Cue c) {
@@ -96,7 +107,7 @@ public class QAdvancer {
   }
 
   private Cue findNextCue( Cue current ) {
-    SortedSet cueset = qdata.getCues();
+    SortedSet cueset = qstream.getCues();
 
     if (current == null)
       return (Cue)cueset.first();
@@ -130,7 +141,7 @@ public class QAdvancer {
     int programCount = 0;
 
     // go backward through the events
-    SortedSet headset = qdata.getCues();
+    SortedSet headset = qstream.getCues();
     Cue loopQ = currentCue;
     while ( loopQ != null && programCount < channelCount ) {
       Iterator iter = loopQ.getEvents().iterator();
@@ -149,19 +160,6 @@ public class QAdvancer {
 	loopQ = null;
       } else
 	loopQ = (Cue)headset.last();
-    }
-
-    if (loopQ == null) {
-      // get the setupEvents, and do those if needed
-      Iterator iter = qdata.getSetupEvents().iterator();
-      while (iter.hasNext()) {
-	ProgramChangeEvent ev = (ProgramChangeEvent)iter.next();
-	int ch = ev.getChannel();
-	if (events[ch] == null && midiChans[ch] != null) {
-	  events[ch] = ev;
-	  programCount++;
-	}
-      }
     }
 
     List out = new ArrayList();

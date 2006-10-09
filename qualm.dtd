@@ -1,5 +1,4 @@
-<!ELEMENT qualm-data (title?,midi-channels, patches, global?, 
-	  start-events?, cue+)>
+<!ELEMENT qualm-data (title?,midi-channels, patches, cue-stream+)>
 <!ELEMENT title (#PCDATA)>
 <!ELEMENT midi-channels (channel+)>
 <!ELEMENT channel (#PCDATA)>
@@ -28,8 +27,6 @@
      </patches>
 -->
 
-<!ELEMENT global (trigger|map-events)*>
-<!ELEMENT start-events (program-change+)>
 <!ELEMENT map-events (map-from,map-to)>
 <!ELEMENT map-from (note-on|note-off|control-change|program-change)>
 <!ELEMENT map-to (note-on|note-off|control-change|program-change)>
@@ -42,6 +39,10 @@
 -->
 
 <!ELEMENT events (note-on|note-off|control-change|program-change)+>
+
+<!ELEMENT cue-stream (global?,cue*)>
+<!ATTLIST cue-stream id ID #IMPLIED>
+<!ELEMENT global (trigger|map-events)*>
 
 <!ELEMENT cue (trigger|events|map-events)*>
 <!ATTLIST cue song CDATA #REQUIRED measure CDATA #REQUIRED>

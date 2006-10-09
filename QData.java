@@ -9,30 +9,22 @@ import java.util.*;
 public class QData {
   String[] channels;
   Map patches;
-  Collection reverseTriggers;
-  Collection setupEvents;
-  Collection mapEvents;
-  SortedSet cues;
+  Collection cueStreams;
   String title;
 
   public QData( ) {
     title = null;
     channels = new String[16];
     patches = new HashMap();
-    cues = new TreeSet();
+    cueStreams = new ArrayList();
   } 
 
   public String getTitle() { return title; }
   public void setTitle(String t) { title=t; }
 
-  public Collection getSetupEvents() { return setupEvents; }
-  public void setSetupEvents(Collection s) { setupEvents=s; }
-
-  public Collection getReverseTriggers() { return reverseTriggers; }
-  public void setReverseTriggers(Collection s) { reverseTriggers=s; }
-
   public void addMidiChannel( int num, String desc ) {
     channels[num] = desc;
+    PatchChanger.addPatchChanger( num, null );
   }
   public String[] getMidiChannels() { return channels; }
   public Collection getPatches() { return patches.values(); }
@@ -44,10 +36,10 @@ public class QData {
     return (Patch)patches.get(id); 
   }
 
-  public void addCue( Cue cue ) {
-    cues.add(cue);
+  public void addCueStream(QStream qs) {
+    cueStreams.add(qs);
   }
-  public SortedSet getCues() { return cues; }
+  public Collection getCueStreams() { return cueStreams; }
 
   public void dump() {
     System.out.println("Data dump for " + getTitle());
@@ -58,10 +50,46 @@ public class QData {
     System.out.println("  ch:" + out);
     System.out.println("  pl:" + patches.values());
 
-    System.out.println("  se:" + setupEvents);
-    System.out.println("  rt:" + reverseTriggers);
-   
-    System.out.println("  qs:" + cues);
+    Iterator iter = cueStreams.iterator();
+    while(iter.hasNext()) {
+      ((QStream)iter.next()).dump();
+    }
   }
   
+
+  public void prepareCueStreams() {
+    // go through the different cue streams, and populate the cues'
+    // program changes with info on how to reverse the patch changes
+    // properly.
+
+    // we do this first by creating a "master plot" of cue changes
+    TreeSet masterCues = new TreeSet();
+    Iterator iter = cueStreams.iterator();
+    while(iter.hasNext()) {
+      masterCues.addAll(  ((QStream)iter.next()).getCues() );
+    }
+    
+    // next, we go through the cues' patch changes, and populate them
+    // with back-patch info
+    Patch[] patches = new Patch[16];
+    
+    iter = masterCues.iterator();
+    while (iter.hasNext()) {
+      Cue q = (Cue)(iter.next());
+
+      Collection events = q.getEvents();
+      Iterator j = events.iterator();
+      while(j.hasNext()) {
+	ProgramChangeEvent pce = (ProgramChangeEvent)j.next();
+	int ch = pce.getChannel();
+	if (patches[ch] != null) {
+	  pce.setPreviousPatch(patches[ch]);
+	}
+
+	patches[ch] = pce.getPatch();
+      }
+    }
+    
+  }
+
 } 
