@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cwd=`/usr/bin/dirname $0`
+cwd=`(cd $cwd; cd ../..; pwd)`
+java -cp /usr/share/java/gnu-getopt.jar:/usr/share/java/libreadline-java.jar:$cwd qualm.testing.StressTest $*
