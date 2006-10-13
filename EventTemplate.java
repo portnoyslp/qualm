@@ -7,6 +7,13 @@ public class EventTemplate {
 
   public EventTemplate () { } 
 
+  public EventTemplate (EventTemplate et) {
+      this.type = et.type;
+      this.channel = et.channel;
+      this.extra1 = et.extra1;
+      this.extra2 = et.extra2;
+  }
+
   public static EventTemplate createNoteOnEventTemplate( int ch, int note ) { 
     EventTemplate t = new EventTemplate();
     t.type = ShortMessage.NOTE_ON;
@@ -99,7 +106,7 @@ public class EventTemplate {
     }
     return false;
   }
-  
+
   protected int type;
   protected int channel;
   protected int extra1;

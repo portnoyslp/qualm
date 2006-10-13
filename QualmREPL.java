@@ -28,7 +28,7 @@ public class QualmREPL extends Thread {
     boolean init = true;
     Iterator iter = controllers.iterator();
     while (iter.hasNext()) {
-      if (!init) prompt += "/";
+      if (!init) prompt += " | ";
       init = false;
 
       QController qc = (QController)iter.next();

@@ -107,7 +107,11 @@ public class QDataLoader extends DefaultHandler {
 	currentAttribute = "channel";
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
 	String patchID = attributes.getValue("patch");
-	eventSet.add(new ProgramChangeEvent(ch, qdata.lookupPatch(patchID)));
+	Patch foundPatch = qdata.lookupPatch(patchID);
+	if (foundPatch == null) {
+	  System.err.println("WARNING: could not find patch with id " + patchID);
+	}
+	eventSet.add(new ProgramChangeEvent(ch, foundPatch));
 	
       } else if (qName.equals("trigger")) {
 	currentAttribute="reverse";

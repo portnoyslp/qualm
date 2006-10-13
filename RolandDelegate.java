@@ -8,7 +8,7 @@ public class RolandDelegate extends ChangeDelegate {
     try {
       int ch = pce.getChannel();
       Patch patch = pce.getPatch();
-      int patchNum = patch.getNumber();
+      int patchNum = patch.getNumber()-1;
 
       if (patch.getBank() != null) {
 
@@ -44,7 +44,7 @@ public class RolandDelegate extends ChangeDelegate {
 	
 	// for Roland, if the patchNum is greater than 128, than we're
 	// increasing the bank LSB by one.
-	if (patchNum > 128 &&
+	if (patchNum >= 128 &&
 	    bankName.indexOf('/')==-1) {
 	  bank++;
 	}
@@ -69,7 +69,7 @@ public class RolandDelegate extends ChangeDelegate {
       ShortMessage msg = new ShortMessage();
       msg.setMessage( ShortMessage.PROGRAM_CHANGE, 
 		      pce.getChannel(), 
-		      patch.getNumber()%128, 0 );
+		      patchNum%128, 0 );
 
       if (midiOut != null) 
 	midiOut.send(msg, -1);
@@ -77,6 +77,8 @@ public class RolandDelegate extends ChangeDelegate {
     } catch (InvalidMidiDataException e) {
       System.out.println("Unable to send Program Change: " + pce);
       System.out.println(e);
+    } catch (Exception e2) {
+      e2.printStackTrace();
     }
   }
   

@@ -32,6 +32,90 @@ public class Qualm {
     return ret;
   }
 
+  public static MidiDevice.Info[] getMidiPorts(String inputPort, String outputPort, 
+					       boolean listPorts, boolean debugMIDI) {
+    MidiDevice.Info[] out = new MidiDevice.Info[2];
+    out[0] = null;
+    out[1] = null;
+
+    MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
+    if (infos.length == 0) {
+      System.out.println( "No MIDI devices found." );
+      return out;
+    }
+      
+    boolean useAlsa = true;
+      
+    /* Find ALSA MIDI ports */
+    List midiports = new ArrayList();
+    int i;
+    for(i = 0; i<infos.length; i++) {
+      if (infos[i].getName().startsWith("ALSA MIDI")) {
+	midiports.add(infos[i]);
+      }
+    }
+      
+    /* If we found no ALSA ports, then we'll use others */
+    if (midiports.size() == 0) {
+      useAlsa = false;
+      for(i = 0; i<infos.length; i++) 
+	midiports.add(infos[i]);
+    }
+      
+    if (midiports.size() == 0) {
+      System.out.println("No MIDI ports found.  Exiting." );
+      System.exit(1);
+    }
+      
+    Map clientMap = null;
+    if (useAlsa) clientMap = Qualm.parseALSAClients();
+
+    if (listPorts) 
+      System.out.println("MIDI ports:");
+      
+    Iterator iter = midiports.iterator();
+    while (iter.hasNext()) {
+      MidiDevice.Info info = (MidiDevice.Info)iter.next();
+      String dev = info.getName();
+      String cName = info.getDescription();
+      if (useAlsa) {
+	dev = dev.substring(dev.indexOf('(')+1);
+	dev = dev.substring(0, dev.lastIndexOf( ':' ));
+	Integer cNum = new Integer(dev);
+	cName = (String)clientMap.get(cNum);
+      }
+	
+      if (listPorts)
+	System.out.println ("  " + info.getName() + " [" + cName +"]");
+	
+      // Is this a port we want?
+      MidiDevice md = null;
+      try {
+	md = MidiSystem.getMidiDevice(info);
+	if (listPorts && debugMIDI)
+	  System.out.println("   [trans:" + md.getMaxTransmitters() + " rec:" + md.getMaxReceivers() + "]");
+      } catch (MidiUnavailableException mue) { System.out.println(info.getName() + " unavailable"); }
+
+      if ((cName.indexOf(inputPort) != -1 ||
+	   info.getName().indexOf(inputPort) != -1) &&
+	  md!=null && md.getMaxTransmitters() != 0) {
+	out[0] = info;
+	if (debugMIDI)
+	  System.out.println("Using " + out[0].getName() + " (" + cName + ") for input.");
+      }
+	
+      if ((cName.indexOf(outputPort) != -1 ||
+	   info.getName().indexOf(outputPort) != -1) &&
+	  md!=null && md.getMaxReceivers() != 0) { 
+	out[1] = info;
+	if (debugMIDI)
+	  System.out.println("Using " + out[1].getName() + " (" + cName + ") for output.");
+      }
+    }
+
+    return out;
+  }
+
   private static void usage() {
     System.out.println("Usage: java qualm.Qualm <options> <filename>");
     System.out.println("  --output <out>");
@@ -110,79 +194,9 @@ public class Qualm {
     MidiDevice.Info outputInfo = null;
    
     if (!skipMIDI) {
-      MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
-      if (infos.length == 0) {
-	System.out.println( "No MIDI devices found.  Exiting." );
-	System.exit(1);
-      }
-      
-      boolean useAlsa = true;
-      
-      /* Find ALSA MIDI ports */
-      List midiports = new ArrayList();
-      for(i = 0; i<infos.length; i++) {
-	if (infos[i].getName().startsWith("ALSA MIDI")) {
-	  midiports.add(infos[i]);
-	}
-      }
-      
-      /* If we found no ALSA ports, then we'll use others */
-      if (midiports.size() == 0) {
-	useAlsa = false;
-	for(i = 0; i<infos.length; i++) 
-	  midiports.add(infos[i]);
-      }
-      
-      if (midiports.size() == 0) {
-	System.out.println("No MIDI ports found.  Exiting." );
-	System.exit(1);
-      }
-      
-      Map clientMap = null;
-      if (useAlsa) clientMap = Qualm.parseALSAClients();
-
-      if (listPorts) 
-	System.out.println("MIDI ports:");
-      
-      Iterator iter = midiports.iterator();
-      while (iter.hasNext()) {
-	MidiDevice.Info info = (MidiDevice.Info)iter.next();
-	String dev = info.getName();
-	String cName = info.getDescription();
-	if (useAlsa) {
-	  dev = dev.substring(dev.indexOf('(')+1);
-	  dev = dev.substring(0, dev.lastIndexOf( ':' ));
-	  Integer cNum = new Integer(dev);
-	  cName = (String)clientMap.get(cNum);
-	}
-	
-	if (listPorts)
-	  System.out.println ("  " + info.getName() + " [" + cName +"]");
-	
-	// Is this a port we want?
-	MidiDevice md = null;
-	try {
-	  md = MidiSystem.getMidiDevice(info);
-	  if (listPorts && debugMIDI)
-	    System.out.println("   [trans:" + md.getMaxTransmitters() + " rec:" + md.getMaxReceivers() + "]");
-	} catch (MidiUnavailableException mue) { System.out.println(info.getName() + " unavailable"); }
-
-	if ((cName.indexOf(inputPort) != -1 ||
-	     info.getName().indexOf(inputPort) != -1) &&
-	    md!=null && md.getMaxTransmitters() != 0) {
-	  inputInfo = info;
-	  if (debugMIDI)
-	    System.out.println("Using " + inputInfo.getName() + " (" + cName + ") for input.");
-	}
-	
-	if ((cName.indexOf(outputPort) != -1 ||
-	     info.getName().indexOf(outputPort) != -1) &&
-	    md!=null && md.getMaxReceivers() != 0) { 
-	  outputInfo = info;
-	  if (debugMIDI)
-	    System.out.println("Using " + outputInfo.getName() + " (" + cName + ") for output.");
-	}
-      }
+      MidiDevice.Info[] ports = getMidiPorts(inputPort, outputPort, listPorts, debugMIDI);
+      inputInfo = ports[0];
+      outputInfo = ports[1];
       
       if (listPorts) 
 	System.exit(0);
