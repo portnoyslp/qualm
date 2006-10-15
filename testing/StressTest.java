@@ -12,8 +12,22 @@ public class StressTest {
   static Receiver midiOut = null;
     
   public static void runLoop(QData data) {
-    // get all the cues
-    TreeSet cues = new TreeSet();
+    // get all the cues.  Note that we can't use the normal
+    // comparator for Cues, we have to use our own which will allow
+    // two cues with the same measure number to exist in the set.
+    Comparator cueCompare = new Comparator() {
+	public int compare(Object a, Object b) {
+	  if (a instanceof Cue &&
+	      b instanceof Cue) {
+	    int out = ((Cue)a).compareTo(b);
+	    if (out == 0)
+	      return a.hashCode()-b.hashCode();
+	    else return out;
+	  }
+	  return ((Comparable)a).compareTo(b);
+	}
+      };
+    TreeSet cues = new TreeSet(cueCompare);
     Iterator iter = data.getCueStreams().iterator();
     while (iter.hasNext()) {
       QStream qs = (QStream)iter.next();
@@ -46,7 +60,7 @@ public class StressTest {
       t.sendMessage(midiOut);
 
       // pause for a little while
-      try {  Thread.currentThread().sleep(500); } catch (InterruptedException ie) { }
+      try {  Thread.currentThread().sleep(1500); } catch (InterruptedException ie) { }
 
     }
     System.out.println("Done with cues");

@@ -8,14 +8,19 @@ public class QController implements Receiver {
   Receiver midiOut;
   QAdvancer advancer;
   QData qdata;
+  String title;
 
   public QController( Receiver out, QStream qstream, QData data ) {
     midiOut = out;
     qdata = data;
+    title = qstream.getTitle();
     advancer = new QAdvancer( qstream, data );
 
     setupTriggers();
   }
+
+  public String getTitle() { return title; }
+  public void setTitle(String t) { title=t; }
 
   public QData getQData() { return qdata; }
   public Cue getCurrentCue() { return advancer.getCurrentCue(); }

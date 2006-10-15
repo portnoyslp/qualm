@@ -1,15 +1,17 @@
 package qualm;
 
-import java.lang.Thread;
 import java.io.*;
+import java.lang.Thread;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class QualmREPL extends Thread {
   ArrayList controllers = new ArrayList();
   MultiplexReceiver mrec = null;
   BufferedReader reader;
+  ArrayList changePlugins = new ArrayList();
 
   public QualmREPL( ) {
     reader = new BufferedReader( new InputStreamReader( System.in ));
@@ -49,6 +51,13 @@ public class QualmREPL extends Thread {
     return prompt + "> ";
   }
 
+  public void updatePrompt() {
+    handleChangePlugins();
+    System.out.print( promptString() );
+    System.out.flush();
+  }
+
+
   public void run() {
     // first, we reset the controllers.
     readlineHandlesPrompt = true;
@@ -57,8 +66,7 @@ public class QualmREPL extends Thread {
 
     while (true) {
       try {
-	System.out.print( promptString() );
-	System.out.flush();
+	updatePrompt();
 
 	String line = reader.readLine();
 	processLine( line );
@@ -98,8 +106,7 @@ public class QualmREPL extends Thread {
     }
       // redo prompt
     if (!readlineHandlesPrompt) {
-      System.out.print( promptString() );
-      System.out.flush();
+      updatePrompt();
     }
   }
 
@@ -140,13 +147,57 @@ public class QualmREPL extends Thread {
 	mrec.setDebugMIDI(true);
       } else if (line.toLowerCase().equals("unshowmidi")) {
 	mrec.setDebugMIDI(false);
-	
+
+      } else if (line.toLowerCase().startsWith("plugin")) {
+	installPlugin(line);
+
       } else {
 	gotoCue(line);
       }
     }
 
     readlineHandlesPrompt = false;
+  }
+
+  public void installPlugin(String line) {
+    // XXX there's probably a better way to handle plugins.  Checkout 
+    // http://jpf.sourceforge.net
+    StringTokenizer st = new StringTokenizer(line);
+    String tok = st.nextToken();
+    if (!tok.equals("plugin")) {
+      System.out.println("Odd error: plugin spec line did not start with 'plugin'");
+      return;
+    }
+
+    tok = st.nextToken();
+    if (!tok.equals("change")) {
+      System.out.println("Only handling change plugins; type '" + tok + "' not supported.");
+      return;
+    }
+    
+    tok = st.nextToken();
+    // should be a class spec; try instantiating an object for this
+    Object obj;
+    try {
+      obj = Class.forName(tok).newInstance();
+    } catch (Exception e) {
+      System.out.println("Unable to create plugin of type '" + tok + "'");
+      return;
+    }
+    if (!(obj instanceof qualm.plugins.ChangeNotification)) {
+      System.out.println("Plugin '" + tok + "' is not a change notifier; ignoring request.");
+    }
+
+    // OK, so all that worked.  Now we add it to the list of plugins
+    changePlugins.add( obj );
+  }
+
+  public void handleChangePlugins() {
+    // Tell any ChangeNotification plugins
+    Iterator iter = changePlugins.iterator();
+    while (iter.hasNext()) {
+      ((qualm.plugins.ChangeNotification)iter.next()).patchChange(controllers);
+    }
   }
 
 }

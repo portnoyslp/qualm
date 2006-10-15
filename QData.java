@@ -63,7 +63,23 @@ public class QData {
     // properly.
 
     // we do this first by creating a "master plot" of cue changes
-    TreeSet masterCues = new TreeSet();
+
+    // problem with a master plot is that we can't use the normal
+    // comparator for Cues, we have to use our own which will allow
+    // two cues with the same measure number to exist in the set.
+    Comparator cueCompare = new Comparator() {
+	public int compare(Object a, Object b) {
+	  if (a instanceof Cue &&
+	      b instanceof Cue) {
+	    int out = ((Cue)a).compareTo(b);
+	    if (out == 0)
+	      return a.hashCode()-b.hashCode();
+	    else return out;
+	  }
+	  return ((Comparable)a).compareTo(b);
+	}
+      };
+    TreeSet masterCues = new TreeSet(cueCompare);
     Iterator iter = cueStreams.iterator();
     while(iter.hasNext()) {
       masterCues.addAll(  ((QStream)iter.next()).getCues() );
