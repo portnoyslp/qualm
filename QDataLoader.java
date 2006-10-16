@@ -70,6 +70,7 @@ public class QDataLoader extends DefaultHandler {
 			   String qName, Attributes attributes) 
     throws NumberFormatException {
 
+    content = "";
     String currentAttribute = null;
     String currentElement = "`" + qName + "' element";
 
@@ -219,7 +220,7 @@ public class QDataLoader extends DefaultHandler {
   }
 
   public void characters(char[] ch, int start, int length) {
-    content = new String(ch,start,length);
+    content += new String(ch,start,length);
   }
   
   private static List numList = 
