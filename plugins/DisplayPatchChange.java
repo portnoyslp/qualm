@@ -5,17 +5,19 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.BorderLayout;
 
-import java.util.Collection;
+import java.util.TreeMap;
 import java.util.Iterator;
 
-public class DisplayChange extends ChangeNotification {
+public class DisplayPatchChange extends PatchChangeNotification {
 
-  public DisplayChange() {
+  TreeMap patches = new TreeMap();
+
+  public DisplayPatchChange() {
     showDisplay();
   }
 
   void showDisplay() {
-    frame = new JFrame("Current Cue");
+    frame = new JFrame("Current Patch");
     java.awt.Container panel = frame.getContentPane();
     panel.setLayout(new BorderLayout());
     
@@ -28,26 +30,22 @@ public class DisplayChange extends ChangeNotification {
     frame.show();
   }
 
-  public void patchChange(Collection qControllers) {
+  public void patchChange(int channel, String channelName, Patch patch) {
+    // Store the info
+    patches.put(channelName, patch.getDescription());
+
     // get all the current and pending cues
     String text = "<html><body>";
-    Iterator iter = qControllers.iterator();
+    Iterator iter = patches.keySet().iterator();
     boolean init = true;
     while (iter.hasNext()) {
       if (!init) text +="<br>";
       init = false;
 
-      QController qc = (QController)iter.next();
-      Cue curQ = qc.getCurrentCue();
-      Cue pendingQ = qc.getPendingCue();
+      channelName = (String)iter.next();
+      String patchName = (String)patches.get(channelName);
 
-      text += qc.getTitle() + ": ";
-      text += curQ.getCueNumber();
-      text += " - ";
-
-      if (pendingQ == null) 
-	text += "END";
-      else text += pendingQ.getCueNumber();
+      text += channelName + ": " + patchName;
     }
 
     // display the new cue info in big 'ol letters
