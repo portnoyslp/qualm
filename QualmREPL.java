@@ -11,7 +11,8 @@ public class QualmREPL extends Thread {
   ArrayList controllers = new ArrayList();
   MultiplexReceiver mrec = null;
   BufferedReader reader;
-  ArrayList changePlugins = new ArrayList();
+  ArrayList cuePlugins = new ArrayList();
+  ArrayList patchPlugins = new ArrayList();
 
   public QualmREPL( ) {
     reader = new BufferedReader( new InputStreamReader( System.in ));
@@ -52,7 +53,7 @@ public class QualmREPL extends Thread {
   }
 
   public void updatePrompt() {
-    handleChangePlugins();
+    handleCuePlugins();
     System.out.print( promptString() );
     System.out.flush();
   }
@@ -103,6 +104,9 @@ public class QualmREPL extends Thread {
       Patch patch = pce.getPatch();
       System.out.println( qd.getMidiChannels()[ch] + " -> " +
 			  patch.getDescription() );
+
+      // update the PatchChange plugins
+      handlePatchPlugins( ch, qd.getMidiChannels()[ch], patch);
     }
       // redo prompt
     if (!readlineHandlesPrompt) {
@@ -169,35 +173,52 @@ public class QualmREPL extends Thread {
       return;
     }
 
-    tok = st.nextToken();
-    if (!tok.equals("change")) {
-      System.out.println("Only handling change plugins; type '" + tok + "' not supported.");
+    String pluginType = st.nextToken();
+    if (!pluginType.equals("cue") && !pluginType.equals("patch")) {
+      System.out.println("Only handling change plugins; type '" + pluginType + "' not supported.");
       return;
     }
     
     tok = st.nextToken();
     // should be a class spec; try instantiating an object for this
-    Object obj;
+    Class cls;
     try {
-      obj = Class.forName(tok).newInstance();
+      cls = Class.forName(tok);
+  
+      if (pluginType.equals("cue")) {
+	if (Class.forName("qualm.plugins.CueChangeNotification").isAssignableFrom(cls))
+	  cuePlugins.add( cls.newInstance() );
+	else
+	  System.out.println("Plugin '" + tok + "' is not a cue notifier; ignoring request.");
+      }
+      if (pluginType.equals("patch")) {
+	if (Class.forName("qualm.plugins.PatchChangeNotification").isAssignableFrom(cls)) 
+	  patchPlugins.add( cls.newInstance() );
+	else 
+	  System.out.println("Plugin '" + tok + "' is not a patch notifier; ignoring request.");
+      }
+      
     } catch (Exception e) {
       System.out.println("Unable to create plugin of type '" + tok + "'");
-      return;
     }
-    if (!(obj instanceof qualm.plugins.ChangeNotification)) {
-      System.out.println("Plugin '" + tok + "' is not a change notifier; ignoring request.");
-    }
-
-    // OK, so all that worked.  Now we add it to the list of plugins
-    changePlugins.add( obj );
+ 
   }
 
-  public void handleChangePlugins() {
-    // Tell any ChangeNotification plugins
-    Iterator iter = changePlugins.iterator();
+  public void handleCuePlugins() {
+    // Tell any CueChangeNotification plugins
+    Iterator iter = cuePlugins.iterator();
     while (iter.hasNext()) {
-      ((qualm.plugins.ChangeNotification)iter.next()).patchChange(controllers);
+      ((qualm.plugins.CueChangeNotification)iter.next()).cueChange(controllers);
     }
   }
+
+  public void handlePatchPlugins(int ch, String name, Patch p) {
+    // Tell any CueChangeNotification plugins
+    Iterator iter = patchPlugins.iterator();
+    while (iter.hasNext()) {
+      ((qualm.plugins.PatchChangeNotification)iter.next()).patchChange(ch,name,p);
+    }
+  }
+
 
 }
