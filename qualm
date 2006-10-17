@@ -2,4 +2,4 @@
 
 cwd=`/usr/bin/dirname $0`
 cwd=`(cd $cwd; cd ..; pwd)`
-java -cp /usr/share/java/gnu-getopt.jar:/usr/share/java/libreadline-java.jar:$cwd qualm.Qualm $*
+java -cp /usr/share/java/gnu-getopt.jar:$cwd qualm.Qualm $*
