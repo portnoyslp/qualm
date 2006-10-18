@@ -1,5 +1,6 @@
 all: 
 	ant -emacs all
 
-test:
-	ant test
+dist:
+	ant dist
+
