@@ -52,6 +52,8 @@ public class DisplayPatchChange extends PatchChangeNotification {
     cDisp.setText(text + "</body></html>");
   }
 
+  public void shutdown() { frame.dispose(); frame = null; }
+
   JFrame frame;
   JLabel cDisp;
 

@@ -2,12 +2,18 @@ package qualm;
 
 import java.io.*;
 import java.lang.Thread;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.util.prefs.Preferences;
+import qualm.plugins.QualmPlugin;
 
 public class QualmREPL extends Thread {
+  // Preference keys
+  private static final String CUE_PLUGINS = "cue_plugins";
+  private static final String PATCH_PLUGINS = "patch_plugins";
+  private static Preferences prefs = 
+    Preferences.userNodeForPackage(QualmREPL.class);
+
+
   ArrayList controllers = new ArrayList();
   MultiplexReceiver mrec = null;
   BufferedReader reader;
@@ -16,6 +22,7 @@ public class QualmREPL extends Thread {
 
   public QualmREPL( ) {
     reader = new BufferedReader( new InputStreamReader( System.in ));
+    loadPreferences();
   }
 
   public void setMultiplexReceiver( MultiplexReceiver m ) { mrec = m; }
@@ -23,6 +30,66 @@ public class QualmREPL extends Thread {
   public void addController(QController qc) {
     controllers.add(qc);
     qc.setREPL(this);
+  }
+
+  public void loadPreferences() {
+    // load all the preferences available.
+    String patchPluginNames = prefs.get(PATCH_PLUGINS,"");
+    String cuePluginNames = prefs.get(CUE_PLUGINS,"");
+
+    String pluginType = "patch";
+    StringTokenizer st = new StringTokenizer(patchPluginNames,",");
+
+    while (st.hasMoreTokens()) {
+      String pluginName = st.nextToken();
+      try {
+	addPlugin(pluginType, pluginName);
+      } catch(IllegalArgumentException iae) {
+	System.out.println("Preferences: could not create plugin '" + pluginName +
+			   "' as a '" + pluginType + "' plugin; ignoring.");
+      }
+    }
+
+    pluginType = "cue";
+    st = new StringTokenizer(cuePluginNames,",");
+
+    while (st.hasMoreTokens()) {
+      String pluginName = st.nextToken();
+      try {
+	addPlugin(pluginType, pluginName);
+      } catch(IllegalArgumentException iae) {
+	System.out.println("Preferences: could not create plugin '" + pluginName +
+			   "' as a '" + pluginType + "' plugin; ignoring.");
+      }
+    }
+  }
+
+  public void savePreferences() {
+    // store all the preferences information
+    Iterator iter;
+    boolean init;
+    String out;
+
+    iter = patchPlugins.iterator();
+    init = true;
+    out = "";
+    while (iter.hasNext()) {
+      if (!init) out+=",";
+      Object obj = iter.next();
+      out += obj.getClass().getName();
+    }
+    prefs.put(PATCH_PLUGINS,out);
+
+    iter = cuePlugins.iterator();
+    init = true;
+    out = "";
+    while (iter.hasNext()) {
+      if (!init) out+=",";
+      Object obj = iter.next();
+      out += obj.getClass().getName();
+    }
+    prefs.put(CUE_PLUGINS,out);
+      
   }
 
   public String promptString() {
@@ -136,24 +203,28 @@ public class QualmREPL extends Thread {
       // advance the "mainline" patch
       mainQC().advancePatch();
     } else {
+      String lowerCase = line.toLowerCase();
 
-      if (line.toLowerCase().equals("quit")) {
+      if (lowerCase.equals("quit")) {
 	System.exit(0);
       }
 
-      if (line.toLowerCase().equals("dump")) {
+      if (lowerCase.equals("dump")) {
 	mainQC().getQData().dump();
       
-      } else if (line.toLowerCase().equals("reset")) {
+      } else if (lowerCase.equals("reset")) {
 	reset();
 
-      } else if (line.toLowerCase().equals("showmidi")) {
+      } else if (lowerCase.equals("showmidi")) {
 	mrec.setDebugMIDI(true);
-      } else if (line.toLowerCase().equals("unshowmidi")) {
+      } else if (lowerCase.equals("unshowmidi")) {
 	mrec.setDebugMIDI(false);
 
-      } else if (line.toLowerCase().startsWith("plugin")) {
-	installPlugin(line);
+      } else if (lowerCase.startsWith("plugin")) {
+	parsePluginLine(line);
+
+      } else if (lowerCase.startsWith("save")) {
+	savePreferences();
 
       } else {
 	gotoCue(line);
@@ -163,7 +234,60 @@ public class QualmREPL extends Thread {
     readlineHandlesPrompt = false;
   }
 
-  public void installPlugin(String line) {
+  private void addPlugin(String pluginType, String name) {
+    // should be a class spec; try instantiating an object for this
+    Class cls;
+    try {
+      cls = Class.forName(name);
+  
+      if (pluginType.equals("cue")) {
+	if (Class.forName("qualm.plugins.CueChangeNotification").isAssignableFrom(cls)) {
+	  QualmPlugin qp = (QualmPlugin) cls.newInstance();
+	  cuePlugins.add( qp );
+	  qp.initialize();
+	  return;
+	}
+      } else if (pluginType.equals("patch")) {
+	if (Class.forName("qualm.plugins.PatchChangeNotification").isAssignableFrom(cls)) {
+	  QualmPlugin qp = (QualmPlugin) cls.newInstance();
+	  patchPlugins.add( qp );
+	  qp.initialize();
+	  return;
+	}
+      }
+    } catch (Exception e) { }
+
+    throw new IllegalArgumentException();
+  }
+
+  private void removePlugin(String pluginType, String name) {
+    Iterator iter;
+    if (pluginType.equals("cue"))
+      iter = cuePlugins.iterator();
+    else if (pluginType.equals("patch"))
+      iter = patchPlugins.iterator();
+    else
+      throw new IllegalArgumentException("Unrecognized plugin type '" + pluginType + "'");
+
+    boolean found = false;
+
+    while (iter.hasNext()) {
+      // remove plugins that match the name.
+      Object obj = iter.next();
+      if (obj.getClass().getName().equals( name )) {
+	((QualmPlugin)obj).shutdown();
+	iter.remove();
+	System.out.println("Removed " + pluginType + " plugin " + obj.getClass().getName());
+	found = true;
+      }
+    }
+    
+    if (!found)
+      System.out.println("Unable to find running plugin of type '" + name + "'");
+  }
+
+
+  public void parsePluginLine(String line) {
     // XXX there's probably a better way to handle plugins.  Checkout 
     // http://jpf.sourceforge.net
     StringTokenizer st = new StringTokenizer(line);
@@ -173,35 +297,44 @@ public class QualmREPL extends Thread {
       return;
     }
 
-    String pluginType = st.nextToken();
+    boolean remove = false;
+    String pluginType;
+
+    tok = st.nextToken();
+    if (tok.equals("list")) {
+      Iterator iter = cuePlugins.iterator();
+      while (iter.hasNext())
+	System.out.println("cue " + iter.next().getClass().getName());
+
+      iter = patchPlugins.iterator();
+      while (iter.hasNext())
+	System.out.println("patch " + iter.next().getClass().getName());
+      return;
+
+    } else if (tok.equals("remove")) {
+      remove = true;
+      pluginType = st.nextToken();
+    } else
+      pluginType = tok;
+
     if (!pluginType.equals("cue") && !pluginType.equals("patch")) {
-      System.out.println("Only handling change plugins; type '" + pluginType + "' not supported.");
+      if (pluginType.contains(".")) 
+	System.out.println("Missing plugin type; use 'plugin {remove} [type] [pluginName]'");
+      else
+	System.out.println("Only handling change plugins; type '" + pluginType + "' not supported.");
       return;
     }
     
     tok = st.nextToken();
-    // should be a class spec; try instantiating an object for this
-    Class cls;
     try {
-      cls = Class.forName(tok);
-  
-      if (pluginType.equals("cue")) {
-	if (Class.forName("qualm.plugins.CueChangeNotification").isAssignableFrom(cls))
-	  cuePlugins.add( cls.newInstance() );
-	else
-	  System.out.println("Plugin '" + tok + "' is not a cue notifier; ignoring request.");
-      }
-      if (pluginType.equals("patch")) {
-	if (Class.forName("qualm.plugins.PatchChangeNotification").isAssignableFrom(cls)) 
-	  patchPlugins.add( cls.newInstance() );
-	else 
-	  System.out.println("Plugin '" + tok + "' is not a patch notifier; ignoring request.");
-      }
-      
-    } catch (Exception e) {
-      System.out.println("Unable to create plugin of type '" + tok + "'");
+      if (remove)
+	removePlugin(pluginType, tok);
+      else
+	addPlugin(pluginType, tok);
+    } catch (IllegalArgumentException iae) {
+      System.out.println("Requested plugin '" + tok + "' does not match type '" +
+			 pluginType + "'; ignoring request.");
     }
- 
   }
 
   public void handleCuePlugins() {
