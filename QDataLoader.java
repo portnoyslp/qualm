@@ -4,6 +4,7 @@ import java.io.*;
 import javax.xml.parsers.*;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import java.util.*;
 
 /**
@@ -12,13 +13,19 @@ import java.util.*;
  */
 
 public class QDataLoader extends DefaultHandler {
+
+  boolean validateInput = false;
   
   SAXParser parser;
   QData qdata; 
   
-  public QDataLoader() {
+  public QDataLoader() { this( false ); }
+  
+  public QDataLoader(boolean validateInput) {
+    this.validateInput = validateInput;
     try {
       SAXParserFactory spf = SAXParserFactory.newInstance();
+      spf.setValidating(validateInput);
       parser = spf.newSAXParser();
     } catch (ParserConfigurationException pce) {
       System.out.println("Could not configure parser: " + pce);
@@ -26,7 +33,7 @@ public class QDataLoader extends DefaultHandler {
       System.out.println("Could not build parser: " + se);
     }
   }
-  
+
   public QData readFile( File f ) {
     try {
       parser.parse( f, this );
@@ -274,6 +281,15 @@ public class QDataLoader extends DefaultHandler {
     return (octave*12 + numList.indexOf( key ));
   }
   
+  public InputSource resolveEntity(String publicId, String systemId) 
+    throws org.xml.sax.SAXException, java.io.IOException {
+    if (validateInput)
+      return super.resolveEntity(publicId, systemId);
+    else
+      // return a null input source so that we don't check things we
+      // don't care about.
+      return new InputSource(new StringBufferInputStream(""));
+  }
 
   public static void main(String[] args) {
     for(int i=0; i<args.length; i++)

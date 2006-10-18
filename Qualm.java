@@ -125,6 +125,7 @@ public class Qualm {
     System.out.println("  --nomidi | -n   Ignore MIDI ports");
     System.out.println("  --list | -l     List all ALSA MIDI ports and exit.");
     System.out.println("  --debugmidi     Print all received MIDI events.");
+    System.out.println("  --lint          Carefully check the input file for errors.");
     System.out.println("  --help | -h     Prints this message.");
     System.out.println("  <filename>      The Qualm filename to execute.");
     System.out.println("\n If only one port is specified, an attempt will be made to open the\nport for both input and output.  If no port is specified, 'UM-1' will\nbe used.");
@@ -137,16 +138,18 @@ public class Qualm {
     boolean listPorts = false;
     boolean debugMIDI = false;
     boolean skipMIDI = false;
+    boolean validateInput = false;
 
     // handle argument list
     int i = 0;
-    LongOpt[] longopts = new LongOpt[6];
+    LongOpt[] longopts = new LongOpt[7];
     longopts[i++] = new LongOpt("output", LongOpt.REQUIRED_ARGUMENT, null, 'o');
     longopts[i++] = new LongOpt("input", LongOpt.REQUIRED_ARGUMENT, null, 'i');
     longopts[i++] = new LongOpt("list", LongOpt.NO_ARGUMENT, null, 'l');
     longopts[i++] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
     longopts[i++] = new LongOpt("nomidi", LongOpt.NO_ARGUMENT, null, 'n');
     longopts[i++] = new LongOpt("debugmidi", LongOpt.NO_ARGUMENT, null, 0);
+    longopts[i++] = new LongOpt("lint", LongOpt.NO_ARGUMENT, null, 1);
 
     Getopt g = new Getopt("Qualm", args, "o:i:hln", longopts);
     int c;
@@ -157,6 +160,9 @@ public class Qualm {
 	  // debugmidi option
 	  debugMIDI = true;
 	  break;
+	case 1:
+	  // lint option
+	  validateInput = true;
 	case 'n':
 	  skipMIDI = true;
 	case 'i':
@@ -217,7 +223,7 @@ public class Qualm {
 
     // Load the qualm file
     System.out.println("loading " + inputFilename + "...");
-    QDataLoader qdl = new QDataLoader();
+    QDataLoader qdl = new QDataLoader( validateInput );
     QData data;
 
     if (inputFilename.startsWith("http:") ||
