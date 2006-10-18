@@ -1,5 +1,6 @@
-<?xml version="1.0" standalone='yes'?>
-<!DOCTYPE qualm-data PUBLIC "-//QUALM/DTD Qualm Data//EN" "qualm.dtd">
+<?xml version="1.0"?>
+<!DOCTYPE qualm-data PUBLIC "-//QUALM/DTD Qualm Data//EN" "http://qualm.berlios.de/qualm.dtd">
+
 <qualm-data>
   <title>Test File for Qualm</title>
   <midi-channels>
@@ -8,7 +9,7 @@
     <channel num="4">Drum Kit</channel>
   </midi-channels>
   <patches>
-    <patch id="P1" bank="User" num="1">Nice Piano</patch>
+    <patch id="Nice_Piano" bank="User" num="1">Nice Piano</patch>
     <patch id="P2" bank="User" num="2">TremStr/Str</patch>
     <patch id="P3" bank="User" num="3">Strs/FzzClav</patch>      
     <patch id="P4" bank="PrA"  num="15">Rhodes</patch>       
@@ -17,7 +18,7 @@
     <patch id="P96" bank="User" num="96">TmpG/TmpD</patch>
   </patches>
 
-  <cue-stream id="1st Stream">
+  <cue-stream id="First_Stream">
     <global>
       <trigger><note-on channel="1" note="c6"/></trigger>
       <trigger reverse="yes"><note-on channel="1" note="c2"/></trigger>
@@ -30,7 +31,7 @@
       <events><program-change channel="1" patch="P3"/></events>
     </cue>
     <cue song="2" measure="35">
-      <events><program-change channel="1" patch="P1"/></events>
+      <events><program-change channel="1" patch="Nice_Piano"/></events>
     </cue>
     <cue song="2" measure="102">
       <events><program-change channel="1" patch="P4"/></events>
@@ -46,7 +47,7 @@
       </events>
     </cue>
   </cue-stream>
-  <cue-stream id="2nd Stream">
+  <cue-stream id="Second_Stream">
     <global>
       <trigger><note-on channel="2" note="c6"/></trigger>
     </global>

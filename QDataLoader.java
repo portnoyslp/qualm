@@ -291,6 +291,24 @@ public class QDataLoader extends DefaultHandler {
       return new InputSource(new StringBufferInputStream(""));
   }
 
+  // handle validation errors if appropriate
+  public void error(org.xml.sax.SAXParseException err) {
+    if (validateInput) {
+      System.out.println("*** ERROR: " 
+			 + ", line " + err.getLineNumber()
+			 + ", uri " + err.getSystemId());
+      System.out.println("   " + err.getMessage());
+    }
+  }
+  public void warning(org.xml.sax.SAXParseException err) {
+    if (validateInput) {
+      System.out.println("*** WARNING: " 
+			 + ", line " + err.getLineNumber()
+			 + ", uri " + err.getSystemId());
+      System.out.println("   " + err.getMessage());
+    }
+  }
+
   public static void main(String[] args) {
     for(int i=0; i<args.length; i++)
       System.out.println(args[i] + "=>" + _noteNameToMidi(args[i]));
