@@ -96,13 +96,16 @@ public class QData {
       Collection events = q.getEvents();
       Iterator j = events.iterator();
       while(j.hasNext()) {
-	ProgramChangeEvent pce = (ProgramChangeEvent)j.next();
-	int ch = pce.getChannel();
-	if (patches[ch] != null) {
-	  pce.setPreviousPatch(patches[ch]);
-	}
+	Object obj = j.next();
+	if (obj instanceof ProgramChangeEvent) {
+	  ProgramChangeEvent pce = (ProgramChangeEvent)obj;
+	  int ch = pce.getChannel();
+	  if (patches[ch] != null) {
+	    pce.setPreviousPatch(patches[ch]);
+	  }
 
-	patches[ch] = pce.getPatch();
+	  patches[ch] = pce.getPatch();
+	}
       }
     }
     

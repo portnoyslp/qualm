@@ -6,6 +6,7 @@ import java.util.*;
 public class QController implements Receiver {
 
   Receiver midiOut;
+  MasterController master;
   QAdvancer advancer;
   QData qdata;
   String title;
@@ -19,6 +20,8 @@ public class QController implements Receiver {
     setupTriggers();
   }
 
+  public Receiver getMidiOut() { return midiOut; }
+
   public String getTitle() { return title; }
   public void setTitle(String t) { title=t; }
 
@@ -26,32 +29,10 @@ public class QController implements Receiver {
   public Cue getCurrentCue() { return advancer.getCurrentCue(); }
   public Cue getPendingCue() { return advancer.getPendingCue(); }
 
-  QualmREPL REPL = null;
-  public QualmREPL getREPL() {
-    return REPL;
-  }
+  public void setMaster( MasterController mc ) { master = mc; }
+  public MasterController getMaster() { return master; }
 
-  public void setREPL(QualmREPL newREPL) {
-    this.REPL = newREPL;
-  }
 
-  private void sendEvents( Collection c ) {
-    Iterator i = c.iterator();
-    while(i.hasNext()) {
-      ProgramChangeEvent pce = (ProgramChangeEvent)i.next();
-      sendPatchChange(pce);
-    }
-
-    // update print loop
-    if (REPL != null) {
-      REPL.updateCue( c );
-    }
-  }
-
-  private void sendPatchChange(ProgramChangeEvent pce) {
-    PatchChanger.patchChange(pce, midiOut);
-  }
-  
   private void setupTriggers() {
     // set up triggers
     triggers = new ArrayList();
@@ -59,9 +40,10 @@ public class QController implements Receiver {
     buildTriggerCache();
   }
 
-  public void switchToCue( String cuenum ) {
-    sendEvents( advancer.switchToMeasure( cuenum ) );
+  public Collection changesForCue( String cuenum ) {
+    Collection events = advancer.switchToMeasure(cuenum);
     setupTriggers();
+    return events;
   }
 
   // Implementation of javax.sound.midi.Receiver
@@ -92,11 +74,11 @@ public class QController implements Receiver {
   }
 
   public void advancePatch() {
-    sendEvents( advancer.advancePatch() );
+    master.sendEvents( advancer.advancePatch() );
     setupTriggers();
   }
   public void reversePatch() {
-    sendEvents( advancer.reversePatch() );
+    master.sendEvents( advancer.reversePatch() );
     setupTriggers();
   }
 

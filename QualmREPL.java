@@ -14,8 +14,7 @@ public class QualmREPL extends Thread {
     Preferences.userNodeForPackage(QualmREPL.class);
 
 
-  ArrayList controllers = new ArrayList();
-  MultiplexReceiver mrec = null;
+  MasterController controller = null;
   BufferedReader reader;
   ArrayList cuePlugins = new ArrayList();
   ArrayList patchPlugins = new ArrayList();
@@ -25,11 +24,13 @@ public class QualmREPL extends Thread {
     loadPreferences();
   }
 
-  public void setMultiplexReceiver( MultiplexReceiver m ) { mrec = m; }
+  public void setMasterController(MasterController mc) { 
+    controller = mc; 
+    controller.setREPL(this);
+  }
 
   public void addController(QController qc) {
-    controllers.add(qc);
-    qc.setREPL(this);
+    controller.addController(qc);
   }
 
   public void loadPreferences() {
@@ -96,7 +97,7 @@ public class QualmREPL extends Thread {
     String prompt="";
     
     boolean init = true;
-    Iterator iter = controllers.iterator();
+    Iterator iter = controller.getControllers().iterator();
     while (iter.hasNext()) {
       if (!init) prompt += " | ";
       init = false;
@@ -149,7 +150,7 @@ public class QualmREPL extends Thread {
   }
 
   private QController mainQC() {
-    return (QController) (controllers.get(0));
+    return controller.mainQC();
   }
 
   boolean readlineHandlesPrompt = false;
@@ -166,33 +167,35 @@ public class QualmREPL extends Thread {
     QData qd = mainQC().getQData();
     Iterator iter = c.iterator();
     while(iter.hasNext()) {
-      ProgramChangeEvent pce = (ProgramChangeEvent)iter.next();
-      int ch = pce.getChannel();
-      Patch patch = pce.getPatch();
-      System.out.println( qd.getMidiChannels()[ch] + " -> " +
-			  patch.getDescription() );
-
-      // update the PatchChange plugins
-      handlePatchPlugins( ch, qd.getMidiChannels()[ch], patch);
+      Object obj = iter.next();
+      if (obj instanceof ProgramChangeEvent) {
+	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
+	int ch = pce.getChannel();
+	Patch patch = pce.getPatch();
+	System.out.println( qd.getMidiChannels()[ch] + " -> " +
+			    patch.getDescription() );
+	
+	// update the PatchChange plugins
+	handlePatchPlugins( ch, qd.getMidiChannels()[ch], patch);
+      }
     }
-      // redo prompt
+
+    // redo prompt
     if (!readlineHandlesPrompt) {
       updatePrompt();
     }
   }
 
-  public void reset() {
+  public void reset() { 
     gotoCue("0.0");
   }
 
-  public void gotoCue(String cueName) {
-    // send all controllers to the cue number named in the line
-    Iterator iter = controllers.iterator();
-    while (iter.hasNext()) {
-      QController qc = (QController)iter.next();
-      qc.switchToCue( cueName );
-    }
+  public void advanceController (String line) {
+    String stream_id = line.substring(line.indexOf(" ")).trim();
+    controller.advanceStream(stream_id);
   }
+
+  public void gotoCue(String cueName) { controller.gotoCue(cueName); }
 
   public void processLine( String line ) {
     readlineHandlesPrompt = true;
@@ -216,15 +219,18 @@ public class QualmREPL extends Thread {
 	reset();
 
       } else if (lowerCase.equals("showmidi")) {
-	mrec.setDebugMIDI(true);
+	controller.setDebugMIDI(true);
       } else if (lowerCase.equals("unshowmidi")) {
-	mrec.setDebugMIDI(false);
+	controller.setDebugMIDI(false);
 
       } else if (lowerCase.startsWith("plugin")) {
 	parsePluginLine(line);
 
       } else if (lowerCase.startsWith("save")) {
 	savePreferences();
+
+      } else if (lowerCase.startsWith("adv")) {
+	advanceController(line);
 
       } else {
 	gotoCue(line);
@@ -341,7 +347,7 @@ public class QualmREPL extends Thread {
     // Tell any CueChangeNotification plugins
     Iterator iter = cuePlugins.iterator();
     while (iter.hasNext()) {
-      ((qualm.plugins.CueChangeNotification)iter.next()).cueChange(controllers);
+      ((qualm.plugins.CueChangeNotification)iter.next()).cueChange(controller);
     }
   }
 

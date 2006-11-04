@@ -120,6 +120,15 @@ public class QDataLoader extends DefaultHandler {
 	  System.err.println("WARNING: could not find patch with id " + patchID);
 	}
 	eventSet.add(new ProgramChangeEvent(ch, foundPatch));
+
+      } else if (qName.equals("advance")) {
+	StreamAdvance sa = new StreamAdvance( attributes.getValue("stream"));
+	if (attributes.getValue("song")!=null)
+	  sa.setSong(attributes.getValue("song"));
+	if (attributes.getValue("measure")!=null)
+	  sa.setMeasure(attributes.getValue("measure"));
+
+	eventSet.add(sa);
 	
       } else if (qName.equals("trigger")) {
 	currentAttribute="reverse";

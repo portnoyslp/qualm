@@ -28,10 +28,10 @@ public class DisplayCueChange extends CueChangeNotification {
     frame.show();
   }
 
-  public void cueChange(Collection qControllers) {
+  public void cueChange(MasterController master) {
     // get all the current and pending cues
     String text = "<html><body>";
-    Iterator iter = qControllers.iterator();
+    Iterator iter = master.getControllers().iterator();
     boolean init = true;
     while (iter.hasNext()) {
       if (!init) text +="<br>";

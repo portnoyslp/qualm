@@ -96,20 +96,24 @@ public class Qualm {
 	  System.out.println("   [trans:" + md.getMaxTransmitters() + " rec:" + md.getMaxReceivers() + "]");
       } catch (MidiUnavailableException mue) { System.out.println(info.getName() + " unavailable"); }
 
-      if ((cName.indexOf(inputPort) != -1 ||
-	   info.getName().indexOf(inputPort) != -1) &&
-	  md!=null && md.getMaxTransmitters() != 0) {
-	out[0] = info;
-	if (debugMIDI)
-	  System.out.println("Using " + out[0].getName() + " (" + cName + ") for input.");
+      if (inputPort != null) {
+	if ((cName.indexOf(inputPort) != -1 ||
+	     info.getName().indexOf(inputPort) != -1) &&
+	    md!=null && md.getMaxTransmitters() != 0) {
+	  out[0] = info;
+	  if (debugMIDI)
+	    System.out.println("Using " + out[0].getName() + " (" + cName + ") for input.");
+	}
       }
 	
-      if ((cName.indexOf(outputPort) != -1 ||
-	   info.getName().indexOf(outputPort) != -1) &&
-	  md!=null && md.getMaxReceivers() != 0) { 
-	out[1] = info;
-	if (debugMIDI)
-	  System.out.println("Using " + out[1].getName() + " (" + cName + ") for output.");
+      if (outputPort != null) {
+	if ((cName.indexOf(outputPort) != -1 ||
+	     info.getName().indexOf(outputPort) != -1) &&
+	    md!=null && md.getMaxReceivers() != 0) { 
+	  out[1] = info;
+	  if (debugMIDI)
+	    System.out.println("Using " + out[1].getName() + " (" + cName + ") for output.");
+	}
       }
     }
 
@@ -262,11 +266,11 @@ public class Qualm {
     // prepare patches properly
     data.prepareCueStreams();
 
-    MultiplexReceiver mrec = new MultiplexReceiver();
-    if (debugMIDI) mrec.setDebugMIDI(true);
+    MasterController mc = new MasterController( midiOut );
+    if (debugMIDI) mc.setDebugMIDI(true);
 
     QualmREPL repl = new QualmREPL();
-    repl.setMultiplexReceiver( mrec );
+    repl.setMasterController( mc );
 
     // For each cue stream, start a controller
     boolean first = true;
@@ -277,16 +281,14 @@ public class Qualm {
 					data );
 
       repl.addController(qc);
-      mrec.addReceiver(qc);
     }
 
     // connect the transmitter to the receiver.
     if (!skipMIDI)
-      midiIn.setReceiver( mrec );
+      midiIn.setReceiver( mc );
   
     // start the REPL
     repl.start();
-      
   }
 
 }

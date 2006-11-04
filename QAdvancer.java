@@ -93,8 +93,11 @@ public class QAdvancer {
     Collection out = new ArrayList();
     Iterator iter = currentCue.getEvents().iterator();
     while (iter.hasNext()) {
-      ProgramChangeEvent pce = (ProgramChangeEvent)iter.next();
-      out.add( new ProgramChangeEvent(pce.getChannel(), pce.getPreviousPatch()) );
+      Object obj = iter.next();
+      if (obj instanceof ProgramChangeEvent) {
+	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
+	out.add( new ProgramChangeEvent(pce.getChannel(), pce.getPreviousPatch()) );
+      }
     }
 
     pendingCue = currentCue;
@@ -135,7 +138,7 @@ public class QAdvancer {
     for(int i=0; i<midiChans.length; i++) 
       if (midiChans[i] != null) channelCount++;
       
-    ProgramChangeEvent[] events = new ProgramChangeEvent[ midiChans.length ];
+    CuedProgramChangeEvent[] events = new CuedProgramChangeEvent[ midiChans.length ];
     for(int i=0; i<events.length; i++) events[i] = null;
 
     int programCount = 0;
@@ -146,11 +149,16 @@ public class QAdvancer {
     while ( loopQ != null && programCount < channelCount ) {
       Iterator iter = loopQ.getEvents().iterator();
       while (iter.hasNext()) {
-	ProgramChangeEvent ev = (ProgramChangeEvent)iter.next();
-	int ch = ev.getChannel();
-	if (events[ch] == null && midiChans[ch] != null) {
-	  events[ch] = ev;
-	  programCount++;
+	Object obj = iter.next();
+	if (obj instanceof ProgramChangeEvent) {
+	  ProgramChangeEvent pce = (ProgramChangeEvent)obj;
+	  CuedProgramChangeEvent ev = 
+	    new CuedProgramChangeEvent(loopQ, pce);
+	  int ch = ev.getChannel();
+	  if (events[ch] == null && midiChans[ch] != null) {
+	    events[ch] = ev;
+	    programCount++;
+	  }
 	}
       }
 

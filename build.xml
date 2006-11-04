@@ -15,12 +15,12 @@
     </javac>
   </target>
 
-  <target name="dist">
+  <target name="dist" depends="compile">
     <jar destfile="qualm.jar"
-	 manifest="qualm.manifest"
-	 basedir=".."
 	 includes="qualm/**/*.class"
-	 excludes="**/testing/"/>
+	 manifest="qualm.manifest"
+	 basedir=".."/>
+<!--	 excludes="**/testing/" -->
   </target>
 
 </project>
