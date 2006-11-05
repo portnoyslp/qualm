@@ -94,62 +94,73 @@ public class AuditionPatches {
     System.out.flush();
   }
 
-  public static void loopThroughPatches(QData data) {
+  private static TreeSet setupPatches() {
     TreeSet patches = new TreeSet( new Comparator() { 
 	public int compare(Object a, Object b) {
 	  return ((Patch)a).getID().compareTo( ((Patch)b).getID() );
 	}	  
       });
     patches.addAll(data.getPatches());
+    return patches;
+  }
+
+  public static void loopThroughPatches() {
+    TreeSet patches = setupPatches(); 
 
     BufferedReader reader = 
       new BufferedReader( new InputStreamReader( System.in ));
 
     Iterator iter = patches.iterator();
+    boolean startRun = true;
     while(iter.hasNext()) {
       Patch p = (Patch)iter.next();
       prompt(p);
       
-      boolean next = false;
-      while (!next) {
-	auditionPatch(p);
+      boolean advancePatch = false;
+      while (!advancePatch) {
+	if (!startRun)
+	  auditionPatch(p);
+	startRun = false;
 
 	try { 
 	  String line = reader.readLine();
-	  if (line == null || line.trim().equals("")) {
+	  line = line.trim();
+	  if (line == null || line.equals("")) {
 	    // re-audition by continuing in loop...
 	    prompt(p);
 	  } else if (line.toLowerCase().equals("n") ||
 		     line.toLowerCase().equals("next")) {
 	    // next patch in sequence.
-	    next = true;
+	    advancePatch = true;
+	  } else if (line.toLowerCase().equals("quit")) {
+	    System.exit(0);
+	  } else if (line.toLowerCase().equals("single")) {
+	    playSingle = true;
+	  } else if (line.toLowerCase().equals("multiple") ||
+		     line.toLowerCase().equals("chord")) {
+	    playSingle = false;
+	  } else if (line.toLowerCase().equals("reload")) {
+	    String targetName = p.getID();
+	    loadData();
+	    patches = setupPatches();
+	    Patch target = data.lookupPatch(targetName);
+	    if (target == null) {
+	      System.out.println("Could not find current patch '" + target + 
+				 "' in reload of data; starting from the beginning.");
+	      iter = patches.iterator();
+	    } else {
+	      iter = iteratorForPatch(target, patches);
+	      advancePatch = true;
+	    }
 	  } else {
 	    // we might be specifying a patch name; try to move to it if so
-	    Patch target = data.lookupPatch(line.trim());
+	    Patch target = data.lookupPatch(line);
 	    if (target == null) {
-	      System.out.println("Unable to switch to patch '" + line.trim() +
+	      System.out.println("Unable to switch to patch '" + line +
 				 "'; ignoring.");
 	    } else {
-	      // the insanity of having to replace an iterator on the
-	      // fly.  Here we go through to find the new patch, but
-	      // we really need to find the *preceding* patch so we
-	      // know when to stop.
-	      Patch preceding = null;
-	      Iterator iter2 = patches.iterator();
-	      while (iter2.hasNext()) {
-		Patch q = (Patch)iter2.next();
-		if (q.equals(target)) break;
-		preceding = q;
-	      }
-	      iter2 = patches.iterator();
-	      if (preceding != null) {
-		while (iter2.hasNext()) {
-		  if ( ((Patch)iter2.next()).equals(preceding) )
-		    break;
-		}
-	      }
-	      iter = iter2;
-	      next = true;
+	      iter = iteratorForPatch(target, patches);
+	      advancePatch = true;
 	    }
 	  }
 	} catch (Exception e) {
@@ -160,6 +171,47 @@ public class AuditionPatches {
     }
   }
 
+  private static Iterator iteratorForPatch(Patch target, TreeSet patches) {
+    // the insanity of having to replace an iterator on the
+    // fly.  Here we go through to find the new patch, but
+    // we really need to find the *preceding* patch so we
+    // know when to stop.
+    Patch preceding = null;
+    Iterator iter2 = patches.iterator();
+    while (iter2.hasNext()) {
+      Patch q = (Patch)iter2.next();
+      if (q.equals(target)) break;
+      preceding = q;
+    }
+    iter2 = patches.iterator();
+    if (preceding != null) {
+      while (iter2.hasNext()) {
+	if ( ((Patch)iter2.next()).equals(preceding) )
+	  break;
+      }
+    }
+    return iter2;
+  }
+
+  static String inputFilename;
+  static QData data;
+
+  private static void loadData() {
+    if (inputFilename == null)
+      throw new RuntimeException("loadData called without inputFilename in place.");
+    
+    QDataLoader qdl = new QDataLoader();
+    
+    if (inputFilename.startsWith("http:") ||
+	inputFilename.startsWith("ftp:") ||
+	inputFilename.startsWith("file:")) {
+      // assume we have a URL
+      data = qdl.readSource( new org.xml.sax.InputSource(inputFilename));
+    } else {
+      data = qdl.readFile( new java.io.File( inputFilename ));
+    }
+
+  }
 
   public static void main(String[] args) {
 
@@ -194,19 +246,9 @@ public class AuditionPatches {
       System.out.println("No filename given.");
       System.exit(0);
     }
-    String inputFilename = args[g.getOptind()];
+    inputFilename = args[g.getOptind()];
 
-    QDataLoader qdl = new QDataLoader();
-    QData data;
-    
-    if (inputFilename.startsWith("http:") ||
-	inputFilename.startsWith("ftp:") ||
-	inputFilename.startsWith("file:")) {
-      // assume we have a URL
-      data = qdl.readSource( new org.xml.sax.InputSource(inputFilename));
-    } else {
-      data = qdl.readFile( new java.io.File( inputFilename ));
-    }
+    loadData();
 
     // get the default patch
     defaultPatch = data.lookupPatch( defaultPatchName );
@@ -235,7 +277,7 @@ public class AuditionPatches {
       System.out.println("Unable to open device for output:" + mdu2);
     }
 
-    loopThroughPatches(data);
+    loopThroughPatches();
     System.exit(0);
   }
 
