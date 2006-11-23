@@ -45,7 +45,7 @@ public class QAdvancer {
     // if our target cue equals the next one, then use it instead.
     try {
       Cue nextQ = findNextCue( currentCue );
-      if (newQ.equals( nextQ )) {
+      if (nextQ != null && newQ.equals( nextQ )) {
 	currentCue = nextQ;
       }
     } catch (Exception e) {

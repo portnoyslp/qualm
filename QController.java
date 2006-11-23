@@ -133,7 +133,7 @@ public class QController implements Receiver {
   }
 
   private void addCurrentTriggers() {
-    Cue cue = advancer.getPendingCue();
+    Cue cue = advancer.getCurrentCue();
     if (cue != null) {
       Iterator iter = cue.getTriggers().iterator();
       while(iter.hasNext()) {
