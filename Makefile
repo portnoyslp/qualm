@@ -4,3 +4,6 @@ all:
 dist:
 	ant dist
 
+check:
+	ant -emacs check
+

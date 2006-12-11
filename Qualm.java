@@ -130,12 +130,31 @@ public class Qualm {
     System.out.println("  --list | -l     List all ALSA MIDI ports and exit.");
     System.out.println("  --debugmidi     Print all received MIDI events.");
     System.out.println("  --lint          Carefully check the input file for errors.");
+    System.out.println("  --version | -v  Give information on the build identifier.");
     System.out.println("  --help | -h     Prints this message.");
     System.out.println("  <filename>      The Qualm filename to execute.");
     System.out.println("\n If only one port is specified, an attempt will be made to open the\nport for both input and output.  If no port is specified, 'UM-1' will\nbe used.");
   }
-    
+
+  public static void loadProperties() {
+    String propsFile = "qualm/qualm.properties";
+    try {
+      System.getProperties().load(ClassLoader.getSystemResource(propsFile).openStream());
+    } catch (java.io.IOException ioe) {
+      System.err.println("Unable to open properties file " + propsFile + ": " + ioe.getMessage());
+    } catch (NullPointerException ne) {
+      System.err.println("Unable to find properties file " + propsFile);
+    }
+  }
+
+  public static String versionString() {
+    return "Qualm v" + System.getProperty("qualm.version.number") +
+      " (build " + System.getProperty("qualm.version.build") + ")";
+  }
+
   public static void main(String[] args) throws Exception {
+
+    loadProperties();
 
     String inputPort = null;
     String outputPort = null;
@@ -146,7 +165,7 @@ public class Qualm {
 
     // handle argument list
     int i = 0;
-    LongOpt[] longopts = new LongOpt[7];
+    LongOpt[] longopts = new LongOpt[8];
     longopts[i++] = new LongOpt("output", LongOpt.REQUIRED_ARGUMENT, null, 'o');
     longopts[i++] = new LongOpt("input", LongOpt.REQUIRED_ARGUMENT, null, 'i');
     longopts[i++] = new LongOpt("list", LongOpt.NO_ARGUMENT, null, 'l');
@@ -154,8 +173,9 @@ public class Qualm {
     longopts[i++] = new LongOpt("nomidi", LongOpt.NO_ARGUMENT, null, 'n');
     longopts[i++] = new LongOpt("debugmidi", LongOpt.NO_ARGUMENT, null, 0);
     longopts[i++] = new LongOpt("lint", LongOpt.NO_ARGUMENT, null, 1);
+    longopts[i++] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
 
-    Getopt g = new Getopt("Qualm", args, "o:i:hln", longopts);
+    Getopt g = new Getopt("Qualm", args, "o:i:hlnv", longopts);
     int c;
     while ((c = g.getopt()) != -1) {
       switch(c)
@@ -180,6 +200,8 @@ public class Qualm {
 	  break;
 	case 'h':
 	  usage();
+	case 'v':
+	  System.out.println(versionString());
 	  System.exit(0);
 	}
     }

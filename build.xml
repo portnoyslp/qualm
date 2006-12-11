@@ -1,26 +1,60 @@
 <?xml version="1.0"?>
-<project name="qualm" default="all">
+<project name="qualm" basedir=".." default="all">
+
+  <property name="srcdir" value="qualm"/>
 
   <path id="classpath">
     <pathelement location="/usr/share/java/gnu-getopt.jar"/>
-    <pathelement location=".."/>
+    <pathelement location="/usr/share/java/junit.jar"/>
+    <pathelement location="${basedir}"/>
   </path>
 
   <target name="all" depends="compile"
 	  description="Build the system"/>
 
-  <target name="compile">
-    <javac debug="true" source="1.4" srcdir=".">
+  <target name="init">
+    <exec executable="svnversion"
+	  failifexecutionfails="no"
+	  outputproperty="buildversion">
+      <arg value="${srcdir}"/>
+      <arg value="-n"/>
+    </exec>
+    <replaceregexp file="${srcdir}/qualm.properties" 
+		   match="(qualm.version.build:) \S+"
+		   replace="\1 ${buildversion}"/>
+    <echo message="Building version ${buildversion}"/>
+  </target>
+
+  <target name="compile" depends="init">
+    <javac debug="true" source="1.4" srcdir="${srcdir}"
+	   excludes="qualm/testing/junit/**">
       <classpath refid="classpath"/>
     </javac>
   </target>
 
-  <target name="dist" depends="compile">
-    <jar destfile="qualm.jar"
-	 includes="qualm/**/*.class"
-	 manifest="qualm.manifest"
-	 basedir=".."/>
-<!--	 excludes="**/testing/" -->
+  <target name="dist" depends="compile"> 
+    <jar destfile="${srcdir}/qualm.jar"
+	 excludes="${srcdir}/testing/junit/**"
+	 includes="${srcdir}/**/*.class"
+	 manifest="${srcdir}/qualm.manifest"
+	 basedir="${basedir}"/>
   </target>
+
+  <target name="check" depends="compile-test">
+    <junit printsummary="yes">
+      <classpath refid="classpath"/>
+      <formatter type="plain"/>
+      <batchtest>
+	<fileset dir="${basedir}" includes="${srcdir}/**/junit/*Tester.class"/>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="compile-test">
+    <javac debug="true" source="1.4" srcdir="${srcdir}">
+      <classpath refid="classpath"/>
+    </javac>
+  </target>
+
 
 </project>

@@ -232,6 +232,9 @@ public class QualmREPL extends Thread {
       } else if (lowerCase.startsWith("adv")) {
 	advanceController(line);
 
+      } else if (lowerCase.startsWith("version")) {
+	System.out.println( Qualm.versionString() );
+
       } else {
 	gotoCue(line);
       }
@@ -324,7 +327,7 @@ public class QualmREPL extends Thread {
       pluginType = tok;
 
     if (!pluginType.equals("cue") && !pluginType.equals("patch")) {
-      if (pluginType.contains(".")) 
+      if (pluginType.indexOf(".") != -1) 
 	System.out.println("Missing plugin type; use 'plugin {remove} [type] [pluginName]'");
       else
 	System.out.println("Only handling change plugins; type '" + pluginType + "' not supported.");
