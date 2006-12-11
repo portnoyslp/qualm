@@ -4,7 +4,7 @@
 <qualm-data>
   <title>Test File for Qualm</title>
   <midi-channels>
-    <channel num="1">Lower Keyboard</channel>
+    <channel num="1" device-type="Roland JV-1080">Lower Keyboard</channel>
     <channel num="2">Upper Keyboard</channel>
     <channel num="4">Drum Kit</channel>
   </midi-channels>

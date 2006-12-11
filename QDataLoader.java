@@ -86,6 +86,7 @@ public class QDataLoader extends DefaultHandler {
       if (qName.equals("channel")) {
 	// dealing with a midi-channel definition
 	auxValue[0] = attributes.getValue("num");
+	auxValue[1] = attributes.getValue("device-type");
 	
       } else if (qName.equals("patch")) {
 	currentElement = "patch `" + attributes.getValue("id") + "'";
@@ -185,7 +186,7 @@ public class QDataLoader extends DefaultHandler {
 
     } else if (qName.equals("channel")) {
       // dealing with a midi-channel definition
-      qdata.addMidiChannel( Integer.parseInt(auxValue[0])-1, content );
+      qdata.addMidiChannel( Integer.parseInt(auxValue[0])-1, auxValue[1], content );
       
     } else if (qName.equals("patch")) {
       // patch name; ignoring channel
@@ -291,7 +292,7 @@ public class QDataLoader extends DefaultHandler {
   }
   
   public InputSource resolveEntity(String publicId, String systemId) 
-    throws org.xml.sax.SAXException, java.io.IOException {
+    throws org.xml.sax.SAXException {
     if (validateInput)
       return super.resolveEntity(publicId, systemId);
     else

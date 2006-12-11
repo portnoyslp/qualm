@@ -26,7 +26,8 @@ public abstract class ChangeDelegate {
    * valid.
    *
    * @param pce the event under consideration.
-   * @return a <code>boolean</code> value indicating whether or not this is a valid event.
+   * @return a <code>boolean</code> value indicating whether or not
+   * <code>pce</code> is a valid event.
    */
   public boolean isValid( ProgramChangeEvent pce ) { return true; }
 }

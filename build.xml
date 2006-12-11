@@ -19,6 +19,8 @@
       <arg value="${srcdir}"/>
       <arg value="-n"/>
     </exec>
+    <copy file="${srcdir}/qualm.properties.tmpl"
+	  tofile="${srcdir}/qualm.properties"/>
     <replaceregexp file="${srcdir}/qualm.properties" 
 		   match="(qualm.version.build:) \S+"
 		   replace="\1 ${buildversion}"/>

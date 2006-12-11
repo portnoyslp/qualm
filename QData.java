@@ -22,9 +22,9 @@ public class QData {
   public String getTitle() { return title; }
   public void setTitle(String t) { title=t; }
 
-  public void addMidiChannel( int num, String desc ) {
+  public void addMidiChannel( int num, String deviceType, String desc ) {
     channels[num] = desc;
-    PatchChanger.addPatchChanger( num, null );
+    PatchChanger.addPatchChanger( num, deviceType );
   }
   public String[] getMidiChannels() { return channels; }
   public Collection getPatches() { return patches.values(); }
