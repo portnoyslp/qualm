@@ -42,7 +42,7 @@ public class RolandDelegate extends ChangeDelegate {
 	  }
 	}
 	
-	// for Roland, if the patchNum is greater than 128, than we're
+	// for Roland, if the patchNum is greater than 128, then we're
 	// increasing the bank LSB by one.
 	if (patchNum >= 128 &&
 	    bankName.indexOf('/')==-1) {

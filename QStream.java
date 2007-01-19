@@ -11,12 +11,14 @@ public class QStream {
   SortedSet cues;
 
   public QStream() {
-    title = null;
+    title = defaultTitle();
     cues = new TreeSet();
   } 
 
+  private String defaultTitle() { return "QStream"+hashCode(); }
+
   public String getTitle() { return title; }
-  public void setTitle(String t) { title=t; }
+  public void setTitle(String t) { if (t!=null) title=t; }
 
   public void addCue( Cue cue ) {
     cues.add(cue);

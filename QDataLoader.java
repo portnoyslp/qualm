@@ -293,12 +293,16 @@ public class QDataLoader extends DefaultHandler {
   
   public InputSource resolveEntity(String publicId, String systemId) 
     throws org.xml.sax.SAXException {
-    if (validateInput)
-      return super.resolveEntity(publicId, systemId);
-    else
-      // return a null input source so that we don't check things we
-      // don't care about.
-      return new InputSource(new StringBufferInputStream(""));
+    try { 
+      if (validateInput)
+	return super.resolveEntity(publicId, systemId);
+      else
+	// return a null input source so that we don't check things we
+	// don't care about.
+	return new InputSource(new StringBufferInputStream(""));
+    } catch (java.io.IOException ioe) {
+      throw new RuntimeException(ioe);
+    }
   }
 
   // handle validation errors if appropriate

@@ -37,7 +37,7 @@
   <target name="dist" depends="compile"> 
     <jar destfile="${srcdir}/qualm.jar"
 	 excludes="${srcdir}/testing/junit/**"
-	 includes="${srcdir}/**/*.class"
+	 includes="${srcdir}/**/*.class ${srcdir}/qualm.properties"
 	 manifest="${srcdir}/qualm.manifest"
 	 basedir="${basedir}"/>
   </target>

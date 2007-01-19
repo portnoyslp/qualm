@@ -11,8 +11,8 @@
   <patches>
     <patch id="Nice_Piano" bank="User" num="1">Nice Piano</patch>
     <patch id="P2" bank="User" num="2">TremStr/Str</patch>
-    <patch id="P3" bank="User" num="3">Strs/FzzClav</patch>      
-    <patch id="P4" bank="PrA"  num="15">Rhodes</patch>       
+    <patch id="P3" bank="User" num="3">Strs/FzzClav</patch>
+    <patch id="P4" bank="PrA"  num="15">Rhodes</patch>
     <patch id="P5" bank="User" num="5">Organ</patch>
     <patch id="P95" bank="User" num="95">LKB/TmpF</patch>
     <patch id="P96" bank="User" num="96">TmpG/TmpD</patch>
