@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
-<project name="qualm" basedir=".." default="all">
+<project name="qualm" basedir="." default="all">
 
-  <property name="srcdir" value="qualm"/>
+  <property name="srcdir" value="${basedir}/src"/>
+  <property name="builddir" value="${basedir}/build"/>
 
   <path id="classpath">
     <pathelement location="/usr/share/java/gnu-getopt.jar"/>
@@ -13,6 +14,7 @@
 	  description="Build the system"/>
 
   <target name="init">
+    <mkdir dir="${builddir}"/>
     <exec executable="svnversion"
 	  failifexecutionfails="no"
 	  outputproperty="buildversion">
@@ -20,24 +22,24 @@
       <arg value="-n"/>
     </exec>
     <copy file="${srcdir}/qualm.properties.tmpl"
-	  tofile="${srcdir}/qualm.properties"/>
-    <replaceregexp file="${srcdir}/qualm.properties" 
+	  tofile="${builddir}/qualm.properties"/>
+    <replaceregexp file="${builddir}/qualm.properties" 
 		   match="(qualm.version.build:) \S+"
 		   replace="\1 ${buildversion}"/>
     <echo message="Building version ${buildversion}"/>
   </target>
 
   <target name="compile" depends="init">
-    <javac debug="true" source="1.4" srcdir="${srcdir}"
+    <javac debug="true" source="1.4" destdir="${builddir}" srcdir="${srcdir}"
 	   excludes="qualm/testing/junit/**">
       <classpath refid="classpath"/>
     </javac>
   </target>
 
   <target name="dist" depends="compile"> 
-    <jar destfile="${srcdir}/qualm.jar"
-	 excludes="${srcdir}/testing/junit/**"
-	 includes="${srcdir}/**/*.class ${srcdir}/qualm.properties"
+    <jar destfile="${basedir}/qualm.jar"
+	 excludes="${builddir}/testing/junit/**"
+	 includes="${builddir}/**/*.class ${srcdir}/qualm.properties"
 	 manifest="${srcdir}/qualm.manifest"
 	 basedir="${basedir}"/>
   </target>
