@@ -1,0 +1,207 @@
+\documentclass{article}
+\usepackage{palatino}
+\usepackage{html}
+\usepackage{xspace}
+\newcommand{\q}{{\sf\bf{Qualm}}\xspace}
+\newcommand{\code}[1]{{\tt #1}}
+\begin{document}
+
+\title{\q: Queueing Applications for Live MIDI}
+\author{Stephen Peters}
+\maketitle
+
+\section{Rationale}
+
+\q was created to deal with the problem of live shows that need to
+switch among a large set of pre-defined synthesizer patches.  This has
+come in most handy for amateur productions of musicals, starting with
+a \htmladdnormallink{musical group at
+MIT}{http://www.mit.edu/\textasciitilde\ mtg}.
+
+Many musicals would be scored for an acoustic orchestra, but more and
+more ``rock''-style shows were appearing that wished to make use of
+different keyboard sounds.  For these, we would either piano
+throughout, or use whatever pre-programmed sounds the keyboard had.
+If we wanted to get really fancy, we'd borrow a synth module and
+select them by hand.
+
+This worked well until \htmladdnormallink{{\em Bat Boy: The
+Musical}}{http://en.wikipedia.org/wiki/Bat_Boy:_The_Musical}.  Before
+that show, we were looking at maybe a dozen patches in a show.  But
+{\em Bat Boy} required two keyboard players, and one of those players
+had to work with both an upper and a lower keyboard simultaneously.
+Both parts had well over a hundred different changes to select.
+
+For the K1 part, we did a souped-up version of our old ``select
+patches by hand'' method.  We programmed all the patches sequentially
+into a Korg NS5R synthesizer module, and configured a pedal to go
+through them one-by-one.  This worked well, but since the synth module
+would only hold a limited number, we had to store each act separately,
+and download lots of information to the module before each act.  Plus,
+if you wanted to change the way one instrument sounded, you had to
+make the change and then copy it everywhere that sound got used;
+needless to say, that was a rather tedious operation, and became even
+more so when you wanted to insert or delete a patch.
+
+To avoid all that -- and because the upper- and lower-keyboard thing
+would have made that setup especially tough -- we chose a different
+route for the second keyboard part.  Each patch would be stored just
+once on a second synth module (a Roland JV-1080), and I created a
+computer program that would store information about where each patch
+was, and when the right moment occurred, it would just look up what
+the next patch should be and tell the synth module to load it.  Not
+only did I not have to worry about copying patches around, but I could
+be really flexible about what kind of trigger would switch the patch;
+I could hit the Enter key on the computer, step on a pedal, hit a
+particular note on the keyboard, even temporarily set a special key as
+the trigger so that it would switch automatically while I played.  And
+the control file could be edited to insert or delete new patches, or
+even add in control of a drum module at the last minute.
+
+The software that did all this I dubbed \q, ostensibly "Queueing
+Applications for Live MIDI", but really because the music directors
+for that show were very nervous about whether this could work.  Since
+then, it's been used for other patch-heavy shows like {\em Star Wars
+  Trilogy: Musical Edition}, {\em The Who's Tommy}, and {\em Children
+  of Eden}.  Most of these were operating a single keyboard with many
+patches, but {\em Children of Eden}, for one, actually used a single
+synthesizer module to deal with input from three separate keyboards at
+the same time, utilizing a separate stream of patches for each one.
+
+\section{Installation}
+
+\q is a Java program, and as such can be installed by simply
+downloading a jar file.  In order to get MIDI support working
+properly, however, there are certain system requirements that vary
+from operating system to operating system.  Some of this information
+can also be found on the \htmladdnormallinkfoot{Java Sound
+  Resources}{http://jsresources.org} pages.
+
+\subsection{MIDI I/O}
+
+The first hurdle for getting \q working is making sure that the Java
+subsystem can handle output to MIDI hardware devices.  For different
+operating systems, there are different steps that must be followed:
+
+\subsubsection{Linux}
+
+For Linux, getting MIDI I/O working means that you need the Advanced
+Linux Sound Architecture, or ALSA.  If your laptop has a reasonably
+new install (Linux kernel 2.6 series), you already have ALSA.  That
+should mean that you can skip this paragraph.  If not, check to see if
+you have alsa by opening a terminal window and trying to run
+\code{alsamixer}.  If you have ALSA installed and configured, this
+should run and display a rather crude-looking graph of the current
+mixer settings, but you can just hit Control-C to exit.  If you don't
+have ALSA installed, you'll need to do so.  I'm not going to go
+through all the rigmarole for doing this here; there are how-to guides
+to ALSA available on the web.
+
+\subsubsection{MacOS X}
+
+The Java that comes with OSX doesn't have support for MIDI I/O out of
+the box.  However, it is fairly easy to locate the
+\htmladdnormallinkfoot{Plumstone
+MIDI}{http://www.mandolane.co.uk/swPlumstone.html} project, which will
+do the right thing for OSX machines.  For PPC Macs, this exists as
+freeware; a similar project (Mandolane) exists as shareware for
+PPC/Intel installs.
+
+Installing the Plumstone jar file in your computer's
+\code{/Library/Java/Extensions} folder will enable MIDI I/O.
+
+\subsubsection{Windows}
+
+As long as you're using Java 1.4 or later, you shouldn't have a
+problem with MIDI I/O under Windows.
+
+\subsection{The GetOpt Package}
+
+Assuming ALSA is installed and running, what else does \q need?  Well,
+it needs an options-parsing package.  This is probably a package
+called 'java-getopt', 'gnu.getopt', or 'libgetopt-java', depending on
+what brand of Linux you're using.  That needs to be installed, using
+whatever tools you normally use to install things.
+
+I've prepped a small distribution of \q that you can fetch from
+http://www.portnoy.org/MTG/eden2006/Synth/qualm.jar.  After downloading
+it, you should be able to run it with
+
+    java -jar qualm.jar
+    http://www.portnoy.org/MTG/eden2006/Synth/children-of-eden.xml
+
+If everything is working, this will probably exit, complaining about not
+being able to find an input port named UM-1 (the default designation of
+our USB MIDI module).  If you have the USB module plugged in, this
+should very happily start up and give you the \q prompt.
+
+Running \q
+
+\q is pretty straightforward.  It takes a control file written in
+xml, consisting of a list of patches, and a set of "cues" (gathered into
+independent cue "streams") which describe the patch changes and the
+events that will trigger the next cue in the sequence.  I won't go into
+all the details of how you create such a control file (since that's my
+job :-).
+
+Once \q is running, it will occasionally pepper the output with lines
+like
+
+    K2 -> Sust. String Pad
+
+These are simply announcing that it's just changed the patch on the
+channel called "K2" to a "Sust. String Pad" sound.  Most of the time,
+though, what you see is something like:
+
+    14.1-14.54 | 14.19-14.65 | 14.1-14.64>
+
+This is the main prompt.  It's telling you what cue it thinks each cue
+stream is currently handling (for Children of Eden, we have three
+streams, one for each keyboard player).  Each cue is actually listing
+both the current cue and the next cue it will expect in that stream. 
+All the cues are indexed by song and measure number, so "14.19-14.65"
+says that it is playing the patches associated with song 14, between
+measures 19 and 65.
+
+You can tell \q to advance to a certain point in the score by
+entering two numbers, separated by a period (".").  So, if you want to
+go to song 17, measure 22, you can type "17.22", and then \q will
+announce that it has reset the patches for that particular location in
+the score, and placed each cue stream at the proper cue:
+
+    14.1-14.54 | 14.19-14.65 | 14.1-14.64> *17.22*
+    K1 -> Harp
+    K2 -> Dulcimer
+    K3 -> Pulse Keys
+    15.1-18.1 | 17.22-17.34 | 17.14-17.45>
+
+This is mostly useful for rehearsals, when our fearless leader announces
+that we're going to start playing at a specific spot.  It's also
+occasionally useful during shows, when we just want to sync up during
+long breaks to make sure we're all on the same page (literally).
+
+Other commands that you can type at the prompt are:
+
+    * *reset* -- this resets all the cue streams to the start of the
+      show; kind of the same as typing "1.1".
+    * *quit* -- does what you probably expect it to.  Go ahead, type it
+      in.  Quitter.
+    * *dump* -- mostly useful for debugging; prints out a text
+      representation of the entire control file.
+    * *showmidi* -- more debugging; shows all the MIDI events that pass
+      through the unit (you can also get this by adding a "--debugmidi"
+      option on the command line).  *unshowmidi* will turn this off.
+    * *plugin cue qualm.plugins.DisplayCueChange* -- part of a new
+      plugin functionality, this will load in a plugin for showing off
+      cue changes (in this case, in a big window so players can read it
+      easily).  There are other plugin commands, but I won't go into
+      them right now.
+    * *save* -- saves the current preferences (which in this case is
+      really just the list of plugins) so that \q will use them next
+      time.
+
+Hope this helped.  I've probably forgotten something; if you guys have
+questions, feel free to ask.
+
+
+\end{document}
