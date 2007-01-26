@@ -37,6 +37,7 @@ public class QDataLoader extends DefaultHandler {
   public QData readFile( File f ) {
     try {
       parser.parse( f, this );
+      qdata.prepareCueStreams();
       return qdata;
     } catch (Exception e) {
       System.out.println("Couldn't parse " + f + ": " + e);
@@ -46,6 +47,7 @@ public class QDataLoader extends DefaultHandler {
   public QData readSource( org.xml.sax.InputSource f ) {
     try {
       parser.parse( f, this );
+      qdata.prepareCueStreams();
       return qdata;
     } catch (Exception e) {
       System.out.println("Couldn't parse " + f + ": " + e);
@@ -190,7 +192,11 @@ public class QDataLoader extends DefaultHandler {
       
     } else if (qName.equals("patch")) {
       // patch name; ignoring channel
-      patch.setDescription(content);
+      if (content != null && !"".equals(content))
+	patch.setDescription(content);
+      else
+	patch.setDescription(patch.getID());
+
       qdata.addPatch( patch );
       
     } else if (qName.equals("trigger")) {
@@ -200,7 +206,7 @@ public class QDataLoader extends DefaultHandler {
     } else if (qName.equals("map-from")) {
       curMapper.setFromTemplate(curTemplate);
     } else if (qName.equals("map-to")) {
-      curMapper.setFromTemplate(curTemplate);
+      curMapper.setToTemplate(curTemplate);
     } else if (qName.equals("map-events")) {
       eventMaps.add(curMapper);
 

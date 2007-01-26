@@ -285,9 +285,6 @@ public class Qualm {
     } // !skipMIDI
 
 
-    // prepare patches properly
-    data.prepareCueStreams();
-
     MasterController mc = new MasterController( midiOut );
     if (debugMIDI) mc.setDebugMIDI(true);
 

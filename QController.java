@@ -84,7 +84,7 @@ public class QController implements Receiver {
 
   public void send(MidiMessage midiMessage, long l) {
     // Do any of the currently in-effect maps match this event?
-    Cue cue = advancer.getPendingCue();
+    Cue cue = getCurrentCue();
     if (cue != null) {
       Iterator iter = cue.getEventMaps().iterator();
       while(iter.hasNext()) {
@@ -133,7 +133,7 @@ public class QController implements Receiver {
   }
 
   private void addCurrentTriggers() {
-    Cue cue = advancer.getCurrentCue();
+    Cue cue = getCurrentCue();
     if (cue != null) {
       Iterator iter = cue.getTriggers().iterator();
       while(iter.hasNext()) {

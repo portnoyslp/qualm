@@ -36,7 +36,7 @@ public class MasterController implements Receiver {
 
     Collection changes = changesForCue( cueName );
 
-    // we now have a set of CuedProgramChangeEvents.  We need to
+    // we now have a set of cued ProgramChangeEvents.  We need to
     // determine which is the best (most recent) program change for
     // each channel, and send it.
     boolean[] sent_channel = new boolean[16];
@@ -140,7 +140,7 @@ public class MasterController implements Receiver {
   public void send(MidiMessage midiMessage, long ts) {
     if (debugMIDI) 
       System.out.println( MidiMessageParser.messageToString(midiMessage) );
-    
+
     Iterator i = controllers.values().iterator();
     while (i.hasNext()) 
       ((Receiver)i.next()). send(midiMessage, ts);
