@@ -3,11 +3,12 @@
 
   <property name="srcdir" value="${basedir}/src"/>
   <property name="builddir" value="${basedir}/build"/>
+  <property name="testdir" value="${basedir}/test-results"/>
 
   <path id="classpath">
     <pathelement location="/usr/share/java/gnu-getopt.jar"/>
     <pathelement location="/usr/share/java/junit.jar"/>
-    <pathelement location="${basedir}"/>
+    <pathelement location="${builddir}"/>
   </path>
 
   <target name="all" depends="compile"
@@ -45,17 +46,18 @@
   </target>
 
   <target name="check" depends="compile-test">
+    <mkdir dir="${testdir}"/>
     <junit printsummary="yes">
       <classpath refid="classpath"/>
       <formatter type="plain"/>
-      <batchtest>
-	<fileset dir="${basedir}" includes="${srcdir}/**/junit/*Tester.class"/>
+      <batchtest todir="${testdir}">
+	<fileset dir="${builddir}" includes="**/junit/*Tester.class"/>
       </batchtest>
     </junit>
   </target>
 
   <target name="compile-test">
-    <javac debug="true" source="1.4" srcdir="${srcdir}">
+    <javac debug="true" source="1.4" srcdir="${srcdir}" destdir="${builddir}">
       <classpath refid="classpath"/>
     </javac>
   </target>
