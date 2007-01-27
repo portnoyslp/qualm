@@ -2,7 +2,9 @@
 \usepackage{palatino}
 \usepackage{html}
 \usepackage{xspace}
-\newcommand{\q}{{\sf\bf{Qualm}}\xspace}
+\usepackage{alltt}
+\usepackage[margin=1in]{geometry}
+\newcommand{\q}{{\textsf{\textbf{Qualm}}}\xspace}
 \newcommand{\code}[1]{{\tt #1}}
 \begin{document}
 
@@ -58,8 +60,8 @@ the trigger so that it would switch automatically while I played.  And
 the control file could be edited to insert or delete new patches, or
 even add in control of a drum module at the last minute.
 
-The software that did all this I dubbed \q, ostensibly "Queueing
-Applications for Live MIDI", but really because the music directors
+The software that did all this I dubbed \q, ostensibly ``Queueing
+Applications for Live MIDI,'' but really because the music directors
 for that show were very nervous about whether this could work.  Since
 then, it's been used for other patch-heavy shows like {\em Star Wars
   Trilogy: Musical Edition}, {\em The Who's Tommy}, and {\em Children
@@ -108,7 +110,7 @@ freeware; a similar project (Mandolane) exists as shareware for
 PPC/Intel installs.
 
 Installing the Plumstone jar file in your computer's
-\code{/Library/Java/Extensions} folder will enable MIDI I/O.
+\code{/Li\-bra\-ry/Ja\-va/Ex\-ten\-sions} folder will enable MIDI I/O.
 
 \subsubsection{Windows}
 
@@ -118,90 +120,100 @@ problem with MIDI I/O under Windows.
 \subsection{The GetOpt Package}
 
 Assuming ALSA is installed and running, what else does \q need?  Well,
-it needs an options-parsing package.  This is probably a package
-called 'java-getopt', 'gnu.getopt', or 'libgetopt-java', depending on
-what brand of Linux you're using.  That needs to be installed, using
-whatever tools you normally use to install things.
+it needs the GNU GetOpt options-parsing package.  This is a jar file,
+available from \htmladdnormallinkfoot{the author's download
+  page}{http://www.urbanophile.com/arenn/hacking/download.html}.  On
+Linux, this is probably already available as a package named
+\code{java-getopt}, \code{gnu.getopt}, or \code{libgetopt-java},
+depending on what brand of Linux you're using.  On Linux or OSX, this
+jar file should be installed into \code{/usr/share/java}; on Windows
+you should install it and add its location to your CLASSPATH variable.
 
-I've prepped a small distribution of \q that you can fetch from
-http://www.portnoy.org/MTG/eden2006/Synth/qualm.jar.  After downloading
-it, you should be able to run it with
+\section{\q Control Files}
 
-    java -jar qualm.jar
-    http://www.portnoy.org/MTG/eden2006/Synth/children-of-eden.xml
+\q is fairly straightforward.  It takes a control file written in
+XML, consisting of a list of patches, and a set of ``cues'' (gathered into
+independent cue ``streams'') which describe the patch changes and the
+events that will trigger the next cue in the sequence.  
 
-If everything is working, this will probably exit, complaining about not
-being able to find an input port named UM-1 (the default designation of
-our USB MIDI module).  If you have the USB module plugged in, this
-should very happily start up and give you the \q prompt.
+TODO: Much explanation of control files...
 
-Running \q
+\section{Running \q}
 
-\q is pretty straightforward.  It takes a control file written in
-xml, consisting of a list of patches, and a set of "cues" (gathered into
-independent cue "streams") which describe the patch changes and the
-events that will trigger the next cue in the sequence.  I won't go into
-all the details of how you create such a control file (since that's my
-job :-).
+\q is started by executing the jar file, providing the location of the
+control file on the command line.
 
 Once \q is running, it will occasionally pepper the output with lines
 like
 
+\begin{verbatim}
     K2 -> Sust. String Pad
+\end{verbatim}
 
 These are simply announcing that it's just changed the patch on the
-channel called "K2" to a "Sust. String Pad" sound.  Most of the time,
+channel called ``K2'' to a ``Sust. String Pad'' sound.  Most of the time,
 though, what you see is something like:
 
+\begin{verbatim}
     14.1-14.54 | 14.19-14.65 | 14.1-14.64>
+\end{verbatim}
 
 This is the main prompt.  It's telling you what cue it thinks each cue
-stream is currently handling (for Children of Eden, we have three
+stream is currently handling (for {\em Children of Eden}, we have three
 streams, one for each keyboard player).  Each cue is actually listing
 both the current cue and the next cue it will expect in that stream. 
-All the cues are indexed by song and measure number, so "14.19-14.65"
+All the cues are indexed by song and measure number, so ``14.19-14.65''
 says that it is playing the patches associated with song 14, between
 measures 19 and 65.
 
 You can tell \q to advance to a certain point in the score by
-entering two numbers, separated by a period (".").  So, if you want to
-go to song 17, measure 22, you can type "17.22", and then \q will
+entering two numbers, separated by a period (``.'').  So, if you want to
+go to song 17, measure 22, you can type ``17.22'', and then \q will
 announce that it has reset the patches for that particular location in
 the score, and placed each cue stream at the proper cue:
 
-    14.1-14.54 | 14.19-14.65 | 14.1-14.64> *17.22*
+
+\begin{alltt}
+    14.1-14.54 | 14.19-14.65 | 14.1-14.64> \textbf{17.22}
     K1 -> Harp
     K2 -> Dulcimer
     K3 -> Pulse Keys
     15.1-18.1 | 17.22-17.34 | 17.14-17.45>
+\end{alltt}
 
-This is mostly useful for rehearsals, when our fearless leader announces
-that we're going to start playing at a specific spot.  It's also
-occasionally useful during shows, when we just want to sync up during
-long breaks to make sure we're all on the same page (literally).
+This is mostly useful for rehearsals, when your fearless music
+director announces that we're going to start playing at a specific
+spot.  It's also occasionally useful during shows, when you just want
+to sync up during long breaks to make sure you're all on the same page
+(literally).
 
 Other commands that you can type at the prompt are:
 
-    * *reset* -- this resets all the cue streams to the start of the
-      show; kind of the same as typing "1.1".
-    * *quit* -- does what you probably expect it to.  Go ahead, type it
+\begin{description}
+\item[reset] -- this resets all the cue streams to the start of the
+      show; kind of the same as typing ``1.1''.
+
+\item[quit] -- does what you probably expect it to.  Go ahead, type it
       in.  Quitter.
-    * *dump* -- mostly useful for debugging; prints out a text
+
+\item[dump] -- mostly useful for debugging; prints out a text
       representation of the entire control file.
-    * *showmidi* -- more debugging; shows all the MIDI events that pass
-      through the unit (you can also get this by adding a "--debugmidi"
-      option on the command line).  *unshowmidi* will turn this off.
-    * *plugin cue qualm.plugins.DisplayCueChange* -- part of a new
+
+\item[showmidi] -- more debugging; shows all the MIDI events that pass
+      through the unit (you can also get this by adding a ``--debugmidi''
+      option on the command line).  {\bf unshowmidi} will turn this
+      off.
+
+\item[plugin cue qualm.plugins.DisplayCueChange] -- part of a 
       plugin functionality, this will load in a plugin for showing off
       cue changes (in this case, in a big window so players can read it
       easily).  There are other plugin commands, but I won't go into
       them right now.
-    * *save* -- saves the current preferences (which in this case is
+
+\item[save] -- saves the current preferences (which in this case is
       really just the list of plugins) so that \q will use them next
       time.
-
-Hope this helped.  I've probably forgotten something; if you guys have
-questions, feel free to ask.
+\end{description}
 
 
 \end{document}

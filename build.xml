@@ -11,7 +11,7 @@
     <pathelement location="${builddir}"/>
   </path>
 
-  <target name="all" depends="compile"
+  <target name="all" depends="compile,doc"
 	  description="Build the system"/>
 
   <target name="init">
@@ -37,7 +37,20 @@
     </javac>
   </target>
 
-  <target name="dist" depends="compile"> 
+  <target name="check-doc">
+    <uptodate property="docBuild.notRequired" 
+	      srcfile="${basedir}/doc/manual.tex"
+	      targetfile="${basedir}/doc/manual.pdf"/>
+  </target>
+
+  <target name="doc" depends="check-doc" unless="docBuild.notRequired">
+    <exec dir="${basedir}/doc" executable="pdflatex"
+	  failifexecutionfails="no">
+      <arg value="manual.tex"/>
+    </exec>
+  </target>
+
+  <target name="dist" depends="compile,doc"> 
     <jar destfile="${basedir}/qualm.jar"
 	 excludes="${builddir}/testing/junit/**"
 	 includes="${builddir}/**/*.class ${srcdir}/qualm.properties"
