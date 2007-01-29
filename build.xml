@@ -38,17 +38,29 @@
   </target>
 
   <target name="check-doc">
-    <uptodate property="docBuild.notRequired" 
+    <uptodate property="docBuildPDF.notRequired" 
 	      srcfile="${basedir}/doc/manual.tex"
 	      targetfile="${basedir}/doc/manual.pdf"/>
+    <uptodate property="docBuildHTML.notRequired" 
+	      srcfile="${basedir}/doc/manual.tex"
+	      targetfile="${basedir}/doc/manual/index.html"/>
   </target>
 
-  <target name="doc" depends="check-doc" unless="docBuild.notRequired">
+  <target name="doc-pdf" depends="check-doc" unless="docBuildPDF.notRequired">
     <exec dir="${basedir}/doc" executable="pdflatex"
 	  failifexecutionfails="no">
       <arg value="manual.tex"/>
     </exec>
   </target>
+
+  <target name="doc-html" depends="check-doc" unless="docBuildHTML.notRequired">
+    <exec dir="${basedir}/doc" executable="latex2html"
+	  failifexecutionfails="no">
+      <arg value="manual.tex"/>
+    </exec>
+  </target>
+
+  <target name="doc" depends="doc-pdf,doc-html"/>
 
   <target name="dist" depends="compile,doc"> 
     <jar destfile="${basedir}/qualm.jar"

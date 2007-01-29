@@ -4,7 +4,7 @@
 \usepackage{xspace}
 \usepackage{alltt}
 \usepackage[margin=1in]{geometry}
-\newcommand{\q}{{\textsf{\textbf{Qualm}}}\xspace}
+\newcommand{\q}{{\textsf{Qualm}}\xspace}
 \newcommand{\code}[1]{{\tt #1}}
 \begin{document}
 
@@ -182,7 +182,7 @@ the score, and placed each cue stream at the proper cue:
 \end{alltt}
 
 This is mostly useful for rehearsals, when your fearless music
-director announces that we're going to start playing at a specific
+director announces that everyone's going to start playing at a specific
 spot.  It's also occasionally useful during shows, when you just want
 to sync up during long breaks to make sure you're all on the same page
 (literally).
@@ -190,6 +190,9 @@ to sync up during long breaks to make sure you're all on the same page
 Other commands that you can type at the prompt are:
 
 \begin{description}
+\item[version] -- reports the current \q version and build
+      information.
+
 \item[reset] -- this resets all the cue streams to the start of the
       show; kind of the same as typing ``1.1''.
 
@@ -204,16 +207,25 @@ Other commands that you can type at the prompt are:
       option on the command line).  {\bf unshowmidi} will turn this
       off.
 
-\item[plugin cue qualm.plugins.DisplayCueChange] -- part of a 
-      plugin functionality, this will load in a plugin for showing off
-      cue changes (in this case, in a big window so players can read it
-      easily).  There are other plugin commands, but I won't go into
-      them right now.
+\item[adv \textit{stream}] -- advance the stream named {\em stream}
+      forward one patch.  If you just hit ``Enter'' on the keyboard,
+      it has the same effect as typing ``adv'' with the name of the
+      first stream.
+
+\item[plugin [remove] (cue|patch) \textit{plugin-name}] -- controls
+      the plugin facility of \q.  For more information, see
+      section~\ref{sec:plugins}.
 
 \item[save] -- saves the current preferences (which in this case is
       really just the list of plugins) so that \q will use them next
       time.
 \end{description}
+
+\section{Plugins}
+\label{sec:plugins}
+XXX To be written
+
+
 
 
 \end{document}
