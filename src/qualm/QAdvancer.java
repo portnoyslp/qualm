@@ -60,16 +60,23 @@ public class QAdvancer {
   public Collection advancePatch() {
     // send the next patch change
     Cue nextCue = findNextCue(currentCue);
-    
-    // find patch changes
-    Collection events = getPatchChanges(nextCue);
 
-    currentCue = nextCue;
+    if (nextCue != null) {
 
-    // find the next cue...
-    pendingCue = findNextCue( currentCue );
+      // find patch changes
+      Collection events = getPatchChanges(nextCue);
+      
+      currentCue = nextCue;
 
-    return events;
+      // find the next cue...
+      pendingCue = findNextCue( currentCue );
+
+      return events;
+
+    } else {
+      return new ArrayList(); 
+    }
+
   } 
 
   public Collection reversePatch() {

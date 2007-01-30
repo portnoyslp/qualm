@@ -22,7 +22,7 @@ public class Trigger {
   public EventTemplate getTemplate() { return template; }
 
   public String toString() {
-    return "trig[" + template + "]";
+    return "trig[" + template + (getReverse()?"rev":"") + "]";
   }
 
   public boolean match(MidiMessage m) {

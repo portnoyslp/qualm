@@ -95,8 +95,9 @@ public class QController implements Receiver {
       }
     }
 
-    if (ignoreEvents()) 
+    if (ignoreEvents()) {
       return;
+    }
       
     for (int i=0;i<cachedTriggers.length;i++) {
       boolean triggered = false;

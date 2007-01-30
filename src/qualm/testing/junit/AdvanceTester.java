@@ -28,6 +28,7 @@ public class AdvanceTester extends TestCase {
 "  <cue-stream>\n" + 
 "    <global>\n" + 
 "      <trigger><note-on channel=\"1\" note=\"c4\"/></trigger>\n" + 
+"      <trigger reverse=\"yes\"><note-on channel=\"1\" note=\"b3\"/></trigger>\n" + 
 "    </global>\n" + 
 "    <cue song=\"1\" measure=\"1\">\n" + 
 "      <events><program-change channel=\"1\" patch=\"P1\"/></events>\n" + 
@@ -40,6 +41,10 @@ public class AdvanceTester extends TestCase {
 
     FakeMIDI fm = FakeMIDI.prepareTest(adv1);
     fm.addOutgoing((long)0, ShortMessage.NOTE_ON, 0, 60, 10);
+    fm.addOutgoing((long)300, ShortMessage.NOTE_ON, 0, 59, 10); // ignored
+    fm.addOutgoing((long)1500, ShortMessage.NOTE_ON, 0, 60, 10); // no change
+    fm.addOutgoing((long)3000, ShortMessage.NOTE_ON, 0, 59, 10); // reverse
+    fm.addOutgoing((long)4500, ShortMessage.NOTE_ON, 0, 59, 10); // reverse
     fm.run();
     java.util.ArrayList msgs = fm.receivedMessages();
 
@@ -49,8 +54,20 @@ public class AdvanceTester extends TestCase {
       System.out.println("   " + MidiMessageParser.messageToString((MidiMessage)iter.next()));
     }
 
-    assertTrue(msgs.size() == 2);
-    
+    assertTrue(msgs.size() == 4);
+    ShortMessage sm1 = new ShortMessage();
+    sm1.setMessage(ShortMessage.PROGRAM_CHANGE,0,0,0);
+    ShortMessage sm2 = new ShortMessage();
+    sm2.setMessage(ShortMessage.PROGRAM_CHANGE,0,1,0);
+    // since ShortMessage doesn't define a useful equals() method, we compare using print reps
+    assertEquals(MidiMessageParser.messageToString((ShortMessage)msgs.get(0)),
+		 MidiMessageParser.messageToString(sm1)); // setup first cue
+    assertEquals(MidiMessageParser.messageToString((ShortMessage)msgs.get(1)),
+		 MidiMessageParser.messageToString(sm2)); // patch advance
+    assertEquals(MidiMessageParser.messageToString((ShortMessage)msgs.get(2)),
+		 MidiMessageParser.messageToString(sm1)); // reverse to first
+    assertEquals(MidiMessageParser.messageToString((ShortMessage)msgs.get(3)),
+		 MidiMessageParser.messageToString(sm1)); // reverse to first (regenerates)
   }
 
 }
