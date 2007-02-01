@@ -41,6 +41,9 @@ public class EventMapTester extends TestCase {
 
     FakeMIDI fm = FakeMIDI.prepareTest(evm1);
     fm.addOutgoing((long)0, ShortMessage.CONTROL_CHANGE, 0, 64, 10 );
+    fm.addOutgoing((long)1500, ShortMessage.CONTROL_CHANGE, 1, 64, 10 ); //wrong channel; ignore
+    fm.addOutgoing((long)1600, ShortMessage.CONTROL_CHANGE, 0, 65, 10 ); //wrong control; ignore
+    fm.addOutgoing((long)1700, ShortMessage.CONTROL_CHANGE, 0, 64, 50 );
     fm.run();
     java.util.ArrayList msgs = fm.receivedMessages();
 
@@ -50,8 +53,10 @@ public class EventMapTester extends TestCase {
       System.out.println("   "+ MidiMessageParser.messageToString((MidiMessage)iter.next()));
     }
 
-    assertTrue(msgs.size() == 2);
-    
+    assertTrue(msgs.size() == 3);
+    FakeMIDI.assertMIDI(msgs.get(0),ShortMessage.PROGRAM_CHANGE,0,0,0); // init patch
+    FakeMIDI.assertMIDI(msgs.get(1),ShortMessage.CONTROL_CHANGE,1,67,10); // first ctrl
+    FakeMIDI.assertMIDI(msgs.get(2),ShortMessage.CONTROL_CHANGE,1,67,50); // last ctrl
   }
 
 }

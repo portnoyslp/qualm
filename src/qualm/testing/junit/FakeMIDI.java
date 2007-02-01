@@ -7,6 +7,8 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Transmitter;
 
+import junit.framework.Assert;
+
 /*
  * A "fake" midi transmitter/receiver which can be given a set of
  * commands to send, and will store the responses for later analysis.
@@ -89,6 +91,24 @@ public class FakeMIDI implements Receiver,Transmitter {
    
     return fm;
   }
+
+  // assertion test
+  public static void assertMIDI(Object msg, int command, int channel, int data1, int data2) {
+    ShortMessage m = (ShortMessage)msg;
+    Assert.assertEquals("Command for " + MidiMessageParser.messageToString(m) + 
+			" not expected value " + command,
+			m.getCommand(), command);
+    Assert.assertEquals("Channel for " + MidiMessageParser.messageToString(m) + 
+			" not expected value " + channel,
+			m.getChannel(), channel);
+    Assert.assertEquals("Data1 for " + MidiMessageParser.messageToString(m) + 
+			" not expected value " + data1,
+			m.getData1(), data1);
+    Assert.assertEquals("Data2 for " + MidiMessageParser.messageToString(m) + 
+			" not expected value " + data2,
+			m.getData2(), data2);
+  }
+  
 
   // Implementation of javax.sound.midi.Receiver
 

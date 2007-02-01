@@ -55,19 +55,10 @@ public class AdvanceTester extends TestCase {
     }
 
     assertTrue(msgs.size() == 4);
-    ShortMessage sm1 = new ShortMessage();
-    sm1.setMessage(ShortMessage.PROGRAM_CHANGE,0,0,0);
-    ShortMessage sm2 = new ShortMessage();
-    sm2.setMessage(ShortMessage.PROGRAM_CHANGE,0,1,0);
-    // since ShortMessage doesn't define a useful equals() method, we compare using print reps
-    assertEquals(MidiMessageParser.messageToString((ShortMessage)msgs.get(0)),
-		 MidiMessageParser.messageToString(sm1)); // setup first cue
-    assertEquals(MidiMessageParser.messageToString((ShortMessage)msgs.get(1)),
-		 MidiMessageParser.messageToString(sm2)); // patch advance
-    assertEquals(MidiMessageParser.messageToString((ShortMessage)msgs.get(2)),
-		 MidiMessageParser.messageToString(sm1)); // reverse to first
-    assertEquals(MidiMessageParser.messageToString((ShortMessage)msgs.get(3)),
-		 MidiMessageParser.messageToString(sm1)); // reverse to first (regenerates)
+    FakeMIDI.assertMIDI(msgs.get(0),ShortMessage.PROGRAM_CHANGE,0,0,0); // init patch
+    FakeMIDI.assertMIDI(msgs.get(1),ShortMessage.PROGRAM_CHANGE,0,1,0); // advance
+    FakeMIDI.assertMIDI(msgs.get(2),ShortMessage.PROGRAM_CHANGE,0,0,0); // reverse
+    FakeMIDI.assertMIDI(msgs.get(3),ShortMessage.PROGRAM_CHANGE,0,0,0); // reverse (re-inits)
   }
 
 }

@@ -35,7 +35,31 @@ public class QDataLoaderTester extends TestCase {
     assertEquals(qd.lookupPatch("Timpani").getID(),"Timpani");
     assertEquals(qd.lookupPatch("Timpani").getDescription(),"Timpani");
     assertTrue(qd.lookupPatch("Timpani").getNumber() == 5);
-    
+
+    // check streams
+    assertTrue(2==qd.getCueStreams().size());
+    QStream s = (QStream) ((java.util.List)qd.getCueStreams()).get(0);
+    assertEquals(s.getTitle(),"First_Stream");
+    assertTrue(2==s.getCues().size());
+    s = (QStream)  ((java.util.List)qd.getCueStreams()).get(1);
+    assertEquals(s.getTitle(),"Second_Stream");
+    assertTrue(2==s.getCues().size());
+
+    // random check of cues
+    s = (QStream) ((java.util.List)qd.getCueStreams()).get(0);
+    Cue q = (Cue) s.getCues().first();
+    assertEquals(q,new Cue("3.1"));
+    assertEquals(q.getEvents().size(), 1);
+    assertEquals(q.getEventMaps().size(), 1);
+    assertEquals(q.getTriggers().size(), 3);
+
+    s = (QStream) ((java.util.List)qd.getCueStreams()).get(1);
+    q = (Cue) s.getCues().last();
+    assertEquals(q,new Cue("2.10"));
+    assertEquals(q.getEvents().size(), 2);
+    assertEquals(q.getEventMaps().size(), 0);
+    assertEquals(q.getTriggers().size(), 1);
+
   }
 
 }
