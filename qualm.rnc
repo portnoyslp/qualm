@@ -2,7 +2,7 @@ qualm-data =
   element qualm-data {
     element title { text }?,
     element midi-channels { channel+ },
-    element patches { patch+ },
+    element patches { patch, (patch | patch-alias)* },
     cue-stream+
   }
 channel =
@@ -23,13 +23,21 @@ patch =
   element patch {
     attribute num { text },
     attribute bank { text }?,
+    [ a:defaultValue = "" ] attribute comment { text }?,
+    attribute id { xsd:ID },
+    text
+  }
+patch-alias =
+  element patch-alias { 
+    attribute target { xsd:IDREF },
     attribute id { xsd:ID },
     text
   }
 # <patches>
 #   <patch num="1" id="p1">Nice Piano</patch>
 #   <patch num="2" id="p2">TremStr/Str</patch>
-#   <patch num="5" id="p5">Organ</patch>
+#   <patch-alias id="p1_lookalike" target="p1">Really Nice Piano</patch-alias>
+#   <patch num="5" id="p5" comment="GroovyOrgn">Organ</patch>
 # </patches>
 map-events =
   element map-events {

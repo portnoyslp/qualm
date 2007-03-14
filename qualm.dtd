@@ -13,17 +13,23 @@
        <channel num="10">Drum Kit</channel>
      </midi-channels>
 -->
-<!ELEMENT patches (patch+)>
+<!ELEMENT patches (patch,(patch|patch-alias)*)>
 <!ELEMENT patch (#PCDATA)>
 <!ATTLIST patch
 	  num CDATA #REQUIRED
 	  bank CDATA #IMPLIED
+	  comment CDATA ""
+	  id ID #REQUIRED>
+<!ELEMENT patch-alias (#PCDATA)>
+<!ATTLIST patch-alias
+	  target IDREF #REQUIRED
 	  id ID #REQUIRED>
 <!--
      <patches>
        <patch num="1" id="p1">Nice Piano</patch>
+       <patch-alias id="p1_lookalike" target="p1">V. Nice Piano</patch-alias>
        <patch num="2" id="p2">TremStr/Str</patch>
-       <patch num="5" id="p5">Organ</patch>
+       <patch num="5" id="p5" comment="GruvyOrgn">Organ</patch>
      </patches>
 -->
 

@@ -7,6 +7,10 @@
 
   <path id="classpath">
     <pathelement location="/usr/share/java/gnu-getopt.jar"/>
+    <fileset dir="${basedir}">
+      <!-- just in case there's no /usr/share/java... -->
+      <include name="*-getopt*.jar"/>
+    </fileset>
     <pathelement location="/usr/share/java/junit.jar"/>
     <pathelement location="${builddir}"/>
   </path>
@@ -62,12 +66,13 @@
 
   <target name="doc" depends="doc-pdf,doc-html"/>
 
-  <target name="dist" depends="compile,doc"> 
+  <target name="dist" depends="compile"
+	  description="Create Jar file for distribution"> 
     <jar destfile="${basedir}/qualm.jar"
-	 excludes="${builddir}/testing/junit/**"
-	 includes="${builddir}/**/*.class ${srcdir}/qualm.properties"
+         excludes="qualm/testing/junit/**"
+	 includes="**/*.class qualm.properties"
 	 manifest="${srcdir}/qualm.manifest"
-	 basedir="${basedir}"/>
+	 basedir="${builddir}"/>
   </target>
 
   <target name="check" depends="compile-test">
@@ -87,5 +92,10 @@
     </javac>
   </target>
 
+  <target name="clean" description="Purge build directory and jar file">
+    <delete dir="${builddir}" />
+    <delete file="${basedir}/qualm.jar" />
+  </target>
 
 </project>
+

@@ -102,6 +102,23 @@ public class QDataLoader extends DefaultHandler {
 	  patch.setBank( attributes.getValue("bank") );
 	}
 
+      } else if (qName.equals("patch-alias")) {
+	currentElement = "patch-alias `" + attributes.getValue("id") + "'";
+	currentAttribute = "target";
+
+	String targetID =  attributes.getValue("target");
+	Patch targetPatch = qdata.lookupPatch( targetID );
+	if (targetPatch == null)
+	  System.err.println("WARNING: could not find patch with id " + 
+			     targetID);
+
+	// duplicate bank and number of target patch (but id and
+	// description will be different)
+	patch = new Patch( attributes.getValue("id"),
+			   targetPatch.getNumber() );
+
+	patch.setBank( targetPatch.getBank() );
+
       } else if (qName.equals("cue-stream")) {
 	qstream = new QStream();
 	qstream.setTitle(attributes.getValue("id"));
@@ -190,7 +207,7 @@ public class QDataLoader extends DefaultHandler {
       // dealing with a midi-channel definition
       qdata.addMidiChannel( Integer.parseInt(auxValue[0])-1, auxValue[1], content );
       
-    } else if (qName.equals("patch")) {
+    } else if (qName.equals("patch") || qName.equals("patch-alias")) {
       // patch name; ignoring channel
       if (content != null && !"".equals(content))
 	patch.setDescription(content);
@@ -335,3 +352,4 @@ public class QDataLoader extends DefaultHandler {
   }
 
 }
+

@@ -137,7 +137,7 @@ public class Qualm {
   }
 
   public static void loadProperties() {
-    String propsFile = "qualm/qualm.properties";
+    String propsFile = "qualm.properties";
     try {
       System.getProperties().load(ClassLoader.getSystemResource(propsFile).openStream());
     } catch (java.io.IOException ioe) {
@@ -207,7 +207,8 @@ public class Qualm {
     }
 
     if (g.getOptind() == args.length && !listPorts) {
-      System.out.println("No filename given.");
+      System.out.println("No filename given.\n");
+      usage();
       System.exit(0);
     }
     String inputFilename = null;
@@ -311,3 +312,4 @@ public class Qualm {
   }
 
 }
+

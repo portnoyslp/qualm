@@ -8,7 +8,7 @@
 \newcommand{\code}[1]{{\tt #1}}
 \begin{document}
 
-\title{\q: Queueing Applications for Live MIDI}
+\title{\textbf{\q:} Queueing Applications for Live MIDI}
 \author{Stephen Peters}
 \maketitle
 
@@ -22,22 +22,22 @@ MIT}{http://www.mit.edu/\textasciitilde\ mtg}.
 
 Many musicals would be scored for an acoustic orchestra, but more and
 more ``rock''-style shows were appearing that wished to make use of
-different keyboard sounds.  For these, we would either piano
+different keyboard sounds.  For these, we would either use piano
 throughout, or use whatever pre-programmed sounds the keyboard had.
 If we wanted to get really fancy, we'd borrow a synth module and
 select them by hand.
 
-This worked well until \htmladdnormallink{{\em Bat Boy: The
+This worked fine until \htmladdnormallink{{\em Bat Boy: The
 Musical}}{http://en.wikipedia.org/wiki/Bat_Boy:_The_Musical}.  Before
 that show, we were looking at maybe a dozen patches in a show.  But
 {\em Bat Boy} required two keyboard players, and one of those players
 had to work with both an upper and a lower keyboard simultaneously.
-Both parts had well over a hundred different changes to select.
+Each part had over two hundred different changes to select.
 
 For the K1 part, we did a souped-up version of our old ``select
 patches by hand'' method.  We programmed all the patches sequentially
 into a Korg NS5R synthesizer module, and configured a pedal to go
-through them one-by-one.  This worked well, but since the synth module
+through them one-by-one.  This worked, but since the synth module
 would only hold a limited number, we had to store each act separately,
 and download lots of information to the module before each act.  Plus,
 if you wanted to change the way one instrument sounded, you had to
@@ -48,24 +48,25 @@ more so when you wanted to insert or delete a patch.
 To avoid all that -- and because the upper- and lower-keyboard thing
 would have made that setup especially tough -- we chose a different
 route for the second keyboard part.  Each patch would be stored just
-once on a second synth module (a Roland JV-1080), and I created a
+once on a second synth module (a Roland JV-1080), and we created a
 computer program that would store information about where each patch
 was, and when the right moment occurred, it would just look up what
 the next patch should be and tell the synth module to load it.  Not
-only did I not have to worry about copying patches around, but I could
-be really flexible about what kind of trigger would switch the patch;
-I could hit the Enter key on the computer, step on a pedal, hit a
-particular note on the keyboard, even temporarily set a special key as
-the trigger so that it would switch automatically while I played.  And
-the control file could be edited to insert or delete new patches, or
-even add in control of a drum module at the last minute.
+only did we not have to worry about copying patches around, but this
+allowed us to be really flexible about what kind of trigger would
+switch the patch; the pianist could hit the Enter key on the computer,
+step on a pedal, hit a particular note on the keyboard, even
+temporarily set a special key as the trigger so that it would switch
+automatically while he or she played.  And the control file could be
+edited to insert or delete new patches, or even add in control of a
+drum module at the last minute.
 
-The software that did all this I dubbed \q, ostensibly ``Queueing
+The software that did all this was dubbed \q, ostensibly ``Queueing
 Applications for Live MIDI,'' but really because the music directors
 for that show were very nervous about whether this could work.  Since
 then, it's been used for other patch-heavy shows like {\em Star Wars
-  Trilogy: Musical Edition}, {\em The Who's Tommy}, and {\em Children
-  of Eden}.  Most of these were operating a single keyboard with many
+Trilogy: Musical Edition}, {\em The Who's Tommy}, and {\em Children of
+Eden}.  Most of these were operating a single keyboard with many
 patches, but {\em Children of Eden}, for one, actually used a single
 synthesizer module to deal with input from three separate keyboards at
 the same time, utilizing a separate stream of patches for each one.
@@ -212,7 +213,7 @@ Other commands that you can type at the prompt are:
       it has the same effect as typing ``adv'' with the name of the
       first stream.
 
-\item[plugin [remove] (cue|patch) \textit{plugin-name}] -- controls
+\item[plugin {[remove]} (cue$\mid$patch) \textit{plugin-name}] -- controls
       the plugin facility of \q.  For more information, see
       section~\ref{sec:plugins}.
 

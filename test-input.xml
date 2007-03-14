@@ -6,14 +6,14 @@
   <midi-channels>
     <channel num="1" device-type="Roland JV-1080">Lower Keyboard</channel>
     <channel num="2">Upper Keyboard</channel>
-    <channel num="4">Drum Kit</channel>
+    <channel num="4" device-type="Alesis">Drum Kit</channel>
   </midi-channels>
   <patches>
     <patch id="Nice_Piano" bank="User" num="1">Nice Piano</patch>
     <patch id="P2" bank="User" num="2">TremStr/Str</patch>
-    <patch id="P3" bank="User" num="3">Strs/FzzClav</patch>
+    <patch id="P3" bank="User" num="3" comment="split at C5">Strs/FzzClav</patch>
     <patch id="P4" bank="PrA"  num="15">Rhodes</patch>
-    <patch id="P5" bank="User" num="5">Organ</patch>
+    <patch-alias id="P5" target="Nice_Piano">Good Piano</patch-alias>
     <patch id="P95" bank="User" num="95">LKB/TmpF</patch>
     <patch id="P96" bank="User" num="96">TmpG/TmpD</patch>
   </patches>
