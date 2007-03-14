@@ -322,7 +322,7 @@ public class QDataLoader extends DefaultHandler {
       else
 	// return a null input source so that we don't check things we
 	// don't care about.
-	return new InputSource(new StringBufferInputStream(""));
+	return new InputSource(new StringReader(""));
     } catch (java.io.IOException ioe) {
       throw new RuntimeException(ioe);
     }
