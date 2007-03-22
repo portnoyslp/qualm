@@ -18,7 +18,7 @@
 <!ATTLIST patch
 	  num CDATA #REQUIRED
 	  bank CDATA #IMPLIED
-	  comment CDATA ""
+	  remark CDATA ""
 	  id ID #REQUIRED>
 <!ELEMENT patch-alias (#PCDATA)>
 <!ATTLIST patch-alias
@@ -29,7 +29,7 @@
        <patch num="1" id="p1">Nice Piano</patch>
        <patch-alias id="p1_lookalike" target="p1">V. Nice Piano</patch-alias>
        <patch num="2" id="p2">TremStr/Str</patch>
-       <patch num="5" id="p5" comment="GruvyOrgn">Organ</patch>
+       <patch num="5" id="p5" remark="GruvyOrgn">Organ</patch>
      </patches>
 -->
 

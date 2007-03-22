@@ -23,7 +23,7 @@ patch =
   element patch {
     attribute num { text },
     attribute bank { text }?,
-    [ a:defaultValue = "" ] attribute comment { text }?,
+    [ a:defaultValue = "" ] attribute remark { text }?,
     attribute id { xsd:ID },
     text
   }
@@ -37,7 +37,7 @@ patch-alias =
 #   <patch num="1" id="p1">Nice Piano</patch>
 #   <patch num="2" id="p2">TremStr/Str</patch>
 #   <patch-alias id="p1_lookalike" target="p1">Really Nice Piano</patch-alias>
-#   <patch num="5" id="p5" comment="GroovyOrgn">Organ</patch>
+#   <patch num="5" id="p5" remark="GroovyOrgn">Organ</patch>
 # </patches>
 map-events =
   element map-events {
