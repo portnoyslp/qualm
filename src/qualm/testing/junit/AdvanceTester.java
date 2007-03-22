@@ -40,11 +40,11 @@ public class AdvanceTester extends TestCase {
 "</qualm-data>\n";
 
     FakeMIDI fm = FakeMIDI.prepareTest(adv1);
-    fm.addOutgoing((long)0, ShortMessage.NOTE_ON, 0, 60, 10);
-    fm.addOutgoing((long)300, ShortMessage.NOTE_ON, 0, 59, 10); // ignored
-    fm.addOutgoing((long)1500, ShortMessage.NOTE_ON, 0, 60, 10); // no change
-    fm.addOutgoing((long)3000, ShortMessage.NOTE_ON, 0, 59, 10); // reverse
-    fm.addOutgoing((long)4500, ShortMessage.NOTE_ON, 0, 59, 10); // reverse
+    fm.addOutgoing((long)0, ShortMessage.NOTE_ON, 0, 60, 10); // switch to P2
+    fm.addOutgoing((long)300, ShortMessage.NOTE_ON, 0, 59, 10); // ignored; too soon
+    fm.addOutgoing((long)1500, ShortMessage.NOTE_ON, 0, 60, 10); // ignored; at end
+    fm.addOutgoing((long)3000, ShortMessage.NOTE_ON, 0, 59, 10); // reverse; to P1
+    fm.addOutgoing((long)4500, ShortMessage.NOTE_ON, 0, 59, 10); // reverse; same patch
     fm.run();
     java.util.ArrayList msgs = fm.receivedMessages();
 
