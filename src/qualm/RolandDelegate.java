@@ -77,9 +77,7 @@ public class RolandDelegate extends ChangeDelegate {
     } catch (InvalidMidiDataException e) {
       System.out.println("Unable to send Program Change: " + pce);
       System.out.println(e);
-    } catch (Exception e2) {
-      e2.printStackTrace();
-    }
+    } 
   }
   
 }

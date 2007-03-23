@@ -81,6 +81,7 @@ public class FakeMIDI implements Receiver,Transmitter {
     QData qd = (new QDataLoader()).
       readSource(new org.xml.sax.InputSource(new java.io.StringReader(xmlString)));
     MasterController mc = new MasterController ( fm );
+    mc.setSilentErrorHandling(false);
 
     Iterator iter = qd.getCueStreams().iterator();
     while (iter.hasNext()) 

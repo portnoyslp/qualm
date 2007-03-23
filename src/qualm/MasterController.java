@@ -10,6 +10,7 @@ public class MasterController implements Receiver {
   SortedMap controllers;
   QualmREPL REPL = null;
   boolean debugMIDI = false;
+  boolean silentErrorHandling = true;
 
   public MasterController( Receiver out ) {
     midiOut = out;
@@ -130,6 +131,7 @@ public class MasterController implements Receiver {
   // Implementation of javax.sound.midi.Receiver
 
   public void setDebugMIDI(boolean flag) { debugMIDI=flag; }
+  public void setSilentErrorHandling(boolean flag) { silentErrorHandling=flag; }
 
   public void close() {
     Iterator i = controllers.values().iterator();
@@ -141,9 +143,17 @@ public class MasterController implements Receiver {
     if (debugMIDI) 
       System.out.println( MidiMessageParser.messageToString(midiMessage) );
 
-    Iterator i = controllers.values().iterator();
-    while (i.hasNext()) 
-      ((Receiver)i.next()). send(midiMessage, ts);
+    try {
+      Iterator i = controllers.values().iterator();
+      while (i.hasNext()) 
+	((Receiver)i.next()). send(midiMessage, ts);
+    } catch (RuntimeException re) {
+      // if we get any errors from the data send, we can either print
+      // them and continue, or throw a monkey wrench
+      re.printStackTrace();
+      if (!silentErrorHandling)
+	throw re;
+    }
   }
 
 
