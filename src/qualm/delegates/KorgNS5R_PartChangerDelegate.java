@@ -1,20 +1,26 @@
-package qualm;
+package qualm.delegates;
 
+import qualm.*;
+import qualm.Patch;
 import javax.sound.midi.*;
 
 /**
- * ChangeDelegate for Korg (written for Korg NS5R)
+ * ChangeDelegate for Korg NS5R which sends all change commands in
+ * SysEx form so that they are targeted to affect a particular Part
+ * (as opposed to any Part that's listening on a particular MIDI
+ * channel).
  *
- * Note: for note window changes to work, make sure the Korg is set to
- * receive sysex messages on "exclusive channel 1".
+ * Note: make sure the Korg is set to receive sysex messages on
+ * "exclusive channel 1".
  */
-public class KorgDelegate extends ChangeDelegate
+public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
 {
   public void patchChange( ProgramChangeEvent pce,
 			   Receiver midiOut )
   {
     try {
-      ShortMessage msg;
+      SysexMessage sysex;
+      byte[] data;
 
       int channel = pce.getChannel();
       Patch patch = pce.getPatch();
@@ -77,44 +83,55 @@ public class KorgDelegate extends ChangeDelegate
 	else
 	  throw new Exception("invalid bank name: " + bankName);
 
-	// send Control Change 0 to select Bank MSB
-	msg = new ShortMessage();
-	msg.setMessage( ShortMessage.CONTROL_CHANGE,
-			channel, 0, msb );
+	// send SysEx to select Bank MSB for Part
+	data = new byte[]
+	  { (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 1, (byte) channel, 0,
+	    (byte) msb, (byte) 0xF7 };
+
+	sysex = new SysexMessage();
+	sysex.setMessage( data, data.length );
 
 	if (midiOut != null)
-	  midiOut.send(msg, -1);
+	  midiOut.send(sysex, -1);
 
-	// send Control Change 32 to select Bank LSB, if needed
+	// send SysEx to select Bank LSB for Part, if needed
 	if (lsb != -1)
 	{
-	  msg = new ShortMessage();
-	  msg.setMessage( ShortMessage.CONTROL_CHANGE,
-			  channel, 32, lsb );//TODO
+	  data[7] = 1;
+	  data[8] = (byte) lsb;
+
+	  sysex = new SysexMessage();
+	  sysex.setMessage( data, data.length );
 
 	  if (midiOut != null)
-	    midiOut.send(msg, -1);
+	    midiOut.send(sysex, -1);
 	}
       }
 
-      // send Program Change to select Program
-      msg = new ShortMessage();
-      msg.setMessage( ShortMessage.PROGRAM_CHANGE,
-		      channel, progNum, 0 );
+      // send SysEx to select Program for Part
+      data = new byte[]
+	{ (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 1, (byte) channel, 2,
+	  (byte) progNum, (byte) 0xF7 };
+
+      sysex = new SysexMessage();
+      sysex.setMessage( data, data.length );
 
       if (midiOut != null)
-	midiOut.send(msg, -1);
+	midiOut.send(sysex, -1);
 
 
       if (patch.getVolume() != null)
       {
-	// send Control Change 7 to set channel volume
-	msg = new ShortMessage();
-	msg.setMessage( ShortMessage.CONTROL_CHANGE,
-			channel, 7, patch.getVolume().intValue() );
+	// send SysEx to set volume for Part
+	data = new byte[]
+	  { (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 1, (byte) channel, 0x10,
+	    patch.getVolume().byteValue(), (byte) 0xF7 };
+
+	sysex = new SysexMessage();
+	sysex.setMessage( data, data.length );
 
 	if (midiOut != null)
-	  midiOut.send(msg, -1);
+	  midiOut.send(sysex, -1);
       }
 
     } catch (InvalidMidiDataException e) {

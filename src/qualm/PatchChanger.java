@@ -11,6 +11,8 @@ public class PatchChanger {
   }
   private ChangeDelegate getChangeDelegate() { return changeDelegate; }
 
+  private static String delegatePrefix = "qualm.delegates.";
+
   public static void addPatchChanger( int ch,
 				      String deviceType ) {
     if (changer[ch] == null)
@@ -28,7 +30,7 @@ public class PatchChanger {
     delegateName = pattern.matcher(delegateName).replaceAll("");
 
     try {
-      delegate = Class.forName( "qualm." + delegateName + "Delegate" );
+      delegate = Class.forName( delegatePrefix + delegateName + "Delegate" );
       if (!ChangeDelegate.class.isAssignableFrom(delegate))
 	delegate = null;
     } catch (ClassNotFoundException cnfe) { }
@@ -38,7 +40,7 @@ public class PatchChanger {
       delegateName = deviceType.substring(0,deviceType.indexOf(' '));
       delegateName = pattern.matcher(delegateName).replaceAll("");
       try {
-	delegate = Class.forName( "qualm." + delegateName + "Delegate" );
+	delegate = Class.forName( delegatePrefix + delegateName + "Delegate" );
 	if (!ChangeDelegate.class.isAssignableFrom(delegate)) 
 	  delegate = null;
       } catch (ClassNotFoundException cnfe) { }

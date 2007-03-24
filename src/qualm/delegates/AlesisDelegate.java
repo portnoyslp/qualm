@@ -1,5 +1,7 @@
-package qualm;
+package qualm.delegates;
 
+import qualm.*;
+import qualm.Patch;
 import javax.sound.midi.*;
 
 /**
