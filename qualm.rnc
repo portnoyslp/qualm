@@ -25,14 +25,17 @@ patch =
     attribute bank { text }?,
     [ a:defaultValue = "" ] attribute remark { text }?,
     attribute id { xsd:ID },
+    attribute volume { volSpec }?,
     text
   }
 patch-alias =
   element patch-alias { 
     attribute target { xsd:IDREF },
     attribute id { xsd:ID },
+    attribute volume { volSpec }?,
     text
   }
+volSpec = string
 # <patches>
 #   <patch num="1" id="p1">Nice Piano</patch>
 #   <patch num="2" id="p2">TremStr/Str</patch>
@@ -54,7 +57,7 @@ map-events =
 # </map-events>
 events =
   element events {
-    (note-on | note-off | control-change | program-change | advance)+
+    (note-on | note-off | control-change | program-change | note-window-change | advance)+
   }
 cue-stream =
   element cue-stream {
@@ -80,15 +83,16 @@ trigger =
 note-on =
   element note-on {
     attribute channel { channelSpec },
-    attribute note { text },
+    attribute note { noteSpec },
     empty
   }
 note-off =
   element note-off {
     attribute channel { channelSpec },
-    attribute note { text },
+    attribute note { noteSpec },
     empty
   }
+noteSpec = string
 control-change =
   element control-change {
     attribute channel { channelSpec },
@@ -106,6 +110,13 @@ program-change =
   element program-change {
     attribute channel { channelSpec },
     attribute patch { xsd:IDREF },
+    empty
+  }
+note-window-change =
+  element note-window-change {
+    attribute channel { channelSpec },
+    attribute top { noteSpec }?,
+    attribute bottom { noteSpec }?,
     empty
   }
 advance =

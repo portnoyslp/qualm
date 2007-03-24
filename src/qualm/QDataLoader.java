@@ -102,6 +102,15 @@ public class QDataLoader extends DefaultHandler {
 	  patch.setBank( attributes.getValue("bank") );
 	}
 
+	if (attributes.getValue("volume") != null) {
+	  currentAttribute = "volume";
+	  String volStr = attributes.getValue("volume");
+	  int vol = Integer.parseInt( volStr );
+	  if (volStr.endsWith( "%" )) 
+	    vol = (vol * 127) / 100;
+	  patch.setVolume( new Integer(vol) );
+	}
+
       } else if (qName.equals("patch-alias")) {
 	currentElement = "patch-alias `" + attributes.getValue("id") + "'";
 	currentAttribute = "target";
@@ -118,6 +127,19 @@ public class QDataLoader extends DefaultHandler {
 			   targetPatch.getNumber() );
 
 	patch.setBank( targetPatch.getBank() );
+
+	// duplicate volume of target patch unless the patch-alias
+	// sets its own independent volume attribute
+	if (attributes.getValue("volume") != null) {
+	  currentAttribute = "volume";
+	  String volStr = attributes.getValue("volume");
+	  int vol = Integer.parseInt( volStr );
+	  if (volStr.endsWith( "%" )) 
+	    vol = (vol * 127) / 100;
+	  patch.setVolume( new Integer(vol) );
+	}
+	else
+	  patch.setVolume( targetPatch.getVolume() );
 
       } else if (qName.equals("cue-stream")) {
 	qstream = new QStream();
@@ -140,6 +162,26 @@ public class QDataLoader extends DefaultHandler {
 	  System.err.println("WARNING: could not find patch with id " + patchID);
 	}
 	eventSet.add(new ProgramChangeEvent(ch, foundPatch));
+
+      } else if (qName.equals("note-window-change")) {
+	currentElement = "note-window-change element";
+	if (curQ != null) 
+	  currentElement += " [cue " + curQ.getCueNumber() + "]";
+	currentAttribute = "channel";
+	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
+	Integer topNote = null, bottomNote = null;
+	currentAttribute = "bottom";
+	String bottom = attributes.getValue("bottom");
+	if (bottom != null)
+	  bottomNote = new Integer(_noteNameToMidi(bottom));
+	currentAttribute = "top";
+	String top = attributes.getValue("top");
+	if (top != null)
+	  topNote = new Integer(_noteNameToMidi(top));
+	if (bottom == null && top == null) {
+	  System.err.println("WARNING: found note-window-change specifying neither top nor bottom");
+	}
+	eventSet.add(new NoteWindowChangeEvent(ch, bottomNote, topNote));
 
       } else if (qName.equals("advance")) {
 	StreamAdvance sa = new StreamAdvance( attributes.getValue("stream"));

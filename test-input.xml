@@ -12,7 +12,7 @@
     <patch id="Nice_Piano" bank="User" num="1">Nice Piano</patch>
     <patch id="P2" bank="User" num="2">TremStr/Str</patch>
     <patch id="P3" bank="User" num="3" remark="split at C5">Strs/FzzClav</patch>
-    <patch id="P4" bank="PrA"  num="15">Rhodes</patch>
+    <patch id="P4" bank="PrA"  num="15" volume="23%">Rhodes</patch>
     <patch-alias id="P5" target="Nice_Piano">Good Piano</patch-alias>
     <patch id="P95" bank="User" num="95">LKB/TmpF</patch>
     <patch id="P96" bank="User" num="96">TmpG/TmpD</patch>

@@ -67,6 +67,18 @@ public class PatchChanger {
     }
   }
 
+  // ... except for this one, which is also fairly important
+  public static synchronized void noteWindowChange( NoteWindowChangeEvent nwce,
+						    Receiver midiOut ) {
+    int ch = nwce.getChannel();
+    if (changer[ch] != null) {
+      changer[ch].getChangeDelegate().noteWindowChange(nwce, midiOut);
+    } else {
+      throw new RuntimeException("Could not execute note-window change " + nwce
+				 + " on unknown channel " + ch);
+    }
+  }
+
 
   private ChangeDelegate changeDelegate;
 

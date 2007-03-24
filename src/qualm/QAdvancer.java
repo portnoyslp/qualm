@@ -29,6 +29,7 @@ public class QAdvancer {
   public Cue getCurrentCue() { return currentCue; }
   public Cue getPendingCue() { return pendingCue; }
 
+  // returns Collection of CuedEvent
   public Collection switchToMeasure(String cueName) { 
     Cue newQ = new Cue( cueName );
     SortedSet cueset = qstream.getCues();
@@ -99,7 +100,12 @@ public class QAdvancer {
       Object obj = iter.next();
       if (obj instanceof ProgramChangeEvent) {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
-	out.add( new ProgramChangeEvent(pce.getChannel(), pce.getPreviousPatch()) );
+	if (pce.getPreviousPatch() != null)
+	  out.add( new ProgramChangeEvent(pce.getChannel(),
+					  pce.getPreviousPatch()) );
+      }
+      else if (obj instanceof NoteWindowChangeEvent) {
+	out.add( ((NoteWindowChangeEvent)obj).getUndoEvent() );
       }
     }
 
@@ -133,7 +139,7 @@ public class QAdvancer {
    * previous program change for each channel, and then apply those.
    *
    * @return a <code>Collection</code> of
-   * <code>PatchChangeEvent</code> objects. */
+   * <code>CuedEvent</code> objects. */
 
   private Collection revertPatchChanges() {
     String[] midiChans = qdata.getMidiChannels();
@@ -144,16 +150,21 @@ public class QAdvancer {
     CuedProgramChangeEvent[] events = new CuedProgramChangeEvent[ midiChans.length ];
     for(int i=0; i<events.length; i++) events[i] = null;
 
-    int programCount = 0;
+    CuedNoteWindowChangeEvent[] nwcEvents = new CuedNoteWindowChangeEvent[ midiChans.length ];
+    for(int i=0; i<nwcEvents.length; i++) nwcEvents[i] = null;
+
+    int programCount = 0, noteWindowCount = 0;
 
     // go backward through the events
     SortedSet headset = qstream.getCues();
     Cue loopQ = currentCue;
-    while ( loopQ != null && programCount < channelCount ) {
+    while ( loopQ != null && (programCount < channelCount ||
+			      noteWindowCount < channelCount) ) {
       Iterator iter = loopQ.getEvents().iterator();
       while (iter.hasNext()) {
 	Object obj = iter.next();
-	if (obj instanceof ProgramChangeEvent) {
+	if (programCount < channelCount &&
+	    obj instanceof ProgramChangeEvent) {
 	  ProgramChangeEvent pce = (ProgramChangeEvent)obj;
 	  CuedProgramChangeEvent ev = 
 	    new CuedProgramChangeEvent(loopQ, pce);
@@ -161,6 +172,16 @@ public class QAdvancer {
 	  if (events[ch] == null && midiChans[ch] != null) {
 	    events[ch] = ev;
 	    programCount++;
+	  }
+	}
+	else if (noteWindowCount < channelCount &&
+		 obj instanceof NoteWindowChangeEvent) {
+	  NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
+	  int ch = nwce.getChannel();
+	  if (nwcEvents[ch] == null && midiChans[ch] != null) {
+	    nwcEvents[ch] = new CuedNoteWindowChangeEvent
+	      (loopQ, nwce.getPostStateEvent());
+	    noteWindowCount++;
 	  }
 	}
       }
@@ -177,6 +198,10 @@ public class QAdvancer {
     for(int i=0; i<events.length; i++) {
       if (events[i] != null)
 	out.add(events[i]);
+    }
+    for(int i=0; i<nwcEvents.length; i++) {
+      if (nwcEvents[i] != null)
+	out.add(nwcEvents[i]);
     }
     return out;
   }

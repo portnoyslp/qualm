@@ -42,6 +42,10 @@ public class MasterController implements Receiver {
     // each channel, and send it.
     boolean[] sent_channel = new boolean[16];
     for(int i=0;i<16;i++) sent_channel[i] = false;
+
+    boolean[] sent_nw_on_channel = new boolean[16];
+    for(int i=0;i<16;i++) sent_nw_on_channel[i] = false;
+
     Iterator iter = changes.iterator();
     while(iter.hasNext()) {
       Object obj = iter.next();
@@ -52,6 +56,15 @@ public class MasterController implements Receiver {
 	  PatchChanger.patchChange(pce, mainQC().getMidiOut() );
 	  sentPCs.add(pce);
 	  sent_channel[channel] = true;
+	}
+      }
+      if (obj instanceof NoteWindowChangeEvent) {
+	NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
+	int channel = nwce.getChannel();
+	if (!sent_nw_on_channel[ channel ]) {
+	  PatchChanger.noteWindowChange(nwce, mainQC().getMidiOut() );
+	  sentPCs.add(nwce);
+	  sent_nw_on_channel[channel] = true;
 	}
       }
     }
@@ -69,12 +82,18 @@ public class MasterController implements Receiver {
     PatchChanger.patchChange(pce, midiOut);
   }
   
+  private void sendNoteWindowChange(NoteWindowChangeEvent nwce) {
+    PatchChanger.noteWindowChange(nwce, midiOut);
+  }
+  
   protected void sendEvents( Collection c ) {
     Iterator i = c.iterator();
     while(i.hasNext()) {
       Object obj = i.next();
       if (obj instanceof ProgramChangeEvent)
 	sendPatchChange((ProgramChangeEvent)obj);
+      else if (obj instanceof NoteWindowChangeEvent) 
+	sendNoteWindowChange((NoteWindowChangeEvent)obj);
       else if (obj instanceof StreamAdvance) 
 	advanceStream( (StreamAdvance) obj );
     }
@@ -101,12 +120,19 @@ public class MasterController implements Receiver {
     Collection changes = new TreeSet( new Comparator() {
 	// compare cues in reverse order
 	public int compare( Object a, Object b) {
-	  CuedProgramChangeEvent ca = (CuedProgramChangeEvent)a;
-	  CuedProgramChangeEvent cb = (CuedProgramChangeEvent)b;
-	  if (cb.getCue().equals(ca.getCue()))
-	    return ca.getChannel()-cb.getChannel();
-	  else
-	    return cb.getCue().compareTo(ca.getCue());
+	  CuedEvent ca = (CuedEvent)a;
+	  CuedEvent cb = (CuedEvent)b;
+	  // first, compare cue numbers
+	  int val = cb.getCue().compareTo(ca.getCue());
+	  if (val != 0)
+	    return val;
+	  // if same cue number, compare by name of runtime class (to
+	  // distinguish between different types of events)
+	  val = ca.getClass().getName().compareTo(cb.getClass().getName());
+	  if (val != 0)
+	    return val;
+	  // if same cue number and runtime class, compare by channel
+	  return ca.getChannel()-cb.getChannel();
 	}
       });
     

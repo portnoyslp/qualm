@@ -4,6 +4,7 @@ public class Patch {
   String id = null;
   String bank = null;
   int number = -1;
+  Integer volume = null;
   String description;
 
   public Patch( String id, int number ) {
@@ -57,6 +58,20 @@ public class Patch {
    */
   public void setNumber(int newNumber) {
     this.number = newNumber;
+  }
+
+  /**
+   * Get the optional Volume value (null for none).
+   */
+  public Integer getVolume() {
+    return volume;
+  }
+
+  /**
+   * Set the Volume value.
+   */
+  public void setVolume(Integer newVolume) {
+    this.volume = newVolume;
   }
 
   /**

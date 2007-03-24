@@ -88,7 +88,9 @@ public class QData {
     // next, we go through the cues' patch changes, and populate them
     // with back-patch info
     Patch[] patches = new Patch[16];
-    
+    NoteWindowChangeEvent[] noteWindowChangeEvents =
+      new NoteWindowChangeEvent[16];
+
     iter = masterCues.iterator();
     while (iter.hasNext()) {
       Cue q = (Cue)(iter.next());
@@ -105,6 +107,12 @@ public class QData {
 	  }
 
 	  patches[ch] = pce.getPatch();
+	}
+	else if (obj instanceof NoteWindowChangeEvent) {
+	  NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
+	  int ch = nwce.getChannel();
+	  nwce.setPrevious(noteWindowChangeEvents[ch]);
+	  noteWindowChangeEvents[ch] = nwce;
 	}
       }
     }

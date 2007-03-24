@@ -178,6 +178,11 @@ public class QualmREPL extends Thread {
 	// update the PatchChange plugins
 	handlePatchPlugins( ch, qd.getMidiChannels()[ch], patch);
       }
+      else if (obj instanceof NoteWindowChangeEvent) {
+	NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
+	int ch = nwce.getChannel();
+	System.out.println( qd.getMidiChannels()[ch] + " " + nwce );
+      }
     }
 
     // redo prompt

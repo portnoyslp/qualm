@@ -19,11 +19,13 @@
 	  num CDATA #REQUIRED
 	  bank CDATA #IMPLIED
 	  remark CDATA ""
-	  id ID #REQUIRED>
+	  id ID #REQUIRED
+	  volume CDATA #IMPLIED>
 <!ELEMENT patch-alias (#PCDATA)>
 <!ATTLIST patch-alias
 	  target IDREF #REQUIRED
-	  id ID #REQUIRED>
+	  id ID #REQUIRED
+	  volume CDATA #IMPLIED>
 <!--
      <patches>
        <patch num="1" id="p1">Nice Piano</patch>
@@ -44,7 +46,7 @@
      </map-events>
 -->
 
-<!ELEMENT events (note-on|note-off|control-change|program-change|advance)+>
+<!ELEMENT events (note-on|note-off|control-change|program-change|note-window-change|advance)+>
 
 <!ELEMENT cue-stream (global?,cue*)>
 <!ATTLIST cue-stream id ID #IMPLIED>
@@ -80,6 +82,12 @@
 <!ATTLIST program-change
 	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED 
 	  patch IDREF #REQUIRED>
+
+<!ELEMENT note-window-change EMPTY>
+<!ATTLIST note-window-change
+	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED
+	  top CDATA #IMPLIED
+          bottom CDATA #IMPLIED>
 
 <!ELEMENT advance EMPTY>
 <!ATTLIST advance 
