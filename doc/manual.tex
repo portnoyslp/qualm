@@ -6,6 +6,10 @@
 \usepackage[margin=1in]{geometry}
 \newcommand{\q}{{\textsf{Qualm}}\xspace}
 \newcommand{\code}[1]{{\tt #1}}
+\newcommand{\attrlabel}[1]{\mbox{{\ttfamily\itshape #1}}~~--}
+\newenvironment{attributes}
+  {\list{}{\let\makelabel\attrlabel}}
+  {\endlist}
 \begin{document}
 
 \title{\textbf{\q:} Queueing Applications for Live MIDI}
@@ -71,6 +75,7 @@ patches, but {\em Children of Eden}, for one, actually used a single
 synthesizer module to deal with input from three separate keyboards at
 the same time, utilizing a separate stream of patches for each one.
 
+\begin{latexonly}\newpage\end{latexonly}
 \section{Installation}
 
 \q is a Java program, and as such can be installed by simply
@@ -130,15 +135,180 @@ depending on what brand of Linux you're using.  On Linux or OSX, this
 jar file should be installed into \code{/usr/share/java}; on Windows
 you should install it and add its location to your CLASSPATH variable.
 
+\begin{latexonly}\newpage\end{latexonly}
 \section{\q Control Files}
 
 \q is fairly straightforward.  It takes a control file written in
 XML, consisting of a list of patches, and a set of ``cues'' (gathered into
 independent cue ``streams'') which describe the patch changes and the
-events that will trigger the next cue in the sequence.  
+events that will trigger the next cue in the sequence.
 
-TODO: Much explanation of control files...
+\begin{figure}
+\begin{scriptsize}
+\begin{verbatim}
+<?xml version="1.0"?>
+<!DOCTYPE qualm-data PUBLIC "-//QUALM/DTD Qualm Data//EN" "http://qualm.berlios.de/qualm.dtd">
 
+<qualm-data>
+  <title>Example Qualm File</title>
+  <midi-channels>
+    <channel num="1" device-type="Roland JV-1080">Lower Keyboard</channel>
+    <channel num="2">Upper Keyboard</channel>
+    <channel num="4" device-type="Alesis">Drum Kit</channel>
+  </midi-channels>
+
+  <patches>
+    <patch id="Nice_Piano" bank="User" num="1">Nice Piano</patch>
+    <patch id="P2" bank="User" num="2">TremStr/Str</patch>
+    <patch id="P3" bank="User" num="3" remark="split at C5">Strs/FzzClav</patch>
+    <patch id="P4" bank="PrA"  num="15" volume="23%">Rhodes</patch>
+    <patch-alias id="P5" target="Nice_Piano">Good Piano</patch-alias>
+    <patch id="P95" bank="User" num="95">LKB/TmpF</patch>
+    <patch id="P96" bank="User" num="96">TmpG/TmpD</patch>
+  </patches>
+
+  <cue-stream id="First_Stream">
+    <global>
+      <trigger><note-on channel="1" note="c6"/></trigger>
+      <trigger reverse="yes"><note-on channel="1" note="c2"/></trigger>
+      <map-events>
+        <map-from><control-change channel="1" control="damper"/></map-from>
+        <map-to><control-change channel="2" control="80"/></map-to>
+      </map-events>
+    </global>
+    <cue song="1a" measure="10">
+      <events>
+        <program-change channel="1" patch="P3"/>
+        <advance stream="Second_Stream" song="2" measure="10"/>
+      </events>
+    </cue>
+    <cue song="3" measure="1">
+      <events><program-change channel="2" patch="P3"/></events>
+      <trigger><note-on channel="2" note="g2"/></trigger>
+    </cue>
+    <cue song="3" measure="16">
+      <events>
+        <program-change channel="4" patch="P96"/>
+        <program-change channel="1" patch="P5"/>
+      </events>
+    </cue>
+  </cue-stream>
+  <cue-stream id="Second_Stream">
+    <global>
+      <trigger><note-on channel="2" note="c6"/></trigger>
+    </global>
+    <cue song="1" measure="1">
+      <events><program-change channel="2" patch="P96"/></events>
+    </cue>
+    <cue song="2" measure="10">
+      <events><program-change channel="2" patch="P95"/></events>
+    </cue>
+  </cue-stream>
+</qualm-data>
+\end{verbatim}
+\end{scriptsize}
+\caption{An example \q data file.\label{example-file}}
+\end{figure}
+
+An example \q data file is shown in Figure~\ref{example-file}.
+
+All the XML information for \q is surrounded by a {\tt qualm-data}
+element.  The first element within the {\tt qualm-data} is usually a
+{\tt title} element which can give a descriptive name of the task for
+which the file has been prepared.  The rest of the data is divided
+broadly into three sections; the channel specification, the patch
+listing, and the cue streams.
+
+\subsection{Channel Specifications}
+
+MIDI defines 16 different channels that can independently receive note
+data.  Any channel that is used by \q in a control file, however,
+needs to first be specified in the {\tt midi-channels} section of the file.
+
+Each channel is defined through a {\tt channel} element, which can
+contain a brief piece of text describing the channel data.  This
+description will be seen in \q when it reports on patch changes or
+other channel updates.  {\tt channel} uses the attributes:
+
+\begin{attributes}
+ \item[num] The MIDI channel number that will be used for control.  A
+   required attribute.
+ \item[device-type] The synth model that \q will use when sending
+   events on the channel.  This value is used to determine the class
+   name for a delegate which \q uses to format messages on the MIDI
+   bus.  If not supplied, \q will use the value ``{\tt Roland}''.
+   (Optional)
+\end{attributes}
+
+Using a channel in a \q data file that was not defined in {\tt
+  midi-channels} could result in run-time errors.
+
+
+\subsection{Patch Listing}
+
+The {\tt patches} section of the \q file contains the list of
+different sounds, or patches, that will be requested of the synth
+module during \q's operation.  The {\tt patches} section can
+contain either {\tt patch} or {\tt patch-alias} elements:
+
+\subsubsection{Patch Definitions}
+
+The {\tt patch} element defines the name of the patch that \q will
+display while using that patch in operation.  This element can contain
+the attributes:
+
+\begin{attributes}
+\item[id] A unique identifier for this patch.  This will be used in
+  the cue section to create patch change events.
+\item[num] The patch number (or ``program number'') that will be sent
+  to the synthesizer to select the sound for this patch.
+\item[bank] A number or string that will select the appropriate
+  ``bank'' of sound programs.  Most synthesizers have more than 128
+  sounds, and thus need to select among multiple banks.  Because the
+  different synthesizers might choose different naming conventions for
+  the banks, string values for the bank are interpreted by the target
+  synth.  \footnote{Patch libraries are often synthesizer-specific,
+    so if many different synthesizer modules are used in the same
+    control file, patches should be created with an eye towards which
+    synth the patch will be destined for.}  (Optional)
+\item[remark] A comment on the patch which the synth programmer can
+  use to make notes about the development of the sound. (Optional)
+\item[volume] Tells the synthesizer that when it loads this patch it
+  should set the volume for that channel to the given value.  This
+  value is either a number from 0-127, or can be written as a
+  percentage using a {\tt \%} character (as in {\tt
+    "50\%"}).\footnote{Because this feature uses standard MIDI
+    controls for changing a channel's volume, it may interact poorly
+    with volume pedals or sliders which are meant to perform the same
+    effect.  If you're using devices such as these in your synthesizer
+    setup, it may be best to avoid using the {\tt volume} attribute.}
+\end{attributes}
+
+\subsubsection{Patch Aliases}
+
+The {\tt patch-alias} element defines a patch which is the same sound
+as an already existing patch in the list.  This can be used to call
+the same sound by a variety of different names, or to create specific
+scenarios where a patch should be played vastly louder or softer than
+usual.  This element can contain the attributes:
+
+\begin{attributes}
+\item[target] The patch identifer that this alias references.  When
+  this alias is called in the \q cue stream, it will load the same
+  sound as the referenced patch.  {\em Note:} This should be a patch
+  identifer that exists earlier in the list of patches than this
+  alias; trying to ``forward reference'' a later patch will cause
+  warnings when loading your control file.
+\item[id] A unique identifier for this patch alias.  All patches and
+  patch aliases must have a unique identifier; there can be no
+  duplicates in the list of patches.
+\item[volume] Overrides the volume level for the given patch when
+  accessed through this alias.  For more information, see the {\tt
+    volume} attribute on the {\tt patch} element in the previous
+  section.
+\end{attributes}
+
+\begin{latexonly}\newpage\end{latexonly}
 \section{Running \q}
 
 \q is started by executing the jar file, providing the location of the
@@ -222,6 +392,7 @@ Other commands that you can type at the prompt are:
       time.
 \end{description}
 
+\begin{latexonly}\newpage\end{latexonly}
 \section{Plugins}
 \label{sec:plugins}
 XXX To be written
