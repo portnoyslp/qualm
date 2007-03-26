@@ -7,9 +7,8 @@
 \newcommand{\q}{{\textsf{Qualm}}\xspace}
 \newcommand{\code}[1]{{\tt #1}}
 \newcommand{\attrlabel}[1]{\mbox{{\ttfamily\itshape #1}}~~--}
-\newenvironment{attributes}
-  {\list{}{\let\makelabel\attrlabel}}
-  {\endlist}
+\renewcommand{\descriptionlabel}[1]%
+  {\hspace{\labelsep}\attrlabel{#1}}
 \begin{document}
 
 \title{\textbf{\q:} Queueing Applications for Live MIDI}
@@ -75,7 +74,9 @@ patches, but {\em Children of Eden}, for one, actually used a single
 synthesizer module to deal with input from three separate keyboards at
 the same time, utilizing a separate stream of patches for each one.
 
-\begin{latexonly}\newpage\end{latexonly}
+\begin{latexonly}
+\newpage
+\end{latexonly}
 \section{Installation}
 
 \q is a Java program, and as such can be installed by simply
@@ -135,7 +136,9 @@ depending on what brand of Linux you're using.  On Linux or OSX, this
 jar file should be installed into \code{/usr/share/java}; on Windows
 you should install it and add its location to your CLASSPATH variable.
 
-\begin{latexonly}\newpage\end{latexonly}
+\begin{latexonly}
+\newpage
+\end{latexonly}
 \section{\q Control Files}
 
 \q is fairly straightforward.  It takes a control file written in
@@ -230,7 +233,7 @@ contain a brief piece of text describing the channel data.  This
 description will be seen in \q when it reports on patch changes or
 other channel updates.  {\tt channel} uses the attributes:
 
-\begin{attributes}
+\begin{description}
  \item[num] The MIDI channel number that will be used for control.  A
    required attribute.
  \item[device-type] The synth model that \q will use when sending
@@ -238,7 +241,7 @@ other channel updates.  {\tt channel} uses the attributes:
    name for a delegate which \q uses to format messages on the MIDI
    bus.  If not supplied, \q will use the value ``{\tt Roland}''.
    (Optional)
-\end{attributes}
+\end{description}
 
 Using a channel in a \q data file that was not defined in {\tt
   midi-channels} could result in run-time errors.
@@ -257,7 +260,7 @@ The {\tt patch} element defines the name of the patch that \q will
 display while using that patch in operation.  This element can contain
 the attributes:
 
-\begin{attributes}
+\begin{description}
 \item[id] A unique identifier for this patch.  This will be used in
   the cue section to create patch change events.
 \item[num] The patch number (or ``program number'') that will be sent
@@ -273,26 +276,26 @@ the attributes:
     synth the patch will be destined for.}  (Optional)
 \item[remark] A comment on the patch which the synth programmer can
   use to make notes about the development of the sound. (Optional)
-\item[volume] Tells the synthesizer that when it loads this patch it
-  should set the volume for that channel to the given value.  This
-  value is either a number from 0-127, or can be written as a
-  percentage using a {\tt \%} character (as in {\tt
-    "50\%"}).\footnote{Because this feature uses standard MIDI
-    controls for changing a channel's volume, it may interact poorly
-    with volume pedals or sliders which are meant to perform the same
-    effect.  If you're using devices such as these in your synthesizer
-    setup, it may be best to avoid using the {\tt volume} attribute.}
-\end{attributes}
+\item[volume] When loading this patch, tell the synthesizer to set the
+  volume for that channel to the given value.  This value is either a
+  number from 0-127, or can be written as a percentage using a {\tt
+    \%} character (as in {\tt "50\%"}).\footnote{Because this feature
+    uses standard MIDI controls for changing a channel's volume, it
+    may interact poorly with volume pedals or sliders which are meant
+    to perform the same effect.  If you're using devices such as these
+    in your synthesizer setup, it may be best to avoid using the {\tt
+      volume} attribute.}
+\end{description}
 
 \subsubsection{Patch Aliases}
 
 The {\tt patch-alias} element defines a patch which is the same sound
 as an already existing patch in the list.  This can be used to call
 the same sound by a variety of different names, or to create specific
-scenarios where a patch should be played vastly louder or softer than
+scenarios where a patch should be played noticably louder or softer than
 usual.  This element can contain the attributes:
 
-\begin{attributes}
+\begin{description}
 \item[target] The patch identifer that this alias references.  When
   this alias is called in the \q cue stream, it will load the same
   sound as the referenced patch.  {\em Note:} This should be a patch
@@ -306,9 +309,24 @@ usual.  This element can contain the attributes:
   accessed through this alias.  For more information, see the {\tt
     volume} attribute on the {\tt patch} element in the previous
   section.
-\end{attributes}
+\end{description}
 
-\begin{latexonly}\newpage\end{latexonly}
+
+\subsection{Cue Streams and Cues}
+
+\subsubsection{Events}
+
+\paragraph{Program Changes}
+\paragraph{Advancing Streams}
+\paragraph{Note Window Changes}
+
+\subsubsection{Map Events}
+
+\subsubsection{Triggers}
+
+\begin{latexonly}
+\newpage
+\end{latexonly}
 \section{Running \q}
 
 \q is started by executing the jar file, providing the location of the
@@ -361,38 +379,40 @@ to sync up during long breaks to make sure you're all on the same page
 Other commands that you can type at the prompt are:
 
 \begin{description}
-\item[version] -- reports the current \q version and build
+\item[version] reports the current \q version and build
       information.
 
-\item[reset] -- this resets all the cue streams to the start of the
+\item[reset] this resets all the cue streams to the start of the
       show; kind of the same as typing ``1.1''.
 
-\item[quit] -- does what you probably expect it to.  Go ahead, type it
+\item[quit] does what you probably expect it to.  Go ahead, type it
       in.  Quitter.
 
-\item[dump] -- mostly useful for debugging; prints out a text
+\item[dump] mostly useful for debugging; prints out a text
       representation of the entire control file.
 
-\item[showmidi] -- more debugging; shows all the MIDI events that pass
+\item[showmidi] more debugging; shows all the MIDI events that pass
       through the unit (you can also get this by adding a ``--debugmidi''
       option on the command line).  {\bf unshowmidi} will turn this
       off.
 
-\item[adv \textit{stream}] -- advance the stream named {\em stream}
+\item[adv \textit{stream}] advance the stream named {\em stream}
       forward one patch.  If you just hit ``Enter'' on the keyboard,
       it has the same effect as typing ``adv'' with the name of the
       first stream.
 
-\item[plugin {[remove]} (cue$\mid$patch) \textit{plugin-name}] -- controls
+\item[plugin {[remove]} (cue$\mid$patch) \textit{plugin-name}] controls
       the plugin facility of \q.  For more information, see
       section~\ref{sec:plugins}.
 
-\item[save] -- saves the current preferences (which in this case is
+\item[save] saves the current preferences (which in this case is
       really just the list of plugins) so that \q will use them next
       time.
 \end{description}
 
-\begin{latexonly}\newpage\end{latexonly}
+\begin{latexonly}
+\newpage
+\end{latexonly}
 \section{Plugins}
 \label{sec:plugins}
 XXX To be written

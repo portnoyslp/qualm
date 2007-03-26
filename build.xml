@@ -60,6 +60,8 @@
   <target name="doc-html" depends="check-doc" unless="docBuildHTML.notRequired">
     <exec dir="${basedir}/doc" executable="latex2html"
 	  failifexecutionfails="no">
+      <arg value="-antialias"/>
+      <arg value="-local_icons"/>
       <arg value="manual.tex"/>
     </exec>
   </target>
