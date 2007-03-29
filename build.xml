@@ -55,6 +55,18 @@
 	  failifexecutionfails="no">
       <arg value="manual.tex"/>
     </exec>
+    <exec dir="${basedir}/doc" executable="makeindex"
+	  failifexecutionfails="no">
+      <arg value="manual.idx"/>
+    </exec>
+    <exec dir="${basedir}/doc" executable="pdflatex"
+	  failifexecutionfails="no">
+      <arg value="manual.tex"/>
+    </exec>
+    <exec dir="${basedir}/doc" executable="pdflatex"
+	  failifexecutionfails="no">
+      <arg value="manual.tex"/>
+    </exec>
   </target>
 
   <target name="doc-html" depends="check-doc" unless="docBuildHTML.notRequired">
