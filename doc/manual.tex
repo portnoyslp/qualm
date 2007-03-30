@@ -330,11 +330,29 @@ This element can contain the attributes:
 
 \subsection{Cue Streams and Cues}
 
+\index{cue}
 The remaining piece of the \q control file is for defining {\em cues}
 -- namely, what happens at a particular moment in the score, and what
 \q will expect to see in order to switch to the next cue.
 
-These cues are bundled up into one or more \elt{cue-stream}s, 
+These cues are bundled up into one or more \elt{cue-stream}s, each of
+which represents an independent series of cues.  Each \elt{cue-stream}
+can contain an optional {\tt id} attribute which is used to reference
+the stream when necessary.
+
+Within the \elt{cue-stream} are a set of \elt{cue}s, each of which has
+a pair of attributes, {\tt song} and {\tt measure}, which define the
+order in which the cues should be visited.  \index{cue!ordering} Cues
+will be ordered first by the song number, and then by the measure
+number within a song.  If a letter appears in either the song or the
+measure information, it is assumed to come before the next-higher
+number, if appropriate.  As such, a song labeled ``13b'' will come
+after songs ``13'' and ``13a'' and before song ``14''.  A measure
+numbered simply ``a'' or ``A'' will be the first measure in the song,
+even before measure ``1''.  This corresponds to accepted notations.
+
+The contents of a \elt{cue} are for defining the cue's actions.  These
+  are divided into {\em events}, {\em map events}, and {\em triggers}.
 
 \subsubsection{Events}
 

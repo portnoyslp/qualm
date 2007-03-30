@@ -48,9 +48,31 @@
     <uptodate property="docBuildHTML.notRequired" 
 	      srcfile="${basedir}/doc/manual.tex"
 	      targetfile="${basedir}/doc/manual/index.html"/>
+    <condition property="docBuild.required">
+      <or>
+	<isfalse value="${docBuildPDF.notRequired}"/>
+	<isfalse value="${docBuildHTML.notRequired}"/>
+      </or>
+    </condition>
   </target>
 
-  <target name="doc-pdf" depends="check-doc" unless="docBuildPDF.notRequired">
+  <target name="doc-pdf" depends="doc-makeindex" 
+	  unless="docBuildPDF.notRequired">
+    <exec dir="${basedir}/doc" executable="pdflatex"
+	  failifexecutionfails="no">
+      <arg value="manual.tex"/>
+    </exec>
+  </target>
+
+  <target name="doc-html" depends="doc-makeindex" 
+	  unless="docBuildHTML.notRequired">
+    <exec dir="${basedir}/doc" executable="latex2html"
+	  failifexecutionfails="no">
+      <arg line="-local_icons manual.tex"/>
+    </exec>
+  </target>
+
+  <target name="doc-makeindex" depends="check-doc" if="docBuild.required">
     <exec dir="${basedir}/doc" executable="pdflatex"
 	  failifexecutionfails="no">
       <arg value="manual.tex"/>
@@ -61,19 +83,6 @@
     </exec>
     <exec dir="${basedir}/doc" executable="pdflatex"
 	  failifexecutionfails="no">
-      <arg value="manual.tex"/>
-    </exec>
-    <exec dir="${basedir}/doc" executable="pdflatex"
-	  failifexecutionfails="no">
-      <arg value="manual.tex"/>
-    </exec>
-  </target>
-
-  <target name="doc-html" depends="check-doc" unless="docBuildHTML.notRequired">
-    <exec dir="${basedir}/doc" executable="latex2html"
-	  failifexecutionfails="no">
-      <arg value="-antialias"/>
-      <arg value="-local_icons"/>
       <arg value="manual.tex"/>
     </exec>
   </target>
