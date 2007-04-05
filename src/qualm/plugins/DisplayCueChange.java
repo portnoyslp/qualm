@@ -25,7 +25,6 @@ public class DisplayCueChange extends CueChangeNotification {
     
     frame.pack();
     frame.setVisible(true);
-    frame.show();
   }
 
   public void cueChange(MasterController master) {

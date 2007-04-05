@@ -13,6 +13,7 @@ public class AuditionPatches {
   static Receiver midiOut = null;
   static Patch defaultPatch = null;
   static boolean playSingle = false;
+  static boolean ignoreAliases = false;
 
   public static void playArpeggiatedChord(int holdTime) {
     // play a Cmaj chord with increasing strength from p (30) to ff
@@ -201,6 +202,7 @@ public class AuditionPatches {
       throw new RuntimeException("loadData called without inputFilename in place.");
     
     QDataLoader qdl = new QDataLoader();
+    qdl.setIgnorePatchAliases(ignoreAliases);
     
     if (inputFilename.startsWith("http:") ||
 	inputFilename.startsWith("ftp:") ||
@@ -223,7 +225,8 @@ public class AuditionPatches {
     longopts[i++] = new LongOpt("output", LongOpt.REQUIRED_ARGUMENT, null, 'o');
     longopts[i++] = new LongOpt("default", LongOpt.REQUIRED_ARGUMENT, null, 'p');
     longopts[i++] = new LongOpt("single", LongOpt.NO_ARGUMENT, null, 's');
-    Getopt g = new Getopt("Qualm", args, "o:p:s", longopts);
+    longopts[i++] = new LongOpt("ignore-aliases", LongOpt.NO_ARGUMENT, null, 'i');
+    Getopt g = new Getopt("Qualm", args, "o:p:si", longopts);
 
     int c;
     String defaultPatchName = "Piano";
@@ -238,6 +241,9 @@ public class AuditionPatches {
 	  break;
 	case 's':
 	  playSingle = true;
+	  break;
+	case 'i':
+	  ignoreAliases = true;
 	  break;
 	}
     }
@@ -255,6 +261,7 @@ public class AuditionPatches {
     if (defaultPatch == null) {
       System.out.println("Unable to find default patch with name '" 
 			 + defaultPatchName +"'");
+      System.out.println("(use \"-p 'patchName'\" to specify a different default patch)");
       System.exit(1);
     }
 

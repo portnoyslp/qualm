@@ -15,6 +15,7 @@ import java.util.*;
 public class QDataLoader extends DefaultHandler {
 
   boolean validateInput = false;
+  boolean ignorePatchAliases = false;
   
   SAXParser parser;
   QData qdata; 
@@ -53,6 +54,16 @@ public class QDataLoader extends DefaultHandler {
       System.out.println("Couldn't parse " + f + ": " + e);
       return null;
     }
+  }
+
+  /**
+   * If set to true, <patch-alias> tags in the XML data are ignored
+   * and no patches are generated for them.  This is handy for
+   * auditioning patches.
+   */
+  public void setIgnorePatchAliases(boolean val)
+  {
+    this.ignorePatchAliases = val;
   }
   
   /* DefaultHandler overrides */
@@ -105,13 +116,17 @@ public class QDataLoader extends DefaultHandler {
 	if (attributes.getValue("volume") != null) {
 	  currentAttribute = "volume";
 	  String volStr = attributes.getValue("volume");
-	  int vol = Integer.parseInt( volStr );
-	  if (volStr.endsWith( "%" )) 
-	    vol = (vol * 127) / 100;
+	  int vol = -1;
+	  if (volStr.endsWith( "%" )) {
+	    volStr = volStr.substring(0,volStr.length()-1);
+	    vol = (Integer.parseInt( volStr ) * 127) / 100;
+	  } else {
+	    vol = Integer.parseInt( volStr );
+	  }
 	  patch.setVolume( new Integer(vol) );
 	}
 
-      } else if (qName.equals("patch-alias")) {
+      } else if (qName.equals("patch-alias") && !ignorePatchAliases ) {
 	currentElement = "patch-alias `" + attributes.getValue("id") + "'";
 	currentAttribute = "target";
 
@@ -249,7 +264,8 @@ public class QDataLoader extends DefaultHandler {
       // dealing with a midi-channel definition
       qdata.addMidiChannel( Integer.parseInt(auxValue[0])-1, auxValue[1], content );
       
-    } else if (qName.equals("patch") || qName.equals("patch-alias")) {
+    } else if (qName.equals("patch") ||
+	       (qName.equals("patch-alias") && !ignorePatchAliases)) {
       // patch name; ignoring channel
       if (content != null && !"".equals(content))
 	patch.setDescription(content);

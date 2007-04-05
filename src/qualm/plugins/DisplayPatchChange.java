@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 public class DisplayPatchChange extends PatchChangeNotification {
 
-  TreeMap patches = new TreeMap();
+  TreeMap channels = new TreeMap();
 
   public DisplayPatchChange() {
     showDisplay();
@@ -27,25 +27,25 @@ public class DisplayPatchChange extends PatchChangeNotification {
     
     frame.pack();
     frame.setVisible(true);
-    frame.show();
   }
 
   public void patchChange(int channel, String channelName, Patch patch) {
     // Store the info
-    patches.put(channelName, patch.getDescription());
+    Integer channelNum = new Integer(channel);
+
+    // Generate text for description
+    channels.put(channelNum, channelName + ": " + patch.getDescription());
 
     // get all the current and pending cues
     String text = "<html><body>";
-    Iterator iter = patches.keySet().iterator();
+    Iterator iter = channels.keySet().iterator();
     boolean init = true;
     while (iter.hasNext()) {
       if (!init) text +="<br>";
       init = false;
 
-      channelName = (String)iter.next();
-      String patchName = (String)patches.get(channelName);
-
-      text += channelName + ": " + patchName;
+      channelNum = (Integer)iter.next();
+      text += (String)channels.get(channelNum);
     }
 
     // display the new cue info in big 'ol letters
