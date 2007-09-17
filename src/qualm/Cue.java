@@ -89,9 +89,11 @@ public class Cue implements Comparable {
   public int compareTimeStamps( String s1, String m1, 
 				String s2, String m2 ) {
     // compare the song, then measure
-    if (s1.equals(s2))
+
+    int sCmp = _compareStrings(s1,s2);
+    if (sCmp == 0)
       return _compareStrings(m1,m2);
-    return _compareStrings(s1,s2);
+    return sCmp;
   }
 
   public int compareTimeStamps( String ts1, String ts2 ) {

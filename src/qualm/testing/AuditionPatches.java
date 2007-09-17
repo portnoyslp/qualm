@@ -20,10 +20,13 @@ public class AuditionPatches {
     // (96) [ c4, e4, g4, c5 (60,64,67,72)]
 
     try {
+      // slight delay to give synth time to process patch change
+      Thread.sleep(500);
+
       ShortMessage out = new ShortMessage();
 
       if (playSingle) {
-	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 60 );
+	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 70 );
 	midiOut.send(out, -1);
 
       } else {
@@ -80,10 +83,10 @@ public class AuditionPatches {
     // play the original again with a slightly longer hold time.
     PatchChanger.patchChange( new ProgramChangeEvent( 0, p ),
 			      midiOut );
-    playArpeggiatedChord( 800 );
+    playArpeggiatedChord( 1000 );
     PatchChanger.patchChange( new ProgramChangeEvent( 0, defaultPatch ),
 			      midiOut );
-    playArpeggiatedChord( 800 );
+    playArpeggiatedChord( 1000 );
     PatchChanger.patchChange( new ProgramChangeEvent( 0, p ),
 			      midiOut );
     playArpeggiatedChord( 1500 );

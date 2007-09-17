@@ -262,6 +262,7 @@ Using a channel in a \q data file that was not defined in {\tt
   midi-channels} could result in run-time errors.
 
 \subsection{Patch Listing}
+\label{sec:patch-listing}
 
 \index{MIDI!patch}
 \index{patch}
@@ -300,7 +301,7 @@ attributes:
   interact poorly with \index{MIDI!volume pedal}volume pedals or
   sliders which are meant to perform the same effect.  If you're using
   devices such as these in your synthesizer setup, it may be best to
-  avoid using the {\tt volume} attribute.}
+  avoid using the {\tt volume} attribute.} (Optional)
 \end{description}
 
 \subsubsection{Patch Aliases}
@@ -324,7 +325,7 @@ This element can contain the attributes:
 \item[volume] Overrides the volume level for the given patch when
   accessed through this alias.  For more information, see the {\tt
     volume} attribute on the {\tt patch} element in the previous
-  section.
+  section. (Optional)
 \end{description}
 
 
@@ -338,7 +339,8 @@ The remaining piece of the \q control file is for defining {\em cues}
 These cues are bundled up into one or more \elt{cue-stream}s, each of
 which represents an independent series of cues.  Each \elt{cue-stream}
 can contain an optional {\tt id} attribute which is used to reference
-the stream when necessary.
+the stream when necessary (see \ref{par:advancing-streams} for more
+details).
 
 Within the \elt{cue-stream} are a set of \elt{cue}s, each of which has
 a pair of attributes, {\tt song} and {\tt measure}, which define the
@@ -356,15 +358,83 @@ The contents of a \elt{cue} are for defining the cue's actions.  These
 
 \subsubsection{Events}
 
+\index{event} In \q, {\em events} are the actions which occur when a
+cue is reached.  These are broadly defined into three groups -- {\em
+program changes} which switch patches, {\em stream advances} which
+cause another \elt{cue-stream} to change at the same time, and {\em
+note window changes}, which are used to limit the range of notes that
+the channel can use.
+
 \paragraph{Program Changes}
+
+The \elt{program-change} is the most common type of event.  When \q
+switches to a cue that has a \elt{program-change}, it locates the
+requested \elt{patch} or \elt{patch-alias} from the \elt{patches}
+section (see section~\ref{sec:patch-listing}) and asks the synth
+module listening on the associated channel to load the defined patch.
+The \elt{program-change} can contain the following attributes:
+
+\begin{description}
+\item[channel] The MIDI channel to which the request should be sent.
+This should match one of the channels defined in the
+\elt{midi-channels} section of the control file.  A required attribute.
+
+\item[id] The unique identifier for the patch, as previously defined
+in the \elt{patches} section.  If this value does not match one of the
+defined patches, an error will occur when loading the control file.  A
+required attribute.
+\end{description}
+
 \paragraph{Advancing Streams}
+\label{par:advancing-streams}
+
+\index{advancing streams} When working with multiple input streams,
+the \elt{advance} can be used to allow input on one stream to advance
+the patches on another.  For example, if you wanted one keyboard's
+patch-change request to alter both itself and a second keyboard
+simultaneously.  The \tt{song} and \tt{measure} attributes can be used
+to advance the target stream to a particular point; without these
+attributes the target stream will be advanced one cue.
+
+\begin{description}
+\item[stream] The id of the cue-stream to advance.
+
+\item[song] An optional attribute indicating the target song number
+  for the stream.  This is usually used in conjunction with the
+  \tt{measure} attribute below.
+
+\item[measure] An optional attribute indicating the target measure
+  number for the stream.
+\end{description}
+
 \paragraph{Note Window Changes}
+
+XXX to be written
+
+\subsubsection{Triggers}
+\index{triggers}
+
+In \q, {\em triggers} are the actions that advance to the next cue in
+a stream.  Defining a trigger causes \q to listen to the MIDI events
+as they are delivered, and watch for events that match a particular
+pattern.  When a matching event is found, \q will automatically
+advance to the next patch in the cue stream.
+
+The contents of the \elt{trigger} define the type of MIDI event that
+will be matched.  Usually these are \em{note on} events, but \em{note
+off} and \em{control change} events can be matched as well.
+
+The \elt{trigger} can contain the \tt{reverse} attribute, which if
+given the value ``yes'' will indicate to \q that it should move
+a cue \em{backward} in the stream, rather than forward.
 
 \subsubsection{Map Events}
 
-\subsubsection{Triggers}
+XXX to be written
 
 \subsubsection{Global Triggers and Map Events}
+
+XXX to be written
 
 \begin{latexonly}
 \newpage
