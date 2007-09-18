@@ -392,7 +392,7 @@ required attribute.
 the \elt{advance} can be used to allow input on one stream to advance
 the patches on another.  For example, if you wanted one keyboard's
 patch-change request to alter both itself and a second keyboard
-simultaneously.  The \tt{song} and \tt{measure} attributes can be used
+simultaneously.  The {\tt song} and {\tt measure} attributes can be used
 to advance the target stream to a particular point; without these
 attributes the target stream will be advanced one cue.
 
@@ -401,7 +401,7 @@ attributes the target stream will be advanced one cue.
 
 \item[song] An optional attribute indicating the target song number
   for the stream.  This is usually used in conjunction with the
-  \tt{measure} attribute below.
+  {\tt measure} attribute below.
 
 \item[measure] An optional attribute indicating the target measure
   number for the stream.
@@ -420,21 +420,38 @@ as they are delivered, and watch for events that match a particular
 pattern.  When a matching event is found, \q will automatically
 advance to the next patch in the cue stream.
 
-The contents of the \elt{trigger} define the type of MIDI event that
-will be matched.  Usually these are \em{note on} events, but \em{note
-off} and \em{control change} events can be matched as well.
+Every \elt{cue} can have a set of \elt{trigger}s that define the
+matching events for moving to the next cue.  The contents of the
+\elt{trigger} define the type of MIDI event that will be matched.
+Usually these are {\em note on} events, but {\em note off} and {\em
+control change} events can be matched as well.
 
-The \elt{trigger} can contain the \tt{reverse} attribute, which if
+The \elt{trigger} can contain the {\tt reverse} attribute, which if
 given the value ``yes'' will indicate to \q that it should move
-a cue \em{backward} in the stream, rather than forward.
+a cue {\em backward} in the stream, rather than forward.
 
 \subsubsection{Map Events}
 
-XXX to be written
+A {\em map event} can be used to take an incoming MIDI event that
+matches certain parameters, and output a similar MIDI event.  For
+example, it could be used to allow a sustain pedal hooked up to one
+keyboard to automatically control the sustain on another, or alter a
+spare MIDI controller so that it operates as a volume control.
+
+The \elt{map-events} can appear within a \elt{cue} to specify mappings
+that will be active while that cue is in effect.  It will contain both
+a \elt{map-from} and a \elt{map-to}, each of which can contain either
+a \elt{note-on}, \elt{note-off}, or \elt{control-change} to define the
+kind of event that will be handled by the mapper.
 
 \subsubsection{Global Triggers and Map Events}
 
-XXX to be written
+Most triggers and events are ones that should apply across the entire
+\q control file -- for example, a pedal-based input for triggering
+patch advance, or a dedicated note on the keyboard.  For these, each
+\elt{cue-stream} can have a \elt{global} section, containing
+\elt{trigger}s and \elt{map-events}s that apply across all cues in the
+stream.
 
 \begin{latexonly}
 \newpage
