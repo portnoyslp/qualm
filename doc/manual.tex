@@ -235,6 +235,13 @@ the cue streams.
 
 \subsection{Channel Specifications}
 
+\begin{verbatim}
+  <midi-channels>
+    <channel num="1" device-type="Roland JV-1080">Lower Keyboard</channel>
+    <channel num="2">Upper Keyboard</channel>
+  </midi-channels>
+\end{verbatim}
+
 \index{MIDI!channels}
 MIDI defines 16 different channels that can independently receive note
 data.  Any channel that is used by \q in a control file, however,
@@ -261,6 +268,7 @@ updates.  {\tt channel} uses the attributes:
 Using a channel in a \q data file that was not defined in {\tt
   midi-channels} could result in run-time errors.
 
+
 \subsection{Patch Listing}
 \label{sec:patch-listing}
 
@@ -272,6 +280,12 @@ sounds, or patches, that will be requested of the synth module during
 patch} or {\tt patch-alias} elements:
 
 \subsubsection{Patch Definitions}
+
+\begin{verbatim}
+    <patch id="P3" bank="User" num="3" remark="split at C5">Strs/FzzClav</patch>
+    <patch id="P4" bank="PrA"  num="15" volume="23%">Rhodes</patch>
+\end{verbatim}
+
 
 The \elt{patch} defines the name of the patch that \q will display
 while using that patch in operation.  This element can contain the
@@ -305,6 +319,10 @@ attributes:
 \end{description}
 
 \subsubsection{Patch Aliases}
+
+\begin{verbatim}
+    <patch-alias id="P5" target="Nice_Piano">Good Piano</patch-alias>
+\end{verbatim}
 
 The \elt{patch-alias} defines a patch which is the same sound as an
 already existing patch in the list.  This can be used to call the same
@@ -459,7 +477,8 @@ stream.
 \section{Running \q}
 
 \q is started by executing the jar file, providing the location of the
-control file on the command line.
+control file on the command line.  The control file location can be
+either a path on your local system, or a URL to a remote file.
 
 Once \q is running, it will occasionally pepper the output with lines
 like
@@ -537,6 +556,43 @@ Other commands that you can type at the prompt are:
 \item[save] saves the current preferences (which in this case is
       really just the list of plugins) so that \q will use them next
       time.
+\end{description}
+
+\subsection{\q Command Line Options}
+\index{command line options}
+\index{options, command line}
+
+Some options can be given on the command line to alter \q's behavior:
+
+\begin{description}
+\item[--list] requests that \q list all the MIDI ports that it can
+  find, and exit.  This is useful for finding port names to use with
+  {\tt --output} and {\tt --input}, below.
+
+\item[--input \textit{port}] sets the name of the input MIDI port to
+  use for receiving incoming MIDI events.  You can retrieve a list of
+  possible ports using the {\tt --list} option.
+
+\item[--output \textit{port}] sets the name of the output MIDI port to
+  use when sending out new MIDI events.  You can retrieve a list of
+  possible ports using the {\tt --list} option.
+
+\item[--nomidi] tells \q not to bother setting up any MIDI input or
+  output ports, and instead just load the command file.  Providing
+  this option will allow you to issue commands to the \q prompt, but
+  will not allow for controlling MIDI equipment in any way.
+
+\item[--debugmidi] is a useful debugging option; it automatically sets
+  \q to print a description of all received MIDI events to the
+  console.  This is equivalent to starting \q and typing the '{\tt
+  showmidi}' command at the prompt.
+
+\item[--lint] is used to carefully check the control file for
+  formatting errors or other potential problems.  Once \q has done so,
+  it will run normally.
+
+\item[--help] prints out a brief description of these options.
+
 \end{description}
 
 \begin{latexonly}
