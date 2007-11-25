@@ -75,7 +75,19 @@ public class RolandDelegate extends ChangeDelegate {
 
       if (midiOut != null) 
 	midiOut.send(msg, -1);
-      
+
+      Integer volume = patch.getVolume();
+      if (volume != null)
+      {
+	// send Control Change 7 to set channel volume
+	msg = new ShortMessage();
+	msg.setMessage( ShortMessage.CONTROL_CHANGE,
+			pce.getChannel(), 7, volume.intValue() );
+
+	if (midiOut != null)
+	  midiOut.send(msg,-1);
+      }
+
     } catch (InvalidMidiDataException e) {
       System.out.println("Unable to send Program Change: " + pce);
       System.out.println(e);
