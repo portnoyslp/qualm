@@ -28,13 +28,20 @@ public class QDataLoaderTester extends TestCase {
     assertNull(ch[2]);
     
     // check patches
-    assertTrue(4 == qd.getPatches().size());
+    assertTrue(5 == qd.getPatches().size());
     assertEquals(qd.lookupPatch("P1").getID(),"P1");
     assertEquals(qd.lookupPatch("P1").getDescription(),"Patch 1");
     assertTrue(qd.lookupPatch("P1").getNumber() == 1);
     assertEquals(qd.lookupPatch("Timpani").getID(),"Timpani");
     assertEquals(qd.lookupPatch("Timpani").getDescription(),"Timpani");
     assertTrue(qd.lookupPatch("Timpani").getNumber() == 5);
+
+    // patch volumes
+    assertNull(qd.lookupPatch("P1").getVolume()); 
+    assertEquals(qd.lookupPatch("P2").getVolume().intValue(), 20);
+    assertEquals(qd.lookupPatch("P3").getVolume().intValue(), 
+		 (int)((80*127)/100));
+    assertEquals(qd.lookupPatch("P3_2").getVolume().intValue(), 127);
 
     // check streams
     assertTrue(2==qd.getCueStreams().size());

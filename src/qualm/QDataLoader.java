@@ -85,7 +85,17 @@ public class QDataLoader extends DefaultHandler {
   EventMapper curMapper = null;
   List eventMaps = new ArrayList();
   QStream qstream;
-  
+
+  private int parseIntOrPercent( String parseStr, int max) 
+    throws NumberFormatException {
+    if (parseStr.endsWith( "%" )) {
+      parseStr = parseStr.substring(0,parseStr.length()-1);
+      return (Integer.parseInt( parseStr ) * max) / 100;
+    } else {
+      return Integer.parseInt( parseStr );
+    }
+  }
+
   public void startElement(String uri, String localName, 
 			   String qName, Attributes attributes) 
     throws NumberFormatException {
@@ -116,13 +126,7 @@ public class QDataLoader extends DefaultHandler {
 	if (attributes.getValue("volume") != null) {
 	  currentAttribute = "volume";
 	  String volStr = attributes.getValue("volume");
-	  int vol = -1;
-	  if (volStr.endsWith( "%" )) {
-	    volStr = volStr.substring(0,volStr.length()-1);
-	    vol = (Integer.parseInt( volStr ) * 127) / 100;
-	  } else {
-	    vol = Integer.parseInt( volStr );
-	  }
+	  int vol = parseIntOrPercent( volStr , 127 );
 	  patch.setVolume( new Integer(vol) );
 	}
 
@@ -148,9 +152,7 @@ public class QDataLoader extends DefaultHandler {
 	if (attributes.getValue("volume") != null) {
 	  currentAttribute = "volume";
 	  String volStr = attributes.getValue("volume");
-	  int vol = Integer.parseInt( volStr );
-	  if (volStr.endsWith( "%" )) 
-	    vol = (vol * 127) / 100;
+	  int vol = parseIntOrPercent( volStr, 127 );
 	  patch.setVolume( new Integer(vol) );
 	}
 	else
