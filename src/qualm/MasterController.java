@@ -27,6 +27,10 @@ public class MasterController implements Receiver {
     qc.setMaster( this );
   }
 
+  public void removeControllers() {
+    controllers.clear();
+  }
+
   public QController mainQC() { 
     return (QController) controllers.get(controllers.firstKey()); 
   }

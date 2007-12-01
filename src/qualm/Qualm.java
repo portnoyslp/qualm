@@ -152,6 +152,25 @@ public class Qualm {
       " (build " + System.getProperty("qualm.version.build") + ")";
   }
 
+  public static QData loadQDataFromFilename(String inputFilename) {
+    QData data;
+
+    // Load the qualm file
+    QDataLoader qdl = new QDataLoader( validateInput );
+
+    if (inputFilename.startsWith("http:") ||
+	inputFilename.startsWith("ftp:") ||
+	inputFilename.startsWith("file:")) {
+      // assume we have a URL
+      data = qdl.readSource( new org.xml.sax.InputSource(inputFilename));
+    } else {
+      data = qdl.readFile( new java.io.File( inputFilename ));
+    }
+
+    return data;
+  }
+
+
   public static void main(String[] args) throws Exception {
 
     loadProperties();
@@ -161,7 +180,6 @@ public class Qualm {
     boolean listPorts = false;
     boolean debugMIDI = false;
     boolean skipMIDI = false;
-    boolean validateInput = false;
 
     // handle argument list
     int i = 0;
@@ -248,25 +266,6 @@ public class Qualm {
     Transmitter midiIn = null;
     Receiver midiOut = null;
 
-    // Load the qualm file
-    System.out.println("loading " + inputFilename + "...");
-    QDataLoader qdl = new QDataLoader( validateInput );
-    QData data;
-
-    if (inputFilename.startsWith("http:") ||
-	inputFilename.startsWith("ftp:") ||
-	inputFilename.startsWith("file:")) {
-      // assume we have a URL
-      data = qdl.readSource( new org.xml.sax.InputSource(inputFilename));
-    } else {
-      data = qdl.readFile( new java.io.File( inputFilename ));
-    }
-
-    if ( data == null && !debugMIDI ) {
-      System.out.println("No readable files; exiting");
-      System.exit(1);
-    }
-
     if (!skipMIDI) {
       try {      	
 	MidiDevice inDevice = MidiSystem.getMidiDevice( inputInfo );
@@ -292,24 +291,17 @@ public class Qualm {
     QualmREPL repl = new QualmREPL();
     repl.setMasterController( mc );
 
-    // For each cue stream, start a controller
-    boolean first = true;
-    Iterator iter = data.getCueStreams().iterator();
-    while (iter.hasNext()) {
-      QController qc = new QController( midiOut, 
-					(QStream)iter.next(),
-					data );
-
-      repl.addController(qc);
-    }
-
     // connect the transmitter to the receiver.
     if (!skipMIDI)
       midiIn.setReceiver( mc );
+
+    repl.loadFilename( inputFilename );
   
     // start the REPL
     repl.start();
   }
+
+  static boolean validateInput = false;
 
 }
 

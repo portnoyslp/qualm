@@ -18,6 +18,8 @@ public class QualmREPL extends Thread {
   BufferedReader reader;
   ArrayList cuePlugins = new ArrayList();
   ArrayList patchPlugins = new ArrayList();
+  String inputFilename = null;
+  boolean isRunning = false;
 
   public QualmREPL( ) {
     reader = new BufferedReader( new InputStreamReader( System.in ));
@@ -29,6 +31,30 @@ public class QualmREPL extends Thread {
     controller.setREPL(this);
   }
 
+  public void loadFilename( String filename ) {
+    inputFilename = filename;
+
+    // remove existing controllers
+    controller.removeControllers();
+
+    QData qdata = Qualm.loadQDataFromFilename(filename);
+
+    // For each cue stream, start a controller
+    Iterator iter = qdata.getCueStreams().iterator();
+    while (iter.hasNext()) {
+      QController qc = new QController( controller.getMidiOut(), 
+					(QStream)iter.next(),
+					qdata );
+      addController(qc);
+    }
+
+    System.out.println( "Loaded data from " + filename );
+
+    if (isRunning)
+      reset();
+
+  }
+  
   public void addController(QController qc) {
     controller.addController(qc);
   }
@@ -128,6 +154,8 @@ public class QualmREPL extends Thread {
 
 
   public void run() {
+    isRunning = true;
+
     // first, we reset the controllers.
     readlineHandlesPrompt = true;
     reset();
@@ -236,6 +264,18 @@ public class QualmREPL extends Thread {
 
       } else if (lowerCase.startsWith("adv")) {
 	advanceController(line);
+
+      } else if (lowerCase.startsWith("load")) {
+	StringTokenizer st = new StringTokenizer(line);
+	st.nextToken();
+	String filename = st.nextToken();
+	loadFilename( filename );
+
+      } else if (lowerCase.startsWith("reload")) {
+	loadFilename( inputFilename );
+
+      } else if (lowerCase.startsWith("version")) {
+	System.out.println( Qualm.versionString() );
 
       } else if (lowerCase.startsWith("version")) {
 	System.out.println( Qualm.versionString() );
