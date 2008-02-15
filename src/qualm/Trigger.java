@@ -13,6 +13,7 @@ public class Trigger {
     template = et; 
   } 
 
+  // delay is in ms
   public void setDelay(int d) { delay=d; }
   public int getDelay() { return delay; }
 

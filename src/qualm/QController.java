@@ -105,18 +105,33 @@ public class QController implements Receiver {
       Trigger trig = cachedTriggers[i];
       if (trig.match(midiMessage)) {
 	triggered = true;
-	setTimeOut();
-
-	// call the appropriate action
-	if (trig.getReverse()) 
-	  reversePatch();
-	else
-	  advancePatch();
-	
+        executeTrigger(trig);
       }
       if (triggered) break;
     }
     // no match, just ignore the message.
+  }
+
+  private void executeTriggerWithoutDelay(Trigger trig) {
+    // call the appropriate action
+    if (trig.getReverse()) 
+      reversePatch();
+    else
+      advancePatch();
+  }
+
+  //TODO: Build a common thread pool so that if we advance the trigger
+  //through another means, we stop the delaying thread.
+
+  private void executeTrigger(Trigger trig) {
+    setTimeOut();
+
+    // anything less than a couple hundred ms isn't worth creating a thread for.
+    if (trig.getDelay() < 200)
+      executeTriggerWithoutDelay(trig);
+    else 
+      // spawn a thread which will execute this trigger after the appropriate number of ms.
+      new TriggerDelayThread(trig,this).start();
   }
 
 
@@ -142,6 +157,21 @@ public class QController implements Receiver {
 	addTrigger( t );
       }
     }
+  }
+
+  class TriggerDelayThread extends Thread {
+    public void run() {
+      try {
+        sleep(trig.getDelay());
+      } catch (InterruptedException ie) { } 
+      qc.executeTriggerWithoutDelay(trig);
+    }
+    TriggerDelayThread(Trigger trig, QController qc) {
+      this.trig = trig;
+      this.qc = qc;
+    }
+    private Trigger trig;
+    private QController qc;
   }
  
 } // QController

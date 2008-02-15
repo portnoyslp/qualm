@@ -78,6 +78,7 @@ public class QDataLoader extends DefaultHandler {
   List globalTriggers = new ArrayList();
   List globalMaps = new ArrayList();
   boolean reverseTrigger = false;
+  int triggerDelay = 0;
   String content;
   Cue curQ;
   EventTemplate curTemplate;
@@ -216,6 +217,14 @@ public class QDataLoader extends DefaultHandler {
 	if (rev != null && !rev.equals("false"))
 	  reverseTrigger = true;
 
+        currentAttribute="delay";
+        triggerDelay = 0;
+        String delayStr = attributes.getValue("delay");
+        if (delayStr != null && !delayStr.equals("")) {
+          // multiply by 1000 to get ms.
+          triggerDelay = (int) (1000*Float.parseFloat(delayStr));
+        }
+
 	// TRIGGERS
       } else if (qName.equals("note-on")) {
 	currentAttribute = "channel";
@@ -278,6 +287,7 @@ public class QDataLoader extends DefaultHandler {
       
     } else if (qName.equals("trigger")) {
       Trigger t = new Trigger(curTemplate,reverseTrigger);
+      if (triggerDelay != 0.0) { t.setDelay(triggerDelay); }
       triggers.add(t);
 
     } else if (qName.equals("map-from")) {
