@@ -47,11 +47,7 @@ public class EventMapTester extends TestCase {
     fm.run();
     java.util.ArrayList msgs = fm.receivedMessages();
 
-    System.out.println("Number of msgs received == " + msgs.size());
-    java.util.Iterator iter = msgs.iterator();
-    while (iter.hasNext()) {
-      System.out.println("   "+ MidiMessageParser.messageToString((MidiMessage)iter.next()));
-    }
+    fm.printOutMessages();
 
     assertTrue(msgs.size() == 3);
     FakeMIDI.assertMIDI(msgs.get(0),ShortMessage.PROGRAM_CHANGE,0,0,0); // init patch

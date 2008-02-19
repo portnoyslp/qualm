@@ -60,6 +60,10 @@ public class QDataLoaderTester extends TestCase {
     assertEquals(q.getEventMaps().size(), 1);
     assertEquals(q.getTriggers().size(), 3);
 
+    // do we have the delay listed?
+    assertTrue(q.getTriggers().toString().indexOf("dly2500")>-1);
+
+
     s = (QStream) ((java.util.List)qd.getCueStreams()).get(1);
     q = (Cue) s.getCues().last();
     assertEquals(q,new Cue("2.10"));

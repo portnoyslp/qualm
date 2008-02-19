@@ -19,8 +19,12 @@ public class FakeMIDI implements Receiver,Transmitter {
   Receiver receiver;
   ArrayList incomingMessages;
   ArrayList outgoingMessages;
+  long baseTime;
   
   public FakeMIDI( ) {
+    // set the base time for the run.
+    baseTime = System.currentTimeMillis();
+    
     incomingMessages = new ArrayList();
     outgoingMessages = new ArrayList();
   }
@@ -57,15 +61,25 @@ public class FakeMIDI implements Receiver,Transmitter {
   public ArrayList receivedMessages() {
     return incomingMessages;
   }
+  public void printOutMessages() {
+    System.out.println("Number of msgs received == " + incomingMessages.size());
+    java.util.Iterator iter = incomingMessages.iterator();
+    while (iter.hasNext()) {
+      TimestampedMsg tsm = (TimestampedMsg)iter.next();
+      System.out.println("   " + tsm.timestamp + "ms: " +
+                         MidiMessageParser.messageToString( tsm.msg ));
+    }
+  }
+    
 
   public void run() {
-    long baseTime = ((TimestampedMsg)outgoingMessages.get(0)).timestamp ;
-    baseTime = System.currentTimeMillis() - baseTime;
+    long firstStamp = ((TimestampedMsg)outgoingMessages.get(0)).timestamp ;
+    long runStartTime = System.currentTimeMillis() - firstStamp;
     
     // loop through outgoing messages, delaying when necessary.
     for(int i=0; i<outgoingMessages.size(); i++) {
       TimestampedMsg tm = (TimestampedMsg)outgoingMessages.get(i);
-      long targetTime = baseTime + tm.timestamp;
+      long targetTime = runStartTime + tm.timestamp;
       // wait for target time
       while (System.currentTimeMillis() < targetTime ) { 
 	try { Thread.sleep(50); } catch (Exception e) { } 
@@ -88,6 +102,7 @@ public class FakeMIDI implements Receiver,Transmitter {
       mc.addController (new QController( fm, (QStream)iter.next(), qd ));
     fm.setReceiver( mc );
     mc.setDebugMIDI(true);
+
     mc.gotoCue("0.0");
    
     return fm;
@@ -95,7 +110,7 @@ public class FakeMIDI implements Receiver,Transmitter {
 
   // assertion test
   public static void assertMIDI(Object msg, int command, int channel, int data1, int data2) {
-    ShortMessage m = (ShortMessage)msg;
+    ShortMessage m = (ShortMessage) (((TimestampedMsg)msg).msg);
     Assert.assertEquals("Command for " + MidiMessageParser.messageToString(m) + 
 			" not expected value " + command,
 			m.getCommand(), command);
@@ -109,6 +124,15 @@ public class FakeMIDI implements Receiver,Transmitter {
 			" not expected value " + data2,
 			m.getData2(), data2);
   }
+
+  // assertion: ensure that a timestamp is past a certain minimum value
+  public static void assertTS(Object msg, long minValue) {
+    long ts = ((TimestampedMsg)msg).timestamp;
+    MidiMessage m = ((TimestampedMsg)msg).msg;
+    Assert.assertTrue( "Timestamp for " + MidiMessageParser.messageToString( m ) +
+                       " not after " + minValue,
+                       ts > minValue );
+  }
   
 
   // Implementation of javax.sound.midi.Receiver
@@ -118,8 +142,9 @@ public class FakeMIDI implements Receiver,Transmitter {
   }
 
   public void send(MidiMessage midiMessage, long ts) {
-    // store midi messages.
-    incomingMessages.add(midiMessage);
+    // Store midi messages with a timestamp based on the unit's creation.
+    long curTime = System.currentTimeMillis() - baseTime;
+    incomingMessages.add(new TimestampedMsg(curTime, midiMessage));
   }
 
   // Implementation of javax.sound.midi.Transmitter
@@ -130,10 +155,10 @@ public class FakeMIDI implements Receiver,Transmitter {
   // private structures for binding timestamps and messages
   private class TimestampedMsg { 
     public long timestamp;
-    public ShortMessage msg;
-    TimestampedMsg( long ts, ShortMessage sm ) {
+    public MidiMessage msg;
+    TimestampedMsg( long ts, MidiMessage mm ) {
       timestamp = ts;
-      msg = sm;
+      msg = mm;
     }
   }
 

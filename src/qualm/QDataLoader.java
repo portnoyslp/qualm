@@ -287,7 +287,7 @@ public class QDataLoader extends DefaultHandler {
       
     } else if (qName.equals("trigger")) {
       Trigger t = new Trigger(curTemplate,reverseTrigger);
-      if (triggerDelay != 0.0) { t.setDelay(triggerDelay); }
+      if (triggerDelay > 0) { t.setDelay(triggerDelay); }
       triggers.add(t);
 
     } else if (qName.equals("map-from")) {

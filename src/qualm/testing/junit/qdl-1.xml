@@ -27,7 +27,7 @@
     </global>
     <cue song="3" measure="1">
       <events><program-change channel="1" patch="P1"/></events>
-      <trigger><note-on channel="2" note="g2"/></trigger>
+      <trigger delay="2.5"><note-on channel="2" note="g2"/></trigger>
     </cue>
     <cue song="3" measure="16">
       <events>
