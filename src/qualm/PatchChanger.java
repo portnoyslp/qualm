@@ -18,10 +18,10 @@ public class PatchChanger {
     if (changer[ch] == null)
       changer[ch] = new PatchChanger();
 
-    // for now, we default to "Roland" as the device type
+    // for now, we default to "Standard" as the device type
     
     if (deviceType == null) 
-      deviceType = "Roland";
+      deviceType = "Standard";
 
     // find the ChangeDelegate based on the deviceType name.
     Class delegate = null;
