@@ -8,7 +8,7 @@ import java.awt.BorderLayout;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class DisplayCueChange extends CueChangeNotification {
+public class DisplayCueChange extends BaseQualmPlugin implements CueChangeNotification {
 
   public DisplayCueChange() {
     showDisplay();

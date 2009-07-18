@@ -1,6 +1,6 @@
 package qualm.plugins;
 
-public class QualmPlugin {
-  public void initialize() { } 
-  public void shutdown() { } 
+public interface QualmPlugin {
+  public void initialize();
+  public void shutdown(); 
 }

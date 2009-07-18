@@ -89,13 +89,17 @@
 
   <target name="doc" depends="doc-pdf,doc-html"/>
 
-  <target name="dist" depends="compile"
+  <target name="jar" depends="compile"
 	  description="Create Jar file for distribution"> 
     <jar destfile="${basedir}/qualm.jar"
          excludes="qualm/testing/junit/**"
 	 includes="**/*.class qualm.properties"
 	 manifest="${srcdir}/qualm.manifest"
 	 basedir="${builddir}"/>
+  </target>
+
+  <target name="dist" depends="jar"
+	  description="Create distribution directory">
   </target>
 
   <target name="check" depends="compile-test">

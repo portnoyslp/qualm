@@ -40,7 +40,7 @@ public class NetworkNotificationProtocol {
     } else if (inputStr.startsWith("P")) {
       nnp.type = PATCH;
       String[] strs = (inputStr.substring(1)).split(":",3);
-      nnp.channelNum = parseInt(strs[0]);
+      nnp.channelNum = Integer.parseInt(strs[0]);
       nnp.channelName = strs[1];
       nnp.patchDescription = strs[2];
     } else 
