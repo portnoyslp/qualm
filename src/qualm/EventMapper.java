@@ -23,8 +23,10 @@ public class EventMapper {
 
     try {
       out.setMessage( mapTo.type,
-		      (mapTo.channel>0 ? mapTo.channel : sm.getChannel()),
-		      (mapTo.extra1>0 ? mapTo.extra1 : sm.getData1()),
+		      (mapTo.channel != EventTemplate.DONT_CARE ? 
+		       mapTo.channel : sm.getChannel()),
+		      (mapTo.extra1Min != EventTemplate.DONT_CARE ? 
+		       mapTo.extra1Min : sm.getData1()),
 		      sm.getData2() // data taken from input
 		      );
     } catch (InvalidMidiDataException imde) {

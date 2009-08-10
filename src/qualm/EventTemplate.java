@@ -86,7 +86,8 @@ public class EventTemplate {
 
   private void _setNoteRange(String rangeString) {
     // for now, just treat it like a simple value
-    int x = Utilities.noteNameToMidi(rangeString);
+    int x = (rangeString == null ? DONT_CARE :
+	     Utilities.noteNameToMidi(rangeString) );
     extra1Min = x;
     extra1Max = x;
   }
@@ -108,7 +109,11 @@ public class EventTemplate {
 	return false;
 
       // check for bad channel or first data byte
-      if (channel != sm.getChannel() || extra1Min != sm.getData1())
+      if (channel != sm.getChannel())
+	return false;
+      
+      // check for bad match to data
+      if (extra1Min != DONT_CARE && extra1Min != sm.getData1())
 	return false;
 
       // other checks.
@@ -126,5 +131,7 @@ public class EventTemplate {
   protected int extra1Max;
   protected int extra2Min;
   protected int extra2Max;
+
+  public static int DONT_CARE = -1;
   
 }
