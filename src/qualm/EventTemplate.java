@@ -10,22 +10,24 @@ public class EventTemplate {
   public EventTemplate (EventTemplate et) {
       this.type = et.type;
       this.channel = et.channel;
-      this.extra1 = et.extra1;
-      this.extra2 = et.extra2;
+      this.extra1Min = et.extra1Min;
+      this.extra1Max = et.extra1Max;
+      this.extra2Min = et.extra2Min;
+      this.extra2Max = et.extra2Max;
   }
 
-  public static EventTemplate createNoteOnEventTemplate( int ch, int note ) { 
+  public static EventTemplate createNoteOnEventTemplate( int ch, String noteRange ) { 
     EventTemplate t = new EventTemplate();
     t.type = ShortMessage.NOTE_ON;
     t.channel = ch;
-    t.extra1 = note;
+    t._setNoteRange(noteRange);
     return t;
   }
-  public static EventTemplate createNoteOffEventTemplate( int ch, int note ) {  
+  public static EventTemplate createNoteOffEventTemplate( int ch, String noteRange ) {  
     EventTemplate t = new EventTemplate();
     t.type = ShortMessage.NOTE_OFF;
     t.channel = ch;
-    t.extra1 = note;
+    t._setNoteRange(noteRange);
     return t;
   }
 
@@ -35,47 +37,58 @@ public class EventTemplate {
     t.type = ShortMessage.CONTROL_CHANGE;
     t.channel = ch;
 
+    int extra1;
     try {
-      t.extra1 = Integer.parseInt(ctrl);
+      extra1 = Integer.parseInt(ctrl);
     } catch (NumberFormatException nfe) {
       if (ctrl.equals("modulation"))
-	t.extra1 = 1;
+	extra1 = 1;
       else if (ctrl.equals("breath")) 
-	t.extra1 = 2;
+	extra1 = 2;
       else if (ctrl.equals("foot"))
-	t.extra1 = 4;
+	extra1 = 4;
       else if (ctrl.equals("volume"))
-	t.extra1 = 7;
+	extra1 = 7;
       else if (ctrl.equals("balance"))
-	t.extra1 = 8;
+	extra1 = 8;
       else if (ctrl.equals("pan"))
-	t.extra1 = 10;
+	extra1 = 10;
       else if (ctrl.equals("expression"))
-	t.extra1 = 11;
+	extra1 = 11;
       else if (ctrl.equals("effect 1"))
-	t.extra1 = 12;
+	extra1 = 12;
       else if (ctrl.equals("effect 2"))
-	t.extra1 = 13;
+	extra1 = 13;
       else if (ctrl.equals("damper"))
-	t.extra1 = 64;
+	extra1 = 64;
       else if (ctrl.equals("sustain"))
-	t.extra1 = 64;
+	extra1 = 64;
       else if (ctrl.equals("portamento"))
-	t.extra1 = 65;
+	extra1 = 65;
       else if (ctrl.equals("sustenuto"))
-	t.extra1 = 66;
+	extra1 = 66;
       else if (ctrl.equals("soft"))
-	t.extra1 = 67;
+	extra1 = 67;
       else if (ctrl.equals("legato"))
-	t.extra1 = 68;
+	extra1 = 68;
       else 
 	throw new IllegalArgumentException("Cannot parse control change type '" +
 					   ctrl + "'");
     }
+    // no range allowed for control events
+    t.extra1Min = extra1;
+    t.extra1Max = extra1;
 
     if (thresh != null) 
-      t.extra2 = Integer.parseInt(thresh);
+      t.extra2Min = Integer.parseInt(thresh);
     return t;
+  }
+
+  private void _setNoteRange(String rangeString) {
+    // for now, just treat it like a simple value
+    int x = Utilities.noteNameToMidi(rangeString);
+    extra1Min = x;
+    extra1Max = x;
   }
 
   private String[] names = { "NoteOn", "NoteOff", "Control", "Clear" };
@@ -84,7 +97,7 @@ public class EventTemplate {
     if (type == ShortMessage.NOTE_ON) { name = "NoteOn"; }
     if (type == ShortMessage.NOTE_OFF) { name = "NoteOff"; } 
     if (type == ShortMessage.CONTROL_CHANGE) { name = "Control"; } 
-    return "event[" + name + "/" + channel + "/" + extra1 + "]";
+    return "event[" + name + "/" + channel + "/" + extra1Min + "-" + extra1Max + "]";
   }
 
   public boolean match(MidiMessage m) {
@@ -95,13 +108,13 @@ public class EventTemplate {
 	return false;
 
       // check for bad channel or first data byte
-      if (channel != sm.getChannel() || extra1 != sm.getData1())
+      if (channel != sm.getChannel() || extra1Min != sm.getData1())
 	return false;
 
       // other checks.
       if (type == ShortMessage.NOTE_ON || 
 	  type == ShortMessage.NOTE_OFF ||
-	  type == ShortMessage.CONTROL_CHANGE && extra2 <= sm.getData2())
+	  type == ShortMessage.CONTROL_CHANGE && extra2Min <= sm.getData2())
 	return true;
     }
     return false;
@@ -109,7 +122,9 @@ public class EventTemplate {
 
   protected int type;
   protected int channel;
-  protected int extra1;
-  protected int extra2;
+  protected int extra1Min;
+  protected int extra1Max;
+  protected int extra2Min;
+  protected int extra2Max;
   
 }

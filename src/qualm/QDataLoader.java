@@ -191,11 +191,11 @@ public class QDataLoader extends DefaultHandler {
 	currentAttribute = "bottom";
 	String bottom = attributes.getValue("bottom");
 	if (bottom != null)
-	  bottomNote = new Integer(_noteNameToMidi(bottom));
+	  bottomNote = new Integer(Utilities.noteNameToMidi(bottom));
 	currentAttribute = "top";
 	String top = attributes.getValue("top");
 	if (top != null)
-	  topNote = new Integer(_noteNameToMidi(top));
+	  topNote = new Integer(Utilities.noteNameToMidi(top));
 	if (bottom == null && top == null) {
 	  System.err.println("WARNING: found note-window-change specifying neither top nor bottom");
 	}
@@ -230,14 +230,12 @@ public class QDataLoader extends DefaultHandler {
 	currentAttribute = "channel";
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
 	currentAttribute = "note";
-	int n = _noteNameToMidi(attributes.getValue("note"));
-	curTemplate = EventTemplate.createNoteOnEventTemplate( ch, n );
+	curTemplate = EventTemplate.createNoteOnEventTemplate( ch, attributes.getValue("note") );
       } else if (qName.equals("note-off")) {
 	currentAttribute = "channel";
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
 	currentAttribute = "note";
-	int n = _noteNameToMidi(attributes.getValue("note"));
-	curTemplate = EventTemplate.createNoteOffEventTemplate( ch, n );
+	curTemplate = EventTemplate.createNoteOffEventTemplate( ch, attributes.getValue("note") );
       } else if (qName.equals("control-change")) {
 	currentAttribute = "channel";
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
@@ -333,57 +331,6 @@ public class QDataLoader extends DefaultHandler {
     content += new String(ch,start,length);
   }
   
-  private static List numList = 
-    Arrays.asList( new String[] { 
-      "c","c#","d","d#","e","f","f#","g","g#","a","a#","b"
-    });
-
-  private static int _noteNameToMidi ( String noteName ) {
-    try {
-      return Integer.parseInt( noteName );
-    } catch (NumberFormatException nfe) {
-    }
-
-    // convert to lowercase to make our lives easier.
-    noteName = noteName.toLowerCase();
-    
-    // get the key
-    String key = noteName.substring(0,1);
-    noteName = noteName.substring(1);
-    
-    // get the sharp/flat (and convert to just sharps)
-    if (noteName.startsWith("#")) {
-      key = key + "#";
-      noteName = noteName.substring(1);
-    } else if (noteName.startsWith("b")) {
-      // Use # instead of flat
-      char k = key.charAt(0);
-      if (k == 'a') {
-	key = "g#";
-      } else if (k == 'c') {
-	key = "b";
-      } else if (k == 'f') {
-	key = "e";
-      } else {
-	k--;
-	key = new String( new char[] { k } );
-	key = key + "#";
-      }
-      noteName = noteName.substring(1);
-    }
-    // everything else is the octave number.
-    int octave = Integer.parseInt(noteName)+1;
-
-    if (key.equals("e#")) key="f";
-
-    if (key.equals("b#")) {
-      key="c";
-      octave++;
-    }
-    
-    return (octave*12 + numList.indexOf( key ));
-  }
-  
   public InputSource resolveEntity(String publicId, String systemId) 
     throws org.xml.sax.SAXException {
     try { 
@@ -418,7 +365,7 @@ public class QDataLoader extends DefaultHandler {
 
   public static void main(String[] args) {
     for(int i=0; i<args.length; i++)
-      System.out.println(args[i] + "=>" + _noteNameToMidi(args[i]));
+      System.out.println(args[i] + "=>" + Utilities.noteNameToMidi(args[i]));
   }
 
 }
