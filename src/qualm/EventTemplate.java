@@ -84,12 +84,28 @@ public class EventTemplate {
     return t;
   }
 
+  // The note range string can take the form of:
+  // ([A-G][#b]?[0-9]|[0-9]+)(-([A-G][#b]?[0-9]|[0-9]+))?
   private void _setNoteRange(String rangeString) {
-    // for now, just treat it like a simple value
-    int x = (rangeString == null ? DONT_CARE :
-	     Utilities.noteNameToMidi(rangeString) );
-    extra1Min = x;
-    extra1Max = x;
+    // if we don't have a value, we clearly don't care.
+    if (rangeString == null) {
+      extra1Min = extra1Max = DONT_CARE;
+      return;
+    }
+
+    // do we have a hyphen?
+    int idx = rangeString.indexOf('-');
+    if (idx == -1) {
+      // we have no hyphen, so this is just a single noteName.
+      extra1Min = extra1Max = Utilities.noteNameToMidi(rangeString);
+      return;
+    }
+
+    // OK, we have a range.  Split the string in twain.
+    String lo = rangeString.substring(0,idx).trim();
+    String hi = rangeString.substring(idx+1).trim();
+    extra1Min = (lo.equals("") ? 0 : Utilities.noteNameToMidi(lo));
+    extra1Max = (hi.equals("") ? 127 : Utilities.noteNameToMidi(hi));
   }
 
   private String[] names = { "NoteOn", "NoteOff", "Control", "Clear" };
