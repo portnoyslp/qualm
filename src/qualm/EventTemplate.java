@@ -93,6 +93,11 @@ public class EventTemplate {
       return;
     }
 
+    // if we end in a + sign, then change it to a - for later processing
+    if (rangeString.indexOf('+') != -1) {
+      rangeString = rangeString.replace('+','-');
+    }
+
     // do we have a hyphen?
     int idx = rangeString.indexOf('-');
     if (idx == -1) {
