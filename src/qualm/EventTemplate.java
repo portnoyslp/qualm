@@ -134,7 +134,8 @@ public class EventTemplate {
 	return false;
       
       // check for bad match to data
-      if (extra1Min != DONT_CARE && extra1Min != sm.getData1())
+      if (extra1Min != DONT_CARE && 
+          (extra1Min > sm.getData1() || extra1Max < sm.getData1()) )
 	return false;
 
       // other checks.
