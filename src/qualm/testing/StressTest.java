@@ -161,7 +161,7 @@ public class StressTest {
     public void sendMessage(Receiver out) {
       if (type == ShortMessage.NOTE_ON) {
 	int ch = channel;
-	int note = extra1;
+	int note = extra1Min;
 	try {
 	  ShortMessage msg = new ShortMessage();
 	  msg.setMessage( ShortMessage.NOTE_ON, ch, note, 61 );
