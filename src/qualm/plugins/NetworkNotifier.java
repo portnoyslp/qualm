@@ -61,7 +61,7 @@ public class NetworkNotifier extends BaseQualmPlugin
       Cue pendingQ = qc.getPendingCue();
 
       broadcast(NetworkNotificationProtocol.sendCue(curQ.getCueNumber(),
-						    (pendingQ == null ? pendingQ.getCueNumber() : ""),
+						    (pendingQ != null ? pendingQ.getCueNumber() : ""),
 						    qc.getTitle()));
     }
   }

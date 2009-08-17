@@ -14,8 +14,8 @@
     <patch id="P3" bank="User" num="3" remark="split at C5">Strs/FzzClav</patch>
     <patch id="P4" bank="PrA"  num="15" volume="23%">Rhodes</patch>
     <patch-alias id="P5" target="Nice_Piano">Good Piano</patch-alias>
-    <patch id="P95" bank="User" num="95">LKB/TmpF</patch>
-    <patch id="P96" bank="User" num="96">TmpG/TmpD</patch>
+    <patch id="P95" num="95">LKB/TmpF</patch>
+    <patch id="P96" num="96">TmpG/TmpD</patch>
   </patches>
 
   <cue-stream id="First_Stream">

@@ -26,7 +26,7 @@ public class NetworkNotificationProtocol {
       patchDesc;
   }
 
-  public NetworkNotificationProtocol receiveInput( String inputStr ) {
+  public static NetworkNotificationProtocol receiveInput( String inputStr ) {
     // receives a string of text and converts it into a handy object.
     NetworkNotificationProtocol nnp = new NetworkNotificationProtocol();
 

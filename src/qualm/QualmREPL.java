@@ -8,8 +8,7 @@ import qualm.plugins.QualmPlugin;
 
 public class QualmREPL extends Thread {
   // Preference keys
-  private static final String CUE_PLUGINS = "cue_plugins";
-  private static final String PATCH_PLUGINS = "patch_plugins";
+  private static final String PLUGINS_PREFKEY = "plugins";
   private static Preferences prefs = 
     Preferences.userNodeForPackage(QualmREPL.class);
 
@@ -61,32 +60,16 @@ public class QualmREPL extends Thread {
 
   public void loadPreferences() {
     // load all the preferences available.
-    String patchPluginNames = prefs.get(PATCH_PLUGINS,"");
-    String cuePluginNames = prefs.get(CUE_PLUGINS,"");
-
-    String pluginType = "patch";
-    StringTokenizer st = new StringTokenizer(patchPluginNames,",");
+    String pluginNames = prefs.get(PLUGINS_PREFKEY,"");
+    StringTokenizer st = new StringTokenizer(pluginNames,",");
 
     while (st.hasMoreTokens()) {
       String pluginName = st.nextToken();
       try {
-	addPlugin(pluginType, pluginName);
+	addPlugin(pluginName);
       } catch(IllegalArgumentException iae) {
-	System.out.println("Preferences: could not create plugin '" + pluginName +
-			   "' as a '" + pluginType + "' plugin; ignoring.");
-      }
-    }
-
-    pluginType = "cue";
-    st = new StringTokenizer(cuePluginNames,",");
-
-    while (st.hasMoreTokens()) {
-      String pluginName = st.nextToken();
-      try {
-	addPlugin(pluginType, pluginName);
-      } catch(IllegalArgumentException iae) {
-	System.out.println("Preferences: could not create plugin '" + pluginName +
-			   "' as a '" + pluginType + "' plugin; ignoring.");
+	System.out.println("Preferences: could not create or identify plugin '" + pluginName +
+			   "'; ignoring.");
       }
     }
   }
@@ -97,25 +80,28 @@ public class QualmREPL extends Thread {
     boolean init;
     String out;
 
+    // combine cue and patch plugins into one
+    Set plugins = new HashSet();
     iter = patchPlugins.iterator();
-    init = true;
-    out = "";
     while (iter.hasNext()) {
-      if (!init) out+=",";
       Object obj = iter.next();
-      out += obj.getClass().getName();
+      plugins.add(obj.getClass().getName());
     }
-    prefs.put(PATCH_PLUGINS,out);
-
     iter = cuePlugins.iterator();
+    while (iter.hasNext()) {
+      Object obj = iter.next();
+      plugins.add(obj.getClass().getName());
+    }
+
+    // and now we get all the names at once...
     init = true;
     out = "";
+    iter = plugins.iterator();
     while (iter.hasNext()) {
       if (!init) out+=",";
-      Object obj = iter.next();
-      out += obj.getClass().getName();
+      out += (String)iter.next();
     }
-    prefs.put(CUE_PLUGINS,out);
+    prefs.put(PLUGINS_PREFKEY,out);
       
   }
 
@@ -288,50 +274,56 @@ public class QualmREPL extends Thread {
     readlineHandlesPrompt = false;
   }
 
-  private void addPlugin(String pluginType, String name) {
+  private void addPlugin(String name) {
     // should be a class spec; try instantiating an object for this
     Class cls;
     try {
       cls = Class.forName(name);
-  
-      if (pluginType.equals("cue")) {
+      QualmPlugin qp;
+      if (Class.forName("qualm.plugins.QualmPlugin").isAssignableFrom(cls)) {
+	qp = (QualmPlugin)cls.newInstance();
+	qp.initialize();
+	boolean added = false;
 	if (Class.forName("qualm.plugins.CueChangeNotification").isAssignableFrom(cls)) {
-	  QualmPlugin qp = (QualmPlugin) cls.newInstance();
 	  cuePlugins.add( qp );
-	  qp.initialize();
-	  return;
+	  added = true;
 	}
-      } else if (pluginType.equals("patch")) {
 	if (Class.forName("qualm.plugins.PatchChangeNotification").isAssignableFrom(cls)) {
-	  QualmPlugin qp = (QualmPlugin) cls.newInstance();
 	  patchPlugins.add( qp );
-	  qp.initialize();
+	  added = true;
+	}
+	if (added) {
 	  return;
 	}
       }
     } catch (Exception e) { }
-
-    throw new IllegalArgumentException();
+    
+    throw new IllegalArgumentException("Could not start plugin '" + name + "'");
   }
 
-  private void removePlugin(String pluginType, String name) {
+  private void removePlugin(String name) {
     Iterator iter;
-    if (pluginType.equals("cue"))
-      iter = cuePlugins.iterator();
-    else if (pluginType.equals("patch"))
-      iter = patchPlugins.iterator();
-    else
-      throw new IllegalArgumentException("Unrecognized plugin type '" + pluginType + "'");
-
     boolean found = false;
 
+    iter = cuePlugins.iterator();
     while (iter.hasNext()) {
       // remove plugins that match the name.
       Object obj = iter.next();
       if (obj.getClass().getName().equals( name )) {
 	((QualmPlugin)obj).shutdown();
 	iter.remove();
-	System.out.println("Removed " + pluginType + " plugin " + obj.getClass().getName());
+	System.out.println("Removed cue plugin " + obj.getClass().getName());
+	found = true;
+      }
+    }
+    iter = patchPlugins.iterator();
+    while (iter.hasNext()) {
+      // remove plugins that match the name.
+      Object obj = iter.next();
+      if (obj.getClass().getName().equals( name )) {
+	((QualmPlugin)obj).shutdown();
+	iter.remove();
+	System.out.println("Removed patch plugin " + obj.getClass().getName());
 	found = true;
       }
     }
@@ -352,7 +344,6 @@ public class QualmREPL extends Thread {
     }
 
     boolean remove = false;
-    String pluginType;
 
     tok = st.nextToken();
     if (tok.equals("list")) {
@@ -367,27 +358,16 @@ public class QualmREPL extends Thread {
 
     } else if (tok.equals("remove")) {
       remove = true;
-      pluginType = st.nextToken();
-    } else
-      pluginType = tok;
+      tok = st.nextToken();
+    } 
 
-    if (!pluginType.equals("cue") && !pluginType.equals("patch")) {
-      if (pluginType.indexOf(".") != -1) 
-	System.out.println("Missing plugin type; use 'plugin {remove} [type] [pluginName]'");
-      else
-	System.out.println("Only handling change plugins; type '" + pluginType + "' not supported.");
-      return;
-    }
-    
-    tok = st.nextToken();
     try {
       if (remove)
-	removePlugin(pluginType, tok);
+	removePlugin(tok);
       else
-	addPlugin(pluginType, tok);
+	addPlugin(tok);
     } catch (IllegalArgumentException iae) {
-      System.out.println("Requested plugin '" + tok + "' does not match type '" +
-			 pluginType + "'; ignoring request.");
+      System.out.println("Unable to create or identify requested plugin '" + tok + "; ignoring request.");
     }
   }
 
