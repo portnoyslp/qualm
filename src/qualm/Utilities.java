@@ -5,10 +5,10 @@ import java.util.*;
 
 // Useful utility procedures that can be used from various places.
 public class Utilities { 
-    private static List numList = 
+  private static List numList = 
     Arrays.asList( new String[] { 
-      "c","c#","d","d#","e","f","f#","g","g#","a","a#","b"
-    });
+        "c","c#","d","d#","e","f","f#","g","g#","a","a#","b"
+      });
 
   public static int noteNameToMidi ( String noteName ) {
     try {
@@ -55,5 +55,11 @@ public class Utilities {
     
     return (octave*12 + numList.indexOf( key ));
   }
-  
+
+  public static String midiNumberToNoteName ( int number ) {
+    int octave = (number / 12) - 1;
+    int noteIdx = number % 12;
+    return ((String)numList.get(noteIdx)).toUpperCase() + octave;
+  }
+
 }

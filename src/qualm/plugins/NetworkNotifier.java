@@ -14,7 +14,7 @@ import java.util.Iterator;
  */
 
 public class NetworkNotifier extends BaseQualmPlugin
-  implements CueChangeNotification,PatchChangeNotification {
+  implements CueChangeNotification,PatchChangeNotification,EventMapperNotification {
 
   public NetworkNotifier() {
     sockets = new ArrayList();
@@ -63,6 +63,42 @@ public class NetworkNotifier extends BaseQualmPlugin
       broadcast(NetworkNotificationProtocol.sendCue(curQ.getCueNumber(),
 						    (pendingQ != null ? pendingQ.getCueNumber() : ""),
 						    qc.getTitle()));
+    }
+  }
+  public void activeEventMapper(MasterController master) {
+    Iterator iter = master.getControllers().iterator();
+    while (iter.hasNext()) {
+      QController qc = (QController)iter.next();
+      Cue curQ = qc.getCurrentCue();
+      Iterator mapIter = curQ.getEventMaps().iterator();
+      while (mapIter.hasNext()) {
+        EventMapper em = (EventMapper) mapIter.next();
+        
+        EventTemplate fromET = em.getFromTemplate();
+        EventTemplate toET = em.getToTemplate();
+        
+        // we're only going to broadcast note changes for now
+        if (fromET.getTypeDesc().equals("NoteOn")) {
+          int fromChannel = fromET.channel();
+          int toChannel = toET.channel();
+          String rangeDesc = fromET.range1();
+          String desc = "";
+          // convert to note names
+          if (!rangeDesc.equals("-1--1")) {
+            String lowBound = rangeDesc.substring(0,rangeDesc.indexOf("-"));
+            String hiBound = rangeDesc.substring(rangeDesc.indexOf("-")+1);
+            int lo = Integer.parseInt(lowBound);
+            int hi = Integer.parseInt(hiBound);
+            desc = 
+              (lo == 0 ? "" : Utilities.midiNumberToNoteName(lo) ) + 
+              "-" +
+              (hi == 127 ? "" : Utilities.midiNumberToNoteName(hi) );
+          }
+          broadcast(NetworkNotificationProtocol.sendEventMap(fromChannel,
+                                                             toChannel,
+                                                             desc));
+        }
+      }
     }
   }
 

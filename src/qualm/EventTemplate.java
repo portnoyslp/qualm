@@ -113,13 +113,8 @@ public class EventTemplate {
     extra1Max = (hi.equals("") ? 127 : Utilities.noteNameToMidi(hi));
   }
 
-  private String[] names = { "NoteOn", "NoteOff", "Control", "Clear" };
   public String toString() {
-    String name = null;
-    if (type == ShortMessage.NOTE_ON) { name = "NoteOn"; }
-    if (type == ShortMessage.NOTE_OFF) { name = "NoteOff"; } 
-    if (type == ShortMessage.CONTROL_CHANGE) { name = "Control"; } 
-    return "event[" + name + "/" + channel + "/" + extra1Min + "-" + extra1Max + "]";
+    return "event[" + getTypeDesc() + "/" + channel + "/" + range1() + "]";
   }
 
   public boolean match(MidiMessage m) {
@@ -146,6 +141,17 @@ public class EventTemplate {
     }
     return false;
   }
+
+  private String[] names = { "NoteOn", "NoteOff", "Control", "Clear" };
+  public String getTypeDesc() { 
+    String name = null;
+    if (type == ShortMessage.NOTE_ON) { name = "NoteOn"; }
+    if (type == ShortMessage.NOTE_OFF) { name = "NoteOff"; } 
+    if (type == ShortMessage.CONTROL_CHANGE) { name = "Control"; } 
+    return name;
+  }
+  public int channel() { return channel; }
+  public String range1() { return extra1Min + "-" + extra1Max; }
 
   protected int type;
   protected int channel;

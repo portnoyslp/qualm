@@ -17,6 +17,7 @@ public class QualmREPL extends Thread {
   BufferedReader reader;
   ArrayList cuePlugins = new ArrayList();
   ArrayList patchPlugins = new ArrayList();
+  ArrayList mapperPlugins = new ArrayList();
   String inputFilename = null;
   boolean isRunning = false;
 
@@ -62,7 +63,6 @@ public class QualmREPL extends Thread {
     // load all the preferences available.
     String pluginNames = prefs.get(PLUGINS_PREFKEY,"");
     StringTokenizer st = new StringTokenizer(pluginNames,",");
-
     while (st.hasMoreTokens()) {
       String pluginName = st.nextToken();
       try {
@@ -102,7 +102,6 @@ public class QualmREPL extends Thread {
       out += (String)iter.next();
     }
     prefs.put(PLUGINS_PREFKEY,out);
-      
   }
 
   public String promptString() {
@@ -134,6 +133,7 @@ public class QualmREPL extends Thread {
 
   public void updatePrompt() {
     handleCuePlugins();
+    handleMapperPlugins();
     System.out.print( promptString() );
     System.out.flush();
   }
@@ -292,6 +292,10 @@ public class QualmREPL extends Thread {
 	  patchPlugins.add( qp );
 	  added = true;
 	}
+	if (Class.forName("qualm.plugins.EventMapperNotification").isAssignableFrom(cls)) {
+	  mapperPlugins.add( qp );
+	  added = true;
+	}
 	if (added) {
 	  return;
 	}
@@ -354,6 +358,10 @@ public class QualmREPL extends Thread {
       iter = patchPlugins.iterator();
       while (iter.hasNext())
 	System.out.println("patch " + iter.next().getClass().getName());
+
+      iter = mapperPlugins.iterator();
+      while (iter.hasNext())
+	System.out.println("mapper " + iter.next().getClass().getName());
       return;
 
     } else if (tok.equals("remove")) {
@@ -380,10 +388,16 @@ public class QualmREPL extends Thread {
   }
 
   public void handlePatchPlugins(int ch, String name, Patch p) {
-    // Tell any CueChangeNotification plugins
     Iterator iter = patchPlugins.iterator();
     while (iter.hasNext()) {
       ((qualm.plugins.PatchChangeNotification)iter.next()).patchChange(ch,name,p);
+    }
+  }
+
+  public void handleMapperPlugins() {
+    Iterator iter = mapperPlugins.iterator();
+    while (iter.hasNext()) {
+      ((qualm.plugins.EventMapperNotification)iter.next()).activeEventMapper(controller);
     }
   }
 

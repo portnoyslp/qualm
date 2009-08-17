@@ -11,6 +11,9 @@ public class EventMapper {
   public void setFromTemplate(EventTemplate f) { mapFrom = f; }
   public void setToTemplate(EventTemplate t) { mapTo = t; }
 
+  public EventTemplate getFromTemplate() { return mapFrom; }
+  public EventTemplate getToTemplate() { return mapTo; }
+
   public boolean match(MidiMessage m) { return mapFrom.match(m); }
 
   public MidiMessage mapEvent(MidiMessage m) {

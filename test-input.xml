@@ -32,6 +32,14 @@
     </cue>
     <cue song="2" measure="35">
       <events><program-change channel="1" patch="Nice_Piano"/></events>
+      <map-events>
+	<map-from><note-on channel="1" note="C4-D5"/></map-from>
+	<map-to><note-on channel="2"/></map-to>
+      </map-events>
+      <map-events>
+	<map-from><note-off channel="1" note="C4-D5"/></map-from>
+	<map-to><note-off channel="2"/></map-to>
+      </map-events>
     </cue>
     <cue song="2" measure="102">
       <events><program-change channel="1" patch="P4"/></events>

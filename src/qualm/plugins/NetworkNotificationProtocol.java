@@ -25,6 +25,11 @@ public class NetworkNotificationProtocol {
       channelName + ":" + 
       patchDesc;
   }
+  public static String sendEventMap (int fromChannel, int toChannel,
+                                     String mapperDesc) {
+    return "M" + fromChannel + ":" +
+      toChannel + ":" + mapperDesc;
+  }
 
   public static NetworkNotificationProtocol receiveInput( String inputStr ) {
     // receives a string of text and converts it into a handy object.
@@ -43,6 +48,12 @@ public class NetworkNotificationProtocol {
       nnp.channelNum = Integer.parseInt(strs[0]);
       nnp.channelName = strs[1];
       nnp.patchDescription = strs[2];
+    } else if (inputStr.startsWith("M")) {
+      nnp.type = MAPPER;
+      String[] strs = (inputStr.substring(1)).split(":",3);
+      nnp.fromChannel = Integer.parseInt(strs[0]);
+      nnp.toChannel = Integer.parseInt(strs[1]);
+      nnp.mapDescription = strs[2];
     } else 
       throw new IllegalArgumentException("Input '" + inputStr + "' is unrecognized");
 
@@ -55,6 +66,7 @@ public class NetworkNotificationProtocol {
   // Enum values for PATCH vs. CUE messages.
   public static int PATCH = 1;
   public static int CUE = 2;
+  public static int MAPPER = 3;
 
   // The instance information used to deserialize information
   public int type;
@@ -66,6 +78,9 @@ public class NetworkNotificationProtocol {
   public String controllerName;
   public String currentCue;
   public String pendingCue;
-
+  // Event Map info
+  public int fromChannel;
+  public int toChannel;
+  public String mapDescription;
   
 }
