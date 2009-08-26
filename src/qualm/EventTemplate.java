@@ -79,8 +79,10 @@ public class EventTemplate {
     t.extra1Min = extra1;
     t.extra1Max = extra1;
 
+    t.extra2Min = 0;
+    t.extra2Max = 127;
     if (thresh != null) 
-      t.extra2Min = Integer.parseInt(thresh);
+      t.extra2Max = Integer.parseInt(thresh);
     return t;
   }
 
@@ -120,24 +122,35 @@ public class EventTemplate {
   public boolean match(MidiMessage m) {
     if (m instanceof ShortMessage) {
       ShortMessage sm = (ShortMessage)m;
+
       // shortcut test
-      if (type != sm.getCommand()) 
-	return false;
+      if (type != sm.getCommand()) {
+	
+	// special case handling -- a note-on with a velocity of zero is
+	// equivalent to a note-off, so treat it as such.
+	if (type != ShortMessage.NOTE_OFF ||
+	    sm.getCommand() != ShortMessage.NOTE_ON ||
+	    sm.getData2() > 0)
+	  return false;
+      }
 
       // check for bad channel or first data byte
       if (channel != sm.getChannel())
 	return false;
-      
+
       // check for bad match to data
       if (extra1Min != DONT_CARE && 
           (extra1Min > sm.getData1() || extra1Max < sm.getData1()) )
 	return false;
 
       // other checks.
-      if (type == ShortMessage.NOTE_ON || 
-	  type == ShortMessage.NOTE_OFF ||
-	  type == ShortMessage.CONTROL_CHANGE && extra2Min <= sm.getData2())
+      if (type == ShortMessage.NOTE_ON || type == ShortMessage.NOTE_OFF)
 	return true;
+      if (type == ShortMessage.CONTROL_CHANGE && 
+	  extra2Min <= sm.getData2() &&
+	  extra2Max >= sm.getData2())
+	return true;
+
     }
     return false;
   }
