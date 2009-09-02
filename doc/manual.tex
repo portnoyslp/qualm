@@ -261,7 +261,8 @@ updates.  {\tt channel} uses the attributes:
  \item[device-type] The synth model that \q will use when sending
    events on the channel.  This value is used to determine the class
    name for a delegate which \q uses to format messages on the MIDI
-   bus.  If not supplied, \q will use the value ``{\tt Roland}''.
+   bus.  If not supplied, \q will assume a very basic synthesizer
+   model.
    (Optional)
 \end{description}
 
@@ -350,7 +351,7 @@ This element can contain the attributes:
 \subsection{Cue Streams and Cues}
 
 \index{cue}
-The remaining piece of the \q control file is for defining {\em cues}
+The remaining section of the \q control file is for defining {\em cues}
 -- namely, what happens at a particular moment in the score, and what
 \q will expect to see in order to switch to the next cue.
 
@@ -466,9 +467,9 @@ channel the event will be read from (or written to).
 
 Within \elt{map-from}, a \elt{note-on} or \elt{note-off} may contain a
 {\tt note} attribute, which will indicate the note (or range of notes)
-that match the event.  For example, a value of ``A#2'' for {\tt note}
+that match the event.  For example, a value of ``A\#2'' for {\tt note}
 will match only those notes for that value, whereas closed ranges like
-``C4-G#6'' or open-ended ranges like ``-E3'' will match ranges of
+``C4-Gb6'' or open-ended ranges like ``-E3'' will match ranges of
 matching notes.  When mapping such a MIDI event to another note element,
 the actual note value will be copied over.
 
@@ -506,10 +507,10 @@ though, what you see is something like:
 \end{verbatim}
 
 This is the main prompt.  It's telling you what cue it thinks each cue
-stream is currently handling (for {\em Children of Eden}, we have three
-streams, one for each keyboard player).  Each cue is actually listing
-both the current cue and the next cue it will expect in that stream. 
-All the cues are indexed by song and measure number, so ``14.19-14.65''
+stream is currently handling (in this example, there are three
+streams running simultaneously).  Each cue is actually listing both
+the current cue and the next cue it will expect in that stream.  All
+the cues are indexed by song and measure number, so ``14.19-14.65''
 says that it is playing the patches associated with song 14, between
 measures 19 and 65.
 
@@ -554,12 +555,12 @@ Other commands that you can type at the prompt are:
       option on the command line).  {\bf unshowmidi} will turn this
       off.
 
-\item[adv \textit{stream}] advance the stream named {\em stream}
+\item[adv <stream>] advance the stream named {\em stream}
       forward one patch.  If you just hit ``Enter'' on the keyboard,
       it has the same effect as typing ``adv'' with the name of the
       first stream.
 
-\item[plugin {[remove]} (cue$\mid$patch) \textit{plugin-name}] controls
+\item[plugin {[remove]} <plugin-name>] controls
       the plugin facility of \q.  For more information, see
       section~\ref{sec:plugins}.
 
@@ -579,11 +580,11 @@ Some options can be given on the command line to alter \q's behavior:
   find, and exit.  This is useful for finding port names to use with
   {\tt --output} and {\tt --input}, below.
 
-\item[--input \textit{port}] sets the name of the input MIDI port to
+\item[--input <port>] sets the name of the input MIDI port to
   use for receiving incoming MIDI events.  You can retrieve a list of
   possible ports using the {\tt --list} option.
 
-\item[--output \textit{port}] sets the name of the output MIDI port to
+\item[--output <port>] sets the name of the output MIDI port to
   use when sending out new MIDI events.  You can retrieve a list of
   possible ports using the {\tt --list} option.
 
