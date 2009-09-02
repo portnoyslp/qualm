@@ -18,7 +18,7 @@ public class NoteWindowChangeEvent {
 
   public String toString() { 
     return "NoteWindowChange[" + getChannel() + "," +
-      _midiToNoteName(bottomNote) + "," + _midiToNoteName(topNote) + "]";
+      _midiToNoteName(bottomNote) + "-" + _midiToNoteName(topNote) + "]";
   }
 
   /**
@@ -102,17 +102,10 @@ public class NoteWindowChangeEvent {
     return n;
   }
 
-  private static final String[] keys =
-  {"c","c#","d","d#","e","f","f#","g","g#","a","a#","b"};
-
   private static String _midiToNoteName(Integer note)
   {
-    if (note == null)
-      return "null";
-    int n = note.intValue();
-    int octave = (n / 12) - 1; // 60 -> 4, 59 -> 3
-    String key = keys[n % 12];
-    return key + octave;
+    if (note == null) return "";
+    return Utilities.midiNumberToNoteName( note.intValue() );
   }
 
 }

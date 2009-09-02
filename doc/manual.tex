@@ -460,7 +460,17 @@ The \elt{map-events} can appear within a \elt{cue} to specify mappings
 that will be active while that cue is in effect.  It will contain both
 a \elt{map-from} and a \elt{map-to}, each of which can contain either
 a \elt{note-on}, \elt{note-off}, or \elt{control-change} to define the
-kind of event that will be handled by the mapper.
+kind of event that will be handled by the mapper.  Each of these may
+contain a {\tt channel} attribute, which will indicate which MIDI
+channel the event will be read from (or written to).
+
+Within \elt{map-from}, a \elt{note-on} or \elt{note-off} may contain a
+{\tt note} attribute, which will indicate the note (or range of notes)
+that match the event.  For example, a value of ``A#2'' for {\tt note}
+will match only those notes for that value, whereas closed ranges like
+``C4-G#6'' or open-ended ranges like ``-E3'' will match ranges of
+matching notes.  When mapping such a MIDI event to another note element,
+the actual note value will be copied over.
 
 \subsubsection{Global Triggers and Map Events}
 
