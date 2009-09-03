@@ -216,6 +216,14 @@ events that will trigger the next cue in the sequence.
     </cue>
     <cue song="2" measure="10">
       <events><program-change channel="2" patch="P95"/></events>
+      <map-events>
+        <map-from><note-on channel="1" note="C4-Bb6"/></map-from>
+        <map-to><note-on channel="2"/></map-to>
+      </map-events>
+      <map-events>
+        <map-from><note-off channel="1" note="C4-Bb6"/></map-from>
+        <map-to><note-off channel="2"/></map-to>
+      </map-events>
     </cue>
   </cue-stream>
 </qualm-data>
@@ -283,8 +291,8 @@ patch} or {\tt patch-alias} elements:
 \subsubsection{Patch Definitions}
 
 \begin{verbatim}
-    <patch id="P3" bank="User" num="3" remark="split at C5">Strs/FzzClav</patch>
-    <patch id="P4" bank="PrA"  num="15" volume="23%">Rhodes</patch>
+  <patch id="P3" bank="User" num="3" remark="split at C5">Strs/FzzClav</patch>
+  <patch id="P4" bank="PrA"  num="15" volume="23%">Rhodes</patch>
 \end{verbatim}
 
 
@@ -322,7 +330,7 @@ attributes:
 \subsubsection{Patch Aliases}
 
 \begin{verbatim}
-    <patch-alias id="P5" target="Nice_Piano">Good Piano</patch-alias>
+  <patch-alias id="P5" target="Nice_Piano">Good Piano</patch-alias>
 \end{verbatim}
 
 The \elt{patch-alias} defines a patch which is the same sound as an
@@ -386,6 +394,10 @@ the channel can use.
 
 \paragraph{Program Changes}
 
+\begin{verbatim}
+  <program-change channel="2" patch="P96"/>
+\end{verbatim}
+
 The \elt{program-change} is the most common type of event.  When \q
 switches to a cue that has a \elt{program-change}, it locates the
 requested \elt{patch} or \elt{patch-alias} from the \elt{patches}
@@ -398,7 +410,7 @@ The \elt{program-change} can contain the following attributes:
 This should match one of the channels defined in the
 \elt{midi-channels} section of the control file.  A required attribute.
 
-\item[id] The unique identifier for the patch, as previously defined
+\item[patch] The unique identifier for the patch, as previously defined
 in the \elt{patches} section.  If this value does not match one of the
 defined patches, an error will occur when loading the control file.  A
 required attribute.
@@ -406,6 +418,10 @@ required attribute.
 
 \paragraph{Advancing Streams}
 \label{par:advancing-streams}
+
+\begin{verbatim}
+   <advance stream="Second_Stream" song="2" measure="10"/>
+\end{verbatim}
 
 \index{advancing streams} When working with multiple input streams,
 the \elt{advance} can be used to allow input on one stream to advance
@@ -433,6 +449,10 @@ XXX to be written
 \subsubsection{Triggers}
 \index{triggers}
 
+\begin{verbatim}
+  <trigger><note-on channel="2" note="g2"/></trigger>
+\end{verbatim}
+
 In \q, {\em triggers} are the actions that advance to the next cue in
 a stream.  Defining a trigger causes \q to listen to the MIDI events
 as they are delivered, and watch for events that match a particular
@@ -450,6 +470,17 @@ given the value ``yes'' will indicate to \q that it should move
 a cue {\em backward} in the stream, rather than forward.
 
 \subsubsection{Map Events}
+
+\begin{verbatim}
+  <map-events>
+    <map-from><note-on channel="1" note="C4-Bb6"/></map-from>
+    <map-to><note-on channel="2"/></map-to>
+  </map-events>
+  <map-events>
+    <map-from><control-change channel="1" control="damper"/></map-from>
+    <map-to><control-change channel="2" control="80"/></map-to>
+  </map-events>
+\end{verbatim}
 
 A {\em map event} can be used to take an incoming MIDI event that
 matches certain parameters, and output a similar MIDI event.  For
@@ -473,6 +504,37 @@ will match only those notes for that value, whereas closed ranges like
 matching notes.  When mapping such a MIDI event to another note element,
 the actual note value will be copied over.
 
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+{\em Name} & {\em CC \#} \\ \hline
+modulation & 1 \\ \hline
+breath & 2 \\ \hline
+foot & 4 \\ \hline
+volume & 7 \\ \hline
+balance & 8 \\ \hline
+pan & 10 \\ \hline
+expression & 11 \\ \hline
+effect 1 & 12 \\ \hline
+effect 2 & 13 \\ \hline
+damper & 64 \\ \cline{1-1}
+sustain &  \\ \hline
+portamento & 65 \\ \hline
+sustenuto & 66 \\ \hline
+soft & 67 \\ \hline
+legato & 68 \\ \hline
+\end{tabular}
+\end{center}
+\caption{ \label{tbl:controller-names} Available \q controller names,
+  and the MIDI controller change (CC) number.}
+\end{table}
+
+When specifying \elt{control-change}s, the {\tt control} attribute
+specifies which control is being manipulated.  Either a MIDI
+controller number or a name for the controller can be used.
+Table~\ref{tbl:controller-names} lists the allowable names.
+
 \subsubsection{Global Triggers and Map Events}
 
 Most triggers and events are ones that should apply across the entire
@@ -495,15 +557,15 @@ Once \q is running, it will occasionally pepper the output with lines
 like
 
 \begin{verbatim}
-    K2 -> Sust. String Pad
+  K2 -> Sust. String Pad
 \end{verbatim}
 
 These are simply announcing that it's just changed the patch on the
 channel called ``K2'' to a ``Sust. String Pad'' sound.  Most of the time,
 though, what you see is something like:
-
+X
 \begin{verbatim}
-    14.1-14.54 | 14.19-14.65 | 14.1-14.64>
+  14.1-14.54 | 14.19-14.65 | 14.1-14.64>
 \end{verbatim}
 
 This is the main prompt.  It's telling you what cue it thinks each cue
