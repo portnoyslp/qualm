@@ -444,7 +444,40 @@ attributes the target stream will be advanced one cue.
 
 \paragraph{Note Window Changes}
 
-XXX to be written
+\begin{verbatim}
+   <note-window-change channel="1" bottom="G4"/>
+\end{verbatim}
+
+Some synthesizers can handle requests to change the top and bottom
+notes of a patch's range, so that they will only respond to notes in a
+certain part of the keyboard.  This allows you to create splits -- for
+example, making the left side of the keyboard play an acoustic bass,
+while the right side of the keyboard plays piano.  This can be done
+through MIDI ``SysEx'' messages, but are not a standard part of MIDI,
+so are not available for all synthesizer modules.\footnote{This kind
+  of behaviour can also be handled by \q using ``note-on'' and
+  ``note-off'' event maps.  This can be a useful solution if the
+  synthesizer you're using doesn't support the
+  \elt{note-window-change}.}
+
+If the \elt{note-window-change} action is available for your
+synthesizer, you can provide the following attributes:
+
+\begin{description}
+\item[channel] The MIDI channel to which the request should be sent.
+This should match one of the channels defined in the
+\elt{midi-channels} section of the control file.  A required attribute.
+
+\item[bottom] The note specification for the bottom-most note in the
+  range.  This can be either an integer for the MIDI note number, or a
+  name like ``C4'' or ``Bb3''.  (Optional)
+
+\item[top] The note specification for the top-most note in the
+  range. (Optional)
+\end{description}
+
+You must provide at least one of either the {\tt bottom} or {\tt top}
+attributes.
 
 \subsubsection{Triggers}
 \index{triggers}
@@ -468,6 +501,12 @@ control change} events can be matched as well.
 The \elt{trigger} can contain the {\tt reverse} attribute, which if
 given the value ``yes'' will indicate to \q that it should move
 a cue {\em backward} in the stream, rather than forward.
+
+A \elt{trigger} with a {\tt delay} attribute indicates that the
+trigger should wait the given number of seconds after activation
+before advancing to the next cue.  If later MIDI events match the
+trigger after the delay timer has begun (for example, if the same note
+is played again), a new timer will not be started.
 
 \subsubsection{Map Events}
 
@@ -563,7 +602,7 @@ like
 These are simply announcing that it's just changed the patch on the
 channel called ``K2'' to a ``Sust. String Pad'' sound.  Most of the time,
 though, what you see is something like:
-X
+
 \begin{verbatim}
   14.1-14.54 | 14.19-14.65 | 14.1-14.64>
 \end{verbatim}

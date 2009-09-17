@@ -16,7 +16,7 @@ public class DelayTester extends TestCase {
 
   public void testDelay() throws Exception {
     // simple advancement.
-  String delay1 = "<qualm-data>\n" + 
+    String delay1 = "<qualm-data>\n" + 
 "  <title>ADV-1</title>\n" + 
 "  <midi-channels>\n" + 
 "    <channel num=\"1\">Kbd</channel>\n" + 
@@ -39,8 +39,11 @@ public class DelayTester extends TestCase {
 "  </cue-stream>\n" + 
 "</qualm-data>\n";
 
+    // Send two forward triggers, separated by a second.  Only the first should fire. Then we reverse.
+
     FakeMIDI fm = FakeMIDI.prepareTest(delay1);
     fm.addOutgoing((long)0, ShortMessage.NOTE_ON, 0, 60, 10); // switch to P2
+    fm.addOutgoing((long)1000, ShortMessage.NOTE_ON, 0, 60, 10); // switch to P2; should be ignored
     fm.addOutgoing((long)3000, ShortMessage.NOTE_ON, 0, 59, 10); // reverse; to P1
     fm.run();
     java.util.ArrayList msgs = fm.receivedMessages();

@@ -38,6 +38,9 @@ public class QController implements Receiver {
     triggers = new ArrayList();
     addCurrentTriggers();
     buildTriggerCache();
+
+    // also build the list of pending triggers...
+    triggerThreads = new ArrayList();
   }
 
   public Collection changesForCue( String cuenum ) {
@@ -129,14 +132,19 @@ public class QController implements Receiver {
     // anything less than a couple hundred ms isn't worth creating a thread for.
     if (trig.getDelay() < 200)
       executeTriggerWithoutDelay(trig);
-    else 
-      // spawn a thread which will execute this trigger after the appropriate number of ms.
-      new TriggerDelayThread(trig,this).start();
-  }
 
+    else 
+      // check to see if this trigger is already represented in the
+      // list of pending trigger threads.
+      if (!triggerThreads.contains(trig)) 
+        // spawn a thread which will execute this trigger after the appropriate number of ms.
+        new TriggerDelayThread(trig,this).start();
+    
+  }
 
   Trigger cachedTriggers[] = {};
   List triggers;
+  List triggerThreads;
 
   private void buildTriggerCache() {
     List l = new ArrayList();
@@ -165,11 +173,18 @@ public class QController implements Receiver {
         sleep(trig.getDelay());
       } catch (InterruptedException ie) { } 
       qc.executeTriggerWithoutDelay(trig);
+      // remove from trigger thread list
+      triggerThreads.remove(this);
     }
     TriggerDelayThread(Trigger trig, QController qc) {
       this.trig = trig;
       this.qc = qc;
     }
+
+    public boolean equals(Trigger t) {
+      return trig.equals(t);
+    }
+      
     private Trigger trig;
     private QController qc;
   }
