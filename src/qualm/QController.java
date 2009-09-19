@@ -133,12 +133,26 @@ public class QController implements Receiver {
     if (trig.getDelay() < 200)
       executeTriggerWithoutDelay(trig);
 
-    else 
+    else {
       // check to see if this trigger is already represented in the
       // list of pending trigger threads.
-      if (!triggerThreads.contains(trig)) 
+      Iterator iter = triggerThreads.iterator();
+      boolean found = false;
+      while (iter.hasNext()) {
+	TriggerDelayThread th = (TriggerDelayThread)iter.next();
+	if (th.equals(trig)) {
+	  found = true;
+	  break;
+	}
+      }
+
+      if (!found) {
         // spawn a thread which will execute this trigger after the appropriate number of ms.
-        new TriggerDelayThread(trig,this).start();
+	TriggerDelayThread tdt = new TriggerDelayThread(trig,this);
+	triggerThreads.add(tdt);
+	tdt.start();
+      }
+    }
     
   }
 
@@ -183,6 +197,10 @@ public class QController implements Receiver {
 
     public boolean equals(Trigger t) {
       return trig.equals(t);
+    }
+
+    public String toString() {
+      return "TDT:" + trig;
     }
       
     private Trigger trig;
