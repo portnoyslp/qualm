@@ -24,6 +24,7 @@ public class DelayTester extends TestCase {
 "  <patches>\n" + 
 "    <patch id=\"P1\" num=\"1\">Patch 1</patch>\n" + 
 "    <patch id=\"P2\" num=\"2\">Patch 2</patch>\n" + 
+"    <patch id=\"P3\" num=\"3\">Patch 3</patch>\n" + 
 "  </patches>\n" + 
 "  <cue-stream>\n" + 
 "    <global>\n" + 
@@ -35,6 +36,9 @@ public class DelayTester extends TestCase {
 "    </cue>\n" + 
 "    <cue song=\"2\" measure=\"1\">\n" + 
 "      <events><program-change channel=\"1\" patch=\"P2\"/></events>\n" + 
+"    </cue>\n" + 
+"    <cue song=\"3\" measure=\"1\">\n" + 
+"      <events><program-change channel=\"1\" patch=\"P3\"/></events>\n" + 
 "    </cue>\n" + 
 "  </cue-stream>\n" + 
 "</qualm-data>\n";

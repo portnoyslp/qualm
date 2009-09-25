@@ -712,8 +712,48 @@ Some options can be given on the command line to alter \q's behavior:
 \end{latexonly}
 \section{Plugins}
 \label{sec:plugins}
-XXX To be written
 
+\q plugins are used to create additional functionality making use of
+the \q engine.  Currently, most plugins that have been developed are
+for easy-to-read monitors of the \q status.
+
+All the plugins use interfaces defined under the '{\tt qualm.plugins}'
+package.  These interfaces include:
+
+\begin{description}
+\item[qualm.plugins.CueChangeNotification] is used for plugins that
+  want updates when one of the running cue streams moves to a new cue.
+
+\item[qualm.plugins.PatchChangeNotification] is used for plugins that
+  want updates when one or more of the patches on a MIDI channel is
+  changed.
+
+\item[qualm.plugins.EventMapperNotification] is used for plugins that
+  want updates when the current set of event maps is changed.
+\end{description}
+
+Often, these interfaces are triggered all at the same time -- i.e.,
+when \q advances to a new cue.
+
+Plugins that use these interfaces can be loaded through the {\tt
+  plugin} command at the \q prompt.  Typing ``{\tt plugin
+  [plugin.name]}'' will load a new plugin into the running system,
+whereas {\tt plugin remove [plugin.name]} will disable it.  The
+current set of plugins can be stored for a later session at any time
+using the {\tt save} command.
+
+Example plugins include:
+
+\begin{description}
+\item[qualm.plugins.DisplayCueChange] shows a window indicating the
+  current cue positions for all running cue streams.
+\item[qualm.plugins.DisplayPatchChange] shows a window indicating the
+  current patches for all running cue streams.
+\item[qualm.plugins.NetworkNotifier] starts a thread that will allow
+  external programs to subscribe to all the plugin notification events
+  over the network.  An example reader of this information is in {\tt
+    misc/ExampleNetworkReader.java}.
+\end{description}
 
 \newpage
 \printindex
