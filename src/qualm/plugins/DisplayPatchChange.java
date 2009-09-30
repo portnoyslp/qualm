@@ -8,7 +8,7 @@ import java.awt.BorderLayout;
 import java.util.TreeMap;
 import java.util.Iterator;
 
-public class DisplayPatchChange extends PatchChangeNotification {
+public class DisplayPatchChange extends BaseQualmPlugin implements PatchChangeNotification {
 
   TreeMap channels = new TreeMap();
 
