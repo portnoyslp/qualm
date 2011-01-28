@@ -514,6 +514,7 @@ is played again), a new timer will not be started.
   <map-events>
     <map-from><note-on channel="1" note="C4-Bb6"/></map-from>
     <map-to><note-on channel="2"/></map-to>
+    <map-to><note-on channel="3"/></map-to>
   </map-events>
   <map-events>
     <map-from><control-change channel="1" control="damper"/></map-from>
@@ -522,18 +523,19 @@ is played again), a new timer will not be started.
 \end{verbatim}
 
 A {\em map event} can be used to take an incoming MIDI event that
-matches certain parameters, and output a similar MIDI event.  For
-example, it could be used to allow a sustain pedal hooked up to one
-keyboard to automatically control the sustain on another, or alter a
-spare MIDI controller so that it operates as a volume control.
+matches certain parameters, and output one or more similar MIDI
+events.  For example, it could be used to allow a sustain pedal hooked
+up to one keyboard to automatically control the sustain on another, or
+alter a spare MIDI controller so that it operates as a volume control.
 
 The \elt{map-events} can appear within a \elt{cue} to specify mappings
 that will be active while that cue is in effect.  It will contain both
-a \elt{map-from} and a \elt{map-to}, each of which can contain either
-a \elt{note-on}, \elt{note-off}, or \elt{control-change} to define the
-kind of event that will be handled by the mapper.  Each of these may
-contain a {\tt channel} attribute, which will indicate which MIDI
-channel the event will be read from (or written to).
+a \elt{map-from} and one or more \elt{map-to}s, each of which can
+contain either a \elt{note-on}, \elt{note-off}, or
+\elt{control-change} to define the kind of event that will be handled
+by the mapper.  Each of these may contain a {\tt channel} attribute,
+which will indicate which MIDI channel the event will be read from (or
+written to).
 
 Within \elt{map-from}, a \elt{note-on} or \elt{note-off} may contain a
 {\tt note} attribute, which will indicate the note (or range of notes)
@@ -563,6 +565,9 @@ portamento & 65 \\ \hline
 sustenuto & 66 \\ \hline
 soft & 67 \\ \hline
 legato & 68 \\ \hline
+sound off & 120 \\ \hline
+reset controllers & 121 \\ \hline
+notes off & 123 \\ \hline
 \end{tabular}
 \end{center}
 \caption{ \label{tbl:controller-names} Available \q controller names,

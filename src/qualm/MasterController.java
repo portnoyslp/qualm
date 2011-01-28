@@ -13,7 +13,7 @@ public class MasterController implements Receiver {
   boolean silentErrorHandling = true;
 
   public MasterController( Receiver out ) {
-    midiOut = out;
+    midiOut = new VerboseReceiver(out);
     controllers = new TreeMap();
   }
 
@@ -160,7 +160,11 @@ public class MasterController implements Receiver {
 
   // Implementation of javax.sound.midi.Receiver
 
-  public void setDebugMIDI(boolean flag) { debugMIDI=flag; }
+  public void setDebugMIDI(boolean flag) { 
+    debugMIDI=flag; 
+    if (midiOut instanceof VerboseReceiver) 
+      ((VerboseReceiver)midiOut).setDebugMIDI(flag);
+  }
   public void setSilentErrorHandling(boolean flag) { silentErrorHandling=flag; }
 
   public void close() {

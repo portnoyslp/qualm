@@ -49,7 +49,7 @@ map-events =
     },
     element map-to {
       note-on | note-off | control-change | program-change
-    }
+    }+
   }
 # <map-events>
 #   <map-from><control-change channel="1" control="soft"/></map-from>

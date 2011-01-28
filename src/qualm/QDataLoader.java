@@ -291,7 +291,7 @@ public class QDataLoader extends DefaultHandler {
     } else if (qName.equals("map-from")) {
       curMapper.setFromTemplate(curTemplate);
     } else if (qName.equals("map-to")) {
-      curMapper.setToTemplate(curTemplate);
+      curMapper.addToTemplate(curTemplate);
     } else if (qName.equals("map-events")) {
       eventMaps.add(curMapper);
 

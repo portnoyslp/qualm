@@ -35,7 +35,7 @@
      </patches>
 -->
 
-<!ELEMENT map-events (map-from,map-to)>
+<!ELEMENT map-events (map-from,map-to+)>
 <!ELEMENT map-from (note-on|note-off|control-change|program-change)>
 <!ELEMENT map-to (note-on|note-off|control-change|program-change)>
 

@@ -31,6 +31,7 @@ public class EventMapTester extends TestCase {
 "      <map-events>\n" +
 "	<map-from><control-change channel=\"1\" control=\"damper\"/></map-from>\n" +
 "	<map-to><control-change channel=\"2\" control=\"soft\"/></map-to>\n" +
+"	<map-to><control-change channel=\"3\" control=\"soft\"/></map-to>\n" +
 "      </map-events>\n" +
 "    </global>\n" + 
 "    <cue song=\"1\" measure=\"1\">\n" + 
@@ -49,10 +50,12 @@ public class EventMapTester extends TestCase {
 
     fm.printOutMessages();
 
-    assertTrue(msgs.size() == 3);
+    assertTrue(msgs.size() == 5);
     FakeMIDI.assertMIDI(msgs.get(0),ShortMessage.PROGRAM_CHANGE,0,0,0); // init patch
-    FakeMIDI.assertMIDI(msgs.get(1),ShortMessage.CONTROL_CHANGE,1,67,10); // first ctrl
-    FakeMIDI.assertMIDI(msgs.get(2),ShortMessage.CONTROL_CHANGE,1,67,50); // last ctrl
+    FakeMIDI.assertMIDI(msgs.get(1),ShortMessage.CONTROL_CHANGE,1,67,10); // first ctrl, ch2
+    FakeMIDI.assertMIDI(msgs.get(2),ShortMessage.CONTROL_CHANGE,2,67,10); // first ctrl, ch3
+    FakeMIDI.assertMIDI(msgs.get(3),ShortMessage.CONTROL_CHANGE,1,67,50); // last ctrl, ch2
+    FakeMIDI.assertMIDI(msgs.get(4),ShortMessage.CONTROL_CHANGE,2,67,50); // last ctrl, ch3
   }
 
 }

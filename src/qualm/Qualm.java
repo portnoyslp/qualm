@@ -133,7 +133,7 @@ public class Qualm {
     System.out.println("  --version | -v  Give information on the build identifier.");
     System.out.println("  --help | -h     Prints this message.");
     System.out.println("  <filename>      The Qualm filename to execute.");
-    System.out.println("\n If only one port is specified, an attempt will be made to open the\nport for both input and output.  If no port is specified, 'UM-1' will\nbe used.");
+    System.out.println("\n If only one port is specified, an attempt will be made to open the\nport for both input and output.  If no port is specified, Qualm will\nsearch for common USB-MIDI cable names.");
   }
 
   public static void loadProperties() {
@@ -169,7 +169,6 @@ public class Qualm {
 
     return data;
   }
-
 
   public static void main(String[] args) throws Exception {
 
@@ -234,8 +233,10 @@ public class Qualm {
       inputFilename = args[g.getOptind()];
 
     // set ports
+    String DEFAULT_PORT="__default_port__";
+
     if (inputPort == null && outputPort == null) 
-      inputPort="UM-1";
+      inputPort=DEFAULT_PORT;
     if (outputPort == null) 
       outputPort = inputPort;
     if (inputPort == null)
@@ -245,15 +246,30 @@ public class Qualm {
     MidiDevice.Info outputInfo = null;
    
     if (!skipMIDI) {
-      MidiDevice.Info[] ports = getMidiPorts(inputPort, outputPort, listPorts, debugMIDI);
-      inputInfo = ports[0];
-      outputInfo = ports[1];
+      if (inputPort.equals(DEFAULT_PORT) && !listPorts) {
+	// try the various default port names
+	for(i=0; i<defaultPortNames.length; i++) {
+	  MidiDevice.Info[] ports = getMidiPorts(defaultPortNames[i], defaultPortNames[i], false, debugMIDI);
+	  inputInfo = ports[0];
+	  outputInfo = ports[1];
+	  
+	  if (inputInfo != null) break;
+	}
+      } else {
+	MidiDevice.Info[] ports = getMidiPorts(inputPort, outputPort, listPorts, debugMIDI);
+	inputInfo = ports[0];
+	outputInfo = ports[1];
+      }
       
       if (listPorts) 
 	System.exit(0);
       
       if (inputInfo == null ) {
-	System.out.println("Unable to load input port named " + inputPort);
+	if (inputInfo.equals(DEFAULT_PORT)) {
+	  System.out.println("Unable to load default input port");
+	} else {
+	  System.out.println("Unable to load input port named " + inputPort);
+	}
 	System.exit(1);
       }
       if (outputInfo == null) {
@@ -302,6 +318,10 @@ public class Qualm {
   }
 
   static boolean validateInput = false;
+  private static String[] defaultPortNames = {
+    "UM-1",
+    "USB Midi"
+  };
 
 }
 

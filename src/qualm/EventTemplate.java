@@ -71,6 +71,12 @@ public class EventTemplate {
 	extra1 = 67;
       else if (ctrl.equals("legato"))
 	extra1 = 68;
+      else if (ctrl.equals("all sound off"))
+	extra1 = 120;
+      else if (ctrl.equals("reset controllers"))
+	extra1 = 121;
+      else if (ctrl.equals("all notes off"))
+	extra1 = 123;
       else 
 	throw new IllegalArgumentException("Cannot parse control change type '" +
 					   ctrl + "'");

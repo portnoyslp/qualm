@@ -92,9 +92,13 @@ public class QController implements Receiver {
       Iterator iter = cue.getEventMaps().iterator();
       while(iter.hasNext()) {
 	EventMapper em = (EventMapper)iter.next();
-	MidiMessage out = em.mapEvent(midiMessage);
-	if (out != null && midiOut != null)
-	  midiOut.send(out, -1);
+	MidiMessage out[] = em.mapEvent(midiMessage);
+	if (out != null) {
+	  for(int i=0; i<out.length; i++) {
+	    if (out[i] != null && midiOut != null)
+	      midiOut.send(out[i], -1);
+	  }
+	}
       }
     }
 
