@@ -5,6 +5,7 @@ import qualm.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.*;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -75,12 +76,12 @@ public class NetworkNotifier extends BaseQualmPlugin
         EventMapper em = (EventMapper) mapIter.next();
         
         EventTemplate fromET = em.getFromTemplate();
-        EventTemplate toET = em.getToTemplate();
+        List toETList = em.getToTemplateList();
         
         // we're only going to broadcast note changes for now
         if (fromET.getTypeDesc().equals("NoteOn")) {
           int fromChannel = fromET.channel();
-          int toChannel = toET.channel();
+          int toChannel = ((EventTemplate)toETList.get(0)).channel();
           String rangeDesc = fromET.range1();
           String desc = "";
           // convert to note names
