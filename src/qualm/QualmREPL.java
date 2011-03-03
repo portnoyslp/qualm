@@ -214,6 +214,11 @@ public class QualmREPL extends Thread {
     controller.advanceStream(stream_id);
   }
 
+  public void reverseController (String line) {
+    String stream_id = line.substring(line.indexOf(" ")).trim();
+    controller.reverseStream(stream_id);
+  }
+
   public void gotoCue(String cueName) { controller.gotoCue(cueName); }
 
   public void processLine( String line ) {
@@ -250,6 +255,9 @@ public class QualmREPL extends Thread {
 
       } else if (lowerCase.startsWith("adv")) {
 	advanceController(line);
+
+      } else if (lowerCase.startsWith("rev")) {
+	reverseController(line);
 
       } else if (lowerCase.startsWith("load")) {
 	StringTokenizer st = new StringTokenizer(line);

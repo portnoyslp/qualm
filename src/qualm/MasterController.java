@@ -82,6 +82,12 @@ public class MasterController implements Receiver {
       qc.advancePatch();
   }
 
+  public void reverseStream(String stream_id) {
+    QController qc = (QController) controllers.get(stream_id);
+    if (qc != null) 
+      qc.reversePatch();
+  }
+
   private void sendPatchChange(ProgramChangeEvent pce) {
     PatchChanger.patchChange(pce, midiOut);
   }

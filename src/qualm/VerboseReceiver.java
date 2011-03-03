@@ -22,11 +22,12 @@ public class VerboseReceiver implements Receiver {
   public void send(MidiMessage midiMessage, long l) {
     if (debugMIDI)
       System.out.println( "->" + MidiMessageParser.messageToString(midiMessage) );
-    midiOut.send(midiMessage,l);
+    if (midiOut != null)
+      midiOut.send(midiMessage,l);
   }
 
   public void close() {
-    midiOut.close();
+    if (midiOut != null) midiOut.close();
   }
 
 } // VerboseReceiver
