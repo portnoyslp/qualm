@@ -1,0 +1,6 @@
+/qualm.jar
+*.class
+*~
+test-results/*.txt
+build/qualm.properties
+
