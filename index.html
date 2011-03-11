@@ -7,33 +7,145 @@
 
   <style type="text/css">
     body {
-      margin-top: 1.0em;
+      margin: 2em;
       background-color: #88935b;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
+      font-family: Luxi Sans, sans-serif;
     }
-    #container {
+    #content {
       margin: 0 auto;
-      width: 700px;
+      padding: 1em 3em;
+      background: #e0f497;  
+      font-family: luxi sans, sans-serif; 
+      color: #3d0689;
     }
-    h1 { font-size: 3.8em; color: #776ca4; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #776ca4; }
-    h3 { text-align: center; color: #776ca4; }
-    a { color: #776ca4; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+
     .footer { text-align:center; padding-top:30px; font-style: italic; }
+
+    div.title { text-align: center; }
+    
+    div.qna { margin-top: 2em; margin-bottom: 3em; }
+    div.qna h2 { font-size: 120%; }
+    div.qna p {
+      padding-right: 2em; padding-left: 3em; 
+    }
+    
+    a { text-decoration: none; background:transparent; color: #775b8e; }
+    a:hover { border-bottom: 1px dotted; }
+    
+    .download { float: right; }
+    pre { background: #000; color: #fff; padding: 15px; font-size: 120%;}
+
   </style>
 </head>
 
 <body>
   <a href="http://github.com/portnoyslp/qualm"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
 
-  <div id="container">
+  <div id="content">
+    
+    <div class="title">
+      <h1><img src="qualm.png" alt="Qualm: Queing Application for Live MIDI"/></h1>
+    </div>
+
+    <div class="qna">
+      <h2>What is Qualm?</h2>
+      
+      <p>Qualm might be referred to simply as a 
+	"<acronym title="Musical Instrument Digital Interface">MIDI</acronym>
+	event processor" -- it connects to an input MIDI port,
+	listens for events, and will output new MIDI events on an
+	output port as necessary.  For example, it can listen for
+	particular note on/off events and use them to send out patch
+	changes, or even duplicate one channel's pedal events on
+	other channels so that one pedal can do the work of
+	many.</p>
+      
+      <p>Qualm can also be thought of as a musical analog to the
+	software used to control lighting for live shows.  It can
+	divide a production into a series of "cues", and step
+	through them sequentially based on events.  It can also
+	rewind or fast-forward to any given cue state simply by
+	entering a cue number into the program.  If the cue numbers
+	are linked to measure numbers in the music, it's easy and
+	straightforward to use the system for rehearsals.</p>
+      
+      
+      <p>Because Qualm uses MIDI events for all processing, it could
+	also be used to control (or be controlled by) any MIDI-enabled
+	application, such as lighting boards.</p>
+      
+    </div>
+    
+    <div class="qna">
+      <h2>What is Qualm written in?</h2>
+      
+      <p>Qualm is written in Java, and uses the 
+	<a href="http://java.sun.com/products/java-media/sound/index.jsp">Java
+	  Sound API</a> for all processing.  In order to use it,
+	therefore, you will need an implementation of Java Sound
+	that can talk to your MIDI devices.  For Windows, this will
+	require a JDK version 1.4.1 or greater.  For Linux, I
+	recommend the use of the open-source 
+	<a href="http://www.tritonus.org/">Tritonus</a> implementation.
+	This implementation also has support for 
+	<a href="http://www.alsa-project.org/">ALSA</a> devices.</p>
+
+      
+      <p>For more information on Java Sound, see the 
+	<a href="http://www.jsresources.org/">Java Sound Resources</a>
+	page.</p>
+
+	<p>Qualm also makes use of the <a
+	    href="http://www.gnu.org/software/java/packages.html">gnu.getopt</a>
+	  command-line option parser.</p>
+
+    </div>
+    
+    
+    <div class="qna">
+      <h2>The History of Qualm</h2>
+      
+      <p>Qualm was created for a simple purpose -- to handle patch
+	changes during live MIDI performances.  One such example is
+	musical theater, where the keyboard or synthesizer part is
+	often written to use many different patches during a
+	performance, occasionally with very fast changes in between
+	them.</p>
+      
+      <p>In fact, Qualm was created to handle one <a
+	  href="http://www.mit.edu/~mtg">musical theater
+	  organization</a>'s production of <a
+	  href="http://www.batboy-themusical.com">Bat Boy: The
+	  Musical</a>, a show in which the keyboard parts are used to
+	simulate a much larger orchestra, and thus requires many
+	patch changes to create a multitude of horns, strings,
+	organs, etc.  The Keyboard II part for that production had
+	over 130 patch changes during a single two-hour performance,
+	and was handling changes for two different keyboards and a
+	drum module.</p>
+      
+      <p>With such a huge undertaking, it was either going to be
+	necessary to purchase or borrow a large array of pedals, or
+	find some sort of programmatic control that could simulate
+	having that much equipment and feed it all to a single
+	synthesizer (in that case, a very capable Roland JV-1080).
+	We chose the latter route, and were able to control both
+	keyboards and the drum module using a Linux laptop and
+	existing equipment.</p>
+      
+      <p>Since then, the software has been used for patch changes for
+        a number of different shows.  Interesting configurations
+        include a three-keyboard setup in which all the keyboards were
+        independently controlled by a single Qualm routine, but also
+        using the ability to have one keyboard's change also switch
+        patches for another keyboard. Qualm can also be used to
+        listen to the notes as they are played and automatically
+        switch patches without additional intervention.</p>
+      
+    </div>
+    
+    <h2>Contact</h2>
+    <p>Stephen Peters (portnoy@portnoy.org)</p>
 
     <div class="download">
       <a href="http://github.com/portnoyslp/qualm/zipball/master">
@@ -41,19 +153,6 @@
       <a href="http://github.com/portnoyslp/qualm/tarball/master">
         <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
     </div>
-
-    <h1><a href="http://github.com/portnoyslp/qualm">qualm</a>
-      <span class="small">by <a href="http://github.com/portnoyslp">portnoyslp</a></span></h1>
-
-    <div class="description">
-      A flexible MIDI event processor tailored towards doing fast patch changes in live performances
-    </div>
-
-    <h2>Authors</h2>
-<p>Stephen Peters (portnoy@portnoy.org)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Stephen Peters (portnoy@portnoy.org)<br/>      </p>
-
 
     <h2>Download</h2>
     <p>
