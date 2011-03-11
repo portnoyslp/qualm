@@ -20,11 +20,11 @@
 
   <target name="init">
     <mkdir dir="${builddir}"/>
-    <exec executable="svnversion"
+    <exec executable="git"
 	  failifexecutionfails="no"
 	  outputproperty="buildversion">
-      <arg value="${srcdir}"/>
-      <arg value="-n"/>
+      <arg value="describe"/>
+      <arg value="--dirty"/>
     </exec>
     <copy file="${srcdir}/qualm.properties.tmpl"
 	  tofile="${builddir}/qualm.properties"/>
