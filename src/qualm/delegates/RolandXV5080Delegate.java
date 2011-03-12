@@ -55,6 +55,11 @@ public class RolandXV5080Delegate extends RolandDelegate {
       // expansion boards increase the bank LSB by one for high-valued patches.
       retvals[1] = (expansionNum - 1) * 2 + (patchNum >= 128 ? 1 : 0);
 
+    // Handle General MIDI
+    } else if (bankName.startsWith("GM")) {
+      retvals[0] = 121;
+      retvals[1] = (patchNum >= 128 ? 1 : 0);
+
     // OK, I give up.
     } else {
       System.out.println("Couldn't parse bank specification: " + bankName);
