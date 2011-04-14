@@ -75,6 +75,70 @@
 	application, such as lighting boards.</p>
       
     </div>
+
+    <div class="qna">
+      <h2>Why Qualm?</h2>
+      
+      <p>Most musical theater productions that need to execute lots of
+        patch changes accomplish this by using a synthesizer module
+        that can store a large number of patches in sequence, and
+        then using a pedal that can send a "patch advance" command to
+        the module.  Qualm tries to improve on this model in several
+        ways.</p>
+
+      <p><strong>No specialized hardware.</strong>  Not all
+        synthesizer modules have the "patch advance" feature, and not
+        all pedals are easily programmed to submit the correct
+        commands.  Sometimes, budgetary concerns mean that you have
+        to make do with older equipment.  With Qualm, any MIDI
+        synthesizer module can be used (or even the keyboard's
+        built-in bank of patches), and any computer that can run Java
+        can be utilized. Some form of computer MIDI interface will be
+        needed, but a USB-MIDI cable can often be found cheaply.
+        Qualm even can make the need for special pedals
+        un-necessary, since the trigger to move to the next patch
+        can be anything from an unused button to a designated key on
+        the keyboard.</p>
+
+      <p><strong>Support for reversing a patch.</strong>  If you
+        accidentally advance to the next patch out of sequence, it
+        can be difficult to recover while the orchestra continues to
+        play.  Qualm makes it possible to define a "patch reverse"
+        trigger, so that the keyboard player can quickly get back to
+        the correct part of the score.</p>
+
+      <p><strong>Better rehearsal support.</strong>  During
+        rehearsals, or when trying to fine-tune parts of the show,
+        the music director will often want the entire orchestra to
+        start at a given measure number.  This requires the keyboard
+        player to dial in the correct patch, which with an older
+        approach can be time-consuming as he searches through
+        hundreds of changes for the correct spot.  With Qualm,
+        getting the keyboards set up for measure 125 of song 13 is as
+        simple as typing "13.125".</p>
+	
+      <p><strong>Easier handling of large numbers of patches.</strong>
+        There is limited space in the synthesizer's user banks, so
+        trying to put all the patch changes in a row can quickly eat
+        up all the memory.  In addition, some synth modules require
+        that if a patch is used frequently, it needs to be copied
+        separately into different areas.  As such, later alteration of
+        the sound requires a time-consuming and potentially
+        error-prone operation of copying the patch into all the places
+        where it is used.  With Qualm, each patch is set up
+        individually, and Qualm handles switching among them in the
+        correct order.</p>
+
+      <p><strong>Versatility.</strong> With Qualm, you can make patch
+	changes occur through any kind of trigger, and can even set up
+	special triggers for different sections of the show, so that
+	the act of playing the score automatically advances to the
+	next patch when a fast change is required.  Multiple keyboards
+	can be set up to share a single synthesizer module, and can be
+	linked together so that when one keyboard changes to a new
+	patch it will automatically switch the sound on another
+	keyboard.</p>
+    </div>
     
     <div class="qna">
       <h2>What is Qualm written in?</h2>
