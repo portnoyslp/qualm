@@ -55,10 +55,19 @@ public class RolandXV5080Delegate extends RolandDelegate {
       // expansion boards increase the bank LSB by one for high-valued patches.
       retvals[1] = (expansionNum - 1) * 2 + (patchNum >= 128 ? 1 : 0);
 
-    // Handle General MIDI
+    // Handle General MIDI 2 -- The bank GM-x will specify the variant
+    // for the GM2 specification.  Using 'GM-0' or 'GM' for the bank
+    // uses the default.
     } else if (bankName.startsWith("GM")) {
       retvals[0] = 121;
-      retvals[1] = (patchNum >= 128 ? 1 : 0);
+      retvals[1] = 0;
+      if (bankName.startsWith("GM-")) {
+	try {
+	  retvals[1] = Integer.parseInt(bankName.substring(3));
+	} catch (RuntimeException re) {
+	  System.out.println("Couldn't parse GM variant specification: " + bankName);
+	}
+      }
 
     // OK, I give up.
     } else {
