@@ -1,0 +1,13 @@
+*.html
+WARNINGS
+*.aux
+*.idx
+*.pl
+*.tex
+*.pdf
+*.png
+*.ilg
+*.ind
+*.log
+*.out
+*.css
