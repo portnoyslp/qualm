@@ -161,7 +161,6 @@ public class EventTemplate {
     return false;
   }
 
-  private String[] names = { "NoteOn", "NoteOff", "Control", "Clear" };
   public String getTypeDesc() { 
     String name = null;
     if (type == ShortMessage.NOTE_ON) { name = "NoteOn"; }

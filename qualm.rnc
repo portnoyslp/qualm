@@ -83,13 +83,13 @@ trigger =
 note-on =
   element note-on {
     attribute channel { channelSpec },
-    attribute note { noteSpec },
+    attribute note? { noteSpec },
     empty
   }
 note-off =
   element note-off {
     attribute channel { channelSpec },
-    attribute note { noteSpec },
+    attribute note? { noteSpec },
     empty
   }
 noteSpec = string

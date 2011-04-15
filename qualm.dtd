@@ -63,11 +63,11 @@
 <!ELEMENT note-on EMPTY>
 <!ATTLIST note-on 
 	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED
-	  note CDATA #REQUIRED>
+	  note CDATA #IMPLIED>
 <!ELEMENT note-off EMPTY>
 <!ATTLIST note-off 
 	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED 
-	  note CDATA #REQUIRED>
+	  note CDATA #IMPLIED>
 <!ELEMENT control-change EMPTY>
 <!ATTLIST control-change
 	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED
