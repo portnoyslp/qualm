@@ -265,6 +265,9 @@ public class QualmREPL extends Thread {
 	String filename = st.nextToken();
 	loadFilename( filename );
 
+      } else if (lowerCase.startsWith("showxml")) {
+    	  QDataXMLReader.outputXML(mainQC().getQData(),System.out);
+    	  
       } else if (lowerCase.startsWith("reload")) {
 	loadFilename( inputFilename );
 
@@ -379,9 +382,9 @@ public class QualmREPL extends Thread {
 
     try {
       if (remove)
-	removePlugin(tok);
+    	  removePlugin(tok);
       else
-	addPlugin(tok);
+    	  addPlugin(tok);
     } catch (IllegalArgumentException iae) {
       System.out.println("Unable to create or identify requested plugin '" + tok + "; ignoring request.");
     }

@@ -92,7 +92,7 @@ public class KorgDelegate extends ChangeDelegate
 	{
 	  msg = new ShortMessage();
 	  msg.setMessage( ShortMessage.CONTROL_CHANGE,
-			  channel, 32, lsb );//TODO
+			  channel, 32, lsb );
 
 	  if (midiOut != null)
 	    midiOut.send(msg, -1);
