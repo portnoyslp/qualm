@@ -169,7 +169,10 @@ public class EventTemplate {
     return name;
   }
   public int channel() { return channel; }
+  public int getExtra1() { return extra1Min; } 
   public String range1() { return extra1Min + "-" + extra1Max; }
+  public int getExtra2() { return extra2Max; }
+  public String range2() { return extra2Min + "-" + extra2Max; }
 
   protected int type;
   protected int channel;
