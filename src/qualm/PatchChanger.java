@@ -10,6 +10,11 @@ public class PatchChanger {
     changeDelegate = cd;
   }
   private ChangeDelegate getChangeDelegate() { return changeDelegate; }
+  private void setRequestedDevice(String deviceName) {
+    this.requestedDevice = deviceName;
+  }
+  private String getRequestedDevice() { return requestedDevice; }
+  
 
   private static String delegatePrefix = "qualm.delegates.";
 
@@ -17,7 +22,10 @@ public class PatchChanger {
 				      String deviceType ) {
     if (changer[ch] == null)
       changer[ch] = new PatchChanger();
-
+    if (deviceType != null) {
+      changer[ch].setRequestedDevice(deviceType);
+    }
+    
     // for now, we default to "Standard" as the device type
     
     if (deviceType == null) 
@@ -57,7 +65,6 @@ public class PatchChanger {
     }
   }
 
-  // and now the only important method
   public static synchronized void patchChange( ProgramChangeEvent pce,
 					       Receiver midiOut ) {
     int ch = pce.getChannel();
@@ -69,7 +76,6 @@ public class PatchChanger {
     }
   }
 
-  // ... except for this one, which is also fairly important
   public static synchronized void noteWindowChange( NoteWindowChangeEvent nwce,
 						    Receiver midiOut ) {
     int ch = nwce.getChannel();
@@ -81,8 +87,12 @@ public class PatchChanger {
     }
   }
 
-
+  public static String getRequestedDeviceForChannel(int ch) {
+    return changer[ch].getRequestedDevice();
+  }
+  
   private ChangeDelegate changeDelegate;
+  private String requestedDevice;
 
   private static PatchChanger[] changer = new PatchChanger[16];
 

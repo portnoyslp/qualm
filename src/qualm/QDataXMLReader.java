@@ -88,7 +88,9 @@ public class QDataXMLReader implements XMLReader {
           // output the channel
           atts.clear();
           atts.addAttribute(nsu, "num", "num", null, Integer.toString(i+1));
-          // TODO: add device-type
+          String dev = PatchChanger.getRequestedDeviceForChannel(i);
+          if (dev != null)
+            atts.addAttribute(nsu, "device", "device", null, dev);
           nl(4);
           handler.startElement(nsu, "channel", "channel", atts);
           parse(qd.channels[i]);

@@ -2,9 +2,6 @@
 *.class
 *~
 test-results/*.txt
-build/qualm.properties
-build/qualm.manifest
-build/qualm.properties.tmpl
-build/qualm/testing
+build/*
 
 
