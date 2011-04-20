@@ -46,7 +46,7 @@ public class EventMapTester extends TestCase {
     fm.addOutgoing((long)1600, ShortMessage.CONTROL_CHANGE, 0, 65, 10 ); //wrong control; ignore
     fm.addOutgoing((long)1700, ShortMessage.CONTROL_CHANGE, 0, 64, 50 );
     fm.run();
-    java.util.ArrayList msgs = fm.receivedMessages();
+    java.util.ArrayList<Object> msgs = fm.receivedMessages();
 
     fm.printOutMessages();
 

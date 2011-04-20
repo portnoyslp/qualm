@@ -94,7 +94,7 @@ public class QAdvancer {
 
     // OK, now we have to back out the patch.  We're going to create
     // new PCE's which will back out the patch whenever possible.
-    Collection out = new ArrayList();
+    Collection<Object> out = new ArrayList<Object>();
     Iterator iter = currentCue.getEvents().iterator();
     while (iter.hasNext()) {
       Object obj = iter.next();

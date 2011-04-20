@@ -15,7 +15,7 @@ public class EventMapper {
   public void setToTemplates(List templateList) { mapToList = templateList; }
   public void addToTemplate(EventTemplate t) { 
     if (mapToList == null) {
-      mapToList = new ArrayList();
+      mapToList = new ArrayList<EventTemplate>();
     }
     mapToList.add(t);
   }

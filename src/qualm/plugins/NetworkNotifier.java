@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.*;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 
 /*
@@ -18,7 +17,7 @@ public class NetworkNotifier extends BaseQualmPlugin
   implements CueChangeNotification,PatchChangeNotification,EventMapperNotification {
 
   public NetworkNotifier() {
-    sockets = new ArrayList();
+    sockets = new ArrayList<Socket>();
     try {
       serverSocket = new ServerSocket(NetworkNotificationProtocol.PORT);
     } catch (IOException e) {
@@ -130,7 +129,7 @@ public class NetworkNotifier extends BaseQualmPlugin
   }
 
   ServerSocket serverSocket = null;
-  ArrayList sockets = null;
+  ArrayList<Socket> sockets = null;
   Thread serverThread = null;
 
 }

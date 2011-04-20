@@ -17,16 +17,16 @@ import junit.framework.Assert;
 public class FakeMIDI implements Receiver,Transmitter {
 
   Receiver receiver;
-  ArrayList incomingMessages;
-  ArrayList outgoingMessages;
+  ArrayList<Object> incomingMessages;
+  ArrayList<Object> outgoingMessages;
   long baseTime;
   
   public FakeMIDI( ) {
     // set the base time for the run.
     baseTime = System.currentTimeMillis();
     
-    incomingMessages = new ArrayList();
-    outgoingMessages = new ArrayList();
+    incomingMessages = new ArrayList<Object>();
+    outgoingMessages = new ArrayList<Object>();
   }
 
   public void addOutgoing(long ts, ShortMessage sm) {
@@ -58,7 +58,7 @@ public class FakeMIDI implements Receiver,Transmitter {
     addOutgoing(ts,sm);
   }
 
-  public ArrayList receivedMessages() {
+  public ArrayList<Object> receivedMessages() {
     return incomingMessages;
   }
   public void printOutMessages() {

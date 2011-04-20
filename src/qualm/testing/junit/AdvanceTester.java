@@ -46,7 +46,7 @@ public class AdvanceTester extends TestCase {
     fm.addOutgoing((long)3000, ShortMessage.NOTE_ON, 0, 59, 10); // reverse; to P1
     fm.addOutgoing((long)4500, ShortMessage.NOTE_ON, 0, 59, 10); // reverse; same patch
     fm.run();
-    java.util.ArrayList msgs = fm.receivedMessages();
+    java.util.ArrayList<Object> msgs = fm.receivedMessages();
 
     fm.printOutMessages();
 
@@ -90,7 +90,7 @@ public class AdvanceTester extends TestCase {
     fm.addOutgoing((long)1500, ShortMessage.NOTE_ON, 0, 59, 10); // reverse; to P1
     fm.run();
 
-    java.util.ArrayList msgs = fm.receivedMessages();
+    java.util.ArrayList<Object> msgs = fm.receivedMessages();
 
     fm.printOutMessages();
 

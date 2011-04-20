@@ -37,7 +37,7 @@ public class MasterController implements Receiver {
 
   public void gotoCue(String cueName) {
     // send all controllers to the cue number named in the line
-    Collection sentPCs = new ArrayList();
+    Collection sentPCs = new ArrayList<Object>();
 
     Collection changes = changesForCue( cueName );
 

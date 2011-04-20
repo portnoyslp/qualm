@@ -35,12 +35,12 @@ public class QController implements Receiver {
 
   private void setupTriggers() {
     // set up triggers
-    triggers = new ArrayList();
+    triggers = new ArrayList<Trigger>();
     addCurrentTriggers();
     buildTriggerCache();
 
     // also build the list of pending triggers...
-    triggerThreads = new ArrayList();
+    triggerThreads = new ArrayList<Thread>();
   }
 
   public Collection changesForCue( String cuenum ) {
@@ -161,11 +161,11 @@ public class QController implements Receiver {
   }
 
   Trigger cachedTriggers[] = {};
-  List triggers;
-  List triggerThreads;
+  List<Trigger> triggers;
+  List<Thread> triggerThreads;
 
   private void buildTriggerCache() {
-    List l = new ArrayList();
+    List<Trigger> l = new ArrayList<Trigger>();
     l.addAll(triggers);
     cachedTriggers = (Trigger[]) l.toArray(new Trigger[]{});
   }
