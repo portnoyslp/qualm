@@ -5,8 +5,6 @@ import junit.textui.*;
 
 import javax.sound.midi.*;
 
-import qualm.*;
-
 public class StreamTester extends TestCase {
   public StreamTester (String name) { super(name); }
 

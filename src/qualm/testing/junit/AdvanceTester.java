@@ -5,8 +5,6 @@ import junit.textui.*;
 
 import javax.sound.midi.*;
 
-import qualm.*;
-
 public class AdvanceTester extends TestCase {
   public AdvanceTester (String name) { super(name); }
 

@@ -1,5 +1,7 @@
 package qualm.testing.junit;
 
+import java.util.List;
+
 import junit.framework.*;
 import junit.textui.*;
 
@@ -45,15 +47,15 @@ public class QDataLoaderTester extends TestCase {
 
     // check streams
     assertTrue(2==qd.getCueStreams().size());
-    QStream s = (QStream) ((java.util.List)qd.getCueStreams()).get(0);
+    QStream s = (QStream) ((List<QStream>)qd.getCueStreams()).get(0);
     assertEquals(s.getTitle(),"First_Stream");
     assertTrue(2==s.getCues().size());
-    s = (QStream)  ((java.util.List)qd.getCueStreams()).get(1);
+    s = (QStream)  ((List<QStream>)qd.getCueStreams()).get(1);
     assertEquals(s.getTitle(),"Second_Stream");
     assertTrue(2==s.getCues().size());
 
     // random check of cues
-    s = (QStream) ((java.util.List)qd.getCueStreams()).get(0);
+    s = (QStream) ((List<QStream>)qd.getCueStreams()).get(0);
     Cue q = (Cue) s.getCues().first();
     assertEquals(q,new Cue("3.1"));
     assertEquals(q.getEvents().size(), 1);
@@ -64,7 +66,7 @@ public class QDataLoaderTester extends TestCase {
     assertTrue(q.getTriggers().toString().indexOf("dly2500")>-1);
 
 
-    s = (QStream) ((java.util.List)qd.getCueStreams()).get(1);
+    s = (QStream) ((List<QStream>)qd.getCueStreams()).get(1);
     q = (Cue) s.getCues().last();
     assertEquals(q,new Cue("2.10"));
     assertEquals(q.getEvents().size(), 2);

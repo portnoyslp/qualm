@@ -1,7 +1,5 @@
 package qualm.delegates;
 
-import qualm.*;
-
 public class RolandXV5080Delegate extends RolandDelegate {
   protected int[] _bankSelector ( String bankName, int patchNum ) {
     int retvals[] = new int[2];

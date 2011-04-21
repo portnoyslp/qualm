@@ -5,8 +5,6 @@ import junit.textui.*;
 
 import javax.sound.midi.*;
 
-import qualm.*;
-
 public class EventMapTester extends TestCase {
   public EventMapTester (String name) { super(name); }
 

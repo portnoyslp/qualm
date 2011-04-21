@@ -125,10 +125,10 @@ public class QAdvancer {
       return (Cue)cueset.first();
 
     // 'increment' measure number.
-    SortedSet tail = cueset.tailSet( new Cue( current.getSong(),
+    SortedSet<Cue> tail = cueset.tailSet( new Cue( current.getSong(),
 					      current.getMeasure() + "_" ));
     if (tail.size() == 0) return null;
-    return (Cue)tail.first();
+    return tail.first();
   }
 
 
@@ -156,7 +156,7 @@ public class QAdvancer {
     int programCount = 0, noteWindowCount = 0;
 
     // go backward through the events
-    SortedSet headset = qstream.getCues();
+    SortedSet<Cue> headset = qstream.getCues();
     Cue loopQ = currentCue;
     while ( loopQ != null && (programCount < channelCount ||
 			      noteWindowCount < channelCount) ) {
@@ -191,7 +191,7 @@ public class QAdvancer {
       if (headset.size() == 0) {
 	loopQ = null;
       } else
-	loopQ = (Cue)headset.last();
+	loopQ = headset.last();
     }
 
     List<QEvent> out = new ArrayList<QEvent>();

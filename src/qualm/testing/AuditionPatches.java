@@ -220,7 +220,6 @@ public class AuditionPatches {
 
   public static void main(String[] args) {
 
-    String inputPort = null;
     String outputPort = null;
 
     int i = 0;

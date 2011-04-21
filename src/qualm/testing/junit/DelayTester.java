@@ -5,8 +5,6 @@ import junit.textui.*;
 
 import javax.sound.midi.*;
 
-import qualm.*;
-
 public class DelayTester extends TestCase {
   public DelayTester (String name) { super(name); }
 
