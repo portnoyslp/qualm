@@ -33,19 +33,19 @@ public class AuditionPatches {
 	
 	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 30 );
 	midiOut.send(out, -1);
-	Thread.currentThread().sleep(500);
+	Thread.sleep(500);
 	out.setMessage( ShortMessage.NOTE_ON, 0, 64, 52 );
 	midiOut.send(out, -1);
-	Thread.currentThread().sleep(500);
+	Thread.sleep(500);
 	out.setMessage( ShortMessage.NOTE_ON, 0, 67, 74 );
 	midiOut.send(out, -1);
-	Thread.currentThread().sleep(500);
+	Thread.sleep(500);
 	out.setMessage( ShortMessage.NOTE_ON, 0, 72, 96 );
 	midiOut.send(out, -1);
       }
 
       // let it ring before silencing.
-      Thread.currentThread().sleep(holdTime);
+      Thread.sleep(holdTime);
 
       if (playSingle) {
 	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 0 );
@@ -64,7 +64,7 @@ public class AuditionPatches {
       }
       
       // delay another 1s
-      Thread.currentThread().sleep(800);
+      Thread.sleep(800);
     } catch (Exception e) {
       e.printStackTrace();
       return;

@@ -39,7 +39,7 @@ public class PlayAllPatches {
 	midiOut.send(out, -1);
       
 	// delay 1s
-	Thread.currentThread().sleep(1000);
+	Thread.sleep(1000);
 
 	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 0 );
 	midiOut.send(out, -1);
@@ -51,7 +51,7 @@ public class PlayAllPatches {
 	midiOut.send(out, -1);
 
 	// delay another 1s
-	Thread.currentThread().sleep(1000);
+	Thread.sleep(1000);
       } catch (Exception e) {
 	e.printStackTrace();
 	return;

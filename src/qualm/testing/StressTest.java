@@ -56,7 +56,7 @@ public class StressTest {
       t.sendMessage(midiOut);
 
       // pause for a little while
-      try {  Thread.currentThread().sleep(1500); } catch (InterruptedException ie) { }
+      try {  Thread.sleep(1500); } catch (InterruptedException ie) { }
 
     }
     System.out.println("Done with cues");
