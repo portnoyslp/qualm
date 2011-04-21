@@ -8,11 +8,11 @@ import java.util.*;
 
 public class QStream {
   String title;
-  SortedSet cues;
+  SortedSet<Cue> cues;
 
   public QStream() {
     title = defaultTitle();
-    cues = new TreeSet();
+    cues = new TreeSet<Cue>();
   } 
 
   private String defaultTitle() { return "QStream"+hashCode(); }
@@ -23,7 +23,7 @@ public class QStream {
   public void addCue( Cue cue ) {
     cues.add(cue);
   }
-  public SortedSet getCues() { return cues; }
+  public SortedSet<Cue> getCues() { return cues; }
 
   public void dump() {
     System.out.println("Que Stream " + getTitle() + ":");

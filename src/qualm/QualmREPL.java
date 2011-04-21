@@ -15,9 +15,9 @@ public class QualmREPL extends Thread {
 
   MasterController controller = null;
   BufferedReader reader;
-  ArrayList cuePlugins = new ArrayList();
-  ArrayList patchPlugins = new ArrayList();
-  ArrayList mapperPlugins = new ArrayList();
+  ArrayList<QualmPlugin> cuePlugins = new ArrayList<QualmPlugin>();
+  ArrayList<QualmPlugin> patchPlugins = new ArrayList<QualmPlugin>();
+  ArrayList<QualmPlugin> mapperPlugins = new ArrayList<QualmPlugin>();
   String inputFilename = null;
   boolean isRunning = false;
 
@@ -40,10 +40,10 @@ public class QualmREPL extends Thread {
     QData qdata = Qualm.loadQDataFromFilename(filename);
 
     // For each cue stream, start a controller
-    Iterator iter = qdata.getCueStreams().iterator();
+    Iterator<QStream> iter = qdata.getCueStreams().iterator();
     while (iter.hasNext()) {
       QController qc = new QController( controller.getMidiOut(), 
-					(QStream)iter.next(),
+					iter.next(),
 					qdata );
       addController(qc);
     }
@@ -76,12 +76,12 @@ public class QualmREPL extends Thread {
 
   public void savePreferences() {
     // store all the preferences information
-    Iterator iter;
+    Iterator<QualmPlugin> iter;
     boolean init;
     String out;
 
     // combine cue and patch plugins into one
-    Set plugins = new HashSet();
+    Set<String> plugins = new HashSet<String>();
     iter = patchPlugins.iterator();
     while (iter.hasNext()) {
       Object obj = iter.next();
@@ -96,10 +96,10 @@ public class QualmREPL extends Thread {
     // and now we get all the names at once...
     init = true;
     out = "";
-    iter = plugins.iterator();
-    while (iter.hasNext()) {
+    Iterator<String> nameIter = plugins.iterator();
+    while (nameIter.hasNext()) {
       if (!init) out+=",";
-      out += (String)iter.next();
+      out += nameIter.next();
     }
     prefs.put(PLUGINS_PREFKEY,out);
   }
@@ -108,12 +108,12 @@ public class QualmREPL extends Thread {
     String prompt="";
     
     boolean init = true;
-    Iterator iter = controller.getControllers().iterator();
+    Iterator<QController> iter = controller.getControllers().iterator();
     while (iter.hasNext()) {
       if (!init) prompt += " | ";
       init = false;
 
-      QController qc = (QController)iter.next();
+      QController qc = iter.next();
       Cue curQ = qc.getCurrentCue();
       Cue pendingQ = qc.getPendingCue();
 
@@ -168,7 +168,7 @@ public class QualmREPL extends Thread {
   }
 
   boolean readlineHandlesPrompt = false;
-  public void updateCue( Collection c ) {
+  public void updateCue( Collection<QEvent> c ) {
     // signal new cue...If we could interrupt the readline call, that
     // would be best, but instead we'll just print the new prompt
     // string.
@@ -179,9 +179,9 @@ public class QualmREPL extends Thread {
 
     // print out the cue changes
     QData qd = mainQC().getQData();
-    Iterator iter = c.iterator();
+    Iterator<QEvent> iter = c.iterator();
     while(iter.hasNext()) {
-      Object obj = iter.next();
+      QEvent obj = iter.next();
       if (obj instanceof ProgramChangeEvent) {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
 	int ch = pce.getChannel();
@@ -318,7 +318,7 @@ public class QualmREPL extends Thread {
   }
 
   private void removePlugin(String name) {
-    Iterator iter;
+    Iterator<QualmPlugin> iter;
     boolean found = false;
 
     iter = cuePlugins.iterator();
@@ -363,7 +363,7 @@ public class QualmREPL extends Thread {
 
     tok = st.nextToken();
     if (tok.equals("list")) {
-      Iterator iter = cuePlugins.iterator();
+      Iterator<QualmPlugin> iter = cuePlugins.iterator();
       while (iter.hasNext())
 	System.out.println("cue " + iter.next().getClass().getName());
 
@@ -393,21 +393,21 @@ public class QualmREPL extends Thread {
 
   public void handleCuePlugins() {
     // Tell any CueChangeNotification plugins
-    Iterator iter = cuePlugins.iterator();
+    Iterator<QualmPlugin> iter = cuePlugins.iterator();
     while (iter.hasNext()) {
       ((qualm.plugins.CueChangeNotification)iter.next()).cueChange(controller);
     }
   }
 
   public void handlePatchPlugins(int ch, String name, Patch p) {
-    Iterator iter = patchPlugins.iterator();
+    Iterator<QualmPlugin> iter = patchPlugins.iterator();
     while (iter.hasNext()) {
       ((qualm.plugins.PatchChangeNotification)iter.next()).patchChange(ch,name,p);
     }
   }
 
   public void handleMapperPlugins() {
-    Iterator iter = mapperPlugins.iterator();
+    Iterator<QualmPlugin> iter = mapperPlugins.iterator();
     while (iter.hasNext()) {
       ((qualm.plugins.EventMapperNotification)iter.next()).activeEventMapper(controller);
     }

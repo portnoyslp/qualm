@@ -8,8 +8,8 @@ import gnu.getopt.LongOpt;
 
 public class Qualm {
   
-  public static Map parseALSAClients() {
-    Map ret = new HashMap();
+  public static Map<Integer, String> parseALSAClients() {
+    Map<Integer, String> ret = new HashMap<Integer, String>();
     String filename = "/proc/asound/seq/clients";
     try {
       BufferedReader br = 
@@ -47,7 +47,7 @@ public class Qualm {
     boolean useAlsa = true;
       
     /* Find ALSA MIDI ports */
-    List midiports = new ArrayList();
+    List<MidiDevice.Info> midiports = new ArrayList<MidiDevice.Info>();
     int i;
     for(i = 0; i<infos.length; i++) {
       if (infos[i].getName().startsWith("ALSA MIDI")) {
@@ -67,15 +67,15 @@ public class Qualm {
       System.exit(1);
     }
       
-    Map clientMap = null;
+    Map<Integer, String> clientMap = null;
     if (useAlsa) clientMap = Qualm.parseALSAClients();
 
     if (listPorts) 
       System.out.println("MIDI ports:");
       
-    Iterator iter = midiports.iterator();
+    Iterator<MidiDevice.Info> iter = midiports.iterator();
     while (iter.hasNext()) {
-      MidiDevice.Info info = (MidiDevice.Info)iter.next();
+      MidiDevice.Info info = iter.next();
       String dev = info.getName();
       String cName = info.getDescription();
       if (useAlsa) {

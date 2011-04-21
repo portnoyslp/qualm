@@ -2,13 +2,13 @@ package qualm;
 
 import java.util.Collection;
 
-public class Cue implements Comparable {
+public class Cue implements Comparable<Cue> {
 
   String song;
   String measure;
-  Collection triggers;
-  Collection events;
-  Collection eventMaps;
+  Collection<Trigger> triggers;
+  Collection<QEvent> events;
+  Collection<EventMapper> eventMaps;
 
   public Cue( String s, String m ) { song=s; measure=m; }
   public Cue( String ts ) { 
@@ -23,14 +23,14 @@ public class Cue implements Comparable {
   public String getSong() { return song; }
   public String getMeasure() { return measure; }
 
-  public Collection getTriggers() { return triggers; }
-  public void setTriggers(Collection t) { triggers=t; }
+  public Collection<Trigger> getTriggers() { return triggers; }
+  public void setTriggers(Collection<Trigger> t) { triggers=t; }
 
-  public Collection getEventMaps() { return eventMaps; }
-  public void setEventMaps(Collection t) { eventMaps=t; }
+  public Collection<EventMapper> getEventMaps() { return eventMaps; }
+  public void setEventMaps(Collection<EventMapper> t) { eventMaps=t; }
 
-  public Collection getEvents() { return events; }
-  public void setEvents(Collection t) { events=t; }
+  public Collection<QEvent> getEvents() { return events; }
+  public void setEvents(Collection<QEvent> t) { events=t; }
 
   public String getCueNumber() { return song + "." + measure; }
   
@@ -105,8 +105,7 @@ public class Cue implements Comparable {
     return compareTimeStamps(s1,m1,s2,m2);
   }
 
-  public int compareTo(Object c) {
-    Cue q = (Cue) c;
+  public int compareTo(Cue q) {
     return compareTimeStamps( getSong(), getMeasure(),
 			      q.getSong(), q.getMeasure() );
   }

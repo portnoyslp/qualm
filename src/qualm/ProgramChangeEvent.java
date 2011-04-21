@@ -1,6 +1,6 @@
 package qualm;
 
-public class ProgramChangeEvent {
+public class ProgramChangeEvent implements QEvent {
   int channel;
   Patch patch;
   Patch previousPatch = null;

@@ -121,10 +121,9 @@ public class SWTNetwork extends Thread {
   private void updateLabels() {
     // Use cueLabels and patchLabels to update
     String text = "";
-    Iterator iter = cueLabels.values().iterator();
+    Iterator<NetworkNotificationProtocol> iter = cueLabels.values().iterator();
     while (iter.hasNext()) {
-      NetworkNotificationProtocol nnp = 
-	(NetworkNotificationProtocol) iter.next();
+      NetworkNotificationProtocol nnp = iter.next();
     
       String labelStr = nnp.currentCue + " - " +
 	(nnp.pendingCue.equals("") ? "END" : nnp.pendingCue);
@@ -141,8 +140,7 @@ public class SWTNetwork extends Thread {
     text = "";
     iter = patchLabels.values().iterator();
     while (iter.hasNext()) {
-      NetworkNotificationProtocol nnp = 
-	(NetworkNotificationProtocol) iter.next();
+      NetworkNotificationProtocol nnp = iter.next();
     
       String labelStr = nnp.patchDescription;
           

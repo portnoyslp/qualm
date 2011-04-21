@@ -1,7 +1,6 @@
 package qualm;
 
 import javax.sound.midi.*;
-import java.util.*;
 
 // Verbose Receiver -- adds debugging to output messages.
 

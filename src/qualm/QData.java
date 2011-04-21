@@ -8,15 +8,15 @@ import java.util.*;
 
 public class QData {
   String[] channels;
-  Map patches;
-  Collection cueStreams;
+  Map<String, Patch> patches;
+  Collection<QStream> cueStreams;
   String title;
 
   public QData( ) {
     title = null;
     channels = new String[16];
-    patches = new HashMap();
-    cueStreams = new ArrayList();
+    patches = new HashMap<String, Patch>();
+    cueStreams = new ArrayList<QStream>();
   } 
 
   public String getTitle() { return title; }
@@ -27,32 +27,32 @@ public class QData {
     PatchChanger.addPatchChanger( num, deviceType );
   }
   public String[] getMidiChannels() { return channels; }
-  public Collection getPatches() { return patches.values(); }
+  public Collection<Patch> getPatches() { return patches.values(); }
 
   public void addPatch( Patch p ) {
     patches.put( p.getID(), p );
   }
   public Patch lookupPatch( String id ) { 
-    return (Patch)patches.get(id); 
+    return patches.get(id); 
   }
 
   public void addCueStream(QStream qs) {
     cueStreams.add(qs);
   }
-  public Collection getCueStreams() { return cueStreams; }
+  public Collection<QStream> getCueStreams() { return cueStreams; }
 
   public void dump() {
     System.out.println("Data dump for " + getTitle());
     // Create lists of patches, channels.
-    List out = new ArrayList();
+    List<String> out = new ArrayList<String>();
     for (int i=0; i<channels.length;i++) 
       if (channels[i]!=null) out.add("(" + i + ")" + channels[i]);
     System.out.println("  ch:" + out);
     System.out.println("  pl:" + patches.values());
 
-    Iterator iter = cueStreams.iterator();
+    Iterator<QStream> iter = cueStreams.iterator();
     while(iter.hasNext()) {
-      ((QStream)iter.next()).dump();
+      iter.next().dump();
     }
   }
   
@@ -67,22 +67,18 @@ public class QData {
     // problem with a master plot is that we can't use the normal
     // comparator for Cues, we have to use our own which will allow
     // two cues with the same measure number to exist in the set.
-    Comparator cueCompare = new Comparator() {
-	public int compare(Object a, Object b) {
-	  if (a instanceof Cue &&
-	      b instanceof Cue) {
-	    int out = ((Cue)a).compareTo(b);
-	    if (out == 0)
-	      return a.hashCode()-b.hashCode();
-	    else return out;
-	  }
-	  return ((Comparable)a).compareTo(b);
+    Comparator cueCompare = new Comparator<Cue>() {
+	public int compare(Cue a, Cue b) {
+	  int out = a.compareTo(b);
+	  if (out == 0)
+	    return a.hashCode()-b.hashCode();
+	  else return out;
 	}
       };
-    TreeSet masterCues = new TreeSet(cueCompare);
-    Iterator iter = cueStreams.iterator();
+    TreeSet<Cue> masterCues = new TreeSet<Cue>(cueCompare);
+    Iterator<QStream> iter = cueStreams.iterator();
     while(iter.hasNext()) {
-      masterCues.addAll(  ((QStream)iter.next()).getCues() );
+      masterCues.addAll( iter.next().getCues() );
     }
     
     // next, we go through the cues' patch changes, and populate them
@@ -91,14 +87,14 @@ public class QData {
     NoteWindowChangeEvent[] noteWindowChangeEvents =
       new NoteWindowChangeEvent[16];
 
-    iter = masterCues.iterator();
-    while (iter.hasNext()) {
-      Cue q = (Cue)(iter.next());
+    Iterator<Cue> cueIter = masterCues.iterator();
+    while (cueIter.hasNext()) {
+      Cue q = cueIter.next();
 
-      Collection events = q.getEvents();
-      Iterator j = events.iterator();
+      Collection<QEvent> events = q.getEvents();
+      Iterator<QEvent> j = events.iterator();
       while(j.hasNext()) {
-	Object obj = j.next();
+	QEvent obj = j.next();
 	if (obj instanceof ProgramChangeEvent) {
 	  ProgramChangeEvent pce = (ProgramChangeEvent)obj;
 	  int ch = pce.getChannel();

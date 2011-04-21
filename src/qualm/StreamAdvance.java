@@ -1,6 +1,6 @@
 package qualm;
 
-public class StreamAdvance {
+public class StreamAdvance implements QEvent {
   String streamID;
   String song;
   String measure;

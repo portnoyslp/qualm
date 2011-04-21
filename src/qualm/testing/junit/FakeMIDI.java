@@ -61,9 +61,10 @@ public class FakeMIDI implements Receiver,Transmitter {
   public ArrayList<Object> receivedMessages() {
     return incomingMessages;
   }
+  
   public void printOutMessages() {
     System.out.println("Number of msgs received == " + incomingMessages.size());
-    java.util.Iterator iter = incomingMessages.iterator();
+    java.util.Iterator<Object> iter = incomingMessages.iterator();
     while (iter.hasNext()) {
       TimestampedMsg tsm = (TimestampedMsg)iter.next();
       System.out.println("   " + tsm.timestamp + "ms: " +
@@ -97,9 +98,9 @@ public class FakeMIDI implements Receiver,Transmitter {
     MasterController mc = new MasterController ( fm );
     mc.setSilentErrorHandling(false);
 
-    Iterator iter = qd.getCueStreams().iterator();
+    Iterator<QStream> iter = qd.getCueStreams().iterator();
     while (iter.hasNext()) 
-      mc.addController (new QController( fm, (QStream)iter.next(), qd ));
+      mc.addController (new QController( fm, iter.next(), qd ));
     fm.setReceiver( mc );
     mc.setDebugMIDI(true);
 

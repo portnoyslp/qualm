@@ -148,10 +148,9 @@ public class ExampleNetworkReader extends Thread {
   private void updateLabels() {
     // Use cueLabels and patchLabels to update
     String text = "";
-    Iterator iter = cueLabels.values().iterator();
+    Iterator<NetworkNotificationProtocol> iter = cueLabels.values().iterator();
     while (iter.hasNext()) {
-      NetworkNotificationProtocol nnp = 
-	(NetworkNotificationProtocol) iter.next();
+      NetworkNotificationProtocol nnp = iter.next();
     
       curQ.setText(nnp.currentCue);
       nextQ.setText("  -> " + (nnp.pendingCue.equals("") ? "END" : nnp.pendingCue));

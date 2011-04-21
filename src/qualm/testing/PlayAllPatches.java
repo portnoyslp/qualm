@@ -12,16 +12,16 @@ public class PlayAllPatches {
   static Receiver midiOut = null;
 
   public static void loopThroughPatches(QData data) {
-    TreeSet patches = new TreeSet( new Comparator() { 
+    TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator() { 
 	public int compare(Object a, Object b) {
 	  return ((Patch)a).getID().compareTo( ((Patch)b).getID() );
 	}	  
       });
     patches.addAll(data.getPatches());
 
-    Iterator iter = patches.iterator();
+    Iterator<Patch> iter = patches.iterator();
     while(iter.hasNext()) {
-      Patch p = (Patch)iter.next();
+      Patch p = iter.next();
       System.out.println("Switching to patch " + p);
       PatchChanger.patchChange( new ProgramChangeEvent( 0, p ),
 				midiOut );

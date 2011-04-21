@@ -54,9 +54,9 @@ public class NetworkNotifier extends BaseQualmPlugin
 						    patch.getDescription()));
   }
   public void cueChange(MasterController master) { 
-    Iterator iter = master.getControllers().iterator();
+    Iterator<QController> iter = master.getControllers().iterator();
     while (iter.hasNext()) {
-      QController qc = (QController)iter.next();
+      QController qc = iter.next();
       Cue curQ = qc.getCurrentCue();
       Cue pendingQ = qc.getPendingCue();
 
@@ -66,16 +66,16 @@ public class NetworkNotifier extends BaseQualmPlugin
     }
   }
   public void activeEventMapper(MasterController master) {
-    Iterator iter = master.getControllers().iterator();
+    Iterator<QController> iter = master.getControllers().iterator();
     while (iter.hasNext()) {
-      QController qc = (QController)iter.next();
+      QController qc = iter.next();
       Cue curQ = qc.getCurrentCue();
-      Iterator mapIter = curQ.getEventMaps().iterator();
+      Iterator<EventMapper> mapIter = curQ.getEventMaps().iterator();
       while (mapIter.hasNext()) {
-        EventMapper em = (EventMapper) mapIter.next();
+        EventMapper em = mapIter.next();
         
         EventTemplate fromET = em.getFromTemplate();
-        List toETList = em.getToTemplateList();
+        List<EventTemplate> toETList = em.getToTemplateList();
         
         // we're only going to broadcast note changes for now
         if (fromET.getTypeDesc().equals("NoteOn")) {
@@ -103,10 +103,10 @@ public class NetworkNotifier extends BaseQualmPlugin
   }
 
   private void broadcast(String output) {
-    Iterator sockIter = sockets.iterator();
+    Iterator<Socket> sockIter = sockets.iterator();
     while (sockIter.hasNext()) {
       try {
-	Socket sock = (Socket)sockIter.next();
+	Socket sock = sockIter.next();
 	PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
 	out.println(output);
       } catch (IOException ioe) { 
@@ -119,9 +119,9 @@ public class NetworkNotifier extends BaseQualmPlugin
     // close all the sockets.
     try { 
       serverSocket.close();
-      Iterator sockIter = sockets.iterator();
+      Iterator<Socket> sockIter = sockets.iterator();
       while (sockIter.hasNext()) {
-	((Socket)sockIter.next()).close();
+	sockIter.next().close();
       }
     } catch (IOException ioe) {
       System.out.println("Couldn't shut down sockets: " + ioe);

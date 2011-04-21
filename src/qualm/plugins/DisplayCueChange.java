@@ -2,10 +2,8 @@ package qualm.plugins;
 
 import qualm.*;
 import javax.swing.*;
-import java.awt.event.*;
 import java.awt.BorderLayout;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 public class DisplayCueChange extends BaseQualmPlugin implements CueChangeNotification {
@@ -30,13 +28,13 @@ public class DisplayCueChange extends BaseQualmPlugin implements CueChangeNotifi
   public void cueChange(MasterController master) {
     // get all the current and pending cues
     String text = "<html><body>";
-    Iterator iter = master.getControllers().iterator();
+    Iterator<QController> iter = master.getControllers().iterator();
     boolean init = true;
     while (iter.hasNext()) {
       if (!init) text +="<br>";
       init = false;
 
-      QController qc = (QController)iter.next();
+      QController qc = iter.next();
       Cue curQ = qc.getCurrentCue();
       Cue pendingQ = qc.getPendingCue();
 

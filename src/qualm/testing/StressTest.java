@@ -15,37 +15,33 @@ public class StressTest {
     // get all the cues.  Note that we can't use the normal
     // comparator for Cues, we have to use our own which will allow
     // two cues with the same measure number to exist in the set.
-    Comparator cueCompare = new Comparator() {
-	public int compare(Object a, Object b) {
-	  if (a instanceof Cue &&
-	      b instanceof Cue) {
-	    int out = ((Cue)a).compareTo(b);
-	    if (out == 0)
-	      return a.hashCode()-b.hashCode();
-	    else return out;
-	  }
-	  return ((Comparable)a).compareTo(b);
+    Comparator<Cue> cueCompare = new Comparator<Cue>() {
+	public int compare(Cue a, Cue b) {
+	  int out = a.compareTo(b);
+	  if (out == 0)
+	    return a.hashCode()-b.hashCode();
+	  else return out;
 	}
       };
-    TreeSet cues = new TreeSet(cueCompare);
-    Iterator iter = data.getCueStreams().iterator();
+    TreeSet<Cue> cues = new TreeSet<Cue>(cueCompare);
+    Iterator<QStream> iter = data.getCueStreams().iterator();
     while (iter.hasNext()) {
-      QStream qs = (QStream)iter.next();
+      QStream qs = iter.next();
       cues.addAll(qs.getCues());
     }
 
     // OK, we now have a list of cues
-    iter = cues.iterator();
-    while (iter.hasNext()) {
-      Cue q = (Cue)iter.next();
+    Iterator<Cue> cIter = cues.iterator();
+    while (cIter.hasNext()) {
+      Cue q = cIter.next();
       System.out.println("Executing trigger for " + q);
       
       // for each cue, pick a trigger and execute it.
-      Collection coll = q.getTriggers();
-      Iterator j = coll.iterator();
+      Collection<Trigger> coll = q.getTriggers();
+      Iterator<Trigger> j = coll.iterator();
       Trigger trig = null;
       while(j.hasNext()) {
-	trig = (Trigger)j.next();
+	trig = j.next();
 	if (!trig.getReverse())
 	  break;
       }

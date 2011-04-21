@@ -7,14 +7,14 @@ import javax.sound.midi.Receiver;
 public class MasterController implements Receiver {
 
   Receiver midiOut;
-  SortedMap controllers;
+  SortedMap<String, QController> controllers;
   QualmREPL REPL = null;
   boolean debugMIDI = false;
   boolean silentErrorHandling = true;
 
   public MasterController( Receiver out ) {
     midiOut = new VerboseReceiver(out);
-    controllers = new TreeMap();
+    controllers = new TreeMap<String, QController>();
   }
 
   public Receiver getMidiOut() { return midiOut; }
@@ -37,9 +37,9 @@ public class MasterController implements Receiver {
 
   public void gotoCue(String cueName) {
     // send all controllers to the cue number named in the line
-    Collection sentPCs = new ArrayList<Object>();
+    Collection<QEvent> sentPCs = new ArrayList<QEvent>();
 
-    Collection changes = changesForCue( cueName );
+    Collection<QEvent> changes = changesForCue( cueName );
 
     // we now have a set of cued ProgramChangeEvents.  We need to
     // determine which is the best (most recent) program change for
@@ -50,9 +50,9 @@ public class MasterController implements Receiver {
     boolean[] sent_nw_on_channel = new boolean[16];
     for(int i=0;i<16;i++) sent_nw_on_channel[i] = false;
 
-    Iterator iter = changes.iterator();
+    Iterator<QEvent> iter = changes.iterator();
     while(iter.hasNext()) {
-      Object obj = iter.next();
+      QEvent obj = iter.next();
       if (obj instanceof ProgramChangeEvent) {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
 	int channel = pce.getChannel();
@@ -96,10 +96,10 @@ public class MasterController implements Receiver {
     PatchChanger.noteWindowChange(nwce, midiOut);
   }
   
-  protected void sendEvents( Collection c ) {
-    Iterator i = c.iterator();
+  protected void sendEvents( Collection<QEvent> c ) {
+    Iterator<QEvent> i = c.iterator();
     while(i.hasNext()) {
-      Object obj = i.next();
+      QEvent obj = i.next();
       if (obj instanceof ProgramChangeEvent)
 	sendPatchChange((ProgramChangeEvent)obj);
       else if (obj instanceof NoteWindowChangeEvent) 
@@ -113,7 +113,7 @@ public class MasterController implements Receiver {
   }
 
   public void advanceStream(StreamAdvance sa) {
-    QController qc = (QController) controllers.get(sa.getStreamID());
+    QController qc = controllers.get(sa.getStreamID());
     if (qc == null) 
       return;
     
@@ -121,13 +121,13 @@ public class MasterController implements Receiver {
       qc.advancePatch();
     else {
       String cueName = sa.getCueNumber();
-      Collection changes = qc.changesForCue( cueName );
+      Collection<QEvent> changes = qc.changesForCue( cueName );
       sendEvents(changes);
     }
   }
 
-  private Collection changesForCue( String cueName ) {
-    Collection changes = new TreeSet( new Comparator() {
+  private Collection<QEvent> changesForCue( String cueName ) {
+    Collection<QEvent> changes = new TreeSet( new Comparator() {
 	// compare cues in reverse order
 	public int compare( Object a, Object b) {
 	  CuedEvent ca = (CuedEvent)a;
@@ -146,19 +146,19 @@ public class MasterController implements Receiver {
 	}
       });
     
-    Iterator iter = controllers.values().iterator();
+    Iterator<QController> iter = controllers.values().iterator();
     while (iter.hasNext()) {
-      QController qc = (QController)iter.next();
+      QController qc = iter.next();
       changes.addAll(qc.changesForCue( cueName ));
     }
     return changes;
   }
 
-  public Collection getControllers() {
+  public Collection<QController> getControllers() {
     return controllers.values();
   }
 
-  public void updateCue(Collection c) {
+  public void updateCue(Collection<QEvent> c) {
     if (REPL != null)
       REPL.updateCue( c );
   }
@@ -174,9 +174,9 @@ public class MasterController implements Receiver {
   public void setSilentErrorHandling(boolean flag) { silentErrorHandling=flag; }
 
   public void close() {
-    Iterator i = controllers.values().iterator();
+    Iterator<QController> i = controllers.values().iterator();
     while (i.hasNext()) 
-      ((Receiver)i.next()). close();
+      i.next(). close();
   }
 
   public void send(MidiMessage midiMessage, long ts) {
@@ -184,9 +184,9 @@ public class MasterController implements Receiver {
       System.out.println( MidiMessageParser.messageToString(midiMessage) );
 
     try {
-      Iterator i = controllers.values().iterator();
+      Iterator<QController> i = controllers.values().iterator();
       while (i.hasNext()) 
-	((Receiver)i.next()). send(midiMessage, ts);
+	i.next(). send(midiMessage, ts);
     } catch (RuntimeException re) {
       // if we get any errors from the data send, we can either print
       // them and continue, or throw a monkey wrench

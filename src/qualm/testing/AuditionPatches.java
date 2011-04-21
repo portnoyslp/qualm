@@ -98,10 +98,10 @@ public class AuditionPatches {
     System.out.flush();
   }
 
-  private static TreeSet setupPatches() {
-    TreeSet patches = new TreeSet( new Comparator() { 
-	public int compare(Object a, Object b) {
-	  return ((Patch)a).getID().compareTo( ((Patch)b).getID() );
+  private static TreeSet<Patch> setupPatches() {
+    TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator<Patch>() { 
+	public int compare(Patch a, Patch b) {
+	  return a.getID().compareTo( b.getID() );
 	}	  
       });
     patches.addAll(data.getPatches());
@@ -114,10 +114,10 @@ public class AuditionPatches {
     BufferedReader reader = 
       new BufferedReader( new InputStreamReader( System.in ));
 
-    Iterator iter = patches.iterator();
+    Iterator<Patch> iter = patches.iterator();
     boolean startRun = true;
     while(iter.hasNext()) {
-      Patch p = (Patch)iter.next();
+      Patch p = iter.next();
       prompt(p);
       
       boolean advancePatch = false;
@@ -175,22 +175,22 @@ public class AuditionPatches {
     }
   }
 
-  private static Iterator iteratorForPatch(Patch target, TreeSet patches) {
+  private static Iterator<Patch> iteratorForPatch(Patch target, TreeSet patches) {
     // the insanity of having to replace an iterator on the
     // fly.  Here we go through to find the new patch, but
     // we really need to find the *preceding* patch so we
     // know when to stop.
     Patch preceding = null;
-    Iterator iter2 = patches.iterator();
+    Iterator<Patch> iter2 = patches.iterator();
     while (iter2.hasNext()) {
-      Patch q = (Patch)iter2.next();
+      Patch q = iter2.next();
       if (q.equals(target)) break;
       preceding = q;
     }
     iter2 = patches.iterator();
     if (preceding != null) {
       while (iter2.hasNext()) {
-	if ( ((Patch)iter2.next()).equals(preceding) )
+	if ( iter2.next().equals(preceding) )
 	  break;
       }
     }

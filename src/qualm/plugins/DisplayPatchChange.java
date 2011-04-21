@@ -2,7 +2,6 @@ package qualm.plugins;
 
 import qualm.*;
 import javax.swing.*;
-import java.awt.event.*;
 import java.awt.BorderLayout;
 
 import java.util.TreeMap;
@@ -10,7 +9,7 @@ import java.util.Iterator;
 
 public class DisplayPatchChange extends BaseQualmPlugin implements PatchChangeNotification {
 
-  TreeMap channels = new TreeMap();
+  TreeMap<Integer,String> channels = new TreeMap<Integer,String>();
 
   public DisplayPatchChange() {
     showDisplay();
@@ -38,14 +37,14 @@ public class DisplayPatchChange extends BaseQualmPlugin implements PatchChangeNo
 
     // get all the current and pending cues
     String text = "<html><body>";
-    Iterator iter = channels.keySet().iterator();
+    Iterator<Integer> iter = channels.keySet().iterator();
     boolean init = true;
     while (iter.hasNext()) {
       if (!init) text +="<br>";
       init = false;
 
-      channelNum = (Integer)iter.next();
-      text += (String)channels.get(channelNum);
+      channelNum = iter.next();
+      text += channels.get(channelNum);
     }
 
     // display the new cue info in big 'ol letters
