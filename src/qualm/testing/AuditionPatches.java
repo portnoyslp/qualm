@@ -109,7 +109,7 @@ public class AuditionPatches {
   }
 
   public static void loopThroughPatches() {
-    TreeSet patches = setupPatches(); 
+    TreeSet<Patch> patches = setupPatches(); 
 
     BufferedReader reader = 
       new BufferedReader( new InputStreamReader( System.in ));
@@ -175,7 +175,7 @@ public class AuditionPatches {
     }
   }
 
-  private static Iterator<Patch> iteratorForPatch(Patch target, TreeSet patches) {
+  private static Iterator<Patch> iteratorForPatch(Patch target, TreeSet<Patch> patches) {
     // the insanity of having to replace an iterator on the
     // fly.  Here we go through to find the new patch, but
     // we really need to find the *preceding* patch so we

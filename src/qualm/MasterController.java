@@ -127,7 +127,7 @@ public class MasterController implements Receiver {
   }
 
   private Collection<QEvent> changesForCue( String cueName ) {
-    Collection<QEvent> changes = new TreeSet( new Comparator() {
+    Collection<QEvent> changes = new TreeSet<QEvent>( new Comparator() {
 	// compare cues in reverse order
 	public int compare( Object a, Object b) {
 	  CuedEvent ca = (CuedEvent)a;

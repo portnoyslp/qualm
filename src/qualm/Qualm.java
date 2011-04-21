@@ -265,7 +265,7 @@ public class Qualm {
 	System.exit(0);
       
       if (inputInfo == null ) {
-	if (inputInfo.equals(DEFAULT_PORT)) {
+	if (inputPort.equals(DEFAULT_PORT)) {
 	  System.out.println("Unable to load default input port");
 	} else {
 	  System.out.println("Unable to load input port named " + inputPort);

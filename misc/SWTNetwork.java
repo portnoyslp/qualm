@@ -25,8 +25,8 @@ public class SWTNetwork extends Thread {
 
 
   public SWTNetwork() {
-    cueLabels = new TreeMap();
-    patchLabels = new TreeMap();
+    cueLabels = new TreeMap<String,NetworkNotificationProtocol>();
+    patchLabels = new TreeMap<Integer,NetworkNotificationProtocol>();
   }
 
   public void connectToServer(String[] args) {
@@ -163,7 +163,8 @@ public class SWTNetwork extends Thread {
   Display display;
   Shell shell;
   Font font;
-  TreeMap cueLabels, patchLabels;
+  TreeMap<String,NetworkNotificationProtocol> cueLabels;
+  TreeMap<Integer,NetworkNotificationProtocol> patchLabels;
   Text cues, patches;
   String cueFilter,patchFilter;
   Socket inputSocket;
