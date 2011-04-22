@@ -35,7 +35,7 @@
   </target>
 
   <target name="compile" depends="init">
-    <javac debug="true" source="1.4" destdir="${builddir}" srcdir="${srcdir}"
+    <javac debug="true" source="1.5" destdir="${builddir}" srcdir="${srcdir}"
 	   excludes="qualm/testing/junit/**">
       <classpath refid="classpath"/>
     </javac>
