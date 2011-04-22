@@ -179,7 +179,7 @@ public class QDataLoader extends DefaultHandler {
 	if (foundPatch == null) {
 	  System.err.println("WARNING: could not find patch with id " + patchID);
 	}
-	eventSet.add(new ProgramChangeEvent(ch, foundPatch));
+	eventSet.add(new ProgramChangeEvent(ch, curQ, foundPatch));
 
       } else if (qName.equals("note-window-change")) {
 	currentElement = "note-window-change element";
@@ -199,10 +199,10 @@ public class QDataLoader extends DefaultHandler {
 	if (bottom == null && top == null) {
 	  System.err.println("WARNING: found note-window-change specifying neither top nor bottom");
 	}
-	eventSet.add(new NoteWindowChangeEvent(ch, bottomNote, topNote));
+	eventSet.add(new NoteWindowChangeEvent(ch, curQ, bottomNote, topNote));
 
       } else if (qName.equals("advance")) {
-	StreamAdvance sa = new StreamAdvance( attributes.getValue("stream"));
+	StreamAdvance sa = new StreamAdvance( attributes.getValue("stream"), curQ );
 	if (attributes.getValue("song")!=null)
 	  sa.setSong(attributes.getValue("song"));
 	if (attributes.getValue("measure")!=null)

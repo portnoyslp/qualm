@@ -12,9 +12,9 @@ public class PlayAllPatches {
   static Receiver midiOut = null;
 
   public static void loopThroughPatches(QData data) {
-    TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator() { 
-	public int compare(Object a, Object b) {
-	  return ((Patch)a).getID().compareTo( ((Patch)b).getID() );
+    TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator<Patch>() { 
+	public int compare(Patch a, Patch b) {
+	  return a.getID().compareTo( b.getID() );
 	}	  
       });
     patches.addAll(data.getPatches());

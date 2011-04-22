@@ -1,11 +1,18 @@
 package qualm;
 
-public class ProgramChangeEvent implements QEvent {
+public class ProgramChangeEvent extends QEvent {
   int channel;
   Patch patch;
   Patch previousPatch = null;
-  public ProgramChangeEvent( int ch, Patch p ) { channel = ch; patch = p; }
-  public int getChannel() { return channel; }
+  
+  public ProgramChangeEvent( int ch, Patch p ) {
+    setChannel(ch);
+    patch = p;
+  }
+  public ProgramChangeEvent( int ch, Cue q, Patch p ) { 
+    this(ch,p); setCue(q);
+  }
+  
   public Patch getPatch() { return patch; }
 
   public String toString() { 

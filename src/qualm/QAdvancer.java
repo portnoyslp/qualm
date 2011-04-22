@@ -147,10 +147,10 @@ public class QAdvancer {
     for(int i=0; i<midiChans.length; i++) 
       if (midiChans[i] != null) channelCount++;
       
-    CuedProgramChangeEvent[] events = new CuedProgramChangeEvent[ midiChans.length ];
+    ProgramChangeEvent[] events = new ProgramChangeEvent[ midiChans.length ];
     for(int i=0; i<events.length; i++) events[i] = null;
 
-    CuedNoteWindowChangeEvent[] nwcEvents = new CuedNoteWindowChangeEvent[ midiChans.length ];
+    NoteWindowChangeEvent[] nwcEvents = new NoteWindowChangeEvent[ midiChans.length ];
     for(int i=0; i<nwcEvents.length; i++) nwcEvents[i] = null;
 
     int programCount = 0, noteWindowCount = 0;
@@ -166,11 +166,9 @@ public class QAdvancer {
 	if (programCount < channelCount &&
 	    obj instanceof ProgramChangeEvent) {
 	  ProgramChangeEvent pce = (ProgramChangeEvent)obj;
-	  CuedProgramChangeEvent ev = 
-	    new CuedProgramChangeEvent(loopQ, pce);
-	  int ch = ev.getChannel();
+	  int ch = pce.getChannel();
 	  if (events[ch] == null && midiChans[ch] != null) {
-	    events[ch] = ev;
+	    events[ch] = pce;
 	    programCount++;
 	  }
 	}
@@ -179,8 +177,7 @@ public class QAdvancer {
 	  NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
 	  int ch = nwce.getChannel();
 	  if (nwcEvents[ch] == null && midiChans[ch] != null) {
-	    nwcEvents[ch] = new CuedNoteWindowChangeEvent
-	      (loopQ, nwce.getPostStateEvent());
+	    nwcEvents[ch] = nwce.getPostStateEvent();
 	    noteWindowCount++;
 	  }
 	}

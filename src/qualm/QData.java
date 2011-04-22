@@ -67,7 +67,7 @@ public class QData {
     // problem with a master plot is that we can't use the normal
     // comparator for Cues, we have to use our own which will allow
     // two cues with the same measure number to exist in the set.
-    Comparator cueCompare = new Comparator<Cue>() {
+    Comparator<Cue> cueCompare = new Comparator<Cue>() {
 	public int compare(Cue a, Cue b) {
 	  int out = a.compareTo(b);
 	  if (out == 0)

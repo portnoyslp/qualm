@@ -1,16 +1,16 @@
 package qualm;
 
-public class NoteWindowChangeEvent implements QEvent {
+public class NoteWindowChangeEvent extends QEvent {
   int channel;
   Integer bottomNote, topNote; // either or both may be null
   NoteWindowChangeEvent previous = null;
 
-  public NoteWindowChangeEvent( int ch, Integer bottomNote, Integer topNote )
+  public NoteWindowChangeEvent( int ch, Cue q, Integer bottomNote, Integer topNote )
   {
-    channel = ch; this.bottomNote = bottomNote; this.topNote = topNote;
+    this.bottomNote = bottomNote; this.topNote = topNote;
+    setCue(q);
+    setChannel(ch);
   }
-
-  public int getChannel() { return channel; }
 
   public Integer getBottomNote() { return bottomNote; }
 
@@ -56,7 +56,7 @@ public class NoteWindowChangeEvent implements QEvent {
     }
 
     // create an event to set this top and bottom note
-    return new NoteWindowChangeEvent(this.channel, bottom, top);
+    return new NoteWindowChangeEvent(this.channel, getCue(), bottom, top);
   }
 
   /**

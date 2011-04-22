@@ -127,11 +127,9 @@ public class MasterController implements Receiver {
   }
 
   private Collection<QEvent> changesForCue( String cueName ) {
-    Collection<QEvent> changes = new TreeSet<QEvent>( new Comparator() {
+    Collection<QEvent> changes = new TreeSet<QEvent>( new Comparator<QEvent>() {
 	// compare cues in reverse order
-	public int compare( Object a, Object b) {
-	  CuedEvent ca = (CuedEvent)a;
-	  CuedEvent cb = (CuedEvent)b;
+	public int compare( QEvent ca, QEvent cb) {
 	  // first, compare cue numbers
 	  int val = cb.getCue().compareTo(ca.getCue());
 	  if (val != 0)
@@ -141,7 +139,7 @@ public class MasterController implements Receiver {
 	  val = ca.getClass().getName().compareTo(cb.getClass().getName());
 	  if (val != 0)
 	    return val;
-	  // if same cue number and runtime class, compare by channel
+	  // if same cue number and runtime class, use channel to disambiguate more.	  
 	  return ca.getChannel()-cb.getChannel();
 	}
       });
