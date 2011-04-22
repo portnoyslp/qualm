@@ -23,7 +23,7 @@ public class PlayAllPatches {
     while(iter.hasNext()) {
       Patch p = iter.next();
       System.out.println("Switching to patch " + p);
-      PatchChanger.patchChange( new ProgramChangeEvent( 0, p ),
+      PatchChanger.patchChange( new ProgramChangeEvent( 0, null, p ),
 				midiOut );
       // play a chord: c4, e4, g4, c5 (60,64,67,72)
       

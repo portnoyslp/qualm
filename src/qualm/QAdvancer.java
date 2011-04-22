@@ -101,7 +101,7 @@ public class QAdvancer {
       if (obj instanceof ProgramChangeEvent) {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
 	if (pce.getPreviousPatch() != null)
-	  out.add( new ProgramChangeEvent(pce.getChannel(),
+	  out.add( new ProgramChangeEvent(pce.getChannel(), pce.getCue(),
 					  pce.getPreviousPatch()) );
       }
       else if (obj instanceof NoteWindowChangeEvent) {

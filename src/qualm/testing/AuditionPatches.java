@@ -81,13 +81,13 @@ public class AuditionPatches {
 
     // for each patch, we play it, then we play the default, then we
     // play the original again with a slightly longer hold time.
-    PatchChanger.patchChange( new ProgramChangeEvent( 0, p ),
+    PatchChanger.patchChange( new ProgramChangeEvent( 0, null, p ),
 			      midiOut );
     playArpeggiatedChord( 1000 );
-    PatchChanger.patchChange( new ProgramChangeEvent( 0, defaultPatch ),
+    PatchChanger.patchChange( new ProgramChangeEvent( 0, null, defaultPatch ),
 			      midiOut );
     playArpeggiatedChord( 1000 );
-    PatchChanger.patchChange( new ProgramChangeEvent( 0, p ),
+    PatchChanger.patchChange( new ProgramChangeEvent( 0, null, p ),
 			      midiOut );
     playArpeggiatedChord( 1500 );
     

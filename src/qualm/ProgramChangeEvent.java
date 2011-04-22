@@ -5,12 +5,8 @@ public class ProgramChangeEvent extends QEvent {
   Patch patch;
   Patch previousPatch = null;
   
-  public ProgramChangeEvent( int ch, Patch p ) {
-    setChannel(ch);
-    patch = p;
-  }
   public ProgramChangeEvent( int ch, Cue q, Patch p ) { 
-    this(ch,p); setCue(q);
+    setChannel(ch); setCue(q); patch=p;
   }
   
   public Patch getPatch() { return patch; }
