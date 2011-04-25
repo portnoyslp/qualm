@@ -29,18 +29,18 @@ public class QAdvancer {
   public Cue getCurrentCue() { return currentCue; }
   public Cue getPendingCue() { return pendingCue; }
 
-  // returns Collection of CuedEvent
-  public Collection switchToMeasure(String cueName) { 
+  // returns Collection of events
+  public Collection<QEvent> switchToMeasure(String cueName) { 
     Cue newQ = new Cue( cueName );
-    SortedSet cueset = qstream.getCues();
-    SortedSet head = cueset.headSet(newQ);
+    SortedSet<Cue> cueset = qstream.getCues();
+    SortedSet<Cue> head = cueset.headSet(newQ);
 
     // set the new current cue
     if (head.size() == 0) {
       // the first cue is always the first in the stream
-      currentCue = (Cue)cueset.first();
+      currentCue = cueset.first();
     } else {
-      currentCue = (Cue)head.last();
+      currentCue = head.last();
     }
 
     // if our target cue equals the next one, then use it instead.
@@ -54,14 +54,14 @@ public class QAdvancer {
     return revertPatchChanges();
   }
   
-  public Collection advancePatch() {
+  public Collection<QEvent> advancePatch() {
     // send the next patch change
     Cue nextCue = findNextCue(currentCue);
 
     if (nextCue != null) {
 
       // find patch changes
-      Collection events = getPatchChanges(nextCue);
+      Collection<QEvent> events = getPatchChanges(nextCue);
       
       currentCue = nextCue;
 
@@ -71,15 +71,15 @@ public class QAdvancer {
       return events;
 
     } else {
-      return new ArrayList(); 
+      return new ArrayList<QEvent>(); 
     }
 
   } 
 
-  public Collection reversePatch() {
+  public Collection<QEvent> reversePatch() {
     // find previous patch
-    SortedSet cueset = qstream.getCues();
-    SortedSet head;
+    SortedSet<Cue> cueset = qstream.getCues();
+    SortedSet<Cue> head;
     try { 
       head = cueset.headSet ( currentCue ) ;
     } 
@@ -90,18 +90,18 @@ public class QAdvancer {
     if (head.size() == 0)
       return switchToMeasure( "0.0" );
 
-    Cue previousCue = (Cue)head.last();
+    Cue previousCue = head.last();
 
     // OK, now we have to back out the patch.  We're going to create
     // new PCE's which will back out the patch whenever possible.
-    Collection out = new ArrayList();
-    Iterator iter = currentCue.getEvents().iterator();
+    Collection<QEvent> out = new ArrayList<QEvent>();
+    Iterator<QEvent> iter = currentCue.getEvents().iterator();
     while (iter.hasNext()) {
-      Object obj = iter.next();
+      QEvent obj = iter.next();
       if (obj instanceof ProgramChangeEvent) {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
 	if (pce.getPreviousPatch() != null)
-	  out.add( new ProgramChangeEvent(pce.getChannel(),
+	  out.add( new ProgramChangeEvent(pce.getChannel(), pce.getCue(),
 					  pce.getPreviousPatch()) );
       }
       else if (obj instanceof NoteWindowChangeEvent) {
@@ -114,21 +114,21 @@ public class QAdvancer {
     return out;
   }
 
-  private Collection getPatchChanges(Cue c) {
+  private Collection<QEvent> getPatchChanges(Cue c) {
     return c.getEvents();
   }
 
   private Cue findNextCue( Cue current ) {
-    SortedSet cueset = qstream.getCues();
+    SortedSet<Cue> cueset = qstream.getCues();
 
     if (current == null)
       return (Cue)cueset.first();
 
     // 'increment' measure number.
-    SortedSet tail = cueset.tailSet( new Cue( current.getSong(),
+    SortedSet<Cue> tail = cueset.tailSet( new Cue( current.getSong(),
 					      current.getMeasure() + "_" ));
     if (tail.size() == 0) return null;
-    return (Cue)tail.first();
+    return tail.first();
   }
 
 
@@ -141,36 +141,34 @@ public class QAdvancer {
    * @return a <code>Collection</code> of
    * <code>CuedEvent</code> objects. */
 
-  private Collection revertPatchChanges() {
+  private Collection<QEvent> revertPatchChanges() {
     String[] midiChans = qdata.getMidiChannels();
     int channelCount = 0;
     for(int i=0; i<midiChans.length; i++) 
       if (midiChans[i] != null) channelCount++;
       
-    CuedProgramChangeEvent[] events = new CuedProgramChangeEvent[ midiChans.length ];
+    ProgramChangeEvent[] events = new ProgramChangeEvent[ midiChans.length ];
     for(int i=0; i<events.length; i++) events[i] = null;
 
-    CuedNoteWindowChangeEvent[] nwcEvents = new CuedNoteWindowChangeEvent[ midiChans.length ];
+    NoteWindowChangeEvent[] nwcEvents = new NoteWindowChangeEvent[ midiChans.length ];
     for(int i=0; i<nwcEvents.length; i++) nwcEvents[i] = null;
 
     int programCount = 0, noteWindowCount = 0;
 
     // go backward through the events
-    SortedSet headset = qstream.getCues();
+    SortedSet<Cue> headset = qstream.getCues();
     Cue loopQ = currentCue;
     while ( loopQ != null && (programCount < channelCount ||
 			      noteWindowCount < channelCount) ) {
-      Iterator iter = loopQ.getEvents().iterator();
+      Iterator<QEvent> iter = loopQ.getEvents().iterator();
       while (iter.hasNext()) {
-	Object obj = iter.next();
+	QEvent obj = iter.next();
 	if (programCount < channelCount &&
 	    obj instanceof ProgramChangeEvent) {
 	  ProgramChangeEvent pce = (ProgramChangeEvent)obj;
-	  CuedProgramChangeEvent ev = 
-	    new CuedProgramChangeEvent(loopQ, pce);
-	  int ch = ev.getChannel();
+	  int ch = pce.getChannel();
 	  if (events[ch] == null && midiChans[ch] != null) {
-	    events[ch] = ev;
+	    events[ch] = pce;
 	    programCount++;
 	  }
 	}
@@ -179,8 +177,7 @@ public class QAdvancer {
 	  NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
 	  int ch = nwce.getChannel();
 	  if (nwcEvents[ch] == null && midiChans[ch] != null) {
-	    nwcEvents[ch] = new CuedNoteWindowChangeEvent
-	      (loopQ, nwce.getPostStateEvent());
+	    nwcEvents[ch] = nwce.getPostStateEvent();
 	    noteWindowCount++;
 	  }
 	}
@@ -191,10 +188,10 @@ public class QAdvancer {
       if (headset.size() == 0) {
 	loopQ = null;
       } else
-	loopQ = (Cue)headset.last();
+	loopQ = headset.last();
     }
 
-    List out = new ArrayList();
+    List<QEvent> out = new ArrayList<QEvent>();
     for(int i=0; i<events.length; i++) {
       if (events[i] != null)
 	out.add(events[i]);

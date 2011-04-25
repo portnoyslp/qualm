@@ -103,17 +103,17 @@ public class QDataXMLReader implements XMLReader {
       // the list of patches
       nl(2);
       handler.startElement(nsu, "patches", "patches", null);
-      Iterator iter = qd.getPatches().iterator();
+      Iterator<Patch> iter = qd.getPatches().iterator();
       while (iter.hasNext()) {
-        parse((Patch)(iter.next()));			
+        parse(iter.next());			
       }
       nl(2);
       handler.endElement(nsu, "patches", "patches");
 
       // and the streams
-      iter = qd.getCueStreams().iterator();
-      while (iter.hasNext()) {
-        parse((QStream)(iter.next()));			
+      Iterator<QStream> sIter = qd.getCueStreams().iterator();
+      while (sIter.hasNext()) {
+        parse(sIter.next());			
       }
 
       nl(0);
@@ -157,9 +157,9 @@ public class QDataXMLReader implements XMLReader {
     atts.addAttribute(nsu, "id", "id", null, qs.getTitle());
     nl(2);
     handler.startElement(nsu, "cue-stream", "cue-stream", atts);
-    Iterator iter = qs.getCues().iterator();
+    Iterator<Cue> iter = qs.getCues().iterator();
     while (iter.hasNext()) {
-      parse((Cue)(iter.next()));		
+      parse(iter.next());		
     }
     nl(2);
     handler.endElement(nsu, "cue-stream", "cue-stream");
@@ -174,9 +174,9 @@ public class QDataXMLReader implements XMLReader {
 
     nl(6);
     handler.startElement(nsu, "events", "events", null);
-    Iterator iter = cue.getEvents().iterator();
+    Iterator<QEvent> iter = cue.getEvents().iterator();
     while (iter.hasNext()) {
-      Object obj = iter.next();
+      QEvent obj = iter.next();
       if (obj instanceof ProgramChangeEvent) {
         parse((ProgramChangeEvent)obj);
       }
@@ -187,14 +187,14 @@ public class QDataXMLReader implements XMLReader {
     nl(6);
     handler.endElement(nsu, "events", "events");
 
-    iter = cue.getEventMaps().iterator();
-    while (iter.hasNext()) {
-      parse((EventMapper)(iter.next()));
+    Iterator<EventMapper> emIter = cue.getEventMaps().iterator();
+    while (emIter.hasNext()) {
+      parse(emIter.next());
     }
 
-    iter = cue.getTriggers().iterator();
-    while (iter.hasNext()) {
-      parse((Trigger)(iter.next()));
+    Iterator<Trigger> tIter = cue.getTriggers().iterator();
+    while (tIter.hasNext()) {
+      parse(tIter.next());
     }
 
     nl(4);
@@ -229,11 +229,11 @@ public class QDataXMLReader implements XMLReader {
     handler.startElement(nsu, "map-from", "map-from", null);
     parse(em.getFromTemplate());
     handler.endElement(nsu, "map-from", "map-from");
-    Iterator iter = em.getToTemplateList().iterator();
+    Iterator<EventTemplate> iter = em.getToTemplateList().iterator();
     while (iter.hasNext()) {
       nl(8);
       handler.startElement(nsu, "map-to", "map-to", null);
-      parse((EventTemplate)iter.next());
+      parse(iter.next());
       handler.endElement(nsu, "map-to", "map-to");
     }
     nl(6);

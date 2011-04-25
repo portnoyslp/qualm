@@ -5,8 +5,6 @@ import junit.textui.*;
 
 import javax.sound.midi.*;
 
-import qualm.*;
-
 public class DelayTester extends TestCase {
   public DelayTester (String name) { super(name); }
 
@@ -50,7 +48,7 @@ public class DelayTester extends TestCase {
     fm.addOutgoing((long)1000, ShortMessage.NOTE_ON, 0, 60, 10); // switch to P2; should be ignored
     fm.addOutgoing((long)3000, ShortMessage.NOTE_ON, 0, 59, 10); // reverse; to P1
     fm.run();
-    java.util.ArrayList msgs = fm.receivedMessages();
+    java.util.ArrayList<Object> msgs = fm.receivedMessages();
 
     fm.printOutMessages();
 

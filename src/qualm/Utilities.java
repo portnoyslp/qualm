@@ -1,11 +1,10 @@
 package qualm;
 
-import java.io.*;
 import java.util.*;
 
 // Useful utility procedures that can be used from various places.
 public class Utilities { 
-  private static List numList = 
+  private static List<String> numList = 
     Arrays.asList( new String[] { 
         "c","c#","d","d#","e","f","f#","g","g#","a","a#","b"
       });

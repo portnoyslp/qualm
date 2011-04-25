@@ -24,9 +24,9 @@ public class ExampleNetworkReader extends Thread {
   }
 
   public ExampleNetworkReader() {
-    cueLabels = new TreeMap();
-    patchLabels = new TreeMap();
-    eventMappers = new HashMap();
+    cueLabels = new TreeMap<String,NetworkNotificationProtocol>();
+    patchLabels = new TreeMap<Integer,NetworkNotificationProtocol>();
+    eventMappers = new HashMap<Integer,NetworkNotificationProtocol>();
   }
 
   public String parseArgs(String[] args) {
@@ -148,10 +148,9 @@ public class ExampleNetworkReader extends Thread {
   private void updateLabels() {
     // Use cueLabels and patchLabels to update
     String text = "";
-    Iterator iter = cueLabels.values().iterator();
+    Iterator<NetworkNotificationProtocol> iter = cueLabels.values().iterator();
     while (iter.hasNext()) {
-      NetworkNotificationProtocol nnp = 
-	(NetworkNotificationProtocol) iter.next();
+      NetworkNotificationProtocol nnp = iter.next();
     
       curQ.setText(nnp.currentCue);
       nextQ.setText("  -> " + (nnp.pendingCue.equals("") ? "END" : nnp.pendingCue));
@@ -194,8 +193,9 @@ public class ExampleNetworkReader extends Thread {
   Display display;
   Shell shell;
   Font font, bigFont;
-  TreeMap cueLabels, patchLabels;
-  HashMap eventMappers;
+  TreeMap<String,NetworkNotificationProtocol> cueLabels;
+  TreeMap<Integer,NetworkNotificationProtocol> patchLabels;
+  HashMap<Integer,NetworkNotificationProtocol> eventMappers;
   Text patches;
   Label curQ, nextQ;
   String keyboard; // either K1 or K2; used as a filter for both cues and patches.

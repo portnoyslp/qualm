@@ -73,10 +73,10 @@ public class QDataLoader extends DefaultHandler {
   }
   
   String[] auxValue = new String[2];
-  List eventSet = new ArrayList();
-  List triggers = new ArrayList();
-  List globalTriggers = new ArrayList();
-  List globalMaps = new ArrayList();
+  List<QEvent> eventSet = new ArrayList<QEvent>();
+  List<Trigger> triggers = new ArrayList<Trigger>();
+  List<Trigger> globalTriggers = new ArrayList<Trigger>();
+  List<EventMapper> globalMaps = new ArrayList<EventMapper>();
   boolean reverseTrigger = false;
   int triggerDelay = 0;
   String content;
@@ -84,7 +84,7 @@ public class QDataLoader extends DefaultHandler {
   EventTemplate curTemplate;
   Patch patch;
   EventMapper curMapper = null;
-  List eventMaps = new ArrayList();
+  List<EventMapper> eventMaps = new ArrayList<EventMapper>();
   QStream qstream;
 
   private int parseIntOrPercent( String parseStr, int max) 
@@ -164,7 +164,7 @@ public class QDataLoader extends DefaultHandler {
 	qstream.setTitle(attributes.getValue("id"));
      
       } else if (qName.equals("cue")) {
-	eventSet = new ArrayList();
+	eventSet = new ArrayList<QEvent>();
 	curQ = new Cue( attributes.getValue("song"),
 			attributes.getValue("measure"));
 	
@@ -179,7 +179,7 @@ public class QDataLoader extends DefaultHandler {
 	if (foundPatch == null) {
 	  System.err.println("WARNING: could not find patch with id " + patchID);
 	}
-	eventSet.add(new ProgramChangeEvent(ch, foundPatch));
+	eventSet.add(new ProgramChangeEvent(ch, curQ, foundPatch));
 
       } else if (qName.equals("note-window-change")) {
 	currentElement = "note-window-change element";
@@ -199,10 +199,10 @@ public class QDataLoader extends DefaultHandler {
 	if (bottom == null && top == null) {
 	  System.err.println("WARNING: found note-window-change specifying neither top nor bottom");
 	}
-	eventSet.add(new NoteWindowChangeEvent(ch, bottomNote, topNote));
+	eventSet.add(new NoteWindowChangeEvent(ch, curQ, bottomNote, topNote));
 
       } else if (qName.equals("advance")) {
-	StreamAdvance sa = new StreamAdvance( attributes.getValue("stream"));
+	StreamAdvance sa = new StreamAdvance( attributes.getValue("stream"), curQ );
 	if (attributes.getValue("song")!=null)
 	  sa.setSong(attributes.getValue("song"));
 	if (attributes.getValue("measure")!=null)
@@ -296,29 +296,29 @@ public class QDataLoader extends DefaultHandler {
       eventMaps.add(curMapper);
 
     } else if (qName.equals( "cue" )) {
-      ArrayList l = new ArrayList();
+      ArrayList<Trigger> l = new ArrayList<Trigger>();
       l.addAll(globalTriggers);
       l.addAll(triggers);
       curQ.setTriggers ( l );
 
-      ArrayList em = new ArrayList();
+      ArrayList<EventMapper> em = new ArrayList<EventMapper>();
       em.addAll(globalMaps);
       em.addAll(eventMaps);
       curQ.setEventMaps(em);
 
       curQ.setEvents(eventSet);
 
-      triggers = new ArrayList();
-      eventMaps = new ArrayList();
-      eventSet = new ArrayList();
+      triggers = new ArrayList<Trigger>();
+      eventMaps = new ArrayList<EventMapper>();
+      eventSet = new ArrayList<QEvent>();
 
       qstream.addCue( curQ );
 
     } else if (qName.equals("global")) {
       globalTriggers = triggers;
       globalMaps = eventMaps;
-      triggers = new ArrayList();
-      eventMaps = new ArrayList();
+      triggers = new ArrayList<Trigger>();
+      eventMaps = new ArrayList<EventMapper>();
       
     } else if (qName.equals("cue-stream")) {
       qdata.addCueStream(qstream);

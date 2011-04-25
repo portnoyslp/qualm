@@ -17,16 +17,16 @@ import junit.framework.Assert;
 public class FakeMIDI implements Receiver,Transmitter {
 
   Receiver receiver;
-  ArrayList incomingMessages;
-  ArrayList outgoingMessages;
+  ArrayList<Object> incomingMessages;
+  ArrayList<Object> outgoingMessages;
   long baseTime;
   
   public FakeMIDI( ) {
     // set the base time for the run.
     baseTime = System.currentTimeMillis();
     
-    incomingMessages = new ArrayList();
-    outgoingMessages = new ArrayList();
+    incomingMessages = new ArrayList<Object>();
+    outgoingMessages = new ArrayList<Object>();
   }
 
   public void addOutgoing(long ts, ShortMessage sm) {
@@ -58,12 +58,13 @@ public class FakeMIDI implements Receiver,Transmitter {
     addOutgoing(ts,sm);
   }
 
-  public ArrayList receivedMessages() {
+  public ArrayList<Object> receivedMessages() {
     return incomingMessages;
   }
+  
   public void printOutMessages() {
     System.out.println("Number of msgs received == " + incomingMessages.size());
-    java.util.Iterator iter = incomingMessages.iterator();
+    java.util.Iterator<Object> iter = incomingMessages.iterator();
     while (iter.hasNext()) {
       TimestampedMsg tsm = (TimestampedMsg)iter.next();
       System.out.println("   " + tsm.timestamp + "ms: " +
@@ -97,9 +98,9 @@ public class FakeMIDI implements Receiver,Transmitter {
     MasterController mc = new MasterController ( fm );
     mc.setSilentErrorHandling(false);
 
-    Iterator iter = qd.getCueStreams().iterator();
+    Iterator<QStream> iter = qd.getCueStreams().iterator();
     while (iter.hasNext()) 
-      mc.addController (new QController( fm, (QStream)iter.next(), qd ));
+      mc.addController (new QController( fm, iter.next(), qd ));
     fm.setReceiver( mc );
     mc.setDebugMIDI(true);
 

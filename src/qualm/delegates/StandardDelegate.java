@@ -11,7 +11,6 @@ public class StandardDelegate extends ChangeDelegate {
   public void patchChange( ProgramChangeEvent pce,
 			   Receiver midiOut ) {
     try {
-      int ch = pce.getChannel();
       Patch patch = pce.getPatch();
       int patchNum = patch.getNumber()-1;
 

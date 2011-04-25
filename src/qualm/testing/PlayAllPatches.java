@@ -12,18 +12,18 @@ public class PlayAllPatches {
   static Receiver midiOut = null;
 
   public static void loopThroughPatches(QData data) {
-    TreeSet patches = new TreeSet( new Comparator() { 
-	public int compare(Object a, Object b) {
-	  return ((Patch)a).getID().compareTo( ((Patch)b).getID() );
+    TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator<Patch>() { 
+	public int compare(Patch a, Patch b) {
+	  return a.getID().compareTo( b.getID() );
 	}	  
       });
     patches.addAll(data.getPatches());
 
-    Iterator iter = patches.iterator();
+    Iterator<Patch> iter = patches.iterator();
     while(iter.hasNext()) {
-      Patch p = (Patch)iter.next();
+      Patch p = iter.next();
       System.out.println("Switching to patch " + p);
-      PatchChanger.patchChange( new ProgramChangeEvent( 0, p ),
+      PatchChanger.patchChange( new ProgramChangeEvent( 0, null, p ),
 				midiOut );
       // play a chord: c4, e4, g4, c5 (60,64,67,72)
       
@@ -39,7 +39,7 @@ public class PlayAllPatches {
 	midiOut.send(out, -1);
       
 	// delay 1s
-	Thread.currentThread().sleep(1000);
+	Thread.sleep(1000);
 
 	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 0 );
 	midiOut.send(out, -1);
@@ -51,7 +51,7 @@ public class PlayAllPatches {
 	midiOut.send(out, -1);
 
 	// delay another 1s
-	Thread.currentThread().sleep(1000);
+	Thread.sleep(1000);
       } catch (Exception e) {
 	e.printStackTrace();
 	return;

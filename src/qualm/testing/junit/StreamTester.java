@@ -5,8 +5,6 @@ import junit.textui.*;
 
 import javax.sound.midi.*;
 
-import qualm.*;
-
 public class StreamTester extends TestCase {
   public StreamTester (String name) { super(name); }
 
@@ -58,7 +56,7 @@ public class StreamTester extends TestCase {
     fm.addOutgoing((long)3000, ShortMessage.NOTE_ON, 0, 59, 10); // reverse Str1
     fm.addOutgoing((long)4500, ShortMessage.NOTE_ON, 1, 59, 10); // reverse Str2
     fm.run();
-    java.util.ArrayList msgs = fm.receivedMessages();
+    java.util.ArrayList<Object> msgs = fm.receivedMessages();
 
     fm.printOutMessages();
 

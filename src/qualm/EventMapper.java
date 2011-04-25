@@ -12,16 +12,16 @@ public class EventMapper {
   public EventMapper () { } 
 
   public void setFromTemplate(EventTemplate f) { mapFrom = f; }
-  public void setToTemplates(List templateList) { mapToList = templateList; }
+  public void setToTemplates(List<EventTemplate> templateList) { mapToList = templateList; }
   public void addToTemplate(EventTemplate t) { 
     if (mapToList == null) {
-      mapToList = new ArrayList();
+      mapToList = new ArrayList<EventTemplate>();
     }
     mapToList.add(t);
   }
 
   public EventTemplate getFromTemplate() { return mapFrom; }
-  public List getToTemplateList() { return mapToList; }
+  public List<EventTemplate> getToTemplateList() { return mapToList; }
 
   public boolean match(MidiMessage m) { return mapFrom.match(m); }
 
@@ -33,10 +33,10 @@ public class EventMapper {
     ShortMessage sm = (ShortMessage)m;
     ShortMessage[] out = new ShortMessage[ mapToList.size() ];
 
-    Iterator iter = mapToList.iterator();
+    Iterator<EventTemplate> iter = mapToList.iterator();
     int i=0;
     while (iter.hasNext()) {
-      EventTemplate mapTo = (EventTemplate) iter.next();
+      EventTemplate mapTo = iter.next();
       out[i] = new ShortMessage();
       try {
 	out[i].setMessage( mapTo.type,
@@ -61,6 +61,6 @@ public class EventMapper {
 
   
   EventTemplate mapFrom;
-  List mapToList;
+  List<EventTemplate> mapToList;
   
 }

@@ -33,19 +33,19 @@ public class AuditionPatches {
 	
 	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 30 );
 	midiOut.send(out, -1);
-	Thread.currentThread().sleep(500);
+	Thread.sleep(500);
 	out.setMessage( ShortMessage.NOTE_ON, 0, 64, 52 );
 	midiOut.send(out, -1);
-	Thread.currentThread().sleep(500);
+	Thread.sleep(500);
 	out.setMessage( ShortMessage.NOTE_ON, 0, 67, 74 );
 	midiOut.send(out, -1);
-	Thread.currentThread().sleep(500);
+	Thread.sleep(500);
 	out.setMessage( ShortMessage.NOTE_ON, 0, 72, 96 );
 	midiOut.send(out, -1);
       }
 
       // let it ring before silencing.
-      Thread.currentThread().sleep(holdTime);
+      Thread.sleep(holdTime);
 
       if (playSingle) {
 	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 0 );
@@ -64,7 +64,7 @@ public class AuditionPatches {
       }
       
       // delay another 1s
-      Thread.currentThread().sleep(800);
+      Thread.sleep(800);
     } catch (Exception e) {
       e.printStackTrace();
       return;
@@ -81,13 +81,13 @@ public class AuditionPatches {
 
     // for each patch, we play it, then we play the default, then we
     // play the original again with a slightly longer hold time.
-    PatchChanger.patchChange( new ProgramChangeEvent( 0, p ),
+    PatchChanger.patchChange( new ProgramChangeEvent( 0, null, p ),
 			      midiOut );
     playArpeggiatedChord( 1000 );
-    PatchChanger.patchChange( new ProgramChangeEvent( 0, defaultPatch ),
+    PatchChanger.patchChange( new ProgramChangeEvent( 0, null, defaultPatch ),
 			      midiOut );
     playArpeggiatedChord( 1000 );
-    PatchChanger.patchChange( new ProgramChangeEvent( 0, p ),
+    PatchChanger.patchChange( new ProgramChangeEvent( 0, null, p ),
 			      midiOut );
     playArpeggiatedChord( 1500 );
     
@@ -98,10 +98,10 @@ public class AuditionPatches {
     System.out.flush();
   }
 
-  private static TreeSet setupPatches() {
-    TreeSet patches = new TreeSet( new Comparator() { 
-	public int compare(Object a, Object b) {
-	  return ((Patch)a).getID().compareTo( ((Patch)b).getID() );
+  private static TreeSet<Patch> setupPatches() {
+    TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator<Patch>() { 
+	public int compare(Patch a, Patch b) {
+	  return a.getID().compareTo( b.getID() );
 	}	  
       });
     patches.addAll(data.getPatches());
@@ -109,15 +109,15 @@ public class AuditionPatches {
   }
 
   public static void loopThroughPatches() {
-    TreeSet patches = setupPatches(); 
+    TreeSet<Patch> patches = setupPatches(); 
 
     BufferedReader reader = 
       new BufferedReader( new InputStreamReader( System.in ));
 
-    Iterator iter = patches.iterator();
+    Iterator<Patch> iter = patches.iterator();
     boolean startRun = true;
     while(iter.hasNext()) {
-      Patch p = (Patch)iter.next();
+      Patch p = iter.next();
       prompt(p);
       
       boolean advancePatch = false;
@@ -175,22 +175,22 @@ public class AuditionPatches {
     }
   }
 
-  private static Iterator iteratorForPatch(Patch target, TreeSet patches) {
+  private static Iterator<Patch> iteratorForPatch(Patch target, TreeSet<Patch> patches) {
     // the insanity of having to replace an iterator on the
     // fly.  Here we go through to find the new patch, but
     // we really need to find the *preceding* patch so we
     // know when to stop.
     Patch preceding = null;
-    Iterator iter2 = patches.iterator();
+    Iterator<Patch> iter2 = patches.iterator();
     while (iter2.hasNext()) {
-      Patch q = (Patch)iter2.next();
+      Patch q = iter2.next();
       if (q.equals(target)) break;
       preceding = q;
     }
     iter2 = patches.iterator();
     if (preceding != null) {
       while (iter2.hasNext()) {
-	if ( ((Patch)iter2.next()).equals(preceding) )
+	if ( iter2.next().equals(preceding) )
 	  break;
       }
     }
@@ -220,7 +220,6 @@ public class AuditionPatches {
 
   public static void main(String[] args) {
 
-    String inputPort = null;
     String outputPort = null;
 
     int i = 0;

@@ -35,16 +35,16 @@ public class QController implements Receiver {
 
   private void setupTriggers() {
     // set up triggers
-    triggers = new ArrayList();
+    triggers = new ArrayList<Trigger>();
     addCurrentTriggers();
     buildTriggerCache();
 
     // also build the list of pending triggers...
-    triggerThreads = new ArrayList();
+    triggerThreads = new ArrayList<TriggerDelayThread>();
   }
 
-  public Collection changesForCue( String cuenum ) {
-    Collection events = advancer.switchToMeasure(cuenum);
+  public Collection<QEvent> changesForCue( String cuenum ) {
+    Collection<QEvent> events = advancer.switchToMeasure(cuenum);
     setupTriggers();
     return events;
   }
@@ -89,9 +89,9 @@ public class QController implements Receiver {
     // Do any of the currently in-effect maps match this event?
     Cue cue = getCurrentCue();
     if (cue != null) {
-      Iterator iter = cue.getEventMaps().iterator();
+      Iterator<EventMapper> iter = cue.getEventMaps().iterator();
       while(iter.hasNext()) {
-	EventMapper em = (EventMapper)iter.next();
+	EventMapper em = iter.next();
 	MidiMessage out[] = em.mapEvent(midiMessage);
 	if (out != null) {
 	  for(int i=0; i<out.length; i++) {
@@ -140,10 +140,10 @@ public class QController implements Receiver {
     else {
       // check to see if this trigger is already represented in the
       // list of pending trigger threads.
-      Iterator iter = triggerThreads.iterator();
+      Iterator<TriggerDelayThread> iter = triggerThreads.iterator();
       boolean found = false;
       while (iter.hasNext()) {
-	TriggerDelayThread th = (TriggerDelayThread)iter.next();
+	TriggerDelayThread th = iter.next();
 	if (th.equals(trig)) {
 	  found = true;
 	  break;
@@ -161,11 +161,11 @@ public class QController implements Receiver {
   }
 
   Trigger cachedTriggers[] = {};
-  List triggers;
-  List triggerThreads;
+  List<Trigger> triggers;
+  List<TriggerDelayThread> triggerThreads;
 
   private void buildTriggerCache() {
-    List l = new ArrayList();
+    List<Trigger> l = new ArrayList<Trigger>();
     l.addAll(triggers);
     cachedTriggers = (Trigger[]) l.toArray(new Trigger[]{});
   }
@@ -177,9 +177,9 @@ public class QController implements Receiver {
   private void addCurrentTriggers() {
     Cue cue = getCurrentCue();
     if (cue != null) {
-      Iterator iter = cue.getTriggers().iterator();
+      Iterator<Trigger> iter = cue.getTriggers().iterator();
       while(iter.hasNext()) {
-	Trigger t = (Trigger)iter.next();
+	Trigger t = iter.next();
 	addTrigger( t );
       }
     }
