@@ -1,24 +1,25 @@
 package qualm;
 
-import javax.sound.midi.*;
-
 // Verbose Receiver -- adds debugging to output messages.
 
-public class VerboseReceiver implements Receiver {
+public class VerboseReceiver implements QReceiver {
 
-  Receiver midiOut;
+  QReceiver midiOut;
   boolean debugMIDI;
 
-  public VerboseReceiver( Receiver out ) {
-    midiOut = out;
+  public VerboseReceiver( QReceiver out ) {
+    setForwarder( out );
   }
 
-  public Receiver getMidiOut() { return midiOut; }
+  public void setForwarder( QReceiver out ) {
+    midiOut = out;
+  }
+  public QReceiver getForwarder() { return midiOut; }
 
   public boolean getDebugMIDI() { return debugMIDI; }
   public void setDebugMIDI(boolean db) { debugMIDI = db; }
 
-  public void send(MidiMessage midiMessage, long l) {
+  public void send(MidiCommand midiCommand) {
     if (debugMIDI)
       System.out.println( "->" + MidiMessageParser.messageToString(midiMessage) );
     if (midiOut != null)
