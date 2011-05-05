@@ -14,7 +14,7 @@ import junit.framework.Assert;
  * commands to send, and will store the responses for later analysis.
  */
 
-public class FakeMIDI implements Receiver,Transmitter {
+public class FakeMIDI implements QReceiver,Receiver,Transmitter {
 
   Receiver receiver;
   ArrayList<Object> incomingMessages;

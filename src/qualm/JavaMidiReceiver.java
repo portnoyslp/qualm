@@ -20,7 +20,7 @@ import javax.sound.midi.Transmitter;
  * 
  * @author speters
  */
-public class JavaMidiReceiver extends BasicReceiver implements Receiver {
+public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Receiver {
 
   QReceiver qr;
   Transmitter midiIn;
@@ -38,7 +38,7 @@ public class JavaMidiReceiver extends BasicReceiver implements Receiver {
     ShortMessage sm = new ShortMessage();
     try {
       sm.setMessage(mc.getType(),mc.getChannel(),mc.getData1(),mc.getData2());
-      midiOut.send(sm, 0);
+      midiOut.send(sm, -1);
     } catch (InvalidMidiDataException ume) {
       // ignore MIDI problems.
     }
@@ -57,7 +57,7 @@ public class JavaMidiReceiver extends BasicReceiver implements Receiver {
     if (message instanceof ShortMessage) {
       ShortMessage sm = (ShortMessage)message;
       MidiCommand mc = new MidiCommand(sm.getChannel(),sm.getCommand(),sm.getData1(),sm.getData2());
-      getForwarder().handleMidiCommand(mc);
+      getTarget().handleMidiCommand(mc);
     }
     // TODO: Handle other message types
   }
