@@ -1,8 +1,9 @@
 package qualm.delegates;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import qualm.*;
-import qualm.Patch;
-import javax.sound.midi.*;
 
 /**
  * ChangeDelegate for Alesis (written for Alesis QS8.1)
@@ -14,79 +15,64 @@ import javax.sound.midi.*;
  * an octave to correct for this when it processes the event.
  */
 public class AlesisDelegate extends ChangeDelegate {
-  public void patchChange( ProgramChangeEvent pce,
-			   Receiver midiOut ) {
-    try {
-      ShortMessage msg;
+  
+  private static Map<String,Integer> bankNameMap = createBankNameMap();
+  private static final Map<String,Integer> createBankNameMap() {
+    Map<String, Integer> m = new HashMap<String,Integer>();
+    m.put("User", new Integer(0));
+    for(int i=1;i<=4;i++)
+      m.put("Pr" + i, new Integer(i));
+    for(int i=1;i<=8;i++)       
+      m.put("Card" + i, new Integer(i+4));
+    return m;
+  }
+  
+  public void patchChange(ProgramChangeEvent pce, QReceiver midiOut) {
+    MidiCommand msg;
 
-      int channel = pce.getChannel();
-      Patch patch = pce.getPatch();
+    int channel = pce.getChannel();
+    Patch patch = pce.getPatch();
 
-      // Alesis patches are numbered 0-127 (don't need to subtract 1)
-      int progNum = patch.getNumber();
+    // Alesis patches are numbered 0-127 (don't need to subtract 1)
+    int progNum = patch.getNumber();
 
-      String bankName = patch.getBank();
-      if (bankName != null)
-      {
-	// translate bank name into bank number
-	int bank;
-	if (bankName.equals("User")) bank = 0;
-	else if (bankName.equals("Pr1")) bank = 1;
-	else if (bankName.equals("Pr2")) bank = 2;
-	else if (bankName.equals("Pr3")) bank = 3;
-	else if (bankName.equals("Pr4")) bank = 4;
-	else if (bankName.equals("Card1")) bank = 5;
-	else if (bankName.equals("Card2")) bank = 6;
-	else if (bankName.equals("Card3")) bank = 7;
-	else if (bankName.equals("Card4")) bank = 8;
-	else if (bankName.equals("Card5")) bank = 9;
-	else if (bankName.equals("Card6")) bank = 10;
-	else if (bankName.equals("Card7")) bank = 11;
-	else if (bankName.equals("Card8")) bank = 12;
-	else
-	  throw new Exception("invalid bank name: " + bankName);
+    String bankName = patch.getBank();
+    if (bankName != null) {
+      // translate bank name into bank number
+      int bank;
+      if (bankNameMap.containsKey(bankName))
+        bank = bankNameMap.get(bankName).intValue();
+      else
+        throw new RuntimeException("invalid bank name: " + bankName);
 
-	// send Control Change 0 to select Bank MSB (note: for Alesis,
-	// MSB is the entire bank number; LSB is not used at all)
-	msg = new ShortMessage();
-	msg.setMessage( ShortMessage.CONTROL_CHANGE,
-			channel, 0, bank );
+      // send Control Change 0 to select Bank MSB (note: for Alesis,
+      // MSB is the entire bank number; LSB is not used at all)
+      msg = new MidiCommand(channel, MidiCommand.CONTROL_CHANGE, 0, bank);
 
-	if (midiOut != null)
-	  midiOut.send(msg,-1);
-      }
+      if (midiOut != null)
+        midiOut.handleMidiCommand(msg);
+    }
 
-      // send Program Change to select Program
-      msg = new ShortMessage();
-      msg.setMessage( ShortMessage.PROGRAM_CHANGE, 
-		      channel, progNum, 0 );
+    // send Program Change to select Program
+    msg = new MidiCommand(channel, MidiCommand.PROGRAM_CHANGE, progNum, 0);
 
-      if (midiOut != null) 
-	midiOut.send(msg, -1);
+    if (midiOut != null)
+      midiOut.handleMidiCommand(msg);
 
-      Integer volume = patch.getVolume();
-      if (volume != null)
-      {
-	// send Control Change 7 to set channel volume
-	msg = new ShortMessage();
-	msg.setMessage( ShortMessage.CONTROL_CHANGE,
-			channel, 7, volume.intValue() );
+    Integer volume = patch.getVolume();
+    if (volume != null) {
+      // send Control Change 7 to set channel volume
+      msg = new MidiCommand(channel, MidiCommand.CONTROL_CHANGE, 7, volume.intValue());
 
-	if (midiOut != null)
-	  midiOut.send(msg,-1);
-      }
-    } catch (InvalidMidiDataException e) {
-      System.out.println("Unable to send Program Change: " + pce);
-      System.out.println(e);
-    } catch (Exception e2) {
-      e2.printStackTrace();
+      if (midiOut != null)
+        midiOut.handleMidiCommand(msg);
     }
   }
 
 
   
   public void noteWindowChange( NoteWindowChangeEvent nwce,
-				Receiver midiOut )
+				QReceiver midiOut )
   {
     try {
       SysexMessage sysex;

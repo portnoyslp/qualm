@@ -2,7 +2,6 @@ package qualm.delegates;
 
 import qualm.*;
 import qualm.Patch;
-import javax.sound.midi.*;
 
 /**
  * ChangeDelegate for Korg (written for Korg NS5R)
@@ -13,10 +12,10 @@ import javax.sound.midi.*;
 public class KorgDelegate extends ChangeDelegate
 {
   public void patchChange( ProgramChangeEvent pce,
-			   Receiver midiOut )
+			   QReceiver midiOut )
   {
     try {
-      ShortMessage msg;
+      MidiCommand msg;
 
       int channel = pce.getChannel();
       Patch patch = pce.getPatch();
@@ -80,48 +79,38 @@ public class KorgDelegate extends ChangeDelegate
 	  throw new Exception("invalid bank name: " + bankName);
 
 	// send Control Change 0 to select Bank MSB
-	msg = new ShortMessage();
-	msg.setMessage( ShortMessage.CONTROL_CHANGE,
-			channel, 0, msb );
+	msg = new MidiCommand(channel, MidiCommand.CONTROL_CHANGE,
+			      0, msb );
 
 	if (midiOut != null)
-	  midiOut.send(msg, -1);
+	  midiOut.handleMidiCommand(msg);
 
 	// send Control Change 32 to select Bank LSB, if needed
 	if (lsb != -1)
 	{
-	  msg = new ShortMessage();
-	  msg.setMessage( ShortMessage.CONTROL_CHANGE,
-			  channel, 32, lsb );
+	  msg = new MidiCommand( channel, MidiCommand.CONTROL_CHANGE, 32, lsb );
 
 	  if (midiOut != null)
-	    midiOut.send(msg, -1);
+	    midiOut.handleMidiCommand(msg);
 	}
       }
 
       // send Program Change to select Program
-      msg = new ShortMessage();
-      msg.setMessage( ShortMessage.PROGRAM_CHANGE,
-		      channel, progNum, 0 );
+      msg = new MidiCommand( channel, MidiCommand.PROGRAM_CHANGE, progNum, 0 );
 
       if (midiOut != null)
-	midiOut.send(msg, -1);
+	midiOut.handleMidiCommand(msg);
 
 
       if (patch.getVolume() != null)
       {
 	// send Control Change 7 to set channel volume
-	msg = new ShortMessage();
-	msg.setMessage( ShortMessage.CONTROL_CHANGE,
-			channel, 7, patch.getVolume().intValue() );
+	msg = new MidiCommand( channel, MidiCommand.CONTROL_CHANGE, 7, patch.getVolume().intValue());
 
 	if (midiOut != null)
-	  midiOut.send(msg, -1);
+	  midiOut.handleMidiCommand(msg);
       }
 
-    } catch (InvalidMidiDataException e) {
-      System.out.println("Unable to send Program Change: " + pce);
-      System.out.println(e);
     } catch (Exception e2) {
       e2.printStackTrace();
     }
@@ -130,7 +119,7 @@ public class KorgDelegate extends ChangeDelegate
 
 
   public void noteWindowChange( NoteWindowChangeEvent nwce,
-				Receiver midiOut )
+				QReceiver midiOut )
   {
     try {
       SysexMessage sysex;

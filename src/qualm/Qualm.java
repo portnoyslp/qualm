@@ -153,7 +153,7 @@ public class Qualm {
 
     // connect the transmitter to the receiver.
     if (!skipMIDI)
-      jmr.setForwarder( mc );
+      jmr.setTarget( mc );
 
     if (inputFilename == null) {
       System.out.println("No filename given.\n");
