@@ -85,4 +85,16 @@ public class MidiCommand {
     return "[" + cStr + " chan:" + (channel + 1) + " d1:" + data1 + " d2:"
         + data2 + "]";
   }
+  
+  /**
+   * A helper function for compatibility with ShortMessage code
+   * @param cmd
+   * @param ch
+   * @param d1
+   * @param d2
+   * @deprecated
+   */
+  public void setMessage(int cmd, int ch, int d1, int d2) {
+    setParams(ch,cmd,d1,d2);
+  }
 }

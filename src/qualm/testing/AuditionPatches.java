@@ -4,13 +4,14 @@ import qualm.*;
 import gnu.getopt.*;
 import javax.sound.midi.*;
 import java.util.*;
+
 import qualm.Patch;
 
 import java.io.*;
 
 public class AuditionPatches {
 
-  static Receiver midiOut = null;
+  static QReceiver midiOut = null;
   static Patch defaultPatch = null;
   static boolean playSingle = false;
   static boolean ignoreAliases = false;
@@ -23,44 +24,44 @@ public class AuditionPatches {
       // slight delay to give synth time to process patch change
       Thread.sleep(500);
 
-      ShortMessage out = new ShortMessage();
+      MidiCommand out = new MidiCommand();
 
       if (playSingle) {
-	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 70 );
-	midiOut.send(out, -1);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 60, 70 );
+	midiOut.handleMidiCommand(out);
 
       } else {
 	
-	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 30 );
-	midiOut.send(out, -1);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 60, 30 );
+	midiOut.handleMidiCommand(out);
 	Thread.sleep(500);
-	out.setMessage( ShortMessage.NOTE_ON, 0, 64, 52 );
-	midiOut.send(out, -1);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 64, 52 );
+	midiOut.handleMidiCommand(out);
 	Thread.sleep(500);
-	out.setMessage( ShortMessage.NOTE_ON, 0, 67, 74 );
-	midiOut.send(out, -1);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 67, 74 );
+	midiOut.handleMidiCommand(out);
 	Thread.sleep(500);
-	out.setMessage( ShortMessage.NOTE_ON, 0, 72, 96 );
-	midiOut.send(out, -1);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 72, 96 );
+	midiOut.handleMidiCommand(out);
       }
 
       // let it ring before silencing.
       Thread.sleep(holdTime);
 
       if (playSingle) {
-	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 0 );
-	midiOut.send(out, -1);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 60, 0 );
+	midiOut.handleMidiCommand(out);
 
       } else {
 
-	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 0 );
-	midiOut.send(out, -1);
-	out.setMessage( ShortMessage.NOTE_ON, 0, 64, 0 );
-	midiOut.send(out, -1);
-	out.setMessage( ShortMessage.NOTE_ON, 0, 67, 0 );
-	midiOut.send(out, -1);
-	out.setMessage( ShortMessage.NOTE_ON, 0, 72, 0 );
-	midiOut.send(out, -1);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 60, 0 );
+	midiOut.handleMidiCommand(out);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 64, 0 );
+	midiOut.handleMidiCommand(out);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 67, 0 );
+	midiOut.handleMidiCommand(out);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 72, 0 );
+	midiOut.handleMidiCommand(out);
       }
       
       // delay another 1s
@@ -266,25 +267,11 @@ public class AuditionPatches {
       System.out.println("(use \"-p 'patchName'\" to specify a different default patch)");
       System.exit(1);
     }
-
-    // set ports
-    if (outputPort == null) 
-      outputPort="UM-1";
-
-    MidiDevice.Info[] ports = Qualm.getMidiPorts(null, outputPort, false, false);
-    MidiDevice.Info outputInfo = ports[1];
-    if (outputInfo == null) {
-      System.out.println("Unable to load output port named " + outputPort);
-      System.exit(1);
-    }
-
-    try {
-      MidiDevice outDevice = MidiSystem.getMidiDevice( outputInfo );
-      outDevice.open();
-      midiOut = outDevice.getReceiver();
-    } catch (MidiUnavailableException mdu2) {
-      System.out.println("Unable to open device for output:" + mdu2);
-    }
+    
+    // Set up MIDI ports
+    Properties props = new Properties();
+    props.setProperty("outputPort", outputPort);
+    midiOut = new JavaMidiReceiver(props);
 
     loopThroughPatches();
     System.exit(0);
