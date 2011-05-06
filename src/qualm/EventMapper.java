@@ -3,9 +3,6 @@ package qualm;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiMessage;
-import javax.sound.midi.ShortMessage;
 
 public class EventMapper {
 

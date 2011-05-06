@@ -1,6 +1,5 @@
 package qualm;
 
-import javax.sound.midi.*;
 import java.util.*;
 
 public class QController extends AbstractQReceiver {

@@ -1,6 +1,5 @@
 package qualm;
 
-import javax.sound.midi.*;
 import java.util.*;
 import java.io.*;
 import gnu.getopt.Getopt;

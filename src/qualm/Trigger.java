@@ -1,7 +1,5 @@
 package qualm;
 
-import javax.sound.midi.MidiMessage;
-
 public class Trigger {
 
   public Trigger (EventTemplate et, boolean rev) { 

@@ -16,7 +16,7 @@ import javax.sound.midi.*;
 public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
 {
   public void patchChange( ProgramChangeEvent pce,
-			   Receiver midiOut )
+			   QReceiver midiOut )
   {
     try {
       SysexMessage sysex;
@@ -145,7 +145,7 @@ public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
 
 
   public void noteWindowChange( NoteWindowChangeEvent nwce,
-				Receiver midiOut )
+				QReceiver midiOut )
   {
     try {
       SysexMessage sysex;

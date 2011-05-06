@@ -2,7 +2,6 @@ package qualm.testing;
 
 import qualm.*;
 import gnu.getopt.*;
-import javax.sound.midi.*;
 import java.util.*;
 
 import qualm.Patch;

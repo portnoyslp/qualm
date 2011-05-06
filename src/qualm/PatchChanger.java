@@ -1,7 +1,6 @@
 package qualm;
 
 import java.util.regex.Pattern;
-import javax.sound.midi.Receiver;
 
 public class PatchChanger {
   // instance methods
