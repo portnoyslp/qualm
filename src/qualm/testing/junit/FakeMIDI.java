@@ -35,12 +35,12 @@ public class FakeMIDI implements QReceiver {
 
   public void addOutgoing(long ts, int a, int ch, int c) {
     MidiCommand sm = new MidiCommand();
-    sm.setParams(ch, a, c); 
+    sm.setParams(ch, a, (byte)c); 
     addOutgoing(ts,sm);
   }
   public void addOutgoing(long ts, int a, int ch, int c, int d) {
     MidiCommand sm = new MidiCommand();
-    sm.setParams(ch,a,c,d); 
+    sm.setParams(ch,a,(byte)c,(byte)d); 
     addOutgoing(ts,sm);
   }
 

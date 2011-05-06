@@ -75,7 +75,7 @@ public class AlesisDelegate extends ChangeDelegate {
 				QReceiver midiOut )
   {
     try {
-      SysexMessage sysex;
+      MidiCommand sysex;
       byte[] data;
 
       int channel = nwce.getChannel();
@@ -107,11 +107,11 @@ public class AlesisDelegate extends ChangeDelegate {
 	  { (byte) 0xF0, 0, 0, 0x0E, 0x0E, 0x10, 0x24, 0,
 	    (byte) (channel << 3), (byte) bottomNote, (byte) 0xF7 };
 
-	sysex = new SysexMessage();
-	sysex.setMessage( data, data.length );
+	sysex = new MidiCommand();
+	sysex.setSysex( data );
 
 	if (midiOut != null)
-	  midiOut.send(sysex, -1);
+	  midiOut.handleMidiCommand(sysex);
       }
 
       if (nwce.getTopNote() != null)
@@ -125,16 +125,12 @@ public class AlesisDelegate extends ChangeDelegate {
 	  { (byte) 0xF0, 0, 0, 0x0E, 0x0E, 0x10, 0x24, 0,
 	    (byte) (channel << 3 | 2), (byte) topNote, (byte) 0xF7 };
 
-	sysex = new SysexMessage();
-	sysex.setMessage( data, data.length );
+	sysex = new MidiCommand();
+	sysex.setSysex( data );
 
 	if (midiOut != null)
-	  midiOut.send(sysex, -1);
+	  midiOut.handleMidiCommand(sysex);
       }
-
-    } catch (InvalidMidiDataException e) {
-      System.out.println("Unable to send Note Window Change: " + nwce);
-      System.out.println(e);
     } catch (Exception e2) {
       e2.printStackTrace();
     }

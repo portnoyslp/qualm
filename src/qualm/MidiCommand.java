@@ -7,22 +7,25 @@ package qualm;
 public class MidiCommand {
   int channel;
   int type;
-  int data1;
-  int data2;
-
+  byte[] data;
+  
   /* Type codes */
   public static final int CONTROL_CHANGE = 0xB0;
   public static final int NOTE_OFF = 0x80;
   public static final int NOTE_ON = 0x90;
   public static final int PITCH_BEND = 0xE0;
   public static final int PROGRAM_CHANGE = 0xC0;
+  
+  /* Special signifier for SYSEX messages */
+  public static final int SYSEX = -2;
 
+  
   public MidiCommand(int ch, int type, int data) {
-    setParams(ch, type, data, 0);
+    setParams(ch, type, (byte)data, (byte)0);
   }
 
   public MidiCommand(int ch, int type, int data1, int data2) {
-    setParams(ch, type, data1, data2);
+    setParams(ch, type, (byte)data1, (byte)data2);
   }
 
   public MidiCommand() {
@@ -42,26 +45,37 @@ public class MidiCommand {
   }
 
   public int getData1() {
-    return data1;
+    if (data.length>0)
+      return data[0];
+    else return 0;
   }
 
   public int getData2() {
-    return data2;
+    if (data.length>1)
+      return data[1];
+    else return 0;
   }
 
-  public void setParams(int channel, int type, int data1) {
+  public void setParams(int channel, int type, byte data1) {
     setChannel(channel);
     this.type = type;
-    this.data1 = data1;
+    data = new byte[1];
+    data[0] = (byte) data1;
   }
 
-  public void setParams(int channel, int type, int data1, int data2) {
+  public void setParams(int channel, int type, byte data1, byte data2) {
     setChannel(channel);
     this.type = type;
-    this.data1 = data1;
-    this.data2 = data2;
+    data = new byte[2];
+    data[0] = data1;
+    data[1] = data2;
   }
 
+  public void setSysex(byte[] data) {
+    this.type = SYSEX;
+    this.data = data;
+  }
+  
   public String toString() {
     String cStr = "UNKNOWN";
     switch (type) {
@@ -81,9 +95,20 @@ public class MidiCommand {
       cStr = "ProgramChange";
       break;
     }
-
-    return "[" + cStr + " chan:" + (channel + 1) + " d1:" + data1 + " d2:"
-        + data2 + "]";
+    
+    if (cStr.equals("UNKNOWN")) {
+      // print out the message, in hex
+      String ret = "[DATA: "; 
+      for(int i = 0; i<data.length; i++) {
+        ret += Integer.toHexString((int) data[i]);
+        if (i<data.length-1) ret += " ";
+      }
+      ret += "]";
+      return ret;
+    }
+    
+    return "[" + cStr + " chan:" + (channel + 1) + " d1:" + getData1() + " d2:"
+        + getData2() + "]";
   }
   
   /**
@@ -95,6 +120,6 @@ public class MidiCommand {
    * @deprecated
    */
   public void setMessage(int cmd, int ch, int d1, int d2) {
-    setParams(ch,cmd,d1,d2);
+    setParams(ch,cmd,(byte)d1,(byte)d2);
   }
 }

@@ -122,7 +122,7 @@ public class KorgDelegate extends ChangeDelegate
 				QReceiver midiOut )
   {
     try {
-      SysexMessage sysex;
+      MidiCommand sysex;
       byte[] data;
 
       int channel = nwce.getChannel();
@@ -134,11 +134,11 @@ public class KorgDelegate extends ChangeDelegate
 	  { (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 1, (byte) channel, 0x15,
 	    nwce.getBottomNote().byteValue(), (byte) 0xF7 };
 
-	sysex = new SysexMessage();
-	sysex.setMessage( data, data.length );
+	sysex = new MidiCommand();
+	sysex.setSysex( data );
 
 	if (midiOut != null)
-	  midiOut.send(sysex, -1);
+	  midiOut.handleMidiCommand(sysex);
       }
 
       if (nwce.getTopNote() != null)
@@ -148,16 +148,12 @@ public class KorgDelegate extends ChangeDelegate
 	  { (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 1, (byte) channel, 0x16,
 	    nwce.getTopNote().byteValue(), (byte) 0xF7 };
 
-	sysex = new SysexMessage();
-	sysex.setMessage( data, data.length );
+	sysex = new MidiCommand();
+	sysex.setSysex( data );
 
 	if (midiOut != null)
-	  midiOut.send(sysex, -1);
+	  midiOut.handleMidiCommand(sysex);
       }
-
-    } catch (InvalidMidiDataException e) {
-      System.out.println("Unable to send Note Window Change: " + nwce);
-      System.out.println(e);
     } catch (Exception e2) {
       e2.printStackTrace();
     }

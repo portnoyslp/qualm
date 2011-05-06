@@ -20,7 +20,7 @@ public class StandardDelegate extends ChangeDelegate {
     MidiCommand msg = new MidiCommand();
     msg.setParams( pce.getChannel(),
                    MidiCommand.PROGRAM_CHANGE, 
-                   patchNum%128, 0 );
+                   (byte)(patchNum%128), (byte)0 );
     
     if (midiOut != null) 
       midiOut.handleMidiCommand(msg);
@@ -31,7 +31,7 @@ public class StandardDelegate extends ChangeDelegate {
       msg = new MidiCommand();
       msg.setParams( pce.getChannel(),
                      MidiCommand.CONTROL_CHANGE,
-		     7, volume.intValue() );
+		     (byte)7, volume.byteValue() );
 
       if (midiOut != null)
         midiOut.handleMidiCommand(msg);
