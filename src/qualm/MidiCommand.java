@@ -25,6 +25,10 @@ public class MidiCommand {
     setParams(ch, type, data1, data2);
   }
 
+  public MidiCommand() {
+     // totally blank, in case you want to use setParams()
+  }
+
   public void setChannel(int ch) {
     channel = ch;
   }
@@ -45,10 +49,10 @@ public class MidiCommand {
     return data2;
   }
 
-  public void setParams(int type, int data1, int data2) {
+  public void setParams(int channel, int type, int data1) {
+    setChannel(channel);
     this.type = type;
     this.data1 = data1;
-    this.data2 = data2;
   }
 
   public void setParams(int channel, int type, int data1, int data2) {
