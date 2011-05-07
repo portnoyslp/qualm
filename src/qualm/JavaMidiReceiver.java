@@ -1,6 +1,10 @@
 package qualm;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +37,6 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
   /* Receives the given MidiCommand from Qualm and sends it out through the MIDI interface.
    * @see qualm.BasicReceiver#handleMidiCommand(qualm.MidiCommand)
    */
-  @Override
   public void handleMidiCommand(MidiCommand mc) {
     ShortMessage sm = new ShortMessage();
     try {
@@ -44,7 +47,6 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
     }
   }
 
-  @Override
   public void close() {
     midiOut.close();
   }
@@ -52,7 +54,6 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
   /* Receives a MidiMessage from the internal Transmitter, and sends it out through the forwarding target.
    * @see javax.sound.midi.Receiver#send(javax.sound.midi.MidiMessage, long)
    */
-  @Override
   public void send(MidiMessage message, long timeStamp) {
     if (message instanceof ShortMessage) {
       ShortMessage sm = (ShortMessage)message;
@@ -62,7 +63,29 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
     // TODO: Handle other message types
   }
 
-  
+  public static Map<Integer, String> parseALSAClients() {
+    Map<Integer, String> ret = new HashMap<Integer, String>();
+    String filename = "/proc/asound/seq/clients";
+    try {
+      BufferedReader br = 
+        new BufferedReader( new FileReader( filename ));
+      String lin = br.readLine();
+      while ( lin != null ) {
+        if (lin.startsWith("Client") && !lin.startsWith("Client info")) {
+          // get the client number and name
+          Integer clientNum = new Integer(lin.substring(6,10).trim());
+          String clientName = lin.substring(14);
+          clientName = clientName.substring(0,clientName.lastIndexOf('"'));
+          ret.put(clientNum, clientName);
+        }
+        lin = br.readLine();
+      }
+    } catch (IOException ioe) {
+      System.out.println("Couldn't read " + filename + ": " + ioe);
+      return null;
+    }
+    return ret;
+  }
   
   /**
    * Builds the internal MIDI handlers for this instance, using the "inputPort"
@@ -166,7 +189,7 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
 
     Map<Integer, String> clientMap = null;
     if (useAlsa)
-      clientMap = Qualm.parseALSAClients();
+      clientMap = JavaMidiReceiver.parseALSAClients();
 
     if (debugMIDI)
       System.out.println("MIDI ports:");

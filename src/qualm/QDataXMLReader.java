@@ -48,12 +48,10 @@ public class QDataXMLReader implements XMLReader {
     }
   }
 
-  @Override
   public ContentHandler getContentHandler() {
     return handler;
   }
 
-  @Override
   public void setContentHandler(ContentHandler handler) {
     this.handler = handler;
   }
@@ -62,7 +60,6 @@ public class QDataXMLReader implements XMLReader {
     handler.ignorableWhitespace(indentStr.toCharArray(), 0, indent+1);
   }
 
-  @Override
   public void parse(InputSource source) throws IOException, SAXException {
     if (source instanceof QDataInputSource) {
       // start handling data
@@ -279,51 +276,41 @@ public class QDataXMLReader implements XMLReader {
     handler.endElement(nsu, elementName, elementName);
   }
 
-  @Override
   public DTDHandler getDTDHandler() {
     return null;
   }
 
-  @Override
   public EntityResolver getEntityResolver() {
     return null;
   }
 
-  @Override
   public ErrorHandler getErrorHandler() {
     return null;
   }
 
-  @Override
   public boolean getFeature(String arg0) throws SAXNotRecognizedException,
   SAXNotSupportedException {
     return false;
   }
 
-  @Override
   public Object getProperty(String arg0) throws SAXNotRecognizedException,
   SAXNotSupportedException {
     return null;
   }
 
-  @Override
   public void setDTDHandler(DTDHandler arg0) {
   }
 
-  @Override
   public void setEntityResolver(EntityResolver arg0) {
   }
 
-  @Override
   public void setErrorHandler(ErrorHandler arg0) {
   }
 
-  @Override
   public void setFeature(String arg0, boolean arg1)
   throws SAXNotRecognizedException, SAXNotSupportedException {
   }
 
-  @Override
   public void setProperty(String arg0, Object arg1)
   throws SAXNotRecognizedException, SAXNotSupportedException {
   }

@@ -172,7 +172,6 @@ public class MasterController implements QReceiver {
   /* Forwards the given midi command to all the controllers.
    * @see qualm.QReceiver#handleMidiCommand(qualm.MidiCommand)
    */
-  @Override
   public void handleMidiCommand(MidiCommand midi) {
     if (debugMIDI) 
       System.out.println( midi );

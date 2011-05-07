@@ -7,31 +7,6 @@ import gnu.getopt.LongOpt;
 
 public class Qualm {
   
-  public static Map<Integer, String> parseALSAClients() {
-    Map<Integer, String> ret = new HashMap<Integer, String>();
-    String filename = "/proc/asound/seq/clients";
-    try {
-      BufferedReader br = 
-	new BufferedReader( new FileReader( filename ));
-      String lin = br.readLine();
-      while ( lin != null ) {
-	if (lin.startsWith("Client") && !lin.startsWith("Client info")) {
-	  // get the client number and name
-	  Integer clientNum = new Integer(lin.substring(6,10).trim());
-	  String clientName = lin.substring(14);
-	  clientName = clientName.substring(0,clientName.lastIndexOf('"'));
-	  ret.put(clientNum, clientName);
-	}
-	lin = br.readLine();
-      }
-    } catch (IOException ioe) {
-      System.out.println("Couldn't read " + filename + ": " + ioe);
-      return null;
-    }
-    return ret;
-  }
-
-
   private static void usage() {
     System.out.println("Usage: java qualm.Qualm <options> <filename>");
     System.out.println("  --output <out>");
@@ -39,7 +14,6 @@ public class Qualm {
     System.out.println("  --input <in>");
     System.out.println("  -i <in>         Sets input ALSA port.");
     System.out.println("  --nomidi | -n   Ignore MIDI ports");
-    System.out.println("  --list | -l     List all ALSA MIDI ports and exit.");
     System.out.println("  --debugmidi     Print all received MIDI events.");
     System.out.println("  --lint          Carefully check the input file for errors.");
     System.out.println("  --version | -v  Give information on the build identifier.");
@@ -98,6 +72,7 @@ public class Qualm {
     longopts[i++] = new LongOpt("input", LongOpt.REQUIRED_ARGUMENT, null, 'i');
     longopts[i++] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
     longopts[i++] = new LongOpt("nomidi", LongOpt.NO_ARGUMENT, null, 'n');
+    longopts[i++] = new LongOpt("debug", LongOpt.NO_ARGUMENT, null, 0);
     longopts[i++] = new LongOpt("debugmidi", LongOpt.NO_ARGUMENT, null, 0);
     longopts[i++] = new LongOpt("lint", LongOpt.NO_ARGUMENT, null, 1);
     longopts[i++] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
@@ -137,9 +112,9 @@ public class Qualm {
 
     // Set up MIDI ports
     Properties props = new Properties();
-    props.setProperty("inputPort", inputPort);
-    props.setProperty("outputPort", outputPort);
-    props.setProperty("debugMIDI", Boolean.toString(debugMIDI));
+    if (inputPort != null) props.setProperty("inputPort", inputPort);
+    if (outputPort != null) props.setProperty("outputPort", outputPort);
+    props.setProperty("debug", Boolean.toString(debugMIDI));
     JavaMidiReceiver jmr = null;
     if (!skipMIDI)
       jmr = new JavaMidiReceiver(props);
