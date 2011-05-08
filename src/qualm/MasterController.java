@@ -174,7 +174,7 @@ public class MasterController implements QReceiver {
    */
   public void handleMidiCommand(MidiCommand midi) {
     if (debugMIDI) 
-      System.out.println( midi );
+      Qualm.LOG.fine( "Rec'd" + midi );
 
     try {
       Iterator<QController> i = controllers.values().iterator();

@@ -69,26 +69,22 @@ public class RolandDelegate extends ChangeDelegate {
       int[] bankSelectValues = _bankSelector(bankName,patchNum);
 	
       MidiCommand msg = new MidiCommand();
-      msg.setMessage( MidiCommand.CONTROL_CHANGE,
-			ch,
-			0, bankSelectValues[0]);
-	
+      msg.setParams( ch, MidiCommand.CONTROL_CHANGE,
+	             (byte)0, (byte)bankSelectValues[0]);
       if (midiOut != null) 
         midiOut.handleMidiCommand(msg);
 
       msg = new MidiCommand();
-      msg.setMessage( MidiCommand.CONTROL_CHANGE,
-			ch,
-			0x20, bankSelectValues[1]);
+      msg.setParams( ch, MidiCommand.CONTROL_CHANGE,
+		     (byte)0x20, (byte)bankSelectValues[1]);
       if (midiOut != null)
         midiOut.handleMidiCommand(msg);
     }
 
     // we do this for all the messages
     MidiCommand msg = new MidiCommand();
-    msg.setMessage( MidiCommand.PROGRAM_CHANGE, 
-		      pce.getChannel(), 
-		      patchNum%128, 0 );
+    msg.setParams( pce.getChannel(), MidiCommand.PROGRAM_CHANGE, 
+		   (byte)(patchNum%128), (byte)0 );
 
     if (midiOut != null) 
       midiOut.handleMidiCommand(msg);
@@ -97,8 +93,8 @@ public class RolandDelegate extends ChangeDelegate {
     if (volume != null) {
       // send Control Change 7 to set channel volume
       msg = new MidiCommand();
-      msg.setMessage( MidiCommand.CONTROL_CHANGE,
-			pce.getChannel(), 7, volume.intValue() );
+      msg.setParams( pce.getChannel(), MidiCommand.CONTROL_CHANGE,
+		     (byte)7, volume.byteValue() );
 
       if (midiOut != null)
         midiOut.handleMidiCommand(msg);

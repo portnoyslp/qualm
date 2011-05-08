@@ -29,7 +29,7 @@ public abstract class ChangeDelegate {
    */
   public void noteWindowChange( NoteWindowChangeEvent nwce,
 				QReceiver midiOut ) {
-    System.out.println( "WARNING: this device does not support <note-window-change> events." );
+    Qualm.LOG.warning( "This device does not support <note-window-change> events." );
   }
   
   /**

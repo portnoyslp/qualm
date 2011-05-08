@@ -15,7 +15,7 @@ public class VerboseReceiver extends AbstractQReceiver {
 
   public void handleMidiCommand(MidiCommand midiCommand) {
     if (debugMIDI)
-      System.out.println( "->" + midiCommand );
+      Qualm.LOG.info( "->" + midiCommand );
     if (getTarget() != null)
       getTarget().handleMidiCommand(midiCommand);
   }

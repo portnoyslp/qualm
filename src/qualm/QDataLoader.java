@@ -348,18 +348,18 @@ public class QDataLoader extends DefaultHandler {
   // handle validation errors if appropriate
   public void error(org.xml.sax.SAXParseException err) {
     if (validateInput) {
-      System.out.println("*** ERROR: " 
+      Qualm.LOG.severe("Validation Error: " 
 			 + ", line " + err.getLineNumber()
 			 + ", uri " + err.getSystemId());
-      System.out.println("   " + err.getMessage());
+      Qualm.LOG.severe("   " + err.getMessage());
     }
   }
   public void warning(org.xml.sax.SAXParseException err) {
     if (validateInput) {
-      System.out.println("*** WARNING: " 
+      Qualm.LOG.warning("Validation warning: " 
 			 + ", line " + err.getLineNumber()
 			 + ", uri " + err.getSystemId());
-      System.out.println("   " + err.getMessage());
+      Qualm.LOG.warning("   " + err.getMessage());
     }
   }
 

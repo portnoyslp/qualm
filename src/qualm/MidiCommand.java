@@ -75,7 +75,11 @@ public class MidiCommand {
     this.type = SYSEX;
     this.data = data;
   }
-  
+
+  public byte[] getData() {
+    return data;
+  }
+
   public String toString() {
     String cStr = "UNKNOWN";
     switch (type) {

@@ -1,11 +1,19 @@
 package qualm;
 
 import java.util.*;
-import java.io.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
+
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
 public class Qualm {
+  
+  public static final Logger LOG = Logger.getLogger("Qualm.core");
   
   private static void usage() {
     System.out.println("Usage: java qualm.Qualm <options> <filename>");
@@ -14,7 +22,7 @@ public class Qualm {
     System.out.println("  --input <in>");
     System.out.println("  -i <in>         Sets input ALSA port.");
     System.out.println("  --nomidi | -n   Ignore MIDI ports");
-    System.out.println("  --debugmidi     Print all received MIDI events.");
+    System.out.println("  --debugmidi     Print debug output, including received MIDI events.");
     System.out.println("  --lint          Carefully check the input file for errors.");
     System.out.println("  --version | -v  Give information on the build identifier.");
     System.out.println("  --help | -h     Prints this message.");
@@ -105,6 +113,19 @@ public class Qualm {
 	}
     }
 
+    // set up output logging; don't use the parent, so that we can skip the standard logging.
+    // TODO redo so that we can actually use the standard logging config files?
+    LOG.setUseParentHandlers(false);
+    Handler handler = new ConsoleHandler();
+    handler.setLevel(Level.FINER);
+    LOG.addHandler(handler);
+    
+    if (debugMIDI) {
+      LOG.setLevel(Level.FINER);
+    } else {
+      LOG.setLevel(Level.INFO);
+    }
+    
     String inputFilename = null;
     if (g.getOptind() < args.length) {
       inputFilename = args[g.getOptind()];
@@ -114,10 +135,14 @@ public class Qualm {
     Properties props = new Properties();
     if (inputPort != null) props.setProperty("inputPort", inputPort);
     if (outputPort != null) props.setProperty("outputPort", outputPort);
-    props.setProperty("debug", Boolean.toString(debugMIDI));
     JavaMidiReceiver jmr = null;
     if (!skipMIDI)
-      jmr = new JavaMidiReceiver(props);
+      try {
+        jmr = new JavaMidiReceiver(props);       
+      } catch (Exception e) {
+        LOG.warning(e.getMessage());
+        System.exit(0);
+      }
     
     MasterController mc = new MasterController( jmr );
     if (debugMIDI) mc.setDebugMIDI(true);
