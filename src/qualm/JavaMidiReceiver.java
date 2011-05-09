@@ -245,9 +245,9 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
         MidiDevice md = MidiSystem.getMidiDevice(info);
         devInfo = "[";
         if (md.getMaxTransmitters() != 0)
-          devInfo += "trans:" + (md.getMaxTransmitters()>=0 ? md.getMaxTransmitters() : "unlimited") + " ";
+          devInfo += "trans:" + (md.getMaxTransmitters()>=0 ? md.getMaxTransmitters() : "∞") + " ";
         if (md.getMaxReceivers() != 0)
-          devInfo += "rec:" + (md.getMaxReceivers()>=0 ? md.getMaxReceivers() : "unlimited");
+          devInfo += "rec:" + (md.getMaxReceivers()>=0 ? md.getMaxReceivers() : "∞");
         devInfo += "]";
         if (devInfo.equals("[ ]")) {
           devInfo = "[unavailable]";

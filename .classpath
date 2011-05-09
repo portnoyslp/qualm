@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="misc"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="qualm.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/usr/share/java/gnu-getopt.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/junit.jar"/>
