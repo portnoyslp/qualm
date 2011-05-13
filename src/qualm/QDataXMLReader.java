@@ -37,6 +37,7 @@ public class QDataXMLReader implements XMLReader {
       TransformerFactory factory = TransformerFactory.newInstance();
       Transformer transformer = factory.newTransformer();
       transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype);
+      transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
       
       //Setup input and output
       Source src = new SAXSource(new QDataXMLReader(), new QDataInputSource(qd));
