@@ -5,9 +5,6 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.StreamHandler;
-
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
