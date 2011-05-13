@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -25,7 +26,7 @@ public class QDataXMLReader implements XMLReader {
 
   ContentHandler handler;
 
-  // TODO: Should we be doing namespaces?
+  static String doctype = "http://portnoyslp.github.com/qualm/qualm.dtd";
   String nsu = "";  // NamespaceURI
   AttributesImpl atts = new AttributesImpl();
   String rootElement = "qualm-data";
@@ -35,6 +36,8 @@ public class QDataXMLReader implements XMLReader {
     try {
       TransformerFactory factory = TransformerFactory.newInstance();
       Transformer transformer = factory.newTransformer();
+      transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype);
+      
       //Setup input and output
       Source src = new SAXSource(new QDataXMLReader(), new QDataInputSource(qd));
 
