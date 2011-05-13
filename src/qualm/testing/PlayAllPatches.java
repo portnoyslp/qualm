@@ -2,14 +2,14 @@ package qualm.testing;
 
 import qualm.*;
 import gnu.getopt.*;
-import javax.sound.midi.*;
 import java.util.*;
+
 import qualm.Patch;
 
 public class PlayAllPatches {
 
-  static Transmitter midiIn = null;
-  static Receiver midiOut = null;
+  static QReceiver midiIn = null;
+  static QReceiver midiOut = null;
 
   public static void loopThroughPatches(QData data) {
     TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator<Patch>() { 
@@ -28,27 +28,27 @@ public class PlayAllPatches {
       // play a chord: c4, e4, g4, c5 (60,64,67,72)
       
       try {
-	ShortMessage out = new ShortMessage();
-	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 64 );
-	midiOut.send(out, -1);
-	out.setMessage( ShortMessage.NOTE_ON, 0, 64, 64 );
-	midiOut.send(out, -1);
-	out.setMessage( ShortMessage.NOTE_ON, 0, 67, 64 );
-	midiOut.send(out, -1);
-	out.setMessage( ShortMessage.NOTE_ON, 0, 72, 64 );
-	midiOut.send(out, -1);
+	MidiCommand out = new MidiCommand();
+	out.setMessage( MidiCommand.NOTE_ON, 0, 60, 64 );
+	midiOut.handleMidiCommand(out);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 64, 64 );
+	midiOut.handleMidiCommand(out);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 67, 64 );
+	midiOut.handleMidiCommand(out);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 72, 64 );
+	midiOut.handleMidiCommand(out);
       
 	// delay 1s
 	Thread.sleep(1000);
 
-	out.setMessage( ShortMessage.NOTE_ON, 0, 60, 0 );
-	midiOut.send(out, -1);
-	out.setMessage( ShortMessage.NOTE_ON, 0, 64, 0 );
-	midiOut.send(out, -1);
-	out.setMessage( ShortMessage.NOTE_ON, 0, 67, 0 );
-	midiOut.send(out, -1);
-	out.setMessage( ShortMessage.NOTE_ON, 0, 72, 0 );
-	midiOut.send(out, -1);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 60, 0 );
+	midiOut.handleMidiCommand(out);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 64, 0 );
+	midiOut.handleMidiCommand(out);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 67, 0 );
+	midiOut.handleMidiCommand(out);
+	out.setMessage( MidiCommand.NOTE_ON, 0, 72, 0 );
+	midiOut.handleMidiCommand(out);
 
 	// delay another 1s
 	Thread.sleep(1000);
@@ -102,45 +102,13 @@ public class PlayAllPatches {
     } else {
       data = qdl.readFile( new java.io.File( inputFilename ));
     }
-
-
-    // set ports
-    if (inputPort == null && outputPort == null) 
-      inputPort="UM-1";
-    if (outputPort == null) 
-      outputPort = inputPort;
-    if (inputPort == null)
-      inputPort = outputPort;
-
-    MidiDevice.Info[] ports = Qualm.getMidiPorts(inputPort, outputPort, false, false);
-    MidiDevice.Info inputInfo = ports[0];
-    MidiDevice.Info outputInfo = ports[1];
-    if (inputInfo == null ) {
-      System.out.println("Unable to load input port named " + inputPort);
-      System.exit(1);
-    }
-    if (outputInfo == null) {
-      System.out.println("Unable to load output port named " + outputPort);
-      System.exit(1);
-    }
-
-    // get the transmitter and receiver
-    try {      	
-      MidiDevice inDevice = MidiSystem.getMidiDevice( inputInfo );
-      inDevice.open();
-      midiIn = inDevice.getTransmitter();
-    } catch (MidiUnavailableException mdu1) {
-      System.out.println("Unable to open device for input:" + mdu1);
-    }
     
-    try {
-      MidiDevice outDevice = MidiSystem.getMidiDevice( outputInfo );
-      outDevice.open();
-      midiOut = outDevice.getReceiver();
-    } catch (MidiUnavailableException mdu2) {
-      System.out.println("Unable to open device for output:" + mdu2);
-    }
-
+    // Set up MIDI ports
+    Properties props = new Properties();
+    props.setProperty("inputPort", inputPort);
+    props.setProperty("outputPort", outputPort);
+    midiOut = new JavaMidiReceiver(props);
+    midiIn = midiOut;
 
     loopThroughPatches(data);
     System.exit(0);

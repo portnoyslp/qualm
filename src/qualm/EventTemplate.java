@@ -1,8 +1,5 @@
 package qualm;
 
-import javax.sound.midi.MidiMessage;
-import javax.sound.midi.ShortMessage;
-
 public class EventTemplate {
 
   public EventTemplate () { } 
@@ -18,14 +15,14 @@ public class EventTemplate {
 
   public static EventTemplate createNoteOnEventTemplate( int ch, String noteRange ) { 
     EventTemplate t = new EventTemplate();
-    t.type = ShortMessage.NOTE_ON;
+    t.type = MidiCommand.NOTE_ON;
     t.channel = ch;
     t._setNoteRange(noteRange);
     return t;
   }
   public static EventTemplate createNoteOffEventTemplate( int ch, String noteRange ) {  
     EventTemplate t = new EventTemplate();
-    t.type = ShortMessage.NOTE_OFF;
+    t.type = MidiCommand.NOTE_OFF;
     t.channel = ch;
     t._setNoteRange(noteRange);
     return t;
@@ -34,7 +31,7 @@ public class EventTemplate {
   public static EventTemplate createControlEventTemplate( int ch, String ctrl, 
 							  String thresh ) {
     EventTemplate t = new EventTemplate();
-    t.type = ShortMessage.CONTROL_CHANGE;
+    t.type = MidiCommand.CONTROL_CHANGE;
     t.channel = ch;
 
     int extra1;
@@ -125,47 +122,39 @@ public class EventTemplate {
     return "event[" + getTypeDesc() + "/" + channel + "/" + range1() + "]";
   }
 
-  public boolean match(MidiMessage m) {
-    if (m instanceof ShortMessage) {
-      ShortMessage sm = (ShortMessage)m;
-
-      // shortcut test
-      if (type != sm.getCommand()) {
-	
-	// special case handling -- a note-on with a velocity of zero is
-	// equivalent to a note-off, so treat it as such.
-	if (type != ShortMessage.NOTE_OFF ||
-	    sm.getCommand() != ShortMessage.NOTE_ON ||
-	    sm.getData2() > 0)
-	  return false;
-      }
-
-      // check for bad channel or first data byte
-      if (channel != sm.getChannel())
-	return false;
-
-      // check for bad match to data
-      if (extra1Min != DONT_CARE && 
-          (extra1Min > sm.getData1() || extra1Max < sm.getData1()) )
-	return false;
-
-      // other checks.
-      if (type == ShortMessage.NOTE_ON || type == ShortMessage.NOTE_OFF)
-	return true;
-      if (type == ShortMessage.CONTROL_CHANGE && 
-	  extra2Min <= sm.getData2() &&
-	  extra2Max >= sm.getData2())
-	return true;
-
+  public boolean match(MidiCommand cmd) {
+    // shortcut test
+    if (type != cmd.getType()) {
+      // special case handling -- a note-on with a velocity of zero is
+      // equivalent to a note-off, so treat it as such.
+      if (type != MidiCommand.NOTE_OFF
+          || cmd.getType() != MidiCommand.NOTE_ON || cmd.getData2() > 0)
+        return false;
     }
+
+    // check for bad channel or first data byte
+    if (channel != cmd.getChannel())
+      return false;
+
+    // check for bad match to data
+    if (extra1Min != DONT_CARE
+        && (extra1Min > cmd.getData1() || extra1Max < cmd.getData1()))
+      return false;
+
+    // other checks.
+    if (type == MidiCommand.NOTE_ON || type == MidiCommand.NOTE_OFF)
+      return true;
+    if (type == MidiCommand.CONTROL_CHANGE && extra2Min <= cmd.getData2()
+        && extra2Max >= cmd.getData2())
+      return true;
     return false;
   }
 
   public String getTypeDesc() { 
     String name = null;
-    if (type == ShortMessage.NOTE_ON) { name = "NoteOn"; }
-    if (type == ShortMessage.NOTE_OFF) { name = "NoteOff"; } 
-    if (type == ShortMessage.CONTROL_CHANGE) { name = "Control"; } 
+    if (type == MidiCommand.NOTE_ON) { name = "NoteOn"; }
+    if (type == MidiCommand.NOTE_OFF) { name = "NoteOff"; } 
+    if (type == MidiCommand.CONTROL_CHANGE) { name = "Control"; } 
     return name;
   }
   public int channel() { return channel; }

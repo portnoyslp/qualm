@@ -1,7 +1,6 @@
 package qualm;
 
 import java.util.regex.Pattern;
-import javax.sound.midi.Receiver;
 
 public class PatchChanger {
   // instance methods
@@ -66,7 +65,7 @@ public class PatchChanger {
   }
 
   public static synchronized void patchChange( ProgramChangeEvent pce,
-					       Receiver midiOut ) {
+					       QReceiver midiOut ) {
     int ch = pce.getChannel();
     if (changer[ch] != null) {
       changer[ch].getChangeDelegate().patchChange(pce, midiOut);
@@ -77,7 +76,7 @@ public class PatchChanger {
   }
 
   public static synchronized void noteWindowChange( NoteWindowChangeEvent nwce,
-						    Receiver midiOut ) {
+						    QReceiver midiOut ) {
     int ch = nwce.getChannel();
     if (changer[ch] != null) {
       changer[ch].getChangeDelegate().noteWindowChange(nwce, midiOut);

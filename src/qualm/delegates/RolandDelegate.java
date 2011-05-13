@@ -2,7 +2,6 @@ package qualm.delegates;
 
 import qualm.*;
 import qualm.Patch;
-import javax.sound.midi.*;
 
 public class RolandDelegate extends ChangeDelegate {
   protected int[] _bankSelector ( String bankName, int patchNum ) {
@@ -58,58 +57,47 @@ public class RolandDelegate extends ChangeDelegate {
   }
 
   public void patchChange( ProgramChangeEvent pce,
-			   Receiver midiOut ) {
-    try {
-      int ch = pce.getChannel();
-      Patch patch = pce.getPatch();
-      int patchNum = patch.getNumber()-1;
+			   QReceiver midiOut ) {
+    int ch = pce.getChannel();
+    Patch patch = pce.getPatch();
+    int patchNum = patch.getNumber()-1;
 
-      if (patch.getBank() != null) {
+    if (patch.getBank() != null) {
 
-	String bankName = patch.getBank();
-
-	int[] bankSelectValues = _bankSelector(bankName,patchNum);
+      String bankName = patch.getBank();
+      
+      int[] bankSelectValues = _bankSelector(bankName,patchNum);
 	
-	ShortMessage msg = new ShortMessage();
-	msg.setMessage( ShortMessage.CONTROL_CHANGE,
-			ch,
-			0, bankSelectValues[0]);
-	
-	if (midiOut != null) 
-	  midiOut.send(msg,-1);
-
-	msg = new ShortMessage();
-	msg.setMessage( ShortMessage.CONTROL_CHANGE,
-			ch,
-			0x20, bankSelectValues[1]);
-	if (midiOut != null)
-	  midiOut.send(msg,-1);
-      }
-
-      // we do this for all the messages
-      ShortMessage msg = new ShortMessage();
-      msg.setMessage( ShortMessage.PROGRAM_CHANGE, 
-		      pce.getChannel(), 
-		      patchNum%128, 0 );
-
+      MidiCommand msg = new MidiCommand();
+      msg.setParams( ch, MidiCommand.CONTROL_CHANGE,
+	             (byte)0, (byte)bankSelectValues[0]);
       if (midiOut != null) 
-	midiOut.send(msg, -1);
+        midiOut.handleMidiCommand(msg);
 
-      Integer volume = patch.getVolume();
-      if (volume != null)
-      {
-	// send Control Change 7 to set channel volume
-	msg = new ShortMessage();
-	msg.setMessage( ShortMessage.CONTROL_CHANGE,
-			pce.getChannel(), 7, volume.intValue() );
+      msg = new MidiCommand();
+      msg.setParams( ch, MidiCommand.CONTROL_CHANGE,
+		     (byte)0x20, (byte)bankSelectValues[1]);
+      if (midiOut != null)
+        midiOut.handleMidiCommand(msg);
+    }
 
-	if (midiOut != null)
-	  midiOut.send(msg,-1);
-      }
+    // we do this for all the messages
+    MidiCommand msg = new MidiCommand();
+    msg.setParams( pce.getChannel(), MidiCommand.PROGRAM_CHANGE, 
+		   (byte)(patchNum%128), (byte)0 );
 
-    } catch (InvalidMidiDataException e) {
-      System.out.println("Unable to send Program Change: " + pce);
-      System.out.println(e);
+    if (midiOut != null) 
+      midiOut.handleMidiCommand(msg);
+
+    Integer volume = patch.getVolume();
+    if (volume != null) {
+      // send Control Change 7 to set channel volume
+      msg = new MidiCommand();
+      msg.setParams( pce.getChannel(), MidiCommand.CONTROL_CHANGE,
+		     (byte)7, volume.byteValue() );
+
+      if (midiOut != null)
+        midiOut.handleMidiCommand(msg);
     } 
   }
   

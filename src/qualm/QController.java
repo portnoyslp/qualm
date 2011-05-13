@@ -1,26 +1,22 @@
 package qualm;
 
-import javax.sound.midi.*;
 import java.util.*;
 
-public class QController implements Receiver {
+public class QController extends AbstractQReceiver {
 
-  Receiver midiOut;
   MasterController master;
   QAdvancer advancer;
   QData qdata;
   String title;
 
-  public QController( Receiver out, QStream qstream, QData data ) {
-    midiOut = out;
+  public QController( QReceiver out, QStream qstream, QData data ) {
+    setTarget(out);
     qdata = data;
     title = qstream.getTitle();
     advancer = new QAdvancer( qstream, data );
 
     setupTriggers();
   }
-
-  public Receiver getMidiOut() { return midiOut; }
 
   public String getTitle() { return title; }
   public void setTitle(String t) { title=t; }
@@ -85,20 +81,20 @@ public class QController implements Receiver {
     setupTriggers();
   }
 
-  public void send(MidiMessage midiMessage, long l) {
+  public void handleMidiCommand(MidiCommand cmd) {
     // Do any of the currently in-effect maps match this event?
     Cue cue = getCurrentCue();
     if (cue != null) {
       Iterator<EventMapper> iter = cue.getEventMaps().iterator();
       while(iter.hasNext()) {
-	EventMapper em = iter.next();
-	MidiMessage out[] = em.mapEvent(midiMessage);
-	if (out != null) {
-	  for(int i=0; i<out.length; i++) {
-	    if (out[i] != null && midiOut != null)
-	      midiOut.send(out[i], -1);
-	  }
-	}
+        EventMapper em = iter.next();
+        MidiCommand out[] = em.mapEvent(cmd);
+        if (out != null) {
+          for(int i=0; i<out.length; i++) {
+            if (out[i] != null && getTarget() != null)
+              getTarget().handleMidiCommand(out[i]);
+          }
+        }
       }
     }
 
@@ -110,15 +106,16 @@ public class QController implements Receiver {
       boolean triggered = false;
 
       Trigger trig = cachedTriggers[i];
-      if (trig.match(midiMessage)) {
-	triggered = true;
+      if (trig.match(cmd)) {
+        triggered = true;
         executeTrigger(trig);
       }
       if (triggered) break;
     }
     // no match, just ignore the message.
-  }
 
+  }
+  
   private void executeTriggerWithoutDelay(Trigger trig) {
     // call the appropriate action
     if (trig.getReverse()) 

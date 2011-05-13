@@ -1,7 +1,5 @@
 package qualm;
 
-import javax.sound.midi.MidiMessage;
-
 public class Trigger {
 
   public Trigger (EventTemplate et, boolean rev) { 
@@ -25,8 +23,8 @@ public class Trigger {
     return "trig[" + template + (getReverse()?" rev":"") + (getDelay()>0?" dly"+getDelay():"") + "]";
   }
 
-  public boolean match(MidiMessage m) {
-    return template.match(m);
+  public boolean match(MidiCommand cmd) {
+    return template.match(cmd);
   }
   
   protected int delay;

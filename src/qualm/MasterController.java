@@ -1,23 +1,21 @@
 package qualm;
 
 import java.util.*;
-import javax.sound.midi.MidiMessage;
-import javax.sound.midi.Receiver;
 
-public class MasterController implements Receiver {
+public class MasterController implements QReceiver {
 
-  Receiver midiOut;
+  QReceiver midiOut;
   SortedMap<String, QController> controllers;
   QualmREPL REPL = null;
   boolean debugMIDI = false;
   boolean silentErrorHandling = true;
 
-  public MasterController( Receiver out ) {
+  public MasterController( QReceiver out ) {
     midiOut = new VerboseReceiver(out);
     controllers = new TreeMap<String, QController>();
   }
 
-  public Receiver getMidiOut() { return midiOut; }
+  public QReceiver getMidiOut() { return midiOut; }
 
   public void setREPL(QualmREPL newREPL) { REPL = newREPL; }
   public QualmREPL getREPL() { return REPL; }
@@ -57,7 +55,7 @@ public class MasterController implements Receiver {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
 	int channel = pce.getChannel();
 	if (!sent_channel[ channel ]) {
-	  PatchChanger.patchChange(pce, mainQC().getMidiOut() );
+	  PatchChanger.patchChange(pce, mainQC().getTarget() );
 	  sentPCs.add(pce);
 	  sent_channel[channel] = true;
 	}
@@ -66,7 +64,7 @@ public class MasterController implements Receiver {
 	NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
 	int channel = nwce.getChannel();
 	if (!sent_nw_on_channel[ channel ]) {
-	  PatchChanger.noteWindowChange(nwce, mainQC().getMidiOut() );
+	  PatchChanger.noteWindowChange(nwce, mainQC().getTarget() );
 	  sentPCs.add(nwce);
 	  sent_nw_on_channel[channel] = true;
 	}
@@ -171,28 +169,24 @@ public class MasterController implements Receiver {
   }
   public void setSilentErrorHandling(boolean flag) { silentErrorHandling=flag; }
 
-  public void close() {
-    Iterator<QController> i = controllers.values().iterator();
-    while (i.hasNext()) 
-      i.next(). close();
-  }
-
-  public void send(MidiMessage midiMessage, long ts) {
+  /* Forwards the given midi command to all the controllers.
+   * @see qualm.QReceiver#handleMidiCommand(qualm.MidiCommand)
+   */
+  public void handleMidiCommand(MidiCommand midi) {
     if (debugMIDI) 
-      System.out.println( MidiMessageParser.messageToString(midiMessage) );
+      Qualm.LOG.fine( "Rec'd" + midi );
 
     try {
       Iterator<QController> i = controllers.values().iterator();
       while (i.hasNext()) 
-	i.next(). send(midiMessage, ts);
+        i.next(). handleMidiCommand(midi);
     } catch (RuntimeException re) {
       // if we get any errors from the data send, we can either print
       // them and continue, or throw a monkey wrench
       re.printStackTrace();
       if (!silentErrorHandling)
-	throw re;
+        throw re;
     }
   }
-
 
 } // QController

@@ -2,10 +2,6 @@ package qualm.testing.junit;
 
 import qualm.*;
 import java.util.*;
-import javax.sound.midi.MidiMessage;
-import javax.sound.midi.ShortMessage;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.Transmitter;
 
 import junit.framework.Assert;
 
@@ -14,9 +10,9 @@ import junit.framework.Assert;
  * commands to send, and will store the responses for later analysis.
  */
 
-public class FakeMIDI implements Receiver,Transmitter {
+public class FakeMIDI implements QReceiver {
 
-  Receiver receiver;
+  QReceiver receiver;
   ArrayList<Object> incomingMessages;
   ArrayList<Object> outgoingMessages;
   long baseTime;
@@ -29,32 +25,22 @@ public class FakeMIDI implements Receiver,Transmitter {
     outgoingMessages = new ArrayList<Object>();
   }
 
-  public void addOutgoing(long ts, ShortMessage sm) {
-    outgoingMessages.add( new TimestampedMsg(ts,sm) );
+  public void setReceiver (QReceiver rec) {
+    this.receiver = rec;
+  }
+  
+  public void addOutgoing(long ts, MidiCommand cmd) {
+    outgoingMessages.add( new TimestampedMsg(ts,cmd) );
   }
 
-  public void addOutgoing(long ts, int a) {
-    ShortMessage sm = new ShortMessage();
-    try { sm.setMessage(a); } 
-    catch (javax.sound.midi.InvalidMidiDataException mde) {
-      throw new RuntimeException(mde);
-    }
+  public void addOutgoing(long ts, int a, int ch, int c) {
+    MidiCommand sm = new MidiCommand();
+    sm.setParams(ch, a, (byte)c); 
     addOutgoing(ts,sm);
   }
-  public void addOutgoing(long ts, int a, int b, int c) {
-    ShortMessage sm = new ShortMessage();
-    try { sm.setMessage(a, b, c); } 
-    catch (javax.sound.midi.InvalidMidiDataException mde) {
-      throw new RuntimeException(mde);
-    }
-    addOutgoing(ts,sm);
-  }
-  public void addOutgoing(long ts, int a, int b, int c, int d) {
-    ShortMessage sm = new ShortMessage();
-    try { sm.setMessage(a,b,c,d); } 
-    catch (javax.sound.midi.InvalidMidiDataException mde) {
-      throw new RuntimeException(mde);
-    }
+  public void addOutgoing(long ts, int a, int ch, int c, int d) {
+    MidiCommand sm = new MidiCommand();
+    sm.setParams(ch,a,(byte)c,(byte)d); 
     addOutgoing(ts,sm);
   }
 
@@ -67,8 +53,7 @@ public class FakeMIDI implements Receiver,Transmitter {
     java.util.Iterator<Object> iter = incomingMessages.iterator();
     while (iter.hasNext()) {
       TimestampedMsg tsm = (TimestampedMsg)iter.next();
-      System.out.println("   " + tsm.timestamp + "ms: " +
-                         MidiMessageParser.messageToString( tsm.msg ));
+      System.out.println("   " + tsm.timestamp + "ms: " + tsm.msg );
     }
   }
     
@@ -86,7 +71,7 @@ public class FakeMIDI implements Receiver,Transmitter {
 	try { Thread.sleep(50); } catch (Exception e) { } 
       }
       // send message
-      receiver.send(tm.msg,-1);
+      receiver.handleMidiCommand(tm.msg);
     }
   }
 
@@ -111,17 +96,17 @@ public class FakeMIDI implements Receiver,Transmitter {
 
   // assertion test
   public static void assertMIDI(Object msg, int command, int channel, int data1, int data2) {
-    ShortMessage m = (ShortMessage) (((TimestampedMsg)msg).msg);
-    Assert.assertEquals("Command for " + MidiMessageParser.messageToString(m) + 
+    MidiCommand m = (MidiCommand) (((TimestampedMsg)msg).msg);
+    Assert.assertEquals("Command for " + m + 
 			" not expected value " + command,
-			m.getCommand(), command);
-    Assert.assertEquals("Channel for " + MidiMessageParser.messageToString(m) + 
+			m.getType(), command);
+    Assert.assertEquals("Channel for " + m + 
 			" not expected value " + channel,
 			m.getChannel(), channel);
-    Assert.assertEquals("Data1 for " + MidiMessageParser.messageToString(m) + 
+    Assert.assertEquals("Data1 for " + m + 
 			" not expected value " + data1,
 			m.getData1(), data1);
-    Assert.assertEquals("Data2 for " + MidiMessageParser.messageToString(m) + 
+    Assert.assertEquals("Data2 for " + m + 
 			" not expected value " + data2,
 			m.getData2(), data2);
   }
@@ -129,35 +114,26 @@ public class FakeMIDI implements Receiver,Transmitter {
   // assertion: ensure that a timestamp is past a certain minimum value
   public static void assertTS(Object msg, long minValue) {
     long ts = ((TimestampedMsg)msg).timestamp;
-    MidiMessage m = ((TimestampedMsg)msg).msg;
-    Assert.assertTrue( "Timestamp for " + MidiMessageParser.messageToString( m ) +
+    MidiCommand m = ((TimestampedMsg)msg).msg;
+    Assert.assertTrue( "Timestamp for " + m +
                        " not after " + minValue,
                        ts > minValue );
   }
   
 
-  // Implementation of javax.sound.midi.Receiver
+  // Implementation of QReceiver
 
-  public void close() {
-    receiver = null;
-  }
-
-  public void send(MidiMessage midiMessage, long ts) {
+  public void handleMidiCommand(MidiCommand midiMessage) {
     // Store midi messages with a timestamp based on the unit's creation.
     long curTime = System.currentTimeMillis() - baseTime;
     incomingMessages.add(new TimestampedMsg(curTime, midiMessage));
   }
 
-  // Implementation of javax.sound.midi.Transmitter
-
-  public Receiver getReceiver() { return receiver; }
-  public void setReceiver(Receiver receiver) { this.receiver = receiver; }
-
   // private structures for binding timestamps and messages
   private class TimestampedMsg { 
     public long timestamp;
-    public MidiMessage msg;
-    TimestampedMsg( long ts, MidiMessage mm ) {
+    public MidiCommand msg;
+    TimestampedMsg( long ts, MidiCommand mm ) {
       timestamp = ts;
       msg = mm;
     }

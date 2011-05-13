@@ -2,14 +2,13 @@ package qualm.testing;
 
 import qualm.*;
 import gnu.getopt.*;
-import javax.sound.midi.*;
 import java.util.*;
 
 public class StressTest {
 
 
-  static Transmitter midiIn = null;
-  static Receiver midiOut = null;
+  static QReceiver midiIn = null;
+  static QReceiver midiOut = null;
     
   public static void runLoop(QData data) {
     // get all the cues.  Note that we can't use the normal
@@ -106,44 +105,12 @@ public class StressTest {
       data = qdl.readFile( new java.io.File( inputFilename ));
     }
 
-
-    // set ports
-    if (inputPort == null && outputPort == null) 
-      inputPort="UM-1";
-    if (outputPort == null) 
-      outputPort = inputPort;
-    if (inputPort == null)
-      inputPort = outputPort;
-
-    MidiDevice.Info[] ports = Qualm.getMidiPorts(inputPort, outputPort, false, false);
-    MidiDevice.Info inputInfo = ports[0];
-    MidiDevice.Info outputInfo = ports[1];
-    if (inputInfo == null ) {
-      System.out.println("Unable to load input port named " + inputPort);
-      System.exit(1);
-    }
-    if (outputInfo == null) {
-      System.out.println("Unable to load output port named " + outputPort);
-      System.exit(1);
-    }
-
-    // get the transmitter and receiver
-    try {      	
-      MidiDevice inDevice = MidiSystem.getMidiDevice( inputInfo );
-      inDevice.open();
-      midiIn = inDevice.getTransmitter();
-    } catch (MidiUnavailableException mdu1) {
-      System.out.println("Unable to open device for input:" + mdu1);
-    }
-    
-    try {
-      MidiDevice outDevice = MidiSystem.getMidiDevice( outputInfo );
-      outDevice.open();
-      midiOut = outDevice.getReceiver();
-    } catch (MidiUnavailableException mdu2) {
-      System.out.println("Unable to open device for output:" + mdu2);
-    }
-
+    // Set up MIDI ports
+    Properties props = new Properties();
+    props.setProperty("inputPort", inputPort);
+    props.setProperty("outputPort", outputPort);
+    midiOut = new JavaMidiReceiver(props);
+    midiIn = midiOut;
 
     runLoop(data);
     System.exit(0);
@@ -154,19 +121,15 @@ public class StressTest {
   class InstantiatableTemplate extends EventTemplate {
     public InstantiatableTemplate(EventTemplate et) { super(et); }
 
-    public void sendMessage(Receiver out) {
-      if (type == ShortMessage.NOTE_ON) {
+    public void sendMessage(QReceiver midiOut) {
+      if (type == MidiCommand.NOTE_ON) {
 	int ch = channel;
 	int note = extra1Min;
-	try {
-	  ShortMessage msg = new ShortMessage();
-	  msg.setMessage( ShortMessage.NOTE_ON, ch, note, 61 );
-	  out.send(msg, -1);
-	  msg.setMessage( ShortMessage.NOTE_ON, ch, note, 0 );
-	  out.send(msg, -1);
-	} catch (InvalidMidiDataException imde) {
-	  System.out.println("Could not build messages matching " + toString() );
-	}
+	MidiCommand msg = new MidiCommand();
+	msg.setMessage( MidiCommand.NOTE_ON, ch, note, 61 );
+	midiOut.handleMidiCommand(msg);
+	msg.setMessage( MidiCommand.NOTE_ON, ch, note, 0 );
+	midiOut.handleMidiCommand(msg);
       }
     }
   }

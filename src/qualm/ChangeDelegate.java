@@ -1,7 +1,5 @@
 package qualm;
 
-import javax.sound.midi.Receiver;
-
 public abstract class ChangeDelegate {
   /**
    * Tell the MIDI receiver to change patches, using the information
@@ -14,7 +12,7 @@ public abstract class ChangeDelegate {
    * @param midiOut the destination receiver
    */
   public abstract void patchChange( ProgramChangeEvent pce,
-				    Receiver midiOut );
+				    QReceiver midiOut );
   
   /**
    * Tell the MIDI receiver to change the note window for a part,
@@ -30,8 +28,8 @@ public abstract class ChangeDelegate {
    * @param midiOut the destination receiver
    */
   public void noteWindowChange( NoteWindowChangeEvent nwce,
-				Receiver midiOut ) {
-    System.out.println( "WARNING: this device does not support <note-window-change> events." );
+				QReceiver midiOut ) {
+    Qualm.LOG.warning( "This device does not support <note-window-change> events." );
   }
   
   /**

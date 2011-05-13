@@ -16,10 +16,10 @@ import javax.sound.midi.*;
 public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
 {
   public void patchChange( ProgramChangeEvent pce,
-			   Receiver midiOut )
+			   QReceiver midiOut )
   {
     try {
-      SysexMessage sysex;
+      MidiCommand sysex;
       byte[] data;
 
       int channel = pce.getChannel();
@@ -88,11 +88,11 @@ public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
 	  { (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 1, (byte) channel, 0,
 	    (byte) msb, (byte) 0xF7 };
 
-	sysex = new SysexMessage();
-	sysex.setMessage( data, data.length );
+	sysex = new MidiCommand();
+	sysex.setSysex( data );
 
 	if (midiOut != null)
-	  midiOut.send(sysex, -1);
+	  midiOut.handleMidiCommand(sysex);
 
 	// send SysEx to select Bank LSB for Part, if needed
 	if (lsb != -1)
@@ -100,11 +100,11 @@ public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
 	  data[7] = 1;
 	  data[8] = (byte) lsb;
 
-	  sysex = new SysexMessage();
-	  sysex.setMessage( data, data.length );
+	  sysex = new MidiCommand();
+	  sysex.setSysex( data );
 
 	  if (midiOut != null)
-	    midiOut.send(sysex, -1);
+	    midiOut.handleMidiCommand(sysex);
 	}
       }
 
@@ -113,11 +113,11 @@ public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
 	{ (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 1, (byte) channel, 2,
 	  (byte) progNum, (byte) 0xF7 };
 
-      sysex = new SysexMessage();
-      sysex.setMessage( data, data.length );
+      sysex = new MidiCommand();
+      sysex.setSysex( data );
 
       if (midiOut != null)
-	midiOut.send(sysex, -1);
+	midiOut.handleMidiCommand(sysex);
 
 
       if (patch.getVolume() != null)
@@ -127,11 +127,11 @@ public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
 	  { (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 1, (byte) channel, 0x10,
 	    patch.getVolume().byteValue(), (byte) 0xF7 };
 
-	sysex = new SysexMessage();
-	sysex.setMessage( data, data.length );
+	sysex = new MidiCommand();
+	sysex.setSysex( data );
 
 	if (midiOut != null)
-	  midiOut.send(sysex, -1);
+	  midiOut.handleMidiCommand(sysex);
       }
 
     } catch (InvalidMidiDataException e) {
@@ -145,10 +145,10 @@ public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
 
 
   public void noteWindowChange( NoteWindowChangeEvent nwce,
-				Receiver midiOut )
+				QReceiver midiOut )
   {
     try {
-      SysexMessage sysex;
+      MidiCommand sysex;
       byte[] data;
 
       int channel = nwce.getChannel();
@@ -160,11 +160,11 @@ public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
 	  { (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 1, (byte) channel, 0x15,
 	    nwce.getBottomNote().byteValue(), (byte) 0xF7 };
 
-	sysex = new SysexMessage();
-	sysex.setMessage( data, data.length );
+	sysex = new MidiCommand();
+	sysex.setSysex( data );
 
 	if (midiOut != null)
-	  midiOut.send(sysex, -1);
+	  midiOut.handleMidiCommand(sysex);
       }
 
       if (nwce.getTopNote() != null)
@@ -174,16 +174,13 @@ public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
 	  { (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 1, (byte) channel, 0x16,
 	    nwce.getTopNote().byteValue(), (byte) 0xF7 };
 
-	sysex = new SysexMessage();
-	sysex.setMessage( data, data.length );
+	sysex = new MidiCommand();
+	sysex.setSysex( data );
 
 	if (midiOut != null)
-	  midiOut.send(sysex, -1);
+	  midiOut.handleMidiCommand(sysex);
       }
 
-    } catch (InvalidMidiDataException e) {
-      System.out.println("Unable to send Note Window Change: " + nwce);
-      System.out.println(e);
     } catch (Exception e2) {
       e2.printStackTrace();
     }
