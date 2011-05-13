@@ -1,0 +1,97 @@
+<!ELEMENT qualm-data (title?,midi-channels, patches, cue-stream+)>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT midi-channels (channel+)>
+<!ELEMENT channel (#PCDATA)>
+<!ATTLIST channel
+	  device-type CDATA #IMPLIED
+	  num (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED>
+<!--
+     <midi-channels>
+       <channel num="1">Main Keyboard</channel>
+       <channel num="2" 
+		device-type="Roland JV-1080">Auxiliary Keyboard</channel>
+       <channel num="10">Drum Kit</channel>
+     </midi-channels>
+-->
+<!ELEMENT patches (patch,(patch|patch-alias)*)>
+<!ELEMENT patch (#PCDATA)>
+<!ATTLIST patch
+	  num CDATA #REQUIRED
+	  bank CDATA #IMPLIED
+	  remark CDATA ""
+	  id ID #REQUIRED
+	  volume CDATA #IMPLIED>
+<!ELEMENT patch-alias (#PCDATA)>
+<!ATTLIST patch-alias
+	  target IDREF #REQUIRED
+	  id ID #REQUIRED
+	  volume CDATA #IMPLIED>
+<!--
+     <patches>
+       <patch num="1" id="p1">Nice Piano</patch>
+       <patch-alias id="p1_lookalike" target="p1">V. Nice Piano</patch-alias>
+       <patch num="2" id="p2">TremStr/Str</patch>
+       <patch num="5" id="p5" remark="GruvyOrgn">Organ</patch>
+     </patches>
+-->
+
+<!ELEMENT map-events (map-from,map-to+)>
+<!ELEMENT map-from (note-on|note-off|control-change|program-change)>
+<!ELEMENT map-to (note-on|note-off|control-change|program-change)>
+
+<!-- 
+     <map-events>
+       <map-from><control-change channel="1" control="soft"/></map-from>
+       <map-to><control-change channel="2" control="soft"/></map-to>
+     </map-events>
+-->
+
+<!ELEMENT events (note-on|note-off|control-change|program-change|note-window-change|advance)+>
+
+<!ELEMENT cue-stream (global?,cue*)>
+<!ATTLIST cue-stream id ID #IMPLIED>
+<!ELEMENT global (trigger|map-events)*>
+
+<!ELEMENT cue (trigger|events|map-events)*>
+<!ATTLIST cue song CDATA #REQUIRED measure CDATA #REQUIRED>
+<!ELEMENT trigger (note-on|note-off|control-change|program-change|clear)>
+<!ATTLIST trigger
+	  delay CDATA #IMPLIED
+	  override IDREF #IMPLIED
+	  reverse (yes) #IMPLIED
+	  id ID #IMPLIED>
+<!ELEMENT note-on EMPTY>
+<!ATTLIST note-on 
+	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED
+	  note CDATA #IMPLIED>
+<!ELEMENT note-off EMPTY>
+<!ATTLIST note-off 
+	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED 
+	  note CDATA #IMPLIED>
+<!ELEMENT control-change EMPTY>
+<!ATTLIST control-change
+	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED
+	  control CDATA #REQUIRED
+	  threshold CDATA #IMPLIED>
+<!ELEMENT clear EMPTY>
+<!ATTLIST clear 
+	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED 
+	  duration CDATA #REQUIRED>
+
+<!ELEMENT program-change EMPTY>
+<!ATTLIST program-change
+	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED 
+	  patch IDREF #REQUIRED>
+
+<!ELEMENT note-window-change EMPTY>
+<!ATTLIST note-window-change
+	  channel (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16) #REQUIRED
+	  top CDATA #IMPLIED
+          bottom CDATA #IMPLIED>
+
+<!ELEMENT advance EMPTY>
+<!ATTLIST advance 
+          stream IDREF #REQUIRED
+          song CDATA #IMPLIED
+          measure CDATA #IMPLIED>
+
