@@ -59,8 +59,7 @@ public class MasterController implements QReceiver {
 	  sentPCs.add(pce);
 	  sent_channel[channel] = true;
 	}
-      }
-      if (obj instanceof NoteWindowChangeEvent) {
+      } else if (obj instanceof NoteWindowChangeEvent) {
 	NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
 	int channel = nwce.getChannel();
 	if (!sent_nw_on_channel[ channel ]) {
@@ -68,6 +67,9 @@ public class MasterController implements QReceiver {
 	  sentPCs.add(nwce);
 	  sent_nw_on_channel[channel] = true;
 	}
+      } else if (obj instanceof MidiEvent) {
+        // Send the MIDI event.
+        sendMidiEvent((MidiEvent)obj);
       }
     }
 
@@ -86,6 +88,10 @@ public class MasterController implements QReceiver {
       qc.reversePatch();
   }
 
+  private void sendMidiEvent(MidiEvent me) {
+    midiOut.handleMidiCommand(me.getMidiCommand());
+  }
+  
   private void sendPatchChange(ProgramChangeEvent pce) {
     PatchChanger.patchChange(pce, midiOut);
   }
@@ -104,6 +110,8 @@ public class MasterController implements QReceiver {
 	sendNoteWindowChange((NoteWindowChangeEvent)obj);
       else if (obj instanceof StreamAdvance) 
 	advanceStream( (StreamAdvance) obj );
+      else if (obj instanceof MidiEvent)
+        sendMidiEvent( (MidiEvent) obj );
     }
 
     // update print loop

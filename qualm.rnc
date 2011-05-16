@@ -84,6 +84,7 @@ note-on =
   element note-on {
     attribute channel { channelSpec },
     attribute note? { noteSpec },
+    attribute value? { text }
     empty
   }
 note-off =
@@ -97,7 +98,7 @@ control-change =
   element control-change {
     attribute channel { channelSpec },
     attribute control { text },
-    attribute threshold { text }?,
+    attribute value { text }?,
     empty
   }
 clear =

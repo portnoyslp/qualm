@@ -150,6 +150,8 @@ public class EventTemplate {
     return false;
   }
 
+  public int getType() { return type; }
+  
   public String getTypeDesc() { 
     String name = null;
     if (type == MidiCommand.NOTE_ON) { name = "NoteOn"; }

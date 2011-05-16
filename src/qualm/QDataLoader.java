@@ -84,6 +84,7 @@ public class QDataLoader extends DefaultHandler {
   EventTemplate curTemplate;
   Patch patch;
   EventMapper curMapper = null;
+  boolean buildingEvents = false;
   List<EventMapper> eventMaps = new ArrayList<EventMapper>();
   QStream qstream;
 
@@ -224,6 +225,9 @@ public class QDataLoader extends DefaultHandler {
           // multiply by 1000 to get ms.
           triggerDelay = (int) (1000*Float.parseFloat(delayStr));
         }
+        
+      } else if (qName.equals("events")) {
+        buildingEvents = true;
 
 	// TRIGGERS
       } else if (qName.equals("note-on")) {
@@ -231,17 +235,29 @@ public class QDataLoader extends DefaultHandler {
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
 	currentAttribute = "note";
 	curTemplate = EventTemplate.createNoteOnEventTemplate( ch, attributes.getValue("note") );
+	if (buildingEvents) {
+	  eventSet.add(new MidiEvent(curTemplate));
+	}
+	
       } else if (qName.equals("note-off")) {
 	currentAttribute = "channel";
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
 	currentAttribute = "note";
 	curTemplate = EventTemplate.createNoteOffEventTemplate( ch, attributes.getValue("note") );
+        if (buildingEvents) {
+          eventSet.add(new MidiEvent(curTemplate));
+        }
+        
       } else if (qName.equals("control-change")) {
 	currentAttribute = "channel";
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
 	String control = attributes.getValue("control");
-	String thresh = attributes.getValue("threshold");
-	curTemplate = EventTemplate.createControlEventTemplate( ch, control, thresh );
+	String value = attributes.getValue("value");
+	curTemplate = EventTemplate.createControlEventTemplate( ch, control, value );
+        if (buildingEvents) {
+          eventSet.add(new MidiEvent(curTemplate));
+        }
+
 	/* } else if (qName.equals("clear")) {
 	   currentAttribute = "channel";
 	   int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
@@ -294,7 +310,11 @@ public class QDataLoader extends DefaultHandler {
       curMapper.addToTemplate(curTemplate);
     } else if (qName.equals("map-events")) {
       eventMaps.add(curMapper);
+      curMapper = null;
 
+    } else if (qName.equals("events")) {
+      buildingEvents = false;
+      
     } else if (qName.equals( "cue" )) {
       ArrayList<Trigger> l = new ArrayList<Trigger>();
       l.addAll(globalTriggers);
