@@ -56,8 +56,18 @@ public class QDataXMLReader implements XMLReader {
     this.handler = handler;
   }
 
+  // helper functions
   private void nl(int indent) throws SAXException {
     handler.ignorableWhitespace(indentStr.toCharArray(), 0, indent+1);
+  }
+  private void startElement(String elementName, AttributesImpl at) throws SAXException {
+    handler.startElement(nsu, elementName, elementName, at);
+  }
+  private void endElement(String elementName) throws SAXException {
+    handler.endElement(nsu, elementName, elementName);
+  }
+  private void addAttribute(String attName, String value) throws SAXException {
+    atts.addAttribute(nsu, attName, attName, null, value);
   }
 
   public void parse(InputSource source) throws IOException, SAXException {
@@ -70,42 +80,42 @@ public class QDataXMLReader implements XMLReader {
 
       handler.startDocument();
       nl(0);
-      handler.startElement(nsu, rootElement, rootElement, atts);
+      startElement(rootElement, atts);
 
       nl(2);
-      handler.startElement(nsu, "title", "title", null);
+      startElement("title", null);
       parse(qd.getTitle());
-      handler.endElement(nsu, "title", "title");
+      endElement("title");
 
       // the list of midi channels
       nl(2);
-      handler.startElement(nsu, "midi-channels", "midi-channels", null);
+      startElement("midi-channels", null);
       for (int i=0; i < qd.getMidiChannels().length; i++) {
         if (qd.getMidiChannels()[i] != null) {
           // output the channel
           atts.clear();
-          atts.addAttribute(nsu, "num", "num", null, Integer.toString(i+1));
+          addAttribute("num", Integer.toString(i+1));
           String dev = PatchChanger.getRequestedDeviceForChannel(i);
           if (dev != null)
-            atts.addAttribute(nsu, "device", "device", null, dev);
+            addAttribute("device", dev);
           nl(4);
-          handler.startElement(nsu, "channel", "channel", atts);
+          startElement("channel", atts);
           parse(qd.channels[i]);
-          handler.endElement(nsu, "channel", "channel");
+          endElement("channel");
         }
       }
       nl(2);
-      handler.endElement(nsu, "midi-channels", "midi-channels");
+      endElement("midi-channels");
 
       // the list of patches
       nl(2);
-      handler.startElement(nsu, "patches", "patches", null);
+      startElement("patches", null);
       Iterator<Patch> iter = qd.getPatches().iterator();
       while (iter.hasNext()) {
         parse(iter.next());			
       }
       nl(2);
-      handler.endElement(nsu, "patches", "patches");
+      endElement("patches");
 
       // and the streams
       Iterator<QStream> sIter = qd.getCueStreams().iterator();
@@ -114,7 +124,7 @@ public class QDataXMLReader implements XMLReader {
       }
 
       nl(0);
-      handler.endElement(nsu, rootElement, rootElement);
+      endElement(rootElement);
       handler.endDocument();
     }
   }
@@ -131,18 +141,18 @@ public class QDataXMLReader implements XMLReader {
       throw new SAXException("No handler defined.");
     }
     atts.clear();
-    atts.addAttribute(nsu, "id", "id", null, p.getID());
+    addAttribute("id", p.getID());
     if (p.getBank() != null) {
-      atts.addAttribute(nsu, "bank", "bank", null, p.getBank());
+      addAttribute("bank", p.getBank());
     }
-    atts.addAttribute(nsu, "num", "num", null, Integer.toString(p.getNumber()));
+    addAttribute("num", Integer.toString(p.getNumber()));
     if (p.getVolume() != null) {
-      atts.addAttribute(nsu, "volume", "volume", null, p.getVolume().toString());
+      addAttribute("volume", p.getVolume().toString());
     }
     nl(4);
-    handler.startElement(nsu, "patch", "patch", atts);
+    startElement("patch", atts);
     parse(p.getDescription());
-    handler.endElement(nsu, "patch", "patch");
+    endElement("patch");
   }
 
   public void parse(QStream qs) throws SAXException {
@@ -151,26 +161,26 @@ public class QDataXMLReader implements XMLReader {
     }
 
     atts.clear();
-    atts.addAttribute(nsu, "id", "id", null, qs.getTitle());
+    addAttribute("id", qs.getTitle());
     nl(2);
-    handler.startElement(nsu, "cue-stream", "cue-stream", atts);
+    startElement("cue-stream", atts);
     Iterator<Cue> iter = qs.getCues().iterator();
     while (iter.hasNext()) {
       parse(iter.next());		
     }
     nl(2);
-    handler.endElement(nsu, "cue-stream", "cue-stream");
+    endElement("cue-stream");
   }
 
   public void parse(Cue cue) throws SAXException {
     atts.clear();
-    atts.addAttribute(nsu, "song", "song", null, cue.getSong());
-    atts.addAttribute(nsu, "measure", "measure", null, cue.getMeasure());
+    addAttribute("song", cue.getSong());
+    addAttribute("measure", cue.getMeasure());
     nl(4);
-    handler.startElement(nsu, "cue", "cue", atts);
+    startElement("cue", atts);
 
     nl(6);
-    handler.startElement(nsu, "events", "events", null);
+    startElement("events", null);
     Iterator<QEvent> iter = cue.getEvents().iterator();
     while (iter.hasNext()) {
       QEvent obj = iter.next();
@@ -180,9 +190,12 @@ public class QDataXMLReader implements XMLReader {
       if (obj instanceof NoteWindowChangeEvent) {
         parse((NoteWindowChangeEvent)obj);
       }
+      if (obj instanceof StreamAdvance) {
+	parse((StreamAdvance)obj);
+      }
     }
     nl(6);
-    handler.endElement(nsu, "events", "events");
+    endElement("events");
 
     Iterator<EventMapper> emIter = cue.getEventMaps().iterator();
     while (emIter.hasNext()) {
@@ -195,60 +208,72 @@ public class QDataXMLReader implements XMLReader {
     }
 
     nl(4);
-    handler.endElement(nsu, "cue", "cue");
+    endElement("cue");
   }
 
   public void parse(ProgramChangeEvent pce) throws SAXException {
     nl(8);
     atts.clear();
-    atts.addAttribute(nsu, "channel", "channel", null, Integer.toString(pce.getChannel()+1));
-    atts.addAttribute(nsu, "patch", "patch", null, pce.getPatch().getID());
-    handler.startElement(nsu, "program-change", "program-change", atts);
-    handler.endElement(nsu, "program-change", "program-change");
+    addAttribute("channel", Integer.toString(pce.getChannel()+1));
+    addAttribute("patch", pce.getPatch().getID());
+    startElement("program-change", atts);
+    endElement("program-change");
   }
 
   public void parse(NoteWindowChangeEvent nwce) throws SAXException {
     nl(8);
     atts.clear();
-    atts.addAttribute(nsu, "channel", "channel", null, Integer.toString(nwce.getChannel()+1));
+    addAttribute("channel", Integer.toString(nwce.getChannel()+1));
     if (nwce.getTopNote() != null)
-      atts.addAttribute(nsu, "top", "top", null, nwce.getTopNote().toString());
+      addAttribute("top", nwce.getTopNote().toString());
     if (nwce.getBottomNote() != null)
-      atts.addAttribute(nsu, "bottom", "bottom", null, nwce.getBottomNote().toString());
-    handler.startElement(nsu, "note-window-change", "note-window-change", atts);
-    handler.endElement(nsu, "note-window-change", "note-window-change");
+      addAttribute("bottom", nwce.getBottomNote().toString());
+    startElement("note-window-change", atts);
+    endElement("note-window-change");
+  }
+
+  public void parse(StreamAdvance sa) throws SAXException {
+    nl(8);
+    atts.clear();
+    addAttribute("stream", sa.getStreamID());
+    if (sa.getSong() != null)
+      addAttribute("song", sa.getSong());
+    if (sa.getMeasure() != null) 
+      addAttribute("measure", sa.getMeasure());
+    startElement("advance", atts);
+    endElement("advance");
   }
 
   public void parse(EventMapper em) throws SAXException {
     nl(6);
-    handler.startElement(nsu, "map-events", "map-events", null);
+    startElement("map-events", null);
     nl(8);
-    handler.startElement(nsu, "map-from", "map-from", null);
+    startElement("map-from", null);
     parse(em.getFromTemplate());
-    handler.endElement(nsu, "map-from", "map-from");
+    endElement("map-from");
     Iterator<EventTemplate> iter = em.getToTemplateList().iterator();
     while (iter.hasNext()) {
       nl(8);
-      handler.startElement(nsu, "map-to", "map-to", null);
+      startElement("map-to", null);
       parse(iter.next());
-      handler.endElement(nsu, "map-to", "map-to");
+      endElement("map-to");
     }
     nl(6);
-    handler.endElement(nsu, "map-events", "map-events");
+    endElement("map-events");
   }
 
   public void parse(Trigger t) throws SAXException {
     nl(6);
     atts.clear();
     if (t.getDelay() > 0)
-      atts.addAttribute(nsu, "delay", "delay", null, Integer.toString(t.getDelay()));
+      addAttribute("delay", Integer.toString(t.getDelay()));
     if (t.getReverse())
-      atts.addAttribute(nsu, "reverse", "reverse", null, Boolean.toString(t.getReverse()));
-    handler.startElement(nsu, "trigger", "trigger", atts);
+      addAttribute("reverse", Boolean.toString(t.getReverse()));
+    startElement("trigger", atts);
     nl(8);
     parse(t.getTemplate());
     nl(6);
-    handler.endElement(nsu, "trigger", "trigger");
+    endElement("trigger");
   }
   
   public void parse(EventTemplate et) throws SAXException {
@@ -263,17 +288,17 @@ public class QDataXMLReader implements XMLReader {
       throw new SAXException("Could not process template of type '" + et.getTypeDesc() + "'");
     
     atts.clear();
-    atts.addAttribute(nsu, "channel", "channel", null, Integer.toString(et.channel()+1));
+    addAttribute("channel", Integer.toString(et.channel()+1));
     if (elementName.equals("note-on") || elementName.equals("note-off")) {
       if (!et.range1().equals("-1--1")) 
-        atts.addAttribute(nsu, "note", "note", null, et.range1());
+        addAttribute("note", et.range1());
     } else {
-      atts.addAttribute(nsu, "control", "control", null, Integer.toString(et.getExtra1()));
+      addAttribute("control", Integer.toString(et.getExtra1()));
       if (et.getExtra2() < 127)
-        atts.addAttribute(nsu, "threshold", "threshold", null, Integer.toString(et.getExtra2()));
+        addAttribute("threshold", Integer.toString(et.getExtra2()));
     }
-    handler.startElement(nsu, elementName, elementName, atts);
-    handler.endElement(nsu, elementName, elementName);
+    startElement(elementName, atts);
+    endElement(elementName);
   }
 
   public DTDHandler getDTDHandler() {
