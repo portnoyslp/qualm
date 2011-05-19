@@ -184,6 +184,9 @@ public class QDataXMLReader implements XMLReader {
       if (obj instanceof NoteWindowChangeEvent) {
         parse((NoteWindowChangeEvent)obj);
       }
+      if (obj instanceof MidiEvent) {
+        parse((MidiEvent)obj);
+      }
     }
     nl(6);
     handler.endElement(nsu, "events", "events");
@@ -223,6 +226,16 @@ public class QDataXMLReader implements XMLReader {
     handler.endElement(nsu, "note-window-change", "note-window-change");
   }
 
+  public void parse(MidiEvent me) throws SAXException {
+    MidiCommand cmd = me.getMidiCommand();
+    atts.clear();
+    nl(8);
+    if (cmd.getType() == MidiCommand.NOTE_ON) {
+      atts.addAttribute(nsu, "channel", "channel", null, Integer.toString(cmd.getChannel()+1));
+    }
+  }
+  
+  
   public void parse(EventMapper em) throws SAXException {
     nl(6);
     handler.startElement(nsu, "map-events", "map-events", null);
