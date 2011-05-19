@@ -1,6 +1,8 @@
 package qualm.testing.junit;
 
+import java.io.*;
 import java.util.List;
+import java.util.regex.*;
 
 import junit.framework.*;
 import junit.textui.*;
@@ -73,6 +75,48 @@ public class QDataLoaderTester extends TestCase {
     assertEquals(q.getEventMaps().size(), 0);
     assertEquals(q.getTriggers().size(), 1);
 
+    // Finally, can we write everything we read?  Get a normalized (no
+    // carriage returns or following white spaces) version of the
+    // input document, and compare it to a normalized version of the
+    // output.
+    String inputDoc = removeCRs(readFileAsString(fname));
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    QDataXMLReader.outputXML(qd,baos);
+    String outputDoc = removeCRs(baos.toString());
+    // TODO This assertion doesn't quite work yet; there are too many small differences.
+    //assertEquals(inputDoc,outputDoc);
+
+    // So, let's count up various elements to make sure they match expectations
+    assertEquals(3,countMatches(outputDoc,"<channel "));
+    assertEquals(5,countMatches(outputDoc,"<patch "));
+    assertEquals(2,countMatches(outputDoc,"<cue-stream "));
+    assertEquals(4,countMatches(outputDoc,"<cue "));
+    assertEquals(1,countMatches(outputDoc,"<advance "));    
+  }
+
+  public int countMatches(String input, String find) {
+    Pattern p = Pattern.compile(find);
+    Matcher m = p.matcher(input);
+    int i = 0;
+    boolean result = m.find();
+    while (result) {
+      i++;
+      result = m.find();
+    }
+    return i;
+  }
+
+  public String removeCRs ( String input ) {
+    String output = input.replaceAll("\n\\s*", "");
+    // also get rid of the header
+    output = output.replaceFirst("^.*<qualm-data>","<qualm-data>");
+    return output;
+  }
+  public String readFileAsString( String filename ) throws java.io.IOException {
+    byte[] buffer = new byte[(int) new File(filename).length()];
+    BufferedInputStream f = new BufferedInputStream(new FileInputStream(filename));
+    f.read(buffer);
+    return new String(buffer);
   }
 
 }
