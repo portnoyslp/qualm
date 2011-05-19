@@ -33,6 +33,7 @@
       <events>
 	<program-change channel="10" patch="Timpani"/>
 	<program-change channel="1" patch="P3"/>
+	<control-change channel="2" control="pan" value="10"/>
       </events>
     </cue>
   </cue-stream>

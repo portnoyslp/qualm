@@ -80,6 +80,13 @@ public class MidiCommand {
     return data;
   }
 
+  public String hexData() {
+    StringBuilder hex = new StringBuilder();
+    for (byte b : data)
+      hex.append(String.format("%1$02X", b));
+    return hex.toString();
+  }
+  
   public String toString() {
     String cStr = "UNKNOWN";
     switch (type) {
@@ -101,14 +108,7 @@ public class MidiCommand {
     }
     
     if (cStr.equals("UNKNOWN")) {
-      // print out the message, in hex
-      String ret = "[DATA: "; 
-      for(int i = 0; i<data.length; i++) {
-        ret += Integer.toHexString((int) data[i]);
-        if (i<data.length-1) ret += " ";
-      }
-      ret += "]";
-      return ret;
+      return "[DATA: " + hexData() + "]";
     }
     
     return "[" + cStr + " chan:" + (channel + 1) + " d1:" + getData1() + " d2:"

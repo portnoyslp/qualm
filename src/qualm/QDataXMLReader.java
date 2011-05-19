@@ -249,10 +249,34 @@ public class QDataXMLReader implements XMLReader {
 
   public void parse(MidiEvent me) throws SAXException {
     MidiCommand cmd = me.getMidiCommand();
+    String elName = null;
     atts.clear();
     nl(8);
     if (cmd.getType() == MidiCommand.NOTE_ON) {
+      elName = "note-on";
       addAttribute("channel", Integer.toString(cmd.getChannel()+1));
+      addAttribute("note", Integer.toString(cmd.getData1()));
+      addAttribute("value", Integer.toString(cmd.getData2()));
+    }
+    if (cmd.getType() == MidiCommand.NOTE_OFF) {
+      elName = "note-off";
+      addAttribute("channel", Integer.toString(cmd.getChannel()+1));
+      addAttribute("note", Integer.toString(cmd.getData1()));
+    }
+    if (cmd.getType() == MidiCommand.CONTROL_CHANGE) {
+      elName = "control-change";
+      addAttribute("channel", Integer.toString(cmd.getChannel()+1));
+      addAttribute("control", Integer.toString(cmd.getData1()));
+      addAttribute("value", Integer.toString(cmd.getData2()));
+    }
+    if (cmd.getType() == MidiCommand.SYSEX) {
+      startElement("sysex", null);
+      parse(cmd.hexData());
+      endElement("sysex");
+    }
+    if (elName != null) {
+      startElement(elName,atts);
+      endElement(elName);
     }
   }
   
@@ -296,7 +320,7 @@ public class QDataXMLReader implements XMLReader {
     else if (et.getTypeDesc().equals("NoteOff"))
       elementName = "note-off";
     else if (et.getTypeDesc().equals("Control"))
-      elementName = "control";
+      elementName = "control-change";
     else
       throw new SAXException("Could not process template of type '" + et.getTypeDesc() + "'");
     
