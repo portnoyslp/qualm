@@ -57,7 +57,7 @@ map-events =
 # </map-events>
 events =
   element events {
-    (note-on | note-off | control-change | program-change | note-window-change | advance)+
+    (note-on | note-off | control-change | sysex | program-change | note-window-change | advance)+
   }
 cue-stream =
   element cue-stream {
@@ -106,6 +106,10 @@ clear =
     attribute channel { channelSpec },
     attribute duration { text },
     empty
+  }
+sysex = 
+  element sysex {
+    text
   }
 program-change =
   element program-change {

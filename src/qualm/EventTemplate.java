@@ -157,6 +157,7 @@ public class EventTemplate {
     if (type == MidiCommand.NOTE_ON) { name = "NoteOn"; }
     if (type == MidiCommand.NOTE_OFF) { name = "NoteOff"; } 
     if (type == MidiCommand.CONTROL_CHANGE) { name = "Control"; } 
+    if (type == MidiCommand.SYSEX) { name = "SysEx"; }
     return name;
   }
   public int channel() { return channel; }

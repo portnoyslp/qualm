@@ -34,6 +34,7 @@
 	<program-change channel="10" patch="Timpani"/>
 	<program-change channel="1" patch="P3"/>
 	<control-change channel="2" control="pan" value="10"/>
+	<sysex>F04110421240007F0041F7</sysex>
       </events>
     </cue>
   </cue-stream>

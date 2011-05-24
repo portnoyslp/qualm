@@ -133,11 +133,20 @@ public class QDataXMLReader implements XMLReader {
     }
   }
 
+  
   public void parse(String str) throws SAXException {
     if (handler == null) {
       throw new SAXException("No handler defined.");
     }
     handler.characters(str.toCharArray(),0,str.length());
+  }
+
+  public void parseAsHexData(byte[] data) throws SAXException {
+    StringBuilder hex = new StringBuilder();
+    for (byte b : data)
+      hex.append(String.format("%1$02X", b));
+    String hStr = hex.toString();
+    handler.characters(hStr.toCharArray(),0,hStr.length());
   }
 
   public void parse(Patch p) throws SAXException {
@@ -315,25 +324,29 @@ public class QDataXMLReader implements XMLReader {
   
   public void parse(EventTemplate et) throws SAXException {
     String elementName;
-    if (et.getTypeDesc().equals("NoteOn"))
-      elementName = "note-on";
-    else if (et.getTypeDesc().equals("NoteOff"))
-      elementName = "note-off";
-    else if (et.getTypeDesc().equals("Control"))
-      elementName = "control-change";
-    else
+    switch (et.getType()) {
+    case MidiCommand.NOTE_ON: 
+      elementName = "note-on"; break;
+    case MidiCommand.NOTE_OFF:
+      elementName = "note-off"; break;
+    case MidiCommand.CONTROL_CHANGE:
+      elementName = "control-change"; break;
+    case MidiCommand.SYSEX:
+      elementName = "sysex"; break;
+    default:
       throw new SAXException("Could not process template of type '" + et.getTypeDesc() + "'");
+    }
     
     atts.clear();
     addAttribute("channel", Integer.toString(et.channel()+1));
     if (elementName.equals("note-on") || elementName.equals("note-off")) {
       if (!et.range1().equals("-1--1")) 
         addAttribute("note", et.range1());
-    } else {
-      addAttribute("control", Integer.toString(et.getExtra1()));
-      if (et.getExtra2() < 127)
-        addAttribute("threshold", Integer.toString(et.getExtra2()));
-    }
+      } else {
+        addAttribute("control", Integer.toString(et.getExtra1()));
+        if (et.getExtra2() < 127)
+          addAttribute("threshold", Integer.toString(et.getExtra2()));
+      }
     startElement(elementName, atts);
     endElement(elementName);
   }

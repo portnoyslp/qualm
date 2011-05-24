@@ -18,7 +18,7 @@ public class QDataLoader extends DefaultHandler {
   boolean ignorePatchAliases = false;
   
   SAXParser parser;
-  QData qdata; 
+  QData qdata;
   
   public QDataLoader() { this( false ); }
   
@@ -257,6 +257,9 @@ public class QDataLoader extends DefaultHandler {
         if (buildingEvents) {
           eventSet.add(new MidiEvent(curTemplate));
         }
+        
+      } else if (qName.equals("sysex")) {
+        // no attributes, but we have hex-coded data, so this gets handled at endElement
 
 	/* } else if (qName.equals("clear")) {
 	   currentAttribute = "channel";
@@ -314,6 +317,20 @@ public class QDataLoader extends DefaultHandler {
 
     } else if (qName.equals("events")) {
       buildingEvents = false;
+      
+    } else if (qName.equals("sysex")) {
+      // interpret contents as hex-encoded string, and build an event for it
+      int len = content.length();
+      byte[] data = new byte[len/2];
+      for (int i=0; i<len; i+=2) {
+        data[i/2] = (byte) ((Character.digit(content.charAt(i),16) << 4)
+                           + Character.digit(content.charAt(i+1),16));
+      }
+      MidiCommand mc = new MidiCommand();
+      mc.setSysex(data);
+      if (buildingEvents) {
+        eventSet.add(new MidiEvent(mc));
+      }
       
     } else if (qName.equals( "cue" )) {
       ArrayList<Trigger> l = new ArrayList<Trigger>();

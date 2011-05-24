@@ -92,6 +92,7 @@ public class QDataLoaderTester extends TestCase {
     assertEquals(2,countMatches(outputDoc,"<cue-stream "));
     assertEquals(4,countMatches(outputDoc,"<cue "));
     assertEquals(1,countMatches(outputDoc,"<advance "));
+    assertEquals(1,countMatches(outputDoc,"<sysex>"));
     assertEquals(5,countMatches(outputDoc,"<control-change ")); // 5 because the global event-map is copied to the separate cues.
   }
 
