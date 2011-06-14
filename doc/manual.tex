@@ -204,6 +204,7 @@ events that will trigger the next cue in the sequence.
       <events>
         <program-change channel="4" patch="P96"/>
         <program-change channel="1" patch="P5"/>
+        <note-on channel="10" note="g2"/>
       </events>
     </cue>
   </cue-stream>
@@ -212,7 +213,11 @@ events that will trigger the next cue in the sequence.
       <trigger><note-on channel="2" note="c6"/></trigger>
     </global>
     <cue song="1" measure="1">
-      <events><program-change channel="2" patch="P96"/></events>
+      <events>
+        <program-change channel="2" patch="P96"/>
+	<control-change channel="2" control="pan" value="10"/>
+	<sysex>F04110421240007F0041F7</sysex>
+      </events>
     </cue>
     <cue song="2" measure="10">
       <events><program-change channel="2" patch="P95"/></events>
@@ -415,6 +420,67 @@ in the \elt{patches} section.  If this value does not match one of the
 defined patches, an error will occur when loading the control file.  A
 required attribute.
 \end{description}
+
+\paragraph{Note Events}
+\label{par:note-events}
+
+\begin{verbatim}
+   <note-on channel="10" note="g2"/>
+\end{verbatim}
+
+You can specify that certain note events be triggered by using the
+\elt{note-on} and \elt{note-off}.  Attributes for these elements
+include:
+
+\begin{description}
+\item[channel] The MIDI channel to which the note request should be
+  sent.  A required attribute.
+
+\item[note] The designation for the pitch of the note request.  This
+  can be either an integer for the MIDI note number, or a name like
+  ``C4'' or ``Bb3''.
+
+\item[value] The velocity of the key strike, from 0 to 127.  (Optional)
+\end{description}
+
+\paragraph{Control Changes}
+\label{par:control-change-events}
+
+\begin{verbatim}
+  <control-change channel="2" control="pan" value="10"/>
+\end{verbatim}
+
+Control changes that should be initiated at a cue change can be
+specified using a \elt{control-change}.  Attributes will include:
+
+\begin{description}
+\item[channel] The MIDI channel to which the control-change should be
+  issued.  A required attribute.
+
+\item[control] A designation for which control is to be manipulated;
+  either as a MIDI controller number or a name for the controller.
+  Table~\ref{tbl:controller-names} lists the allowable names.
+
+\item[value] The value to which the control should be set.
+\end{description}
+
+\paragraph{System Exclusive Messages}
+\label{par:sysex-events}
+
+\begin{verbatim}
+  <sysex>F04110421240007F0041F7</sysex>
+\end{verbatim}
+
+At times, it may be useful to issue a system-specific set of raw data,
+in order to perform specialized functionality that does not fit into
+the standard defined API.  In MIDI parlance this is referred to as a
+system-exclusive message, and can be accomplished in \q through a
+\elt{sysex} in the \elt{events} section.  The data for the
+system-exclusive should be notated in hexadecimal notation, so the
+value \tt{F04110} would send three bytes, ``F0'', ``41'', and ``10''
+as a system-exclusive message.
+
+Whitespace in the \elt{sysex} content will be ignored.
 
 \paragraph{Advancing Streams}
 \label{par:advancing-streams}

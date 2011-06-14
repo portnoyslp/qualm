@@ -2,6 +2,8 @@ package qualm.testing.junit;
 
 import java.io.*;
 import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.regex.*;
 
 import junit.framework.*;
@@ -67,6 +69,18 @@ public class QDataLoaderTester extends TestCase {
     // do we have the delay listed?
     assertTrue(q.getTriggers().toString().indexOf("dly2500")>-1);
 
+    // check on the sysex event; should be 11 bytes
+    q = (Cue) s.getCues().last();
+    Collection<QEvent> eventColl = q.getEvents();
+    assertEquals(eventColl.size(),4);
+    Iterator<QEvent> iter = eventColl.iterator();
+    while (iter.hasNext()) {
+      QEvent qe = iter.next();
+      if (qe instanceof MidiEvent &&
+	  ((MidiEvent)qe).getMidiCommand().getType() == MidiCommand.SYSEX) {
+	assertEquals( ((MidiEvent)qe).getMidiCommand().hexData(), "F04110421240007F0041F7");
+      }
+    }
 
     s = (QStream) ((List<QStream>)qd.getCueStreams()).get(1);
     q = (Cue) s.getCues().last();

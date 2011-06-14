@@ -320,11 +320,13 @@ public class QDataLoader extends DefaultHandler {
       
     } else if (qName.equals("sysex")) {
       // interpret contents as hex-encoded string, and build an event for it
-      int len = content.length();
+      // first, get rid of all whitespace
+      String hexString = content.replaceAll("\\s+","");
+      int len = hexString.length();
       byte[] data = new byte[len/2];
       for (int i=0; i<len; i+=2) {
-        data[i/2] = (byte) ((Character.digit(content.charAt(i),16) << 4)
-                           + Character.digit(content.charAt(i+1),16));
+        data[i/2] = (byte) ((Character.digit(hexString.charAt(i),16) << 4)
+                           + Character.digit(hexString.charAt(i+1),16));
       }
       MidiCommand mc = new MidiCommand();
       mc.setSysex(data);
