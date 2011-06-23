@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
@@ -32,18 +33,32 @@ public class DSMidiReceiver extends AbstractQReceiver implements QReceiver {
   public DSMidiReceiver(Properties props) {
     try { 
         
+      Qualm.LOG.info("Listening on port " + LOCAL_PORT);
       sockIn = new DatagramSocket(LOCAL_PORT);
     
       sockOut = new DatagramSocket(LOCAL_SEND_PORT);
       sockOut.setBroadcast(true);
     
       Enumeration<NetworkInterface> niEnum = NetworkInterface.getNetworkInterfaces();
-      if (niEnum.hasMoreElements()) {
+      InetAddress broadAddr = null;
+      while (niEnum.hasMoreElements() && broadAddr==null) {
         NetworkInterface ni = niEnum.nextElement();
-        InetAddress broadAddr = ni.getInterfaceAddresses().get(0).getBroadcast();
-        sockOut.connect(broadAddr,DEST_PORT);
-      } else
+        if (ni.isLoopback())
+          continue; // no broadcasting to the local interface
+        
+        for (InterfaceAddress iAddr : ni.getInterfaceAddresses()) {
+          broadAddr = iAddr.getBroadcast();
+          if (broadAddr != null)
+            break;
+        }
+      }
+      
+      if (broadAddr == null) {
         throw new RuntimeException("Could not find any network interfaces.");
+      }
+      
+      Qualm.LOG.info("Broadcasting to " + broadAddr + ":" + DEST_PORT);
+      sockOut.connect(broadAddr,DEST_PORT);
       
     } catch (SocketException ne) {
       throw new RuntimeException("Could not set up sockets.");
@@ -66,6 +81,7 @@ public class DSMidiReceiver extends AbstractQReceiver implements QReceiver {
               case NOTE_ON: messageType = MidiCommand.NOTE_ON;        break;
               case NOTE_OFF: messageType = MidiCommand.NOTE_OFF;       break;
               case CONTROL_CHANGE: messageType = MidiCommand.CONTROL_CHANGE; break;
+              case PROGRAM_CHANGE: messageType = MidiCommand.PROGRAM_CHANGE; break;
             }
             byte channel = (byte) (buf[0] & 0x0f);
             byte data1 = buf[1];
@@ -104,9 +120,10 @@ public class DSMidiReceiver extends AbstractQReceiver implements QReceiver {
       case MidiCommand.NOTE_ON:        messageType=NOTE_ON;        break;
       case MidiCommand.NOTE_OFF:       messageType=NOTE_OFF;       break;
       case MidiCommand.CONTROL_CHANGE: messageType=CONTROL_CHANGE; break;
+      case MidiCommand.PROGRAM_CHANGE: messageType=PROGRAM_CHANGE; break;
       }
       
-      byte channel = (byte)(mc.getChannel()-1);
+      byte channel = (byte)(mc.getChannel());
 
       byte[] sendbuf = new byte[3];          
       sendbuf[0] = (byte) (messageType | channel);
@@ -123,5 +140,7 @@ public class DSMidiReceiver extends AbstractQReceiver implements QReceiver {
   static final byte NOTE_OFF = (byte)0x90;
   static final byte CONTROL_CHANGE = (byte)0xB0;
   static final byte PITCH_CHANGE = (byte)0xE0;
+  static final byte PROGRAM_CHANGE = (byte)0xC0;
+
 
 }
