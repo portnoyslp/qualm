@@ -9,13 +9,13 @@
     body {
       margin: 2em;
       background-color: #88935b;
-      font-family: Luxi Sans, sans-serif;
+      font-family: Luxi Sans, Droid Sans, sans-serif;
     }
     #content {
       margin: 0 auto;
       padding: 1em 3em;
       background: #e0f497;  
-      font-family: luxi sans, sans-serif; 
+      font-family: luxi sans, droid sans, sans-serif; 
       color: #3d0689;
     }
 
@@ -32,8 +32,12 @@
     a { text-decoration: none; background:transparent; color: #775b8e; }
     a:hover { border-bottom: 1px dotted; }
     
-    .download { float: right; }
+    .download { float: right; font-size: 80%; }
+    .download img { vertical-align: middle; }
     pre { background: #000; color: #fff; padding: 15px; font-size: 120%;}
+
+    .download a:hover { border-bottom: none; } 
+    .download a:hover img { background-color: #b4c379; }
 
   </style>
 </head>
@@ -219,18 +223,21 @@
     </p>
 
     <div class="download">
-      <a href="http://github.com/portnoyslp/qualm/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/portnoyslp/qualm/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+      OSX: <a href="./Qualm-0.8-osx.zip"><img border="0" width="60" src="./pkg.png"></a>
     </div>
 
     <h2>Download</h2>
     <p>
       For convenience, a pre-built version of Qualm is available
-      for <a href="./Qualm-0.8-osx.zip">MacOS X</a> as a compressed
-      package file.
+      for MacOS X as a <a href="./Qualm-0.8-osx.zip">compressed
+      package file</a>.
     </p>
+    <div class="download">
+      Source: <a href="http://github.com/portnoyslp/qualm/zipball/master">
+        <img border="0" width="50" src="http://github.com/images/modules/download/zip.png"></a>
+      <a href="http://github.com/portnoyslp/qualm/tarball/master">
+        <img border="0" width="50" src="http://github.com/images/modules/download/tar.png"></a>
+    </div>
     <p>
       You can download the source for Qualm in either
       <a href="http://github.com/portnoyslp/qualm/zipball/master">zip</a> or
