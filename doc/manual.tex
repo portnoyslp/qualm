@@ -130,7 +130,7 @@ Installing the Plumstone jar file in your computer's
 
 \subsubsection{Windows}
 
-As long as you're using Java 1.4 or later, you shouldn't have a
+As long as you're using Java 1.5 or later, you shouldn't have a
 problem with MIDI I/O under Windows.
 
 \subsection{The GetOpt Package}
@@ -748,10 +748,6 @@ Other commands that you can type at the prompt are:
 Some options can be given on the command line to alter \q's behavior:
 
 \begin{description}
-\item[--list] requests that \q list all the MIDI ports that it can
-  find, and exit.  This is useful for finding port names to use with
-  {\tt --output} and {\tt --input}, below.
-
 \item[--input <port>] sets the name of the input MIDI port to
   use for receiving incoming MIDI events.  You can retrieve a list of
   possible ports using the {\tt --list} option.
@@ -768,7 +764,8 @@ Some options can be given on the command line to alter \q's behavior:
 \item[--debugmidi] is a useful debugging option; it automatically sets
   \q to print a description of all received MIDI events to the
   console.  This is equivalent to starting \q and typing the '{\tt
-  showmidi}' command at the prompt.
+    showmidi}' command at the prompt.  This optional also prints debug
+  information that is helpful for finding input and output MIDI ports.
 
 \item[--lint] is used to carefully check the control file for
   formatting errors or other potential problems.  Once \q has done so,
