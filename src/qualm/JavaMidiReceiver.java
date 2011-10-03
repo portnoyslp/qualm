@@ -62,6 +62,7 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
   }
 
   public void close() {
+    midiIn.close();
     midiOut.close();
   }
 
@@ -168,7 +169,10 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
       midiOut = outDevice.getReceiver();
     } catch (MidiUnavailableException mdu2) {
       throw new RuntimeException("Unable to open device for output:" + mdu2);
-    }    
+    }
+						
+    // set the JavaMidiReceiver to handle incoming data.
+    midiIn.setReceiver( this );
   }  
   
   private static List<MidiDevice.Info> fetchAllMidiPorts() {
