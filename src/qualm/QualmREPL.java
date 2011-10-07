@@ -99,6 +99,7 @@ public class QualmREPL extends Thread {
     Iterator<String> nameIter = plugins.iterator();
     while (nameIter.hasNext()) {
       if (!init) out+=",";
+      init = false;
       out += nameIter.next();
     }
     prefs.put(PLUGINS_PREFKEY,out);
