@@ -11,6 +11,7 @@ public class PlayAllPatches {
   static QReceiver midiIn = null;
   static QReceiver midiOut = null;
 
+  @SuppressWarnings("deprecation")
   public static void loopThroughPatches(QData data) {
     TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator<Patch>() { 
 	public int compare(Patch a, Patch b) {

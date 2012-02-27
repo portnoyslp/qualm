@@ -31,7 +31,7 @@ public class PatchChanger {
       deviceType = "Standard";
 
     // find the ChangeDelegate based on the deviceType name.
-    Class delegate = null;
+    Class<?> delegate = null;
     String delegateName = deviceType;
     Pattern pattern = Pattern.compile( "\\W" );
     delegateName = pattern.matcher(delegateName).replaceAll("");

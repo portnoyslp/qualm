@@ -289,7 +289,7 @@ public class QualmREPL extends Thread {
 
   private void addPlugin(String name) {
     // should be a class spec; try instantiating an object for this
-    Class cls;
+    Class<?> cls;
     try {
       cls = Class.forName(name);
       QualmPlugin qp;

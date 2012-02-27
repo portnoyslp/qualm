@@ -2,9 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="misc"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/getopt.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/gnu-getopt.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/junit.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/swt.jar"/>
-	<classpathentry kind="output" path="build"/>
+	<classpathentry kind="lib" path="/usr/share/java/getopt.jar"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

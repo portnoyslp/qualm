@@ -15,6 +15,7 @@ public class AuditionPatches {
   static boolean playSingle = false;
   static boolean ignoreAliases = false;
 
+  @SuppressWarnings("deprecation")
   public static void playArpeggiatedChord(int holdTime) {
     // play a Cmaj chord with increasing strength from p (30) to ff
     // (96) [ c4, e4, g4, c5 (60,64,67,72)]

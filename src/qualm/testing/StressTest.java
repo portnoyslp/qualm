@@ -121,6 +121,7 @@ public class StressTest {
   class InstantiatableTemplate extends EventTemplate {
     public InstantiatableTemplate(EventTemplate et) { super(et); }
 
+    @SuppressWarnings("deprecation")
     public void sendMessage(QReceiver midiOut) {
       if (type == MidiCommand.NOTE_ON) {
 	int ch = channel;
