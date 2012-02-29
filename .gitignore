@@ -3,5 +3,6 @@
 *~
 test-results/*.txt
 build/*
+bin/*
 
 
