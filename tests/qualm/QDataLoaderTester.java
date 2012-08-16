@@ -6,18 +6,14 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.regex.*;
 
-import junit.framework.*;
-import junit.textui.*;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import qualm.*;
 
-public class QDataLoaderTester extends TestCase {
-  public QDataLoaderTester (String name) { super(name); }
+public class QDataLoaderTester {
 
-  public static void main(String[] args) {
-    TestRunner.runAndWait(new TestSuite(QDataLoaderTester.class));
-  }
-
+  @Test
   public void testLoad1() throws Exception {
     // load a test file
     String fname = "tests/qualm/qdl-1.xml";

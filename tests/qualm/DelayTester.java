@@ -1,17 +1,13 @@
 package qualm;
 
-import junit.framework.*;
-import junit.textui.*;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import javax.sound.midi.*;
 
-public class DelayTester extends TestCase {
-  public DelayTester (String name) { super(name); }
+public class DelayTester {
 
-  public static void main(String[] args) {
-    TestRunner.runAndWait(new TestSuite(DelayTester.class));
-  }
-
+  @Test
   public void testDelay() throws Exception {
     // simple advancement.
     String delay1 = "<qualm-data>\n" + 

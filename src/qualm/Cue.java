@@ -110,13 +110,4 @@ public class Cue implements Comparable<Cue> {
 			      q.getSong(), q.getMeasure() );
   }
 
-  public static void main(String args[]) {
-    System.out.println("1A == 1a: " + _compareStrings("1A", "1a"));
-    System.out.println("1 < 1a: " + _compareStrings("1", "1a"));
-    System.out.println("1A < 1b: " + _compareStrings("1A", "1b"));
-    System.out.println("1f < 2: " + _compareStrings("1f", "2"));
-    System.out.println("A < 1: " + _compareStrings("A", "1"));
-    System.out.println("9 < 10: " + _compareStrings("9", "10"));
-  }
-
 }

@@ -1,17 +1,13 @@
 package qualm;
 
-import junit.framework.*;
-import junit.textui.*;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import javax.sound.midi.*;
 
-public class EventMapTester extends TestCase {
-  public EventMapTester (String name) { super(name); }
+public class EventMapTester {
 
-  public static void main(String[] args) {
-    TestRunner.runAndWait(new TestSuite(EventMapTester.class));
-  }
-
+  @Test
   public void testEventMap() throws Exception {
     // simple event mapping.
   String evm1 = "<qualm-data>\n" + 

@@ -1,17 +1,13 @@
 package qualm;
 
-import junit.framework.*;
-import junit.textui.*;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import javax.sound.midi.*;
 
-public class StreamTester extends TestCase {
-  public StreamTester (String name) { super(name); }
+public class StreamTester {
 
-  public static void main(String[] args) {
-    TestRunner.runAndWait(new TestSuite(StreamTester.class));
-  }
-
+  @Test
   public void testStream() throws Exception {
     // simple advancement.`
   String str1 = "<qualm-data>\n" + 

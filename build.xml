@@ -15,10 +15,19 @@
       <!-- just in case there's no /usr/share/java... -->
       <include name="*-getopt*.jar"/>
     </fileset>
-    <pathelement location="/usr/share/java/junit.jar"/>
     <pathelement location="${builddir}"/>
   </path>
 
+  <path id="junit.classpath">
+    <pathelement location="/usr/share/java/gnu-getopt.jar"/>
+    <fileset dir="${basedir}">
+      <!-- just in case there's no /usr/share/java... -->
+      <include name="*-getopt*.jar"/>
+    </fileset>
+    <pathelement location="${builddir}"/>
+    <pathelement location="/usr/share/java/junit4.jar"/>
+  </path>
+    
   <target name="init">
     <mkdir dir="${builddir}"/>
     <exec executable="git"
@@ -104,7 +113,7 @@
   <target name="check" depends="compile-test" description="Run all unit tests">
     <mkdir dir="${testresultdir}"/>
     <junit printsummary="yes">
-      <classpath refid="classpath"/>
+      <classpath refid="junit.classpath"/>
       <formatter type="plain"/>
       <batchtest todir="${testresultdir}">
 	<fileset dir="${builddir}" includes="**/*Tester.class"/>
@@ -115,7 +124,7 @@
   <target name="compile-test" depends="compile">
     <javac debug="true" source="1.5" srcdir="${testdir}" destdir="${builddir}"
 	    includeantruntime="false">
-      <classpath refid="classpath"/>
+      <classpath refid="junit.classpath"/>
     </javac>
   </target>
 

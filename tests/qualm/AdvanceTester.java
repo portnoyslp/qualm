@@ -1,17 +1,12 @@
 package qualm;
 
-import junit.framework.*;
-import junit.textui.*;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import javax.sound.midi.*;
 
-public class AdvanceTester extends TestCase {
-  public AdvanceTester (String name) { super(name); }
-
-  public static void main(String[] args) {
-    TestRunner.runAndWait(new TestSuite(AdvanceTester.class));
-  }
-
+public class AdvanceTester {
+  @Test
   public void testAdvance() throws Exception {
     // simple advancement.
   String adv1 = "<qualm-data>\n" + 
@@ -56,6 +51,7 @@ public class AdvanceTester extends TestCase {
   }
 
   /* Created to exploit a specific bug, when a channel is not used in the first cue, but we reverse to it anyway. */
+  @Test
   public void testReverseEmptyFirstQ() throws Exception {
     // simple advancement.
   String adv1 = "<qualm-data>\n" + 
