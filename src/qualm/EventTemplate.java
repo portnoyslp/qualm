@@ -85,7 +85,7 @@ public class EventTemplate {
     t.extra2Min = 0;
     t.extra2Max = 127;
     if (thresh != null) 
-      t.extra2Max = Integer.parseInt(thresh);
+      t.extra2Min = Integer.parseInt(thresh);
     return t;
   }
 
@@ -119,7 +119,7 @@ public class EventTemplate {
   }
 
   public String toString() {
-    return "event[" + getTypeDesc() + "/" + channel + "/" + range1() + "]";
+    return "event[" + getTypeDesc() + "/" + channel + "/" + range1() + "/" + range2() + "]";
   }
 
   public boolean match(MidiCommand cmd) {
@@ -133,7 +133,8 @@ public class EventTemplate {
     }
 
     // check for bad channel or first data byte
-    if (channel != cmd.getChannel())
+    if (channel != DONT_CARE 
+	&& channel != cmd.getChannel())
       return false;
 
     // check for bad match to data
@@ -144,7 +145,8 @@ public class EventTemplate {
     // other checks.
     if (type == MidiCommand.NOTE_ON || type == MidiCommand.NOTE_OFF)
       return true;
-    if (type == MidiCommand.CONTROL_CHANGE && extra2Min <= cmd.getData2()
+    if (type == MidiCommand.CONTROL_CHANGE 
+	&& extra2Min <= cmd.getData2()
         && extra2Max >= cmd.getData2())
       return true;
     return false;
@@ -162,7 +164,7 @@ public class EventTemplate {
   }
   public int channel() { return channel; }
   public int getExtra1() { return extra1Min; } 
-  public String range1() { return extra1Min + "-" + extra1Max; }
+  public String range1() { return (extra1Min == extra1Max ? ""+extra1Min : extra1Min + "-" + extra1Max); }
   public int getExtra2() { return extra2Max; }
   public String range2() { return extra2Min + "-" + extra2Max; }
 
