@@ -11,9 +11,6 @@ public class EventMapper {
   public void setFromTemplate(EventTemplate f) { mapFrom = f; }
   public void setToTemplates(List<EventTemplate> templateList) { mapToList = templateList; }
   public void addToTemplate(EventTemplate t) { 
-    if (mapToList == null) {
-      mapToList = new ArrayList<EventTemplate>();
-    }
     mapToList.add(t);
   }
 
@@ -49,6 +46,6 @@ public class EventMapper {
 
   
   EventTemplate mapFrom;
-  List<EventTemplate> mapToList;
+  List<EventTemplate> mapToList = new ArrayList<EventTemplate>();
   
 }
