@@ -1,4 +1,4 @@
-package qualm.testing;
+package qualm.utils;
 
 import qualm.*;
 import gnu.getopt.*;
