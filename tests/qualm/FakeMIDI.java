@@ -1,4 +1,4 @@
-package qualm.testing.junit;
+package qualm;
 
 import qualm.*;
 import java.util.*;

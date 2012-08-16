@@ -1,4 +1,4 @@
-package qualm.testing.junit;
+package qualm;
 
 import java.io.*;
 import java.util.List;
@@ -20,7 +20,7 @@ public class QDataLoaderTester extends TestCase {
 
   public void testLoad1() throws Exception {
     // load a test file
-    String fname = "src/qualm/testing/junit/qdl-1.xml";
+    String fname = "tests/qualm/qdl-1.xml";
     QDataLoader qdl = new QDataLoader();
     QData qd = qdl.readFile( new java.io.File(fname) );
     
