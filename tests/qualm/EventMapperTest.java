@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 public class EventMapperTest {
 
   @Test
-  public void noToTemplates() {
+  public void absenceOfToTemplates() {
     EventMapper em = new EventMapper();
     em.setFromTemplate( EventTemplate.createNoteOnEventTemplate ( 0, null ) );
     MidiCommand[] out = em.mapEvent( new MidiCommand( 0, MidiCommand.NOTE_ON, 60 )); 
