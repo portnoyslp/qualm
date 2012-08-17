@@ -106,16 +106,20 @@
 	 basedir="${builddir}"/>
   </target>
 
-  <target name="dist" depends="jar"
-	  description="Create distribution directory">
+  <target name="dist" depends="jar" description="Create distribution directory">
   </target>
 
-  <target name="check" depends="compile-test" description="Run all unit tests">
+  <target name="check" depends="junit" description="Run junit tests">
+  </target>
+
+  <target name="junit" depends="compile-test" description="Run all unit tests">
     <mkdir dir="${testresultdir}"/>
     <junit printsummary="yes">
       <classpath refid="junit.classpath"/>
       <formatter type="plain"/>
       <batchtest todir="${testresultdir}">
+        <fileset dir="${builddir}" includes="**/*Test.class" 
+                                   excludes="qualm/utils/StressTest.class"/>
 	<fileset dir="${builddir}" includes="**/*Tester.class"/>
       </batchtest>
     </junit>
