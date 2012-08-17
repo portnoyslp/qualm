@@ -28,10 +28,14 @@ import javax.sound.midi.Transmitter;
 
 public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Receiver {
 
-  QReceiver qr;
   Transmitter midiIn;
   Receiver midiOut;
   
+  public JavaMidiReceiver(Transmitter trans, Receiver rec) {
+    midiIn = trans;
+    midiOut = rec;
+  }
+
   public JavaMidiReceiver(Properties props) {
     buildMidiHandlers(props);
   }
@@ -78,7 +82,11 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
     if (message instanceof SysexMessage) {
       SysexMessage sysex = (SysexMessage)message;
       MidiCommand mc = new MidiCommand();
-      mc.setSysex(sysex.getData());
+      /* The sysex we receive should probably keep track of the status byte as well */
+      byte[] data = new byte[sysex.getLength()];
+      data[0] = (byte) sysex.getStatus();
+      System.arraycopy(sysex.getData(), 0, data, 1, sysex.getLength() - 1);
+      mc.setSysex(data);
       getTarget().handleMidiCommand(mc);
     }
   }

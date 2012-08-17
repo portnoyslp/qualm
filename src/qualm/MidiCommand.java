@@ -1,5 +1,7 @@
 package qualm;
 
+import java.util.Arrays;
+
 /**
  * Qualm's internal representation of a MIDI message, similar to the MidiMessage
  * available in javax.sound.midi.
@@ -126,4 +128,27 @@ public class MidiCommand {
   public void setMessage(int cmd, int ch, int d1, int d2) {
     setParams(ch,cmd,(byte)d1,(byte)d2);
   }
+
+  /* Override equality so that we can test things more easily */
+  @Override public boolean equals(Object other) {
+    if (other == this)
+      return true;
+
+    if ((other == null) || (other.getClass() != this.getClass()))
+      return false;
+
+    MidiCommand o = (MidiCommand) other;
+    return (Arrays.equals(o.getData(), this.getData())
+            && o.getChannel() == this.getChannel()
+            && o.getType() == this.getType() );
+  }
+  @Override public int hashCode() {
+    final int seed = 13;
+    int result = 1;
+    result = seed * result + this.getChannel();
+    result = seed * result + this.getType();
+    result = seed * result + this.getData().hashCode();
+    return result;
+  }
+
 }

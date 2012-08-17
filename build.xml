@@ -26,6 +26,8 @@
     </fileset>
     <pathelement location="${builddir}"/>
     <pathelement location="/usr/share/java/junit4.jar"/>
+    <pathelement location="/usr/share/java/mockito-core.jar"/>
+    <pathelement location="/usr/share/java/hamcrest-core.jar"/>
   </path>
     
   <target name="init">
