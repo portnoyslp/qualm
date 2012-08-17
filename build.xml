@@ -108,7 +108,7 @@
 	 basedir="${builddir}"/>
   </target>
 
-  <target name="dist" depends="jar" description="Create distribution directory">
+  <target name="dist" depends="clean,jar" description="Create distribution directory">
   </target>
 
   <target name="check" depends="junit" description="Run junit tests">
