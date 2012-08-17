@@ -168,8 +168,6 @@ public class MasterController implements QReceiver {
   }
 
 
-  // Implementation of javax.sound.midi.Receiver
-
   public void setDebugMIDI(boolean flag) { 
     debugMIDI=flag; 
     if (midiOut instanceof VerboseReceiver) 

@@ -165,7 +165,7 @@ public class EventTemplate {
   public int channel() { return channel; }
   public int getExtra1() { return extra1Min; } 
   public String range1() { return (extra1Min == extra1Max ? ""+extra1Min : extra1Min + "-" + extra1Max); }
-  public int getExtra2() { return extra2Max; }
+  public int getExtra2() { return extra2Min; }
   public String range2() { return extra2Min + "-" + extra2Max; }
 
   protected int type;

@@ -78,5 +78,4 @@ public class EventTemplateTest {
     assertTrue(et.match( new MidiCommand( 0, NOTE_ON, 60, 0 )));
   }
     
-
 }

@@ -14,4 +14,12 @@ public class MidiCommandTest {
     assertEquals( playMiddleC, compareTo );
   }
 
+  @Test
+  public void hexData() {
+    byte[] data = new byte[] { (byte)0xF0, 8, 60, 125, (byte) 0xF7 };
+    MidiCommand sysex = new MidiCommand();
+    sysex.setSysex( data );
+    assertEquals( "F0083C7DF7", sysex.hexData() );
+  }
+
 }
