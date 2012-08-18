@@ -14,17 +14,25 @@ public class PatchChanger {
   }
   private String getRequestedDevice() { return requestedDevice; }
   
-
   private static String delegatePrefix = "qualm.delegates.";
 
-  public static void addPatchChanger( int ch,
-				      String deviceType ) {
+  public static void installDelegateForChannel( int ch,
+						ChangeDelegate cd,
+						String deviceType ) {
     if (changer[ch] == null)
       changer[ch] = new PatchChanger();
-    if (deviceType != null) {
+
+    if (deviceType != null)
       changer[ch].setRequestedDevice(deviceType);
-    }
-    
+
+    changer[ch].setChangeDelegate(cd);
+  }
+
+  public static void addPatchChanger( int ch, String deviceType ) {
+    installDelegateForChannel( ch, lookupDelegateFromType(deviceType), deviceType );
+  }
+
+  private static ChangeDelegate lookupDelegateFromType( String deviceType ) {
     // for now, we default to "Standard" as the device type
     
     if (deviceType == null) 
@@ -56,9 +64,9 @@ public class PatchChanger {
     if (delegate == null)
       throw new RuntimeException("Could not locate patch changer for device type '" 
 				 + deviceType + "'");
-      
+
     try {
-      changer[ch].setChangeDelegate( (ChangeDelegate) delegate.newInstance() );
+      return (ChangeDelegate) delegate.newInstance();
     } catch (Exception ie) {
       throw new RuntimeException("Could not create patch changer " + delegate.getName());
     }
