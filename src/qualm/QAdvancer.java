@@ -95,9 +95,7 @@ public class QAdvancer {
     // OK, now we have to back out the patch.  We're going to create
     // new PCE's which will back out the patch whenever possible.
     Collection<QEvent> out = new ArrayList<QEvent>();
-    Iterator<QEvent> iter = currentCue.getEvents().iterator();
-    while (iter.hasNext()) {
-      QEvent obj = iter.next();
+    for (QEvent obj : currentCue.getEvents() ) {
       if (obj instanceof ProgramChangeEvent) {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
 	if (pce.getPreviousPatch() != null)
@@ -146,7 +144,7 @@ public class QAdvancer {
     int channelCount = 0;
     for(int i=0; i<midiChans.length; i++) 
       if (midiChans[i] != null) channelCount++;
-      
+
     ProgramChangeEvent[] events = new ProgramChangeEvent[ midiChans.length ];
     for(int i=0; i<events.length; i++) events[i] = null;
 
