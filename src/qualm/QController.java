@@ -28,7 +28,6 @@ public class QController extends AbstractQReceiver {
   public void setMaster( MasterController mc ) { master = mc; }
   public MasterController getMaster() { return master; }
 
-
   private void setupTriggers() {
     // set up triggers
     triggers = new ArrayList<Trigger>();
@@ -45,31 +44,18 @@ public class QController extends AbstractQReceiver {
     return events;
   }
 
-  // Implementation of javax.sound.midi.Receiver
-
-  /**
-   * Describe <code>close</code> method here.
-   */
-  public void close() { }
-
-  /**
-   * Describe <code>send</code> method here.
-   *
-   * @param midiMessage a <code>MidiMessage</code> value
-   * @param l a <code>long</code> value
-   */
   long waitForTime = -1;
   private boolean ignoreEvents() {
     if (waitForTime == -1) 
       return false;
-    if (System.currentTimeMillis() < waitForTime) 
+    if (Clock.asMillis() < waitForTime) 
       return true;
     
     waitForTime=-1;
     return false;
   }
   private void setTimeOut() {
-    waitForTime = System.currentTimeMillis() + 1000; 
+    waitForTime = Clock.asMillis() + 1000;  // 1 second
   }
 
   public void advancePatch() {
@@ -84,16 +70,11 @@ public class QController extends AbstractQReceiver {
   public void handleMidiCommand(MidiCommand cmd) {
     // Do any of the currently in-effect maps match this event?
     Cue cue = getCurrentCue();
-    if (cue != null) {
-      Iterator<EventMapper> iter = cue.getEventMaps().iterator();
-      while(iter.hasNext()) {
-        EventMapper em = iter.next();
-        MidiCommand out[] = em.mapEvent(cmd);
-        if (out != null) {
-          for(int i=0; i<out.length; i++) {
-            if (out[i] != null && getTarget() != null)
-              getTarget().handleMidiCommand(out[i]);
-          }
+    if (cue != null && cue.getEventMaps() != null) {
+      for (EventMapper em : cue.getEventMaps() ) {
+	for ( MidiCommand mc : em.mapEvent(cmd) ) {
+	  if (mc != null && getTarget() != null)
+	    getTarget().handleMidiCommand(mc);
         }
       }
     }
@@ -101,19 +82,13 @@ public class QController extends AbstractQReceiver {
     if (ignoreEvents()) {
       return;
     }
-      
-    for (int i=0;i<cachedTriggers.length;i++) {
-      boolean triggered = false;
 
-      Trigger trig = cachedTriggers[i];
+    for (Trigger trig : cachedTriggers) {
       if (trig.match(cmd)) {
-        triggered = true;
         executeTrigger(trig);
+	break; // once we execute a trigger, we can stop.
       }
-      if (triggered) break;
     }
-    // no match, just ignore the message.
-
   }
   
   private void executeTriggerWithoutDelay(Trigger trig) {
@@ -173,12 +148,9 @@ public class QController extends AbstractQReceiver {
 
   private void addCurrentTriggers() {
     Cue cue = getCurrentCue();
-    if (cue != null) {
-      Iterator<Trigger> iter = cue.getTriggers().iterator();
-      while(iter.hasNext()) {
-	Trigger t = iter.next();
+    if (cue != null && cue.getTriggers() != null) {
+      for ( Trigger t : cue.getTriggers() )
 	addTrigger( t );
-      }
     }
   }
 
@@ -207,5 +179,5 @@ public class QController extends AbstractQReceiver {
     private Trigger trig;
     private QController qc;
   }
- 
+
 } // QController
