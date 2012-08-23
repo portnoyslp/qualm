@@ -1,7 +1,6 @@
 package qualm;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class EventMapper {
@@ -26,10 +25,8 @@ public class EventMapper {
     // OK, we have a match.  Generate a series of new MIDI messages for the output.
     MidiCommand out[] = new MidiCommand[ mapToList.size() ];
 
-    Iterator<EventTemplate> iter = mapToList.iterator();
     int i=0;
-    while (iter.hasNext()) {
-      EventTemplate mapTo = iter.next();
+    for (EventTemplate mapTo : mapToList) {
       out[i] = new MidiCommand(
             (mapTo.channel != EventTemplate.DONT_CARE ? mapTo.channel : cmd.getChannel()), 
             mapTo.type,

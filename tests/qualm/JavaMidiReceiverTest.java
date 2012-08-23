@@ -1,11 +1,8 @@
 package qualm;
 
 import org.junit.*;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import org.mockito.ArgumentMatcher;
-
-import org.hamcrest.*;
 
 import javax.sound.midi.*;
 

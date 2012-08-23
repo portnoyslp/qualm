@@ -31,15 +31,15 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
   Transmitter midiIn;
   Receiver midiOut;
   
+  public JavaMidiReceiver(Properties props) {
+    buildMidiHandlers(props);
+  }
+  
   public JavaMidiReceiver(Transmitter trans, Receiver rec) {
     midiIn = trans;
     midiOut = rec;
   }
 
-  public JavaMidiReceiver(Properties props) {
-    buildMidiHandlers(props);
-  }
-  
   /* Receives the given MidiCommand from Qualm and sends it out through the MIDI interface.
    * @see qualm.BasicReceiver#handleMidiCommand(qualm.MidiCommand)
    */

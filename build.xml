@@ -2,8 +2,9 @@
 <project name="qualm" basedir="." default="all">
 
   <property name="srcdir" value="${basedir}/src"/>
-  <property name="testdir" value="${basedir}/tests"/>
+  <property name="srcdir.test" value="${basedir}/tests"/>
   <property name="builddir" value="${basedir}/build"/>
+  <property name="builddir.test" value="${basedir}/test-build"/>
   <property name="testresultdir" value="${basedir}/test-results"/>
 
   <target name="all" depends="compile,doc"
@@ -20,11 +21,8 @@
 
   <path id="junit.classpath">
     <pathelement location="/usr/share/java/gnu-getopt.jar"/>
-    <fileset dir="${basedir}">
-      <!-- just in case there's no /usr/share/java... -->
-      <include name="*-getopt*.jar"/>
-    </fileset>
-    <pathelement location="${builddir}"/>
+    <pathelement location="${builddir.test}"/>
+<!--    <path refid="classpath"/> -->
     <pathelement location="/usr/share/java/junit4.jar"/>
     <pathelement location="/usr/share/java/mockito-core.jar"/>
     <pathelement location="/usr/share/java/hamcrest-core.jar"/>
@@ -47,7 +45,7 @@
   </target>
 
   <target name="compile" depends="init">
-    <javac debug="true" source="1.5" destdir="${builddir}" srcdir="${srcdir}"
+    <javac source="1.5" destdir="${builddir}" srcdir="${srcdir}"
 	   includeantruntime="false">
       <classpath refid="classpath"/>
     </javac>
@@ -120,15 +118,16 @@
       <classpath refid="junit.classpath"/>
       <formatter type="plain"/>
       <batchtest todir="${testresultdir}">
-        <fileset dir="${builddir}" includes="**/*Test.class" 
+        <fileset dir="${builddir.test}" includes="**/*Test.class" 
                                    excludes="qualm/utils/StressTest.class"/>
-	<fileset dir="${builddir}" includes="**/*Tester.class"/>
+	    <fileset dir="${builddir.test}" includes="**/*Tester.class"/>
       </batchtest>
     </junit>
   </target>
 
-  <target name="compile-test" depends="compile">
-    <javac debug="true" source="1.5" srcdir="${testdir}" destdir="${builddir}"
+  <target name="compile-test">
+  	<mkdir dir="${builddir.test}"/>
+    <javac source="1.5" srcdir="${srcdir};${srcdir.test}" destdir="${builddir.test}"
 	    includeantruntime="false">
       <classpath refid="junit.classpath"/>
     </javac>
@@ -136,6 +135,7 @@
 
   <target name="clean" description="Purge build directory and jar file">
     <delete dir="${builddir}" />
+  	<delete dir="${builddir.test}" />
     <delete file="${basedir}/qualm.jar" />
   </target>
 

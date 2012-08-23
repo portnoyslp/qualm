@@ -3,8 +3,6 @@ package qualm;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-import javax.sound.midi.*;
-
 public class MidiCommandTest {
 
   @Test

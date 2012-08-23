@@ -8,6 +8,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings( "unchecked" )
 public class QControllerTest {
 
   QController qc;
@@ -62,7 +63,7 @@ public class QControllerTest {
   public void advancePatchSendsToMaster() {
     Cue pending = qc.getPendingCue();
     qc.advancePatch();
-    verify(mockMaster).sendEvents(anyCollection());
+    verify(mockMaster).sendEvents( (Collection<QEvent>) anyCollection());
     assertEquals( pending, qc.getCurrentCue() );
   }
 
@@ -71,7 +72,7 @@ public class QControllerTest {
     qc.changesForCue( "1.1" );
     Cue pending = qc.getPendingCue();
     qc.handleMidiCommand( new MidiCommand( 0, NOTE_ON, 60, 100 ) );
-    verify(mockMaster).sendEvents(anyCollection());
+    verify(mockMaster).sendEvents( anyCollection());
     assertEquals( pending, qc.getCurrentCue() );
   }
 
@@ -89,7 +90,7 @@ public class QControllerTest {
 
     timeSource.setMillis((long) 2200); // accepting triggers again
     qc.handleMidiCommand( new MidiCommand( 0, NOTE_ON, 60, 100 ) ); // this is a reverse trigger, so back to first cue.
-    verify(mockMaster, times(2)).sendEvents(anyCollection());
+    verify(mockMaster, times(2)).sendEvents( anyCollection());
 
     assertEquals( start, qc.getCurrentCue() );
   }

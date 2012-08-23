@@ -1,6 +1,5 @@
 package qualm;
 
-import qualm.*;
 import java.util.*;
 
 import junit.framework.Assert;

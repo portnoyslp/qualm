@@ -9,8 +9,6 @@ import java.util.regex.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-import qualm.*;
-
 public class QDataLoaderTester {
 
   @Test
