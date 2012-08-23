@@ -13,7 +13,7 @@ import javax.sound.midi.*;
  * Note: make sure the Korg is set to receive sysex messages on
  * "exclusive channel 1".
  */
-public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
+public class KorgNS5R_PartChangerDelegate extends KorgDelegate
 {
   public void patchChange( ProgramChangeEvent pce,
 			   QReceiver midiOut )
@@ -137,50 +137,6 @@ public class KorgNS5R_PartChangerDelegate extends ChangeDelegate
     } catch (InvalidMidiDataException e) {
       System.out.println("Unable to send Program Change: " + pce);
       System.out.println(e);
-    } catch (Exception e2) {
-      e2.printStackTrace();
-    }
-  }
-
-
-
-  public void noteWindowChange( NoteWindowChangeEvent nwce,
-				QReceiver midiOut )
-  {
-    try {
-      MidiCommand sysex;
-      byte[] data;
-
-      int channel = nwce.getChannel();
-
-      if (nwce.getBottomNote() != null)
-      {
-	// send SysEx to set note window bottom for Part
-	data = new byte[]
-	  { (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 1, (byte) channel, 0x15,
-	    nwce.getBottomNote().byteValue(), (byte) 0xF7 };
-
-	sysex = new MidiCommand();
-	sysex.setSysex( data );
-
-	if (midiOut != null)
-	  midiOut.handleMidiCommand(sysex);
-      }
-
-      if (nwce.getTopNote() != null)
-      {
-	// send SysEx to set note window top for Part
-	data = new byte[]
-	  { (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 1, (byte) channel, 0x16,
-	    nwce.getTopNote().byteValue(), (byte) 0xF7 };
-
-	sysex = new MidiCommand();
-	sysex.setSysex( data );
-
-	if (midiOut != null)
-	  midiOut.handleMidiCommand(sysex);
-      }
-
     } catch (Exception e2) {
       e2.printStackTrace();
     }

@@ -70,7 +70,7 @@ public class AlesisDelegate extends ChangeDelegate {
   }
 
 
-  
+  @Override  
   public void noteWindowChange( NoteWindowChangeEvent nwce,
 				QReceiver midiOut )
   {

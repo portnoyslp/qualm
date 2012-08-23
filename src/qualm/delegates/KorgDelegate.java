@@ -116,8 +116,6 @@ public class KorgDelegate extends ChangeDelegate
     }
   }
 
-
-
   public void noteWindowChange( NoteWindowChangeEvent nwce,
 				QReceiver midiOut )
   {
