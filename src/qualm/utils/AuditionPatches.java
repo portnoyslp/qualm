@@ -271,7 +271,7 @@ public class AuditionPatches {
     // Set up MIDI ports
     Properties props = new Properties();
     props.setProperty("outputPort", outputPort);
-    midiOut = new JavaMidiReceiver(props);
+    midiOut = JavaMidiReceiver.buildFromProperties(props);
 
     loopThroughPatches();
     System.exit(0);

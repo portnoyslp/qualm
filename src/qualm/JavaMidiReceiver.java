@@ -31,14 +31,15 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
   Transmitter midiIn;
   Receiver midiOut;
   
-  public JavaMidiReceiver(Properties props) {
-    buildMidiHandlers(props);
-  }
-  
   public JavaMidiReceiver(Transmitter trans, Receiver rec) {
     midiIn = trans;
     midiOut = rec;
   }
+  
+  public static JavaMidiReceiver buildFromProperties(Properties props) {
+    return buildMidiHandlers(props);
+  }
+  
 
   /* Receives the given MidiCommand from Qualm and sends it out through the MIDI interface.
    * @see qualm.BasicReceiver#handleMidiCommand(qualm.MidiCommand)
@@ -121,7 +122,10 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
    * 
    * @param props
    */
-  private void buildMidiHandlers(Properties props) {
+  private static JavaMidiReceiver buildMidiHandlers(Properties props) {
+    Receiver rec;
+    Transmitter trans;
+    
     String inputPort = props.getProperty("inputPort");
     String outputPort = props.getProperty("outputPort");
     
@@ -166,7 +170,7 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
     try {         
       MidiDevice inDevice = MidiSystem.getMidiDevice( inputInfo );
       inDevice.open();
-      midiIn = inDevice.getTransmitter();
+      trans = inDevice.getTransmitter();
     } catch (MidiUnavailableException mdu1) {
       throw new RuntimeException("Unable to open device for input:" + mdu1);
     }
@@ -174,13 +178,14 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
     try {
       MidiDevice outDevice = MidiSystem.getMidiDevice( outputInfo );
       outDevice.open();
-      midiOut = outDevice.getReceiver();
+      rec = outDevice.getReceiver();
     } catch (MidiUnavailableException mdu2) {
       throw new RuntimeException("Unable to open device for output:" + mdu2);
     }
-						
-    // set the JavaMidiReceiver to handle incoming data.
-    midiIn.setReceiver( this );
+	
+    JavaMidiReceiver jmr = new JavaMidiReceiver(trans,rec);
+    trans.setReceiver( jmr );
+    return jmr;
   }  
   
   private static List<MidiDevice.Info> fetchAllMidiPorts() {
