@@ -135,7 +135,7 @@ public class Qualm {
     JavaMidiReceiver jmr = null;
     if (!skipMIDI)
       try {
-        jmr = new JavaMidiReceiver(props);       
+        jmr = JavaMidiReceiver.buildFromProperties(props);       
       } catch (Exception e) {
         LOG.warning(e.getMessage());
         System.exit(0);

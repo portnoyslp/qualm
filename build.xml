@@ -128,7 +128,7 @@
   <target name="compile-test">
   	<mkdir dir="${builddir.test}"/>
     <javac source="1.5" srcdir="${srcdir};${srcdir.test}" destdir="${builddir.test}"
-	    includeantruntime="false">
+	    includeantruntime="false" debug="yes">
       <classpath refid="junit.classpath"/>
     </javac>
   </target>
