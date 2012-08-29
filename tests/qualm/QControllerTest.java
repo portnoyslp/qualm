@@ -30,6 +30,9 @@ public class QControllerTest {
     c.setEvents(evList);
     ArrayList<Trigger> trigList = new ArrayList<Trigger>();
     trigList.add(new Trigger(EventTemplate.createNoteOnEventTemplate( 0, "c4" )));
+    Trigger t = new Trigger(EventTemplate.createNoteOnEventTemplate( 0, "c8" ));
+    t.setDelay(10000);
+    trigList.add(t);
     c.setTriggers(trigList);
     qs.addCue(c);
     
@@ -93,6 +96,45 @@ public class QControllerTest {
     verify(mockMaster, times(2)).sendEvents( anyCollection());
 
     assertEquals( start, qc.getCurrentCue() );
+  }
+
+  @Test
+  public void triggerWithDelay() {
+    // We use a 200ms timeout for verify's here, because the extra thread might take a while.
+    qc.changesForCue( "1.1" );
+    Cue pending = qc.getPendingCue();
+    timeSource.setMillis((long) 1000); // set time
+    qc.handleMidiCommand( new MidiCommand( 0, NOTE_ON, 108, 100 ) ); // delay of 10 seconds = 10000
+    verifyNoMoreInteractions(mockMaster);
+
+    timeSource.setMillis((long) 5000); // time not there, we shouldn't see any triggers
+    verify(mockMaster, timeout(200).never()).sendEvents( anyCollection() );
+
+    timeSource.setMillis((long) 12000); // by now we should have triggered
+    verify(mockMaster, timeout(200).times(1)).sendEvents( anyCollection());
+
+    assertEquals( pending, qc.getCurrentCue() );
+  }
+
+  @Test
+  public void doubleTriggerGetsIgnored() {
+    // We use a 200ms timeout for verify's here, because the extra thread might take a while.
+    qc.changesForCue( "1.1" );
+    Cue pending = qc.getPendingCue();
+    timeSource.setMillis((long) 1000); // set time
+    qc.handleMidiCommand( new MidiCommand( 0, NOTE_ON, 108, 100 ) ); // delay of 10 seconds = 10000
+    verifyNoMoreInteractions(mockMaster);
+
+    timeSource.setMillis((long) 5000); // time not there, we shouldn't see any triggers
+    verify(mockMaster, timeout(200).never()).sendEvents( anyCollection() );
+
+    qc.handleMidiCommand( new MidiCommand( 0, NOTE_ON, 108, 100 ) ); // same trigger, should get ignored.
+    verify(mockMaster, timeout(200).never()).sendEvents( anyCollection() );
+
+    timeSource.setMillis((long) 16000); // by now we should have triggered, just the once.
+    verify(mockMaster, timeout(200).times(1)).sendEvents( anyCollection());
+
+    assertEquals( pending, qc.getCurrentCue() );
   }
 
 

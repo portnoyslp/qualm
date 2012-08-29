@@ -9,6 +9,10 @@ public class QController extends AbstractQReceiver {
   QData qdata;
   String title;
 
+  private static final int ignoreEventsTimeMsec = 1000; // 1 second
+  private static final int minWaitTimeMsec = 200;
+  private static final int minimalSleepMsec = 100;
+
   public QController( QReceiver out, QStream qstream, QData data ) {
     setTarget(out);
     qdata = data;
@@ -55,7 +59,7 @@ public class QController extends AbstractQReceiver {
     return false;
   }
   private void setTimeOut() {
-    waitForTime = Clock.asMillis() + 1000;  // 1 second
+    waitForTime = Clock.asMillis() + ignoreEventsTimeMsec;
   }
 
   public void advancePatch() {
@@ -105,24 +109,15 @@ public class QController extends AbstractQReceiver {
   private void executeTrigger(Trigger trig) {
     setTimeOut();
 
-    // anything less than a couple hundred ms isn't worth creating a thread for.
-    if (trig.getDelay() < 200)
+    // anything that's very short isn't worth creating a thread for.
+    if (trig.getDelay() < minWaitTimeMsec)
       executeTriggerWithoutDelay(trig);
 
     else {
       // check to see if this trigger is already represented in the
       // list of pending trigger threads.
-      Iterator<TriggerDelayThread> iter = triggerThreads.iterator();
-      boolean found = false;
-      while (iter.hasNext()) {
-	TriggerDelayThread th = iter.next();
-	if (th.equals(trig)) {
-	  found = true;
-	  break;
-	}
-      }
+      if (!triggerThreads.contains( trig )) {
 
-      if (!found) {
         // spawn a thread which will execute this trigger after the appropriate number of ms.
 	TriggerDelayThread tdt = new TriggerDelayThread(trig,this);
 	triggerThreads.add(tdt);
@@ -157,7 +152,9 @@ public class QController extends AbstractQReceiver {
   class TriggerDelayThread extends Thread {
     public void run() {
       try {
-        sleep(trig.getDelay());
+        while (Clock.asMillis() < wakeupTime) {
+          sleep(minimalSleepMsec);
+        }
       } catch (InterruptedException ie) { } 
       qc.executeTriggerWithoutDelay(trig);
       // remove from trigger thread list
@@ -166,6 +163,7 @@ public class QController extends AbstractQReceiver {
     TriggerDelayThread(Trigger trig, QController qc) {
       this.trig = trig;
       this.qc = qc;
+      this.wakeupTime = Clock.asMillis() + trig.getDelay();
     }
 
     public boolean equals(Trigger t) {
@@ -178,6 +176,7 @@ public class QController extends AbstractQReceiver {
       
     private Trigger trig;
     private QController qc;
+    private long wakeupTime;
   }
 
 } // QController
