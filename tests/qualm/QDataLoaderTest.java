@@ -7,27 +7,39 @@ import java.util.Iterator;
 import java.util.regex.*;
 
 import org.junit.*;
+import org.xml.sax.InputSource;
+
 import static org.junit.Assert.*;
 
-public class QDataLoaderTester {
+public class QDataLoaderTest {
 
-  @Test
-  public void testLoad1() throws Exception {
-    // load a test file
-    String fname = "tests/qualm/qdl-1.xml";
+  QData qd;
+  String fname;
+  
+  @Before
+  public void loadQDL1() {
+    fname = "tests/qualm/qdl-1.xml";
     QDataLoader qdl = new QDataLoader();
-    QData qd = qdl.readFile( new java.io.File(fname) );
-    
+    qd = qdl.readFile( new java.io.File(fname) );
+  }
+  
+  @Test
+  public void checkTitle() {
     assertEquals("QDL-1", qd.getTitle());
-    
+  }
+  
+  @Test
+  public void checkChannels() {
     // check channels
     String ch[] = qd.getMidiChannels();
     assertEquals("Lower Kbd",ch[0]);
     assertEquals("Upper Kbd",ch[1]);
     assertEquals("Drums",ch[9]);
     assertNull(ch[2]);
-    
-    // check patches
+  }
+  
+  @Test
+  public void checkPatches() {
     assertTrue(5 == qd.getPatches().size());
     assertEquals(qd.lookupPatch("P1").getID(),"P1");
     assertEquals(qd.lookupPatch("P1").getDescription(),"Patch 1");
@@ -35,15 +47,19 @@ public class QDataLoaderTester {
     assertEquals(qd.lookupPatch("Timpani").getID(),"Timpani");
     assertEquals(qd.lookupPatch("Timpani").getDescription(),"Timpani");
     assertTrue(qd.lookupPatch("Timpani").getNumber() == 5);
-
-    // patch volumes
+  }
+  
+  @Test
+  public void checkPatchVolumes() {
     assertNull(qd.lookupPatch("P1").getVolume()); 
     assertEquals(qd.lookupPatch("P2").getVolume().intValue(), 20);
     assertEquals(qd.lookupPatch("P3").getVolume().intValue(), 
 		 (int)((80*127)/100));
     assertEquals(qd.lookupPatch("P3_2").getVolume().intValue(), 127);
-
-    // check streams
+  }
+  
+  @Test
+  public void checkStreams() {
     assertTrue(2==qd.getCueStreams().size());
     QStream s = (QStream) ((List<QStream>)qd.getCueStreams()).get(0);
     assertEquals(s.getTitle(),"First_Stream");
@@ -51,38 +67,65 @@ public class QDataLoaderTester {
     s = (QStream)  ((List<QStream>)qd.getCueStreams()).get(1);
     assertEquals(s.getTitle(),"Second_Stream");
     assertTrue(2==s.getCues().size());
-
-    // random check of cues
-    s = (QStream) ((List<QStream>)qd.getCueStreams()).get(0);
+  }
+  
+  @Test
+  public void spotCheckCues() {
+    // check a subset of the cues
+    QStream s = (QStream) ((List<QStream>)qd.getCueStreams()).get(0);
     Cue q = (Cue) s.getCues().first();
     assertEquals(q,new Cue("3.1"));
     assertEquals(q.getEvents().size(), 1);
     assertEquals(q.getEventMaps().size(), 1);
     assertEquals(q.getTriggers().size(), 3);
-
-    // do we have the delay listed?
-    assertTrue(q.getTriggers().toString().indexOf("dly2500")>-1);
-
-    // check on the sysex event; should be 11 bytes
-    q = (Cue) s.getCues().last();
-    Collection<QEvent> eventColl = q.getEvents();
-    assertEquals(eventColl.size(),4);
-    Iterator<QEvent> iter = eventColl.iterator();
-    while (iter.hasNext()) {
-      QEvent qe = iter.next();
-      if (qe instanceof MidiEvent &&
-	  ((MidiEvent)qe).getMidiCommand().getType() == MidiCommand.SYSEX) {
-	assertEquals( ((MidiEvent)qe).getMidiCommand().hexData(), "F04110421240007F0041F7");
-      }
-    }
-
+    
     s = (QStream) ((List<QStream>)qd.getCueStreams()).get(1);
     q = (Cue) s.getCues().last();
     assertEquals(q,new Cue("2.10"));
     assertEquals(q.getEvents().size(), 2);
     assertEquals(q.getEventMaps().size(), 0);
     assertEquals(q.getTriggers().size(), 1);
+  }
 
+  @Test
+  public void checkForDelay() {
+    QStream s = (QStream) ((List<QStream>)qd.getCueStreams()).get(0);
+    Cue q = (Cue) s.getCues().first();
+    assertTrue(q.getTriggers().toString().indexOf("dly2500")>-1);
+  }
+  
+  @Test
+  public void checkSysex() {
+    QStream s = (QStream) ((List<QStream>)qd.getCueStreams()).get(0);
+    Cue q = (Cue) s.getCues().first();
+
+    // check on the sysex event; should be 11 bytes
+    s = (QStream) ((List<QStream>)qd.getCueStreams()).get(0);
+    q = (Cue) s.getCues().last();
+    Collection<QEvent> eventColl = q.getEvents();
+    assertEquals(eventColl.size(),4);
+    for(QEvent qe : eventColl) {
+      if (qe instanceof MidiEvent &&
+	  ((MidiEvent)qe).getMidiCommand().getType() == MidiCommand.SYSEX) {
+	assertEquals( ((MidiEvent)qe).getMidiCommand().hexData(), "F04110421240007F0041F7");
+      }
+    }
+  }
+  
+  @Test
+  public void checkWritingAndReading() {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    QDataXMLReader.outputXML(qd, baos);
+    
+    QDataLoader qdl2 = new QDataLoader();
+    InputSource src = new InputSource(new StringReader(baos.toString()));
+    QData readIn = qdl2.readSource(src);
+
+    assertEquals(qd,readIn);
+  }
+  
+  @Test 
+  public void spotCheckOutputXML() throws IOException {
     // Finally, can we write everything we read?  Get a normalized (no
     // carriage returns or following white spaces) version of the
     // input document, and compare it to a normalized version of the

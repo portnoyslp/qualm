@@ -5,8 +5,6 @@ import qualm.*;
 import org.junit.*;
 import static org.mockito.Mockito.*;
 
-import static qualm.MidiCommand.*;
-
 public class YamahaMotifRackXSDelegateTest {
 
   QReceiver mockQR;

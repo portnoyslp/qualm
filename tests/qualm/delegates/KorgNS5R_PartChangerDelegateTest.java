@@ -3,10 +3,7 @@ package qualm.delegates;
 import qualm.*;
 
 import org.junit.*;
-import org.mockito.*;
 import static org.mockito.Mockito.*;
-
-import static qualm.MidiCommand.*;
 
 public class KorgNS5R_PartChangerDelegateTest {
 
