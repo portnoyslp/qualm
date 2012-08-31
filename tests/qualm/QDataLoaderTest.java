@@ -114,6 +114,7 @@ public class QDataLoaderTest {
   
   @Test
   public void checkWritingAndReading() {
+    // make sure we don't have any differences if we write and read the same doc.
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     QDataXMLReader.outputXML(qd, baos);
     

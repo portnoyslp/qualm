@@ -115,4 +115,26 @@ public class QData {
     
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) return true;
+    if (obj == null || obj.getClass() != this.getClass()) return false;
+
+    QData qd = (QData)obj;
+    return (title == null ? qd.getTitle() == null : title.equals(qd.getTitle()))
+      && Arrays.equals(qd.getMidiChannels(),this.getMidiChannels())
+      // convert getPatches() to HashSet so equals() works.
+      && (new HashSet(getPatches())).equals(new HashSet(qd.getPatches()))
+      ;
+  }
+  @Override
+  public int hashCode() {
+    final int prime = 73;
+    int result = 1;
+    result =  prime * result + (title==null ? 0 : title.hashCode());
+    result += prime * result + (Arrays.hashCode(channels));
+    result += prime * result + (getPatches() == null ? 0 : getPatches().hashCode());
+    
+    return result;
+  }
 } 

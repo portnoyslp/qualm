@@ -93,5 +93,17 @@ public class Patch {
   public String toString() { 
     return getID();
   }
-  
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) return true;
+    if (obj == null || obj.getClass() != this.getClass()) return false;
+    
+    Patch p = (Patch)obj;
+    return p.getID().equals(id);
+  }
+  @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
 } 

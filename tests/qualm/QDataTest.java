@@ -1,0 +1,86 @@
+package qualm;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+
+public class QDataTest {
+
+  QData testData;
+
+  @Before
+  public void setup() {
+    testData = new QDataBuilder()
+      .addMidiChannel( 0, null, "Ch1")
+      .addStream(new QStreamBuilder()
+                 .addCue(new CueBuilder()
+                         .withCueNumber( "1.1" )
+                         .addProgramChangeEvent( 0, new Patch( "P1", 1 ))
+                         .build())
+                 .addCue(new CueBuilder()
+                         .withCueNumber( "2.1" )
+                         .addProgramChangeEvent( 0, new Patch( "P2", 2 ))
+                         .build())
+                 .build())
+      .build();
+  }
+
+  @Test
+  public void addingMidiChannelUpdatesPatchChanger() {
+    QData qd = new QData();
+    qd.addMidiChannel( 2, null, "Test");
+    assertEquals(PatchChanger.getRequestedDeviceForChannel(2), null);
+  }
+
+  @Test
+  public void trivialEquality() {
+    QData qd1 = new QDataBuilder().build();
+    QData qd2 = new QDataBuilder().build();
+    assertEquals(qd1, qd2);
+  }
+
+  @Test
+  public void titleEquality() {
+    QData qd1 = new QDataBuilder().withTitle("Title").build();
+    QData qd2 = new QDataBuilder().withTitle("Title").build();
+    QData qd3 = new QDataBuilder().withTitle("Different Title").build();
+    assertEquals(qd1, qd2);
+    assertFalse(qd1.equals(qd3));
+  }
+
+  @Test
+  public void testChannelEquality() {
+    QData qd1 = new QDataBuilder().addMidiChannel(2, "Roland", "K2").build();
+    QData qd2 = new QDataBuilder().addMidiChannel(2, "Roland", "K2").build();
+    QData qd3 = new QDataBuilder().addMidiChannel(1, "Roland", "K1").build();
+    assertEquals(qd1, qd2);
+    assertFalse(qd1.equals(qd3));
+  }
+
+  @Test
+  public void testPatchEquality() {
+    QData qd1 = new QDataBuilder().addPatch( new Patch( "P1", 1 )).build();
+    QData qd2 = new QDataBuilder().addPatch( new Patch( "P1", 1 )).build();
+    QData qd3 = new QDataBuilder().addPatch( new Patch( "P2", 1 )).build();
+    assertEquals(qd1, qd2);
+    assertFalse(qd1.equals(qd3));
+  }
+
+  @Test
+  public void variedEquality() {
+    QData qd2 = new QDataBuilder()
+      .addMidiChannel( 0, null, "Ch1")
+      .addStream(new QStreamBuilder()
+                 .addCue(new CueBuilder()
+                         .withCueNumber( "1.1" )
+                         .addProgramChangeEvent( 0, new Patch( "P1", 1 ))
+                         .build())
+                 .addCue(new CueBuilder()
+                         .withCueNumber( "2.1" )
+                         .addProgramChangeEvent( 0, new Patch( "P2", 2 ))
+                         .build())
+                 .build())
+      .build();
+    assertEquals(testData,qd2);
+  }
+
+}
