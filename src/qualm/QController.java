@@ -116,8 +116,14 @@ public class QController extends AbstractQReceiver {
     else {
       // check to see if this trigger is already represented in the
       // list of pending trigger threads.
-      if (!triggerThreads.contains( trig )) {
-
+      boolean found = false;
+      for (TriggerDelayThread th : triggerThreads) {
+        if (th.hasTrigger(trig)) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
         // spawn a thread which will execute this trigger after the appropriate number of ms.
 	TriggerDelayThread tdt = new TriggerDelayThread(trig,this);
 	triggerThreads.add(tdt);
@@ -166,7 +172,7 @@ public class QController extends AbstractQReceiver {
       this.wakeupTime = Clock.asMillis() + trig.getDelay();
     }
 
-    public boolean equals(Trigger t) {
+    public boolean hasTrigger(Trigger t) {
       return trig.equals(t);
     }
 
