@@ -48,9 +48,7 @@ public class MasterController implements QReceiver {
     boolean[] sent_nw_on_channel = new boolean[16];
     for(int i=0;i<16;i++) sent_nw_on_channel[i] = false;
 
-    Iterator<QEvent> iter = changes.iterator();
-    while(iter.hasNext()) {
-      QEvent obj = iter.next();
+    for (QEvent obj : changes) {
       if (obj instanceof ProgramChangeEvent) {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
 	int channel = pce.getChannel();
@@ -149,10 +147,8 @@ public class MasterController implements QReceiver {
 	  return ca.getChannel()-cb.getChannel();
 	}
       });
-    
-    Iterator<QController> iter = controllers.values().iterator();
-    while (iter.hasNext()) {
-      QController qc = iter.next();
+   
+    for (QController qc : controllers.values()) {
       changes.addAll(qc.changesForCue( cueName ));
     }
     return changes;
@@ -162,7 +158,7 @@ public class MasterController implements QReceiver {
     return controllers.values();
   }
 
-  public void updateCue(Collection<QEvent> c) {
+  private void updateCue(Collection<QEvent> c) {
     if (REPL != null)
       REPL.updateCue( c );
   }
@@ -183,9 +179,9 @@ public class MasterController implements QReceiver {
       Qualm.LOG.fine( "Rec'd" + midi );
 
     try {
-      Iterator<QController> i = controllers.values().iterator();
-      while (i.hasNext()) 
-        i.next(). handleMidiCommand(midi);
+      for (QController qc : controllers.values() ) {
+        qc.handleMidiCommand(midi);
+      }
     } catch (RuntimeException re) {
       // if we get any errors from the data send, we can either print
       // them and continue, or throw a monkey wrench
