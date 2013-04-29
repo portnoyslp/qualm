@@ -125,20 +125,14 @@ public class QDataLoaderTest {
     assertEquals(qd,readIn);
   }
   
-  @Test 
+  @Test
   public void spotCheckOutputXML() throws IOException {
-    // Finally, can we write everything we read?  Get a normalized (no
-    // carriage returns or following white spaces) version of the
-    // input document, and compare it to a normalized version of the
-    // output.
     String inputDoc = removeCRs(readFileAsString(fname));
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     QDataXMLReader.outputXML(qd,baos);
     String outputDoc = removeCRs(baos.toString());
-    // TODO This assertion doesn't quite work yet; there are too many small differences.
-    //assertEquals(inputDoc,outputDoc);
 
-    // So, let's count up various elements to make sure they match expectations
+    // Count up various elements to make sure they match expectations
     assertEquals(3,countMatches(outputDoc,"<channel "));
     assertEquals(5,countMatches(outputDoc,"<patch "));
     assertEquals(2,countMatches(outputDoc,"<cue-stream "));
