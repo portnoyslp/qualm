@@ -71,7 +71,7 @@ public class QAdvancerTest {
   }
 
   /* exploit a specific bug, when a channel is not used in the first
-   * cue, but we reverse to the the first cue. */
+   * cue, but we reverse to the first cue. */
   @Test
   public void reverseWithEmptyChannel() {
     QStream qs = new QStreamBuilder()
