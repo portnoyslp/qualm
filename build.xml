@@ -7,6 +7,9 @@
   <property name="builddir.test" value="${basedir}/test-build"/>
   <property name="testresultdir" value="${basedir}/test-results"/>
 
+  <property name="instrumentdir" value="${basedir}/instr-build"/>
+  <property name="coveragedir" value="${basedir}/coverage"/>
+
   <target name="all" depends="compile,doc"
 	 description="Build the system"/>
 
@@ -22,11 +25,17 @@
   <path id="junit.classpath">
     <pathelement location="/usr/share/java/gnu-getopt.jar"/>
     <pathelement location="${builddir.test}"/>
-<!--    <path refid="classpath"/> -->
     <pathelement location="/usr/share/java/junit4.jar"/>
     <pathelement location="/usr/share/java/mockito-core.jar"/>
     <pathelement location="/usr/share/java/hamcrest-core.jar"/>
   </path>
+
+  <!-- Added for code coverage -->
+  <path id="emma.classpath">
+    <pathelement location="/usr/share/java/emma.jar"/>
+    <pathelement location="/usr/share/java/emma_ant.jar"/>
+  </path>
+  <taskdef resource="emma_ant.properties" classpathref="emma.classpath"/>
     
   <target name="init">
     <mkdir dir="${builddir}"/>
@@ -46,7 +55,7 @@
 
   <target name="compile" depends="init">
     <javac source="1.5" destdir="${builddir}" srcdir="${srcdir}"
-	   includeantruntime="false">
+	   includeantruntime="false" debug="true">
       <classpath refid="classpath"/>
     </javac>
   </target>
@@ -112,10 +121,33 @@
   <target name="check" depends="junit" description="Run junit tests">
   </target>
 
+  <target name="emma" description="turn on code coverage reporting">
+    <property name="emma.enabled" value="true"/>
+    <mkdir dir="${instrumentdir}"/>
+  </target>
+
   <target name="junit" depends="compile-test" description="Run all unit tests">
     <mkdir dir="${testresultdir}"/>
-    <junit printsummary="yes">
-      <classpath refid="junit.classpath"/>
+
+    <!-- setup Emma, if enabled -->
+    <emma enabled="${emma.enabled}">
+      <instr instrpathref="junit.classpath"
+	     destdir="${instrumentdir}"
+	     metadatafile="${coveragedir}/metadata.emma"
+	     merge="true">
+	<filter includes="qualm.*"/>
+      </instr>
+    </emma>
+
+    <!-- run junit tests -->
+    <junit printsummary="yes" fork="true">
+      <classpath>
+	<pathelement location="${instrumentdir}"/>
+	<path refid="junit.classpath"/>
+	<path refid="emma.classpath"/>
+      </classpath>
+      <jvmarg value="-Demma.coverage.out.file=${coveragedir}/coverage.emma"/>
+      <jvmarg value="-Demma.coverage.out.merge=true"/>
       <formatter type="plain"/>
       <batchtest todir="${testresultdir}">
         <fileset dir="${builddir.test}" includes="**/*Test.class" 
@@ -123,20 +155,33 @@
 	    <fileset dir="${builddir.test}" includes="**/*Tester.class"/>
       </batchtest>
     </junit>
+
+    <!-- run Emma reporting -->
+    <emma enabled="${emma.enabled}">
+      <report sourcepath="${srcdir}">
+	<fileset dir="${coveragedir}">
+	  <include name="*.emma"/>
+	</fileset>
+	<txt outfile="${coveragedir}/coverage.txt"/>
+	<html outfile="${coveragedir}/coverage.html"/>
+      </report>
+    </emma>
   </target>
 
   <target name="compile-test">
   	<mkdir dir="${builddir.test}"/>
     <javac source="1.5" srcdir="${srcdir};${srcdir.test}" destdir="${builddir.test}"
-	    includeantruntime="false" debug="yes">
+	    includeantruntime="false" debug="true">
       <classpath refid="junit.classpath"/>
     </javac>
   </target>
 
   <target name="clean" description="Purge build directory and jar file">
     <delete dir="${builddir}" />
-  	<delete dir="${builddir.test}" />
+    <delete dir="${builddir.test}" />
     <delete file="${basedir}/qualm.jar" />
+    <delete dir="${coveragedir}" />
+    <delete dir="${instrumentdir}" />
   </target>
 
 </project>

@@ -4,5 +4,6 @@
 test-results/*.txt
 build/*
 bin/*
+coverage/*
 
 
