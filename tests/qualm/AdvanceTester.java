@@ -3,7 +3,6 @@ package qualm;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-import javax.sound.midi.*;
 import static javax.sound.midi.ShortMessage.*;
 
 public class AdvanceTester {

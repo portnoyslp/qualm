@@ -93,7 +93,7 @@ public class QAdvancerTest {
     QAdvancer qa2 = new QAdvancer( qs, qd );
 
     Collection<QEvent> evs = qa.switchToMeasure( "2.1" );
-    evs = qa.reversePatch();
+    evs = qa2.reversePatch();
     assertEquals(1, evs.size());
     for (QEvent qe : evs) {
       /* Only reverse to the one channel we care about */

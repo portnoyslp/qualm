@@ -126,7 +126,6 @@ public class QDataLoaderTest {
   
   @Test
   public void spotCheckOutputXML() throws IOException {
-    String inputDoc = removeCRs(readFileAsString(fname));
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     QDataXMLReader.outputXML(qd,baos);
     String outputDoc = removeCRs(baos.toString());
