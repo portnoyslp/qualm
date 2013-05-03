@@ -125,6 +125,7 @@ public class QData {
       && Arrays.equals(qd.getMidiChannels(),this.getMidiChannels())
       // convert getPatches() to HashSet so equals() works.
       && (new HashSet<Patch>(getPatches())).equals(new HashSet<Patch>(qd.getPatches()))
+      && (cueStreams == null ? qd.getCueStreams() == null : cueStreams.equals(qd.getCueStreams()))
       ;
   }
   @Override
@@ -134,6 +135,7 @@ public class QData {
     result =  prime * result + (title==null ? 0 : title.hashCode());
     result += prime * result + (Arrays.hashCode(channels));
     result += prime * result + (getPatches() == null ? 0 : getPatches().hashCode());
+    result += prime * result + (cueStreams == null ? 0 : cueStreams.hashCode());
     
     return result;
   }

@@ -37,5 +37,13 @@ public class MasterControllerTest {
     mc.reverseStream("mock");
     verify(mockControl).reversePatch();
   }
+  
+  @Test
+  public void handleMidiCommandCallsQController() {
+    QController mockControl = mock(QController.class);
+    mc.addController(mockControl);
+    mc.handleMidiCommand( null );
+    verify(mockControl).handleMidiCommand( null );
+  }
 
 }

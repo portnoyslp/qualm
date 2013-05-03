@@ -124,17 +124,14 @@ public class QDataLoaderTest {
     assertEquals(qd,readIn);
   }
   
-  @Test 
+  @Test
   public void spotCheckOutputXML() throws IOException {
-    // Finally, can we write everything we read?  Get a normalized (no
-    // carriage returns or following white spaces) version of the
-    // input document, and compare it to a normalized version of the
-    // output.
+    String inputDoc = removeCRs(readFileAsString(fname));
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     QDataXMLReader.outputXML(qd,baos);
-    String outputDoc = baos.toString();
+    String outputDoc = removeCRs(baos.toString());
 
-    // So, let's count up various elements to make sure they match expectations
+    // Count up various elements to make sure they match expectations
     assertEquals(3,countMatches(outputDoc,"<channel "));
     assertEquals(5,countMatches(outputDoc,"<patch "));
     assertEquals(2,countMatches(outputDoc,"<cue-stream "));
@@ -154,6 +151,19 @@ public class QDataLoaderTest {
       result = m.find();
     }
     return i;
+  }
+
+  public String removeCRs ( String input ) {
+    String output = input.replaceAll("\n\\s*", "");
+    // also get rid of the header
+    output = output.replaceFirst("^.*<qualm-data>","<qualm-data>");
+    return output;
+  }
+  public String readFileAsString( String filename ) throws java.io.IOException {
+    byte[] buffer = new byte[(int) new File(filename).length()];
+    BufferedInputStream f = new BufferedInputStream(new FileInputStream(filename));
+    f.read(buffer);
+    return new String(buffer);
   }
 
 }

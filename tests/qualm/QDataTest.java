@@ -48,7 +48,7 @@ public class QDataTest {
   }
 
   @Test
-  public void testChannelEquality() {
+  public void channelEquality() {
     QData qd1 = new QDataBuilder().addMidiChannel(2, "Roland", "K2").build();
     QData qd2 = new QDataBuilder().addMidiChannel(2, "Roland", "K2").build();
     QData qd3 = new QDataBuilder().addMidiChannel(1, "Roland", "K1").build();
@@ -57,10 +57,29 @@ public class QDataTest {
   }
 
   @Test
-  public void testPatchEquality() {
+  public void patchEquality() {
     QData qd1 = new QDataBuilder().addPatch( new Patch( "P1", 1 )).build();
     QData qd2 = new QDataBuilder().addPatch( new Patch( "P1", 1 )).build();
     QData qd3 = new QDataBuilder().addPatch( new Patch( "P2", 1 )).build();
+    assertEquals(qd1, qd2);
+    assertFalse(qd1.equals(qd3));
+  }
+
+  @Test
+  public void cueStreamEquality() {
+    QData qd1 = new QDataBuilder().addStream( new QStreamBuilder().withTitle("S1").build() ).build();
+    QData qd2 = new QDataBuilder().addStream( new QStreamBuilder().withTitle("S1").build() ).build();
+    QData qd3 = new QDataBuilder().addStream( new QStreamBuilder().withTitle("S2").build() ).build();
+    assertEquals(qd1, qd2);
+    assertFalse(qd1.equals(qd3));
+  }
+  @Test
+  public void multipleCueStreamsEquality() {
+    QData qd1 = new QDataBuilder().addStream( new QStreamBuilder().build() )
+      .addStream( new QStreamBuilder().build() ).build();
+    QData qd2 = new QDataBuilder().addStream( new QStreamBuilder().build() )
+      .addStream( new QStreamBuilder().build() ).build();
+    QData qd3 = new QDataBuilder().addStream( new QStreamBuilder().build() ).build();
     assertEquals(qd1, qd2);
     assertFalse(qd1.equals(qd3));
   }
