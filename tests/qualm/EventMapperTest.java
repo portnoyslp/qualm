@@ -10,7 +10,7 @@ public class EventMapperTest {
   @Test
   public void absenceOfToTemplates() {
     EventMapper em = new EventMapper();
-    em.setFromTemplate( EventTemplate.createNoteOnEventTemplate ( 0, null ) );
+    em.setFromTemplate( EventTemplate.noteOn ( 0, null ) );
     MidiCommand[] out = em.mapEvent( new MidiCommand( 0, NOTE_ON, 60 )); 
     assertArrayEquals( out, new MidiCommand[0] );
   }
@@ -18,7 +18,7 @@ public class EventMapperTest {
   @Test
   public void nullWhenNoMatch() {
     EventMapper em = new EventMapper();
-    em.setFromTemplate( EventTemplate.createNoteOnEventTemplate ( 0, null ) );
+    em.setFromTemplate( EventTemplate.noteOn ( 0, null ) );
     MidiCommand[] out = em.mapEvent( new MidiCommand( 0, NOTE_OFF, 60 )); 
     assertNull( out );
   }
@@ -26,8 +26,8 @@ public class EventMapperTest {
   @Test
   public void channelMappedCorrectly() {
     EventMapper em = new EventMapper();
-    em.setFromTemplate( EventTemplate.createNoteOnEventTemplate ( 0, null ) );
-    em.addToTemplate( EventTemplate.createNoteOffEventTemplate ( EventTemplate.DONT_CARE, null ) );
+    em.setFromTemplate( EventTemplate.noteOn ( 0, null ) );
+    em.addToTemplate( EventTemplate.noteOff ( EventTemplate.DONT_CARE, null ) );
     MidiCommand in = new MidiCommand( 0, NOTE_ON, 60 );
     MidiCommand[] out = em.mapEvent( in ); 
     assertTrue( out.length == 1 );
@@ -37,8 +37,8 @@ public class EventMapperTest {
   @Test
   public void channelReplacement() {
     EventMapper em = new EventMapper();
-    em.setFromTemplate( EventTemplate.createNoteOnEventTemplate ( 0, null ) );
-    em.addToTemplate( EventTemplate.createNoteOffEventTemplate ( 1, null ) );
+    em.setFromTemplate( EventTemplate.noteOn ( 0, null ) );
+    em.addToTemplate( EventTemplate.noteOff ( 1, null ) );
     MidiCommand in = new MidiCommand( 0, NOTE_ON, 60 );
     MidiCommand[] out = em.mapEvent( in ); 
     assertTrue( out.length == 1 );
@@ -48,8 +48,8 @@ public class EventMapperTest {
   @Test
     public void dataReplacement() {
     EventMapper em = new EventMapper();
-    em.setFromTemplate( EventTemplate.createNoteOnEventTemplate ( 0, null ) );
-    em.addToTemplate( EventTemplate.createNoteOffEventTemplate ( 1, null ) );
+    em.setFromTemplate( EventTemplate.noteOn ( 0, null ) );
+    em.addToTemplate( EventTemplate.noteOff ( 1, null ) );
     MidiCommand in = new MidiCommand( 0, NOTE_ON, 60 );
     MidiCommand[] out = em.mapEvent( in ); 
     assertTrue( out.length == 1 );
@@ -59,9 +59,9 @@ public class EventMapperTest {
   @Test
   public void multipleToTemplates() {
     EventMapper em = new EventMapper();
-    em.setFromTemplate( EventTemplate.createNoteOnEventTemplate ( 0, null ) );
-    em.addToTemplate( EventTemplate.createNoteOffEventTemplate ( 1, null ) );
-    em.addToTemplate( EventTemplate.createNoteOnEventTemplate ( 2, null ) );
+    em.setFromTemplate( EventTemplate.noteOn ( 0, null ) );
+    em.addToTemplate( EventTemplate.noteOff ( 1, null ) );
+    em.addToTemplate( EventTemplate.noteOn ( 2, null ) );
     MidiCommand in = new MidiCommand( 0, NOTE_ON, 60 );
     MidiCommand[] out = em.mapEvent( in ); 
     assertTrue( out.length == 2 );

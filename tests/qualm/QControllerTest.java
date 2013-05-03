@@ -29,8 +29,8 @@ public class QControllerTest {
     evList.add(new ProgramChangeEvent( 0, c, new Patch( "P1", 1)));
     c.setEvents(evList);
     ArrayList<Trigger> trigList = new ArrayList<Trigger>();
-    trigList.add(new Trigger(EventTemplate.createNoteOnEventTemplate( 0, "c4" )));
-    Trigger t = new Trigger(EventTemplate.createNoteOnEventTemplate( 0, "c8" ));
+    trigList.add(new Trigger(EventTemplate.noteOn( 0, "c4" )));
+    Trigger t = new Trigger(EventTemplate.noteOn( 0, "c8" ));
     t.setDelay(10000);
     trigList.add(t);
     c.setTriggers(trigList);
@@ -41,7 +41,7 @@ public class QControllerTest {
     evList.add(new ProgramChangeEvent( 0, c, new Patch( "P2", 2)));
     c.setEvents(evList);
     trigList = new ArrayList<Trigger>();
-    trigList.add(new Trigger(EventTemplate.createNoteOnEventTemplate( 0, "c4" ), true));
+    trigList.add(new Trigger(EventTemplate.noteOn( 0, "c4" ), true));
     c.setTriggers(trigList);
     qs.addCue(c);
     

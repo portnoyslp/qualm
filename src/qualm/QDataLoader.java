@@ -234,7 +234,7 @@ public class QDataLoader extends DefaultHandler {
 	currentAttribute = "channel";
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
 	currentAttribute = "note";
-	curTemplate = EventTemplate.createNoteOnEventTemplate( ch, attributes.getValue("note") );
+	curTemplate = EventTemplate.noteOn( ch, attributes.getValue("note") );
 	if (buildingEvents) {
 	  eventSet.add(new MidiEvent(curTemplate));
 	}
@@ -243,7 +243,7 @@ public class QDataLoader extends DefaultHandler {
 	currentAttribute = "channel";
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
 	currentAttribute = "note";
-	curTemplate = EventTemplate.createNoteOffEventTemplate( ch, attributes.getValue("note") );
+	curTemplate = EventTemplate.noteOff( ch, attributes.getValue("note") );
         if (buildingEvents) {
           eventSet.add(new MidiEvent(curTemplate));
         }
@@ -253,7 +253,7 @@ public class QDataLoader extends DefaultHandler {
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
 	String control = attributes.getValue("control");
 	String value = attributes.getValue("value");
-	curTemplate = EventTemplate.createControlEventTemplate( ch, control, value );
+	curTemplate = EventTemplate.control( ch, control, value );
         if (buildingEvents) {
           eventSet.add(new MidiEvent(curTemplate));
         }
