@@ -3,7 +3,6 @@ package qualm;
 import java.io.*;
 import java.util.List;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.regex.*;
 
 import org.junit.*;
@@ -114,7 +113,7 @@ public class QDataLoaderTest {
   
   @Test
   public void checkWritingAndReading() {
-    // make sure we don't have any differences if we write and read the same doc.
+    // make sure we don't have any differences if we write and then read the doc.
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     QDataXMLReader.outputXML(qd, baos);
     
@@ -131,12 +130,9 @@ public class QDataLoaderTest {
     // carriage returns or following white spaces) version of the
     // input document, and compare it to a normalized version of the
     // output.
-    String inputDoc = removeCRs(readFileAsString(fname));
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     QDataXMLReader.outputXML(qd,baos);
-    String outputDoc = removeCRs(baos.toString());
-    // TODO This assertion doesn't quite work yet; there are too many small differences.
-    //assertEquals(inputDoc,outputDoc);
+    String outputDoc = baos.toString();
 
     // So, let's count up various elements to make sure they match expectations
     assertEquals(3,countMatches(outputDoc,"<channel "));
@@ -158,19 +154,6 @@ public class QDataLoaderTest {
       result = m.find();
     }
     return i;
-  }
-
-  public String removeCRs ( String input ) {
-    String output = input.replaceAll("\n\\s*", "");
-    // also get rid of the header
-    output = output.replaceFirst("^.*<qualm-data>","<qualm-data>");
-    return output;
-  }
-  public String readFileAsString( String filename ) throws java.io.IOException {
-    byte[] buffer = new byte[(int) new File(filename).length()];
-    BufferedInputStream f = new BufferedInputStream(new FileInputStream(filename));
-    f.read(buffer);
-    return new String(buffer);
   }
 
 }

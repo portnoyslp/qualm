@@ -124,7 +124,7 @@ public class QData {
     return (title == null ? qd.getTitle() == null : title.equals(qd.getTitle()))
       && Arrays.equals(qd.getMidiChannels(),this.getMidiChannels())
       // convert getPatches() to HashSet so equals() works.
-      && (new HashSet(getPatches())).equals(new HashSet(qd.getPatches()))
+      && (new HashSet<Patch>(getPatches())).equals(new HashSet<Patch>(qd.getPatches()))
       ;
   }
   @Override
