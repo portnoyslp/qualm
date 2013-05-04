@@ -1,10 +1,14 @@
 package qualm.plugins;
 
-import qualm.*;
-import javax.swing.*;
 import java.awt.BorderLayout;
-
 import java.util.Iterator;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+import qualm.Cue;
+import qualm.MasterController;
+import qualm.QController;
 
 public class DisplayCueChange extends BaseQualmPlugin implements CueChangeNotification {
 

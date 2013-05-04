@@ -1,6 +1,9 @@
 package qualm;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QDataBuilder { 
   String title = null;

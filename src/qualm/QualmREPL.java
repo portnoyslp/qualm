@@ -1,9 +1,16 @@
 package qualm;
 
-import java.io.*;
-import java.lang.Thread;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.EOFException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
+
 import qualm.plugins.QualmPlugin;
 
 public class QualmREPL extends Thread {

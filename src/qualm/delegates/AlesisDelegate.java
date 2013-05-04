@@ -3,7 +3,12 @@ package qualm.delegates;
 import java.util.HashMap;
 import java.util.Map;
 
-import qualm.*;
+import qualm.ChangeDelegate;
+import qualm.MidiCommand;
+import qualm.NoteWindowChangeEvent;
+import qualm.Patch;
+import qualm.ProgramChangeEvent;
+import qualm.QReceiver;
 
 /**
  * ChangeDelegate for Alesis (written for Alesis QS8.1)

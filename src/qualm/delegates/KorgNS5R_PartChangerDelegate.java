@@ -1,8 +1,11 @@
 package qualm.delegates;
 
-import qualm.*;
+import javax.sound.midi.InvalidMidiDataException;
+
+import qualm.MidiCommand;
 import qualm.Patch;
-import javax.sound.midi.*;
+import qualm.ProgramChangeEvent;
+import qualm.QReceiver;
 
 /**
  * ChangeDelegate for Korg NS5R which sends all change commands in

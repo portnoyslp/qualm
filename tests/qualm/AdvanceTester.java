@@ -1,9 +1,10 @@
 package qualm;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import static javax.sound.midi.ShortMessage.NOTE_ON;
+import static javax.sound.midi.ShortMessage.PROGRAM_CHANGE;
+import static org.junit.Assert.assertTrue;
 
-import static javax.sound.midi.ShortMessage.*;
+import org.junit.Test;
 
 public class AdvanceTester {
   @Test

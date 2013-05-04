@@ -1,7 +1,11 @@
 package qualm.delegates;
 
-import qualm.*;
+import qualm.ChangeDelegate;
+import qualm.MidiCommand;
+import qualm.NoteWindowChangeEvent;
 import qualm.Patch;
+import qualm.ProgramChangeEvent;
+import qualm.QReceiver;
 
 /**
  * ChangeDelegate for Korg (written for Korg NS5R)

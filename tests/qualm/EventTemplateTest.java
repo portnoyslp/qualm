@@ -1,10 +1,13 @@
 package qualm;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-
-import static qualm.MidiCommand.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static qualm.EventTemplate.DONT_CARE;
+import static qualm.MidiCommand.CONTROL_CHANGE;
+import static qualm.MidiCommand.NOTE_OFF;
+import static qualm.MidiCommand.NOTE_ON;
+
+import org.junit.Test;
 
 public class EventTemplateTest {
 

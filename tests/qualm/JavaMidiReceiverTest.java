@@ -1,12 +1,21 @@
 package qualm;
 
-import org.junit.*;
-import static org.mockito.Mockito.*;
-import org.mockito.ArgumentMatcher;
-
-import javax.sound.midi.*;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
+
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.ShortMessage;
+import javax.sound.midi.SysexMessage;
+import javax.sound.midi.Transmitter;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 
 public class JavaMidiReceiverTest {
 

@@ -1,9 +1,11 @@
 package qualm;
 
-import java.util.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import java.util.Collection;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class QAdvancerTest {
 

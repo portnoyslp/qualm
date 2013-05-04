@@ -1,9 +1,10 @@
 package qualm;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import javax.sound.midi.*;
+import javax.sound.midi.ShortMessage;
+
+import org.junit.Test;
 
 public class StreamTester {
 

@@ -1,7 +1,10 @@
 package qualm.delegates;
 
-import qualm.*;
+import qualm.ChangeDelegate;
+import qualm.MidiCommand;
 import qualm.Patch;
+import qualm.ProgramChangeEvent;
+import qualm.QReceiver;
 
 /* StandardDelegate -- uses the standard MIDI commands for patch
  * changes, volume settings.  Doesn't do bank changes. */

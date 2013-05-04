@@ -1,6 +1,7 @@
 package qualm;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class QStreamBuilder { 
   String title = null;

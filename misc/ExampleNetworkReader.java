@@ -1,14 +1,23 @@
 /* Network-based SWT plugin.  Used to create a lightweight Maemo
  * display, but can also be used elsewhere. */
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.widgets.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.TreeMap;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import qualm.plugins.NetworkNotificationProtocol;
 

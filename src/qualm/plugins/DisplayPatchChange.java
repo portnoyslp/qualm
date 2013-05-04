@@ -1,11 +1,13 @@
 package qualm.plugins;
 
-import qualm.*;
-import javax.swing.*;
 import java.awt.BorderLayout;
-
-import java.util.TreeMap;
 import java.util.Iterator;
+import java.util.TreeMap;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+import qualm.Patch;
 
 public class DisplayPatchChange extends BaseQualmPlugin implements PatchChangeNotification {
 
