@@ -1,12 +1,24 @@
 package qualm.utils;
 
-import qualm.*;
-import gnu.getopt.*;
-import java.util.*;
+import static qualm.MidiCommand.NOTE_ON;
+import gnu.getopt.Getopt;
+import gnu.getopt.LongOpt;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.TreeSet;
+
+import qualm.JavaMidiReceiver;
+import qualm.MidiCommand;
 import qualm.Patch;
-
-import java.io.*;
+import qualm.PatchChanger;
+import qualm.ProgramChangeEvent;
+import qualm.QData;
+import qualm.QDataLoader;
+import qualm.QReceiver;
 
 public class AuditionPatches {
 
@@ -15,7 +27,6 @@ public class AuditionPatches {
   static boolean playSingle = false;
   static boolean ignoreAliases = false;
 
-  @SuppressWarnings("deprecation")
   public static void playArpeggiatedChord(int holdTime) {
     // play a Cmaj chord with increasing strength from p (30) to ff
     // (96) [ c4, e4, g4, c5 (60,64,67,72)]
@@ -24,44 +35,30 @@ public class AuditionPatches {
       // slight delay to give synth time to process patch change
       Thread.sleep(500);
 
-      MidiCommand out = new MidiCommand();
-
       if (playSingle) {
-	out.setMessage( MidiCommand.NOTE_ON, 0, 60, 70 );
-	midiOut.handleMidiCommand(out);
-
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 60, 70 ));
       } else {
 	
-	out.setMessage( MidiCommand.NOTE_ON, 0, 60, 30 );
-	midiOut.handleMidiCommand(out);
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 60, 30 ));
 	Thread.sleep(500);
-	out.setMessage( MidiCommand.NOTE_ON, 0, 64, 52 );
-	midiOut.handleMidiCommand(out);
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 64, 52 ));
 	Thread.sleep(500);
-	out.setMessage( MidiCommand.NOTE_ON, 0, 67, 74 );
-	midiOut.handleMidiCommand(out);
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 67, 74 ));
 	Thread.sleep(500);
-	out.setMessage( MidiCommand.NOTE_ON, 0, 72, 96 );
-	midiOut.handleMidiCommand(out);
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 72, 96 ));
       }
 
       // let it ring before silencing.
       Thread.sleep(holdTime);
 
       if (playSingle) {
-	out.setMessage( MidiCommand.NOTE_ON, 0, 60, 0 );
-	midiOut.handleMidiCommand(out);
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 60, 0 ));
 
       } else {
-
-	out.setMessage( MidiCommand.NOTE_ON, 0, 60, 0 );
-	midiOut.handleMidiCommand(out);
-	out.setMessage( MidiCommand.NOTE_ON, 0, 64, 0 );
-	midiOut.handleMidiCommand(out);
-	out.setMessage( MidiCommand.NOTE_ON, 0, 67, 0 );
-	midiOut.handleMidiCommand(out);
-	out.setMessage( MidiCommand.NOTE_ON, 0, 72, 0 );
-	midiOut.handleMidiCommand(out);
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 60, 0 ));
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 64, 0 ));
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 67, 0 ));
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 72, 0 ));
       }
       
       // delay another 1s
