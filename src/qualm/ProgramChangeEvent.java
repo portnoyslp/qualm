@@ -12,7 +12,7 @@ public class ProgramChangeEvent extends QEvent {
   public Patch getPatch() { return patch; }
 
   public String toString() { 
-    String out = "PC[" + getChannel() + "," + getPatch();
+    String out = "PrCh[" + getChannel() + "," + getPatch();
     if (getPreviousPatch() != null) 
       out += "(" + getPreviousPatch() + ")";
     return out + "]";
