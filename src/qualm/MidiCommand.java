@@ -117,18 +117,6 @@ public class MidiCommand {
         + getData2() + "]";
   }
   
-  /**
-   * A helper function for compatibility with ShortMessage code
-   * @param cmd
-   * @param ch
-   * @param d1
-   * @param d2
-   * @deprecated
-   */
-  public void setMessage(int cmd, int ch, int d1, int d2) {
-    setParams(ch,cmd,(byte)d1,(byte)d2);
-  }
-
   /* Override equality so that we can test things more easily */
   @Override public boolean equals(Object other) {
     if (other == this)
