@@ -1,5 +1,8 @@
 package qualm;
 
+/**
+ * Base class for MIDI-receiving classes. 
+ */
 public abstract class AbstractQReceiver implements QReceiver {
 
   public QReceiver target;

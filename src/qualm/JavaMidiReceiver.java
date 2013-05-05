@@ -22,8 +22,6 @@ import javax.sound.midi.Transmitter;
 
 /**
  * Adaptor for translating between javax.sound.midi messages and Qualm messaging.
- * 
- * @author speters
  */
 
 public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Receiver {
@@ -39,7 +37,6 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
   public static JavaMidiReceiver buildFromProperties(Properties props) {
     return buildMidiHandlers(props);
   }
-  
 
   /* Receives the given MidiCommand from Qualm and sends it out through the MIDI interface.
    * @see qualm.BasicReceiver#handleMidiCommand(qualm.MidiCommand)
