@@ -1,5 +1,6 @@
 package qualm;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Cue implements Comparable<Cue> {
@@ -101,4 +102,66 @@ public class Cue implements Comparable<Cue> {
 			      q.getSong(), q.getMeasure() );
   }
 
+  
+  public static class Builder {
+    String cueNum = null;
+    Collection<Trigger> triggers = new ArrayList<Trigger>();
+    Collection<QEvent> events = new ArrayList<QEvent>();
+    Collection<EventMapper> eventMaps = new ArrayList<EventMapper>();
+
+    public Builder setCueNumber(String cNum) {
+      this.cueNum = cNum;
+      return this;
+    }
+
+    public Builder addTriggers(Collection<Trigger> triggers) {
+      this.triggers.addAll(triggers);
+      return this;
+    }
+
+    public Builder addTrigger(Trigger trigger) {
+      this.triggers.add(trigger);
+      return this;
+    }
+
+    public Builder addEvents(Collection<QEvent> events) {
+      this.events.addAll(events);
+      return this;
+    }
+
+    public Builder addEvent(QEvent event) {
+      this.events.add(event);
+      return this;
+    }
+
+    public Builder addProgramChangeEvent( int ch, Patch p ) {
+      this.events.add( new ProgramChangeEvent( ch, null, p ));
+      return this;
+    }                     
+
+    public Builder addEventMaps(Collection<EventMapper> eventMaps) {
+      this.eventMaps.addAll(eventMaps);
+      return this;
+    }
+
+    public Builder addEventMap(EventMapper eventMap) {
+      this.eventMaps.add(eventMap);
+      return this;
+    }
+
+    public Cue build() {
+      if (cueNum == null) {
+        throw new IllegalStateException("No cue number was provided");
+      }
+      Cue c = new Cue( cueNum );
+      c.setTriggers(triggers);
+      for (QEvent ev : events) {
+        if ( ev.getCue() == null ) 
+          ev.setCue( c );
+      }
+      c.setEvents(events);
+      c.setEventMaps(eventMaps);
+      return c;
+    }
+  }
 }

@@ -14,12 +14,12 @@ public class QAdvancerTest {
   @Before
   public void setup() {
     QStream qs = new QStreamBuilder()
-      .addCue(new CueBuilder()
-              .withCueNumber( "1.1" )
+      .addCue(new Cue.Builder()
+              .setCueNumber( "1.1" )
               .addProgramChangeEvent( 0, new Patch("P1", 1))
               .build())
-      .addCue(new CueBuilder()
-              .withCueNumber( "2.1" )
+      .addCue(new Cue.Builder()
+              .setCueNumber( "2.1" )
               .addProgramChangeEvent( 0, new Patch("P2", 2))
               .build())
       .build();
@@ -77,12 +77,12 @@ public class QAdvancerTest {
   @Test
   public void reverseWithEmptyChannel() {
     QStream qs = new QStreamBuilder()
-      .addCue(new CueBuilder()
-              .withCueNumber( "1.1" )
+      .addCue(new Cue.Builder()
+              .setCueNumber( "1.1" )
               .addProgramChangeEvent( 0, new Patch("P1", 1))
               .build())
-      .addCue(new CueBuilder()
-              .withCueNumber( "2.1" )
+      .addCue(new Cue.Builder()
+              .setCueNumber( "2.1" )
               .addProgramChangeEvent( 0, new Patch("P2", 2))
               .addProgramChangeEvent( 1, new Patch("P1", 2))
               .build())

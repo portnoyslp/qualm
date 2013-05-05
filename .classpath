@@ -4,12 +4,12 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/getopt.jar"/>
-	<classpathentry kind="lib" path="/usr/share/java/gnu-getopt.jar"/>
+	<classpathentry exported="true" kind="lib" path="/usr/share/java/gnu-getopt.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/junit.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/swt.jar"/>
-	<classpathentry kind="lib" path="/usr/share/java/getopt.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/mockito-all-1.9.5.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/junit4.jar"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/usr/share/java/mockito-all-1.9.5-rc1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
