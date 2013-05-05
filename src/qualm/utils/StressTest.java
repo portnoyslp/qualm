@@ -11,7 +11,7 @@ import java.util.TreeSet;
 
 import qualm.Cue;
 import qualm.EventTemplate;
-import qualm.JavaMidiReceiver;
+import qualm.JavaMidiReceiverFactory;
 import qualm.MidiCommand;
 import qualm.QData;
 import qualm.QDataLoader;
@@ -123,7 +123,7 @@ public class StressTest {
     Properties props = new Properties();
     props.setProperty("inputPort", inputPort);
     props.setProperty("outputPort", outputPort);
-    midiOut = JavaMidiReceiver.buildFromProperties(props);
+    midiOut = JavaMidiReceiverFactory.buildFromProperties(props);
     midiIn = midiOut;
 
     runLoop(data);

@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.TreeSet;
 
-import qualm.JavaMidiReceiver;
+import qualm.JavaMidiReceiverFactory;
 import qualm.MidiCommand;
 import qualm.Patch;
 import qualm.PatchChanger;
@@ -110,7 +110,7 @@ public class PlayAllPatches {
     Properties props = new Properties();
     props.setProperty("inputPort", inputPort);
     props.setProperty("outputPort", outputPort);
-    midiOut = JavaMidiReceiver.buildFromProperties(props);
+    midiOut = JavaMidiReceiverFactory.buildFromProperties(props);
     midiIn = midiOut;
 
     loopThroughPatches(data);

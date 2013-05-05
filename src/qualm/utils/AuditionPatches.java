@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.TreeSet;
 
-import qualm.JavaMidiReceiver;
+import qualm.JavaMidiReceiverFactory;
 import qualm.MidiCommand;
 import qualm.Patch;
 import qualm.PatchChanger;
@@ -268,7 +268,7 @@ public class AuditionPatches {
     // Set up MIDI ports
     Properties props = new Properties();
     props.setProperty("outputPort", outputPort);
-    midiOut = JavaMidiReceiver.buildFromProperties(props);
+    midiOut = JavaMidiReceiverFactory.buildFromProperties(props);
 
     loopThroughPatches();
     System.exit(0);
