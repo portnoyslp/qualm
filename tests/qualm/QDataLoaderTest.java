@@ -171,6 +171,7 @@ public class QDataLoaderTest {
     byte[] buffer = new byte[(int) new File(filename).length()];
     BufferedInputStream f = new BufferedInputStream(new FileInputStream(filename));
     f.read(buffer);
+    f.close();
     return new String(buffer);
   }
 

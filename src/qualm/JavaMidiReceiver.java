@@ -109,6 +109,7 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
         }
         lin = br.readLine();
       }
+      br.close();
     } catch (IOException ioe) {
       Qualm.LOG.info("Couldn't read " + filename + ": " + ioe);
       return null;
