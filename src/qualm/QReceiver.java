@@ -1,12 +1,9 @@
 package qualm;
 
 /**
- * New interface for generic MIDI data receivers.  This separates us from javax.sound.midi.* classes.
- * 
- * @author speters
+ * Interface for generic MIDI receivers in Qualm.
  */
+
 public interface QReceiver {
-  
   public void handleMidiCommand(MidiCommand midi);
-  
 }
