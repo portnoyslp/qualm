@@ -96,15 +96,6 @@ public class Cue implements Comparable<Cue> {
     return sCmp;
   }
 
-  public int compareTimeStamps( String ts1, String ts2 ) {
-    // parse the timestamps
-    String s1 = ts1.substring(0,ts1.indexOf("."));
-    String s2 = ts2.substring(0,ts2.indexOf("."));
-    String m1 = ts1.substring(ts1.lastIndexOf(".")+1);
-    String m2 = ts2.substring(ts2.lastIndexOf(".")+1);
-    return compareTimeStamps(s1,m1,s2,m2);
-  }
-
   public int compareTo(Cue q) {
     return compareTimeStamps( getSong(), getMeasure(),
 			      q.getSong(), q.getMeasure() );
