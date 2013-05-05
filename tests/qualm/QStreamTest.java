@@ -18,8 +18,8 @@ public class QStreamTest {
 
   @Test
   public void cuesEquality() {
-    CueBuilder cb = new CueBuilder().withCueNumber("1.1");
-    CueBuilder cb2 = new CueBuilder().withCueNumber("1.2");
+    Cue.Builder cb = new Cue.Builder().setCueNumber("1.1");
+    Cue.Builder cb2 = new Cue.Builder().setCueNumber("1.2");
     QStream qs1 = new QStreamBuilder().addCue(cb.build()).build();
     QStream qs2 = new QStreamBuilder().addCue(cb.build()).build();
     QStream qs3 = new QStreamBuilder().addCue(cb2.build()).build();
