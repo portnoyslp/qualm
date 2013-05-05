@@ -1,9 +1,11 @@
 package qualm;
 
-import java.util.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import java.util.Collection;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class QAdvancerTest {
 
@@ -93,7 +95,7 @@ public class QAdvancerTest {
     QAdvancer qa2 = new QAdvancer( qs, qd );
 
     Collection<QEvent> evs = qa.switchToMeasure( "2.1" );
-    evs = qa.reversePatch();
+    evs = qa2.reversePatch();
     assertEquals(1, evs.size());
     for (QEvent qe : evs) {
       /* Only reverse to the one channel we care about */

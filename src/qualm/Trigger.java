@@ -2,6 +2,10 @@ package qualm;
 
 public class Trigger {
 
+  // Useful constants
+  public static final boolean REVERSE = true;
+  public static final boolean FORWARD = false;
+  
   public Trigger (EventTemplate et, boolean rev) { 
     template = et; 
     setReverse(rev);

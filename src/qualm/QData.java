@@ -1,6 +1,15 @@
 package qualm;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 /**
  * Holds all data for the cue handling...
@@ -124,7 +133,7 @@ public class QData {
     return (title == null ? qd.getTitle() == null : title.equals(qd.getTitle()))
       && Arrays.equals(qd.getMidiChannels(),this.getMidiChannels())
       // convert getPatches() to HashSet so equals() works.
-      && (new HashSet(getPatches())).equals(new HashSet(qd.getPatches()))
+      && (new HashSet<Patch>(getPatches())).equals(new HashSet<Patch>(qd.getPatches()))
       && (cueStreams == null ? qd.getCueStreams() == null : cueStreams.equals(qd.getCueStreams()))
       ;
   }

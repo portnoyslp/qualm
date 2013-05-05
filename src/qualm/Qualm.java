@@ -1,12 +1,13 @@
 package qualm;
 
-import java.util.*;
+import gnu.getopt.Getopt;
+import gnu.getopt.LongOpt;
+
+import java.util.Properties;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import gnu.getopt.Getopt;
-import gnu.getopt.LongOpt;
 
 public class Qualm {
   

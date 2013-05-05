@@ -1,8 +1,13 @@
 package qualm.delegates;
 
-import qualm.*;
+import javax.sound.midi.InvalidMidiDataException;
+
+import qualm.ChangeDelegate;
+import qualm.MidiCommand;
+import qualm.NoteWindowChangeEvent;
 import qualm.Patch;
-import javax.sound.midi.*;
+import qualm.ProgramChangeEvent;
+import qualm.QReceiver;
 
 /**
  * ChangeDelegate for Yamaha MOTIF-RACK XS.  Sends all change commands

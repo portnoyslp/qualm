@@ -1,11 +1,17 @@
 package qualm;
 
-import java.io.*;
-import javax.xml.parsers.*;
-import org.xml.sax.helpers.DefaultHandler;
+import java.io.File;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
-import java.util.*;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Reads in a qualm file and builds a QData structure that holds the
@@ -234,7 +240,7 @@ public class QDataLoader extends DefaultHandler {
 	currentAttribute = "channel";
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
 	currentAttribute = "note";
-	curTemplate = EventTemplate.createNoteOnEventTemplate( ch, attributes.getValue("note") );
+	curTemplate = EventTemplate.noteOn( ch, attributes.getValue("note") );
 	if (buildingEvents) {
 	  eventSet.add(new MidiEvent(curTemplate));
 	}
@@ -243,7 +249,7 @@ public class QDataLoader extends DefaultHandler {
 	currentAttribute = "channel";
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
 	currentAttribute = "note";
-	curTemplate = EventTemplate.createNoteOffEventTemplate( ch, attributes.getValue("note") );
+	curTemplate = EventTemplate.noteOff( ch, attributes.getValue("note") );
         if (buildingEvents) {
           eventSet.add(new MidiEvent(curTemplate));
         }
@@ -253,7 +259,7 @@ public class QDataLoader extends DefaultHandler {
 	int ch = Integer.parseInt(attributes.getValue("channel")) - 1;
 	String control = attributes.getValue("control");
 	String value = attributes.getValue("value");
-	curTemplate = EventTemplate.createControlEventTemplate( ch, control, value );
+	curTemplate = EventTemplate.control( ch, control, value );
         if (buildingEvents) {
           eventSet.add(new MidiEvent(curTemplate));
         }

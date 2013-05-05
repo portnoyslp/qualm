@@ -13,14 +13,14 @@ public class EventTemplate {
       this.extra2Max = et.extra2Max;
   }
 
-  public static EventTemplate createNoteOnEventTemplate( int ch, String noteRange ) { 
+  public static EventTemplate noteOn( int ch, String noteRange ) { 
     EventTemplate t = new EventTemplate();
     t.type = MidiCommand.NOTE_ON;
     t.channel = ch;
     t._setNoteRange(noteRange);
     return t;
   }
-  public static EventTemplate createNoteOffEventTemplate( int ch, String noteRange ) {  
+  public static EventTemplate noteOff( int ch, String noteRange ) {  
     EventTemplate t = new EventTemplate();
     t.type = MidiCommand.NOTE_OFF;
     t.channel = ch;
@@ -28,8 +28,7 @@ public class EventTemplate {
     return t;
   }
 
-  public static EventTemplate createControlEventTemplate( int ch, String ctrl, 
-							  String thresh ) {
+  public static EventTemplate control( int ch, String ctrl, String thresh ) {
     EventTemplate t = new EventTemplate();
     t.type = MidiCommand.CONTROL_CHANGE;
     t.channel = ch;

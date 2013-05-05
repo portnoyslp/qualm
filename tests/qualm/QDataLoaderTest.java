@@ -1,15 +1,23 @@
 package qualm;
 
-import java.io.*;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.regex.*;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 import org.xml.sax.InputSource;
-
-import static org.junit.Assert.*;
 
 public class QDataLoaderTest {
 
@@ -114,7 +122,7 @@ public class QDataLoaderTest {
   
   @Test
   public void checkWritingAndReading() {
-    // make sure we don't have any differences if we write and read the same doc.
+    // make sure we don't have any differences if we write and then read the doc.
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     QDataXMLReader.outputXML(qd, baos);
     
@@ -127,7 +135,6 @@ public class QDataLoaderTest {
   
   @Test
   public void spotCheckOutputXML() throws IOException {
-    String inputDoc = removeCRs(readFileAsString(fname));
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     QDataXMLReader.outputXML(qd,baos);
     String outputDoc = removeCRs(baos.toString());

@@ -1,11 +1,18 @@
 package qualm.delegates;
 
-import qualm.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static qualm.MidiCommand.CONTROL_CHANGE;
+import static qualm.MidiCommand.PROGRAM_CHANGE;
 
-import org.junit.*;
-import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.junit.Test;
 
-import static qualm.MidiCommand.*;
+import qualm.ChangeDelegate;
+import qualm.MidiCommand;
+import qualm.Patch;
+import qualm.ProgramChangeEvent;
+import qualm.QReceiver;
 
 public class RolandDelegateTest {
 

@@ -1,17 +1,28 @@
 package qualm.utils;
 
-import qualm.*;
-import gnu.getopt.*;
-import java.util.*;
+import static qualm.MidiCommand.NOTE_ON;
+import gnu.getopt.Getopt;
+import gnu.getopt.LongOpt;
 
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.TreeSet;
+
+import qualm.JavaMidiReceiver;
+import qualm.MidiCommand;
 import qualm.Patch;
+import qualm.PatchChanger;
+import qualm.ProgramChangeEvent;
+import qualm.QData;
+import qualm.QDataLoader;
+import qualm.QReceiver;
 
 public class PlayAllPatches {
 
   static QReceiver midiIn = null;
   static QReceiver midiOut = null;
 
-  @SuppressWarnings("deprecation")
   public static void loopThroughPatches(QData data) {
     TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator<Patch>() { 
 	public int compare(Patch a, Patch b) {
@@ -29,27 +40,18 @@ public class PlayAllPatches {
       // play a chord: c4, e4, g4, c5 (60,64,67,72)
       
       try {
-	MidiCommand out = new MidiCommand();
-	out.setMessage( MidiCommand.NOTE_ON, 0, 60, 64 );
-	midiOut.handleMidiCommand(out);
-	out.setMessage( MidiCommand.NOTE_ON, 0, 64, 64 );
-	midiOut.handleMidiCommand(out);
-	out.setMessage( MidiCommand.NOTE_ON, 0, 67, 64 );
-	midiOut.handleMidiCommand(out);
-	out.setMessage( MidiCommand.NOTE_ON, 0, 72, 64 );
-	midiOut.handleMidiCommand(out);
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 60, 64 ));
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 64, 64 ));
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 67, 64 ));
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 72, 64 ));
       
 	// delay 1s
 	Thread.sleep(1000);
 
-	out.setMessage( MidiCommand.NOTE_ON, 0, 60, 0 );
-	midiOut.handleMidiCommand(out);
-	out.setMessage( MidiCommand.NOTE_ON, 0, 64, 0 );
-	midiOut.handleMidiCommand(out);
-	out.setMessage( MidiCommand.NOTE_ON, 0, 67, 0 );
-	midiOut.handleMidiCommand(out);
-	out.setMessage( MidiCommand.NOTE_ON, 0, 72, 0 );
-	midiOut.handleMidiCommand(out);
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 60, 0 ));
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 64, 0 ));
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 67, 0 ));
+	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 72, 0 ));
 
 	// delay another 1s
 	Thread.sleep(1000);

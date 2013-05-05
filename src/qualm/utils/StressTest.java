@@ -1,11 +1,25 @@
 package qualm.utils;
 
-import qualm.*;
-import gnu.getopt.*;
-import java.util.*;
+import gnu.getopt.Getopt;
+import gnu.getopt.LongOpt;
+
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.TreeSet;
+
+import qualm.Cue;
+import qualm.EventTemplate;
+import qualm.JavaMidiReceiver;
+import qualm.MidiCommand;
+import qualm.QData;
+import qualm.QDataLoader;
+import qualm.QReceiver;
+import qualm.QStream;
+import qualm.Trigger;
 
 public class StressTest {
-
 
   static QReceiver midiIn = null;
   static QReceiver midiOut = null;
@@ -121,16 +135,12 @@ public class StressTest {
   class InstantiatableTemplate extends EventTemplate {
     public InstantiatableTemplate(EventTemplate et) { super(et); }
 
-    @SuppressWarnings("deprecation")
     public void sendMessage(QReceiver midiOut) {
       if (type == MidiCommand.NOTE_ON) {
 	int ch = channel;
 	int note = extra1Min;
-	MidiCommand msg = new MidiCommand();
-	msg.setMessage( MidiCommand.NOTE_ON, ch, note, 61 );
-	midiOut.handleMidiCommand(msg);
-	msg.setMessage( MidiCommand.NOTE_ON, ch, note, 0 );
-	midiOut.handleMidiCommand(msg);
+	midiOut.handleMidiCommand(new MidiCommand( MidiCommand.NOTE_ON, ch, note, 61 ));
+	midiOut.handleMidiCommand(new MidiCommand( MidiCommand.NOTE_ON, ch, note, 0 ));
       }
     }
   }

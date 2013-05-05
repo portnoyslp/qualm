@@ -1,6 +1,7 @@
 package qualm;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 // Useful utility procedures that can be used from various places.
 public class Utilities { 

@@ -1,9 +1,18 @@
 package qualm.delegates;
 
-import qualm.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-import org.junit.*;
-import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import qualm.ChangeDelegate;
+import qualm.MidiCommand;
+import qualm.NoteWindowChangeEvent;
+import qualm.Patch;
+import qualm.ProgramChangeEvent;
+import qualm.QReceiver;
 
 public class KorgNS5R_PartChangerDelegateTest {
 

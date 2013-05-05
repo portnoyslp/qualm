@@ -1,7 +1,11 @@
 package qualm;
 
-import static org.mockito.Mockito.*;
-import org.junit.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class MasterControllerTest {
   MasterController mc;

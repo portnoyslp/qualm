@@ -1,7 +1,10 @@
 package qualm.delegates;
 
-import qualm.*;
+import qualm.ChangeDelegate;
+import qualm.MidiCommand;
 import qualm.Patch;
+import qualm.ProgramChangeEvent;
+import qualm.QReceiver;
 
 public class RolandDelegate extends ChangeDelegate {
   protected int[] _bankSelector ( String bankName, int patchNum ) {
