@@ -153,11 +153,8 @@ public class QDataLoaderTest {
     Pattern p = Pattern.compile(find);
     Matcher m = p.matcher(input);
     int i = 0;
-    boolean result = m.find();
-    while (result) {
+    while (m.find())
       i++;
-      result = m.find();
-    }
     return i;
   }
 
