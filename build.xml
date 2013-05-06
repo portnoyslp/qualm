@@ -167,6 +167,8 @@
       </report>
     </emma>
   </target>
+	
+  <target name="coverage" depends="emma,junit" description="Run unit tests for code coverage"/>
 
   <target name="compile-test">
   	<mkdir dir="${builddir.test}"/>
