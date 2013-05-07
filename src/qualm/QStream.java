@@ -1,5 +1,6 @@
 package qualm;
 
+import java.io.PrintWriter;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -26,9 +27,9 @@ public class QStream {
   }
   public SortedSet<Cue> getCues() { return cues; }
 
-  public void dump() {
-    System.out.println("Que Stream " + getTitle() + ":");
-    System.out.println("  " + cues);
+  public void dump(PrintWriter output) {
+    output.println("Que Stream " + getTitle() + ":");
+    output.println("  " + cues);
   }
 
   // equals and hashCode derived from title and cues

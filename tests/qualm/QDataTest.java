@@ -3,6 +3,9 @@ package qualm;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,6 +35,12 @@ public class QDataTest {
     QData qd = new QData();
     qd.addMidiChannel( 2, null, "Test");
     assertEquals(PatchChanger.getRequestedDeviceForChannel(2), null);
+  }
+
+  @Test	public void dumpWorks() {
+    StringWriter sw = new StringWriter();
+    testData.dump(new PrintWriter(sw));
+    Assert.assertTrue(sw.toString().startsWith("Data dump for null"));
   }
 
   @Test

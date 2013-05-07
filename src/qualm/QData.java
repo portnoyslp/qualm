@@ -1,5 +1,7 @@
 package qualm;
 
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,19 +52,18 @@ public class QData {
   }
   public Collection<QStream> getCueStreams() { return cueStreams; }
 
-  public void dump() {
-    System.out.println("Data dump for " + getTitle());
+  public void dump(Writer outWriter) {
+    PrintWriter output = new PrintWriter(outWriter);
+    output.println("Data dump for " + getTitle());
     // Create lists of patches, channels.
     List<String> out = new ArrayList<String>();
     for (int i=0; i<channels.length;i++) 
       if (channels[i]!=null) out.add("(" + i + ")" + channels[i]);
-    System.out.println("  ch:" + out);
-    System.out.println("  pl:" + patches.values());
+    output.println("  ch:" + out);
+    output.println("  pl:" + patches.values());
 
-    Iterator<QStream> iter = cueStreams.iterator();
-    while(iter.hasNext()) {
-      iter.next().dump();
-    }
+    for (QStream qs : cueStreams) 
+      qs.dump(output);
   }
   
 

@@ -252,7 +252,7 @@ public class QualmREPL extends Thread {
       }
 
       if (lowerCase.equals("dump")) {
-	mainQC().getQData().dump();
+	mainQC().getQData().dump(output);
       
       } else if (lowerCase.equals("reset")) {
 	reset();
@@ -281,7 +281,7 @@ public class QualmREPL extends Thread {
 	loadFilename( filename );
 
       } else if (lowerCase.startsWith("showxml")) {
-    	QDataXMLReader.outputXML(mainQC().getQData(),output);
+    	QDataXMLReader.outputXML(mainQC().getQData(), output);
     	output.println("");
     	  
       } else if (lowerCase.startsWith("reload")) {

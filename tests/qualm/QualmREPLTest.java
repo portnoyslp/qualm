@@ -2,6 +2,7 @@ package qualm;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -71,16 +72,14 @@ public class QualmREPLTest {
 
   @Test
   public void dumpCommand() throws Exception {
-    QData mockData = mock(QData.class);
-    when(subController.getQData()).thenReturn(mockData);
+    when(subController.getQData()).thenReturn(minimalData());
     repl.processLine("dump");
-    verify(mockData).dump();
+    assertNotNull(output.toString());
   }
 
   @Test
   public void showXmlCommand() throws Exception {
-    QData mockData = mock(QData.class);
-    when(subController.getQData()).thenReturn(mockData);
+    when(subController.getQData()).thenReturn(minimalData());
     repl.processLine("showxml");
     assertNotNull(output.toString());
   }
@@ -104,4 +103,17 @@ public class QualmREPLTest {
     repl.processLine("unshowmidi");
     verify(controller).setDebugMIDI(false);
   }
+
+  private QData minimalData() {
+    return new QDataBuilder()
+      .withTitle("Minimal")
+      .addMidiChannel( 0, null, "Ch1")
+      .addStream(new QStreamBuilder()
+		 .addCue(new Cue.Builder()
+			 .setCueNumber("1.1")
+			 .build())
+		 .build())
+      .build();
+  }
+
 }
