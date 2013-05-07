@@ -17,6 +17,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 
+/**
+ * Unit tests for {@link JavaMidiReceiver}.
+ */
 public class JavaMidiReceiverTest {
 
   Transmitter mockTransmitter;
@@ -24,9 +27,6 @@ public class JavaMidiReceiverTest {
   QReceiver mockQR;
   JavaMidiReceiver jmr;
 
-  /* Uses Mockito to create Transmitter and Receiver mocks, and uses
-   * them to ensure that JMR is mapping the events correctly. */
-  
   @Before
   public void setUp() {
     mockTransmitter = mock(Transmitter.class);

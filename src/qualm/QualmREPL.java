@@ -3,6 +3,7 @@ package qualm;
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,20 +20,26 @@ public class QualmREPL extends Thread {
   private static Preferences prefs = 
     Preferences.userNodeForPackage(QualmREPL.class);
 
-
-  MasterController controller = null;
-  BufferedReader reader;
-  ArrayList<QualmPlugin> cuePlugins = new ArrayList<QualmPlugin>();
-  ArrayList<QualmPlugin> patchPlugins = new ArrayList<QualmPlugin>();
-  ArrayList<QualmPlugin> mapperPlugins = new ArrayList<QualmPlugin>();
-  String inputFilename = null;
-  boolean isRunning = false;
+  private MasterController controller = null;
+  private final ArrayList<QualmPlugin> cuePlugins = new ArrayList<QualmPlugin>();
+  private final ArrayList<QualmPlugin> patchPlugins = new ArrayList<QualmPlugin>();
+  private final ArrayList<QualmPlugin> mapperPlugins = new ArrayList<QualmPlugin>();
+  private final BufferedReader reader;
+  private final PrintWriter output;
+  private String inputFilename = null;
+  private boolean isRunning = false;
 
   public QualmREPL( ) {
-    reader = new BufferedReader( new InputStreamReader( System.in ));
-    loadPreferences();
+    this(new BufferedReader( new InputStreamReader( System.in )), 
+        new PrintWriter( System.out ));
   }
 
+  QualmREPL(BufferedReader reader, PrintWriter output) {
+    this.reader = reader;
+    this.output = output;
+    loadPreferences();
+  }
+  
   public void setMasterController(MasterController mc) { 
     controller = mc; 
     controller.setREPL(this);
@@ -55,7 +62,7 @@ public class QualmREPL extends Thread {
       addController(qc);
     }
 
-    System.out.println( "Loaded data from " + filename );
+    output.println( "Loaded data from " + filename );
 
     if (isRunning)
       reset();
@@ -75,7 +82,7 @@ public class QualmREPL extends Thread {
       try {
 	addPlugin(pluginName);
       } catch(IllegalArgumentException iae) {
-	System.out.println("Preferences: could not create or identify plugin '" + pluginName +
+	output.println("Preferences: could not create or identify plugin '" + pluginName +
 			   "'; ignoring.");
       }
     }
@@ -142,8 +149,8 @@ public class QualmREPL extends Thread {
   public void updatePrompt() {
     handleCuePlugins();
     handleMapperPlugins();
-    System.out.print( promptString() );
-    System.out.flush();
+    output.print( promptString() );
+    output.flush();
   }
 
 
@@ -166,7 +173,7 @@ public class QualmREPL extends Thread {
 	break;
       } 
       catch (Exception e) {
-	System.out.println(e);
+	output.println(e);
       }
     }
   }
@@ -182,7 +189,7 @@ public class QualmREPL extends Thread {
     // string.
     if (!readlineHandlesPrompt) {
       // end the current line
-      System.out.print( "\n" );
+      output.print( "\n" );
     }
 
     // print out the cue changes
@@ -194,7 +201,7 @@ public class QualmREPL extends Thread {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
 	int ch = pce.getChannel();
 	Patch patch = pce.getPatch();
-	System.out.println( qd.getMidiChannels()[ch] + " -> " +
+	output.println( qd.getMidiChannels()[ch] + " -> " +
 			    patch.getDescription() );
 	
 	// update the PatchChange plugins
@@ -203,7 +210,7 @@ public class QualmREPL extends Thread {
       else if (obj instanceof NoteWindowChangeEvent) {
 	NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
 	int ch = nwce.getChannel();
-	System.out.println( qd.getMidiChannels()[ch] + " " + nwce );
+	output.println( qd.getMidiChannels()[ch] + " " + nwce );
       }
     }
 
@@ -274,17 +281,17 @@ public class QualmREPL extends Thread {
 	loadFilename( filename );
 
       } else if (lowerCase.startsWith("showxml")) {
-    	QDataXMLReader.outputXML(mainQC().getQData(),System.out);
-    	System.out.println("");
+    	QDataXMLReader.outputXML(mainQC().getQData(),output);
+    	output.println("");
     	  
       } else if (lowerCase.startsWith("reload")) {
 	loadFilename( inputFilename );
 
       } else if (lowerCase.startsWith("version")) {
-	System.out.println( Qualm.versionString() );
+	output.println( Qualm.versionString() );
 
       } else if (lowerCase.startsWith("version")) {
-	System.out.println( Qualm.versionString() );
+	output.println( Qualm.versionString() );
 
       } else {
 	gotoCue(line);
@@ -336,7 +343,7 @@ public class QualmREPL extends Thread {
       if (obj.getClass().getName().equals( name )) {
 	((QualmPlugin)obj).shutdown();
 	iter.remove();
-	System.out.println("Removed cue plugin " + obj.getClass().getName());
+	output.println("Removed cue plugin " + obj.getClass().getName());
 	found = true;
       }
     }
@@ -347,13 +354,13 @@ public class QualmREPL extends Thread {
       if (obj.getClass().getName().equals( name )) {
 	((QualmPlugin)obj).shutdown();
 	iter.remove();
-	System.out.println("Removed patch plugin " + obj.getClass().getName());
+	output.println("Removed patch plugin " + obj.getClass().getName());
 	found = true;
       }
     }
     
     if (!found)
-      System.out.println("Unable to find running plugin of type '" + name + "'");
+      output.println("Unable to find running plugin of type '" + name + "'");
   }
 
 
@@ -363,7 +370,7 @@ public class QualmREPL extends Thread {
     StringTokenizer st = new StringTokenizer(line);
     String tok = st.nextToken();
     if (!tok.equals("plugin")) {
-      System.out.println("Odd error: plugin spec line did not start with 'plugin'");
+      output.println("Odd error: plugin spec line did not start with 'plugin'");
       return;
     }
 
@@ -373,15 +380,15 @@ public class QualmREPL extends Thread {
     if (tok.equals("list")) {
       Iterator<QualmPlugin> iter = cuePlugins.iterator();
       while (iter.hasNext())
-	System.out.println("cue " + iter.next().getClass().getName());
+	output.println("cue " + iter.next().getClass().getName());
 
       iter = patchPlugins.iterator();
       while (iter.hasNext())
-	System.out.println("patch " + iter.next().getClass().getName());
+	output.println("patch " + iter.next().getClass().getName());
 
       iter = mapperPlugins.iterator();
       while (iter.hasNext())
-	System.out.println("mapper " + iter.next().getClass().getName());
+	output.println("mapper " + iter.next().getClass().getName());
       return;
 
     } else if (tok.equals("remove")) {
@@ -395,7 +402,7 @@ public class QualmREPL extends Thread {
       else
         addPlugin(tok);
     } catch (IllegalArgumentException iae) {
-      System.out.println("Unable to create or identify requested plugin '" + tok + "; ignoring request.");
+      output.println("Unable to create or identify requested plugin '" + tok + "; ignoring request.");
     }
   }
 

@@ -219,10 +219,8 @@ public class JavaMidiReceiverFactory {
     }
 
     if (outputPort != null) {
-      if ((cName.indexOf(outputPort) != -1 || info.getName()
-          .indexOf(outputPort) != -1)
-          && md != null
-          && md.getMaxReceivers() != 0) {
+      if ((cName.indexOf(outputPort) != -1 || info.getName().indexOf(outputPort) != -1)
+          && md != null && md.getMaxReceivers() != 0) {
         out[1] = info;
         Qualm.LOG.info("Using " + out[1].getName() + " (" + cName
             + ") for output.");

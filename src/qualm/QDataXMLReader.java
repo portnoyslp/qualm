@@ -1,7 +1,7 @@
 package qualm;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Iterator;
 
 import javax.xml.transform.OutputKeys;
@@ -32,7 +32,7 @@ public class QDataXMLReader implements XMLReader {
   String rootElement = "qualm-data";
   String indentStr = "\n                ";
 
-  public static void outputXML(QData qd, OutputStream xmlOut) {
+  public static void outputXML(QData qd, Writer xmlWriter) {
     try {
       TransformerFactory factory = TransformerFactory.newInstance();
       Transformer transformer = factory.newTransformer();
@@ -43,7 +43,7 @@ public class QDataXMLReader implements XMLReader {
       Source src = new SAXSource(new QDataXMLReader(), new QDataInputSource(qd));
 
       //Setup output
-      StreamResult res = new StreamResult(xmlOut);
+      StreamResult res = new StreamResult(xmlWriter);
 
       //Start XSLT transformation
       transformer.transform(src, res);

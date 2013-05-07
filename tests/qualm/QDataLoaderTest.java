@@ -5,11 +5,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -123,11 +123,11 @@ public class QDataLoaderTest {
   @Test
   public void checkWritingAndReading() {
     // make sure we don't have any differences if we write and then read the doc.
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    QDataXMLReader.outputXML(qd, baos);
+    StringWriter stringWriter = new StringWriter();
+    QDataXMLReader.outputXML(qd, stringWriter);
     
     QDataLoader qdl2 = new QDataLoader();
-    InputSource src = new InputSource(new StringReader(baos.toString()));
+    InputSource src = new InputSource(new StringReader(stringWriter.toString()));
     QData readIn = qdl2.readSource(src);
 
     assertEquals(qd,readIn);
@@ -135,9 +135,9 @@ public class QDataLoaderTest {
   
   @Test
   public void spotCheckOutputXML() throws IOException {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    QDataXMLReader.outputXML(qd,baos);
-    String outputDoc = removeCRs(baos.toString());
+    StringWriter strWriter = new StringWriter();
+    QDataXMLReader.outputXML(qd, strWriter);
+    String outputDoc = removeCRs(strWriter.toString());
 
     // Count up various elements to make sure they match expectations
     assertEquals(3,countMatches(outputDoc,"<channel "));
