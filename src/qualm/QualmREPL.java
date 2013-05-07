@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,13 +32,12 @@ public class QualmREPL extends Thread {
   private boolean isRunning = false;
 
   public QualmREPL( ) {
-    this(new BufferedReader( new InputStreamReader( System.in )), 
-        new PrintWriter( System.out ));
+    this(new InputStreamReader( System.in ), new PrintWriter( System.out ));
   }
 
-  QualmREPL(BufferedReader reader, PrintWriter output) {
-    this.reader = reader;
-    this.output = output;
+  QualmREPL(Reader reader, Writer output) {
+    this.reader = new BufferedReader(reader);
+    this.output = new PrintWriter(output);
     loadPreferences();
   }
   
@@ -286,9 +287,6 @@ public class QualmREPL extends Thread {
     	  
       } else if (lowerCase.startsWith("reload")) {
 	loadFilename( inputFilename );
-
-      } else if (lowerCase.startsWith("version")) {
-	output.println( Qualm.versionString() );
 
       } else if (lowerCase.startsWith("version")) {
 	output.println( Qualm.versionString() );
