@@ -1,8 +1,11 @@
 package qualm;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.PipedReader;
 import java.io.PipedWriter;
@@ -19,6 +22,7 @@ import org.mockito.Mock;
 public class QualmREPLTest {
   
   @Mock MasterController controller;
+  @Mock QController subController;
   StringWriter output;
   Writer input;
   QualmREPL repl;
@@ -33,7 +37,9 @@ public class QualmREPLTest {
   }
 
   private void setupController() throws Exception {
-    controller = mock(MasterController.class); 
+    controller = mock(MasterController.class);
+    subController = mock(QController.class);
+    when(controller.mainQC()).thenReturn(subController);
     repl.setMasterController(controller);
   }
   
@@ -42,6 +48,49 @@ public class QualmREPLTest {
     verify(controller).setREPL(repl);
   }
   
+  @Test
+  public void emptyAdvances() throws Exception {
+    repl.processLine("");
+    repl.processLine(null);
+    repl.processLine("]");  // oops; hit the wrong key and rolled to the enter key
+    repl.processLine("\\"); // oops; hit the wrong key and rolled to the enter key
+    verify(subController, times(4)).advancePatch();
+  }
+
+  @Test
+  public void advanceCommand() throws Exception {
+    repl.processLine("adv K1");
+    verify(controller).advanceStream("K1");
+  }
+
+  @Test
+  public void reverse() throws Exception {
+    repl.processLine("rev qs2");
+    verify(controller).reverseStream("qs2");
+  }
+
+  @Test
+  public void dumpCommand() throws Exception {
+    QData mockData = mock(QData.class);
+    when(subController.getQData()).thenReturn(mockData);
+    repl.processLine("dump");
+    verify(mockData).dump();
+  }
+
+  @Test
+  public void showXmlCommand() throws Exception {
+    QData mockData = mock(QData.class);
+    when(subController.getQData()).thenReturn(mockData);
+    repl.processLine("showxml");
+    assertNotNull(output.toString());
+  }
+
+  @Test
+  public void resetCommand() throws Exception {
+    repl.processLine("reset");
+    verify(controller).gotoCue("0.0");
+  }
+
   @Test
   public void showVersion() throws Exception {
     repl.processLine("version");

@@ -67,7 +67,6 @@ public class QualmREPL extends Thread {
 
     if (isRunning)
       reset();
-
   }
   
   public void addController(QController qc) {
