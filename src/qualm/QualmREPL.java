@@ -10,10 +10,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
 
+import qualm.plugins.CueChangeNotification;
+import qualm.plugins.EventMapperNotification;
+import qualm.plugins.PatchChangeNotification;
 import qualm.plugins.QualmPlugin;
 
 public class QualmREPL extends Thread {
@@ -23,9 +27,9 @@ public class QualmREPL extends Thread {
     Preferences.userNodeForPackage(QualmREPL.class);
 
   private MasterController controller = null;
-  private final ArrayList<QualmPlugin> cuePlugins = new ArrayList<QualmPlugin>();
-  private final ArrayList<QualmPlugin> patchPlugins = new ArrayList<QualmPlugin>();
-  private final ArrayList<QualmPlugin> mapperPlugins = new ArrayList<QualmPlugin>();
+  private final List<CueChangeNotification> cuePlugins = new ArrayList<CueChangeNotification>();
+  private final List<PatchChangeNotification> patchPlugins = new ArrayList<PatchChangeNotification>();
+  private final List<EventMapperNotification> mapperPlugins = new ArrayList<EventMapperNotification>();
   private final BufferedReader reader;
   private final PrintWriter output;
   private String inputFilename = null;
@@ -55,11 +59,9 @@ public class QualmREPL extends Thread {
     QData qdata = Qualm.loadQDataFromFilename(filename);
 
     // For each cue stream, start a controller
-    Iterator<QStream> iter = qdata.getCueStreams().iterator();
-    while (iter.hasNext()) {
+    for(QStream qs : qdata.getCueStreams()) {
       QController qc = new QController( controller.getMidiOut(), 
-					iter.next(),
-					qdata );
+					qs, qdata );
       addController(qc);
     }
 
@@ -90,31 +92,24 @@ public class QualmREPL extends Thread {
 
   public void savePreferences() {
     // store all the preferences information
-    Iterator<QualmPlugin> iter;
     boolean init;
     String out;
 
     // combine cue and patch plugins into one
     Set<String> plugins = new HashSet<String>();
-    iter = patchPlugins.iterator();
-    while (iter.hasNext()) {
-      Object obj = iter.next();
-      plugins.add(obj.getClass().getName());
+    for (PatchChangeNotification plugin : patchPlugins) {
+      plugins.add(plugin.getClass().getName());
     }
-    iter = cuePlugins.iterator();
-    while (iter.hasNext()) {
-      Object obj = iter.next();
-      plugins.add(obj.getClass().getName());
+    for (CueChangeNotification plugin : cuePlugins) {
+      plugins.add(plugin.getClass().getName());
     }
 
     // and now we get all the names at once...
     init = true;
     out = "";
-    Iterator<String> nameIter = plugins.iterator();
-    while (nameIter.hasNext()) {
-      if (!init) out+=",";
+    for (String name : plugins) {
+      out += (init ? "" : ",") + name;
       init = false;
-      out += nameIter.next();
     }
     prefs.put(PLUGINS_PREFKEY,out);
   }
@@ -123,12 +118,10 @@ public class QualmREPL extends Thread {
     String prompt="";
     
     boolean init = true;
-    Iterator<QController> iter = controller.getControllers().iterator();
-    while (iter.hasNext()) {
+    for (QController qc : controller.getControllers()) {
       if (!init) prompt += " | ";
       init = false;
 
-      QController qc = iter.next();
       Cue curQ = qc.getCurrentCue();
       Cue pendingQ = qc.getPendingCue();
 
@@ -194,9 +187,7 @@ public class QualmREPL extends Thread {
 
     // print out the cue changes
     QData qd = mainQC().getQData();
-    Iterator<QEvent> iter = c.iterator();
-    while(iter.hasNext()) {
-      QEvent obj = iter.next();
+    for (QEvent obj : c) {
       if (obj instanceof ProgramChangeEvent) {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
 	int ch = pce.getChannel();
@@ -309,15 +300,15 @@ public class QualmREPL extends Thread {
 	qp.initialize();
 	boolean added = false;
 	if (Class.forName("qualm.plugins.CueChangeNotification").isAssignableFrom(cls)) {
-	  cuePlugins.add( qp );
+	  cuePlugins.add( (CueChangeNotification) qp );
 	  added = true;
 	}
 	if (Class.forName("qualm.plugins.PatchChangeNotification").isAssignableFrom(cls)) {
-	  patchPlugins.add( qp );
+	  patchPlugins.add( (PatchChangeNotification) qp );
 	  added = true;
 	}
 	if (Class.forName("qualm.plugins.EventMapperNotification").isAssignableFrom(cls)) {
-	  mapperPlugins.add( qp );
+	  mapperPlugins.add( (EventMapperNotification) qp );
 	  added = true;
 	}
 	if (added) {
@@ -330,27 +321,26 @@ public class QualmREPL extends Thread {
   }
 
   private void removePlugin(String name) {
-    Iterator<QualmPlugin> iter;
     boolean found = false;
 
-    iter = cuePlugins.iterator();
-    while (iter.hasNext()) {
+    Iterator<CueChangeNotification> cuePluginIter = cuePlugins.iterator();
+    while(cuePluginIter.hasNext()) {
+      CueChangeNotification obj = cuePluginIter.next();
       // remove plugins that match the name.
-      Object obj = iter.next();
       if (obj.getClass().getName().equals( name )) {
-	((QualmPlugin)obj).shutdown();
-	iter.remove();
+	obj.shutdown();
+	cuePluginIter.remove();
 	output.println("Removed cue plugin " + obj.getClass().getName());
 	found = true;
       }
     }
-    iter = patchPlugins.iterator();
-    while (iter.hasNext()) {
+    Iterator<PatchChangeNotification> patchPluginIter = patchPlugins.iterator();
+    while (patchPluginIter.hasNext()) {
       // remove plugins that match the name.
-      Object obj = iter.next();
+      PatchChangeNotification obj = patchPluginIter.next();
       if (obj.getClass().getName().equals( name )) {
-	((QualmPlugin)obj).shutdown();
-	iter.remove();
+	obj.shutdown();
+	patchPluginIter.remove();
 	output.println("Removed patch plugin " + obj.getClass().getName());
 	found = true;
       }
@@ -375,17 +365,14 @@ public class QualmREPL extends Thread {
 
     tok = st.nextToken();
     if (tok.equals("list")) {
-      Iterator<QualmPlugin> iter = cuePlugins.iterator();
-      while (iter.hasNext())
-	output.println("cue " + iter.next().getClass().getName());
+      for (CueChangeNotification ccn : cuePlugins)
+	output.println("cue " + ccn.getClass().getName());
 
-      iter = patchPlugins.iterator();
-      while (iter.hasNext())
-	output.println("patch " + iter.next().getClass().getName());
+      for (PatchChangeNotification pcn : patchPlugins)
+	output.println("patch " + pcn.getClass().getName());
 
-      iter = mapperPlugins.iterator();
-      while (iter.hasNext())
-	output.println("mapper " + iter.next().getClass().getName());
+      for (EventMapperNotification emn : mapperPlugins)
+	output.println("mapper " + emn.getClass().getName());
       return;
 
     } else if (tok.equals("remove")) {
@@ -404,24 +391,20 @@ public class QualmREPL extends Thread {
   }
 
   public void handleCuePlugins() {
-    // Tell any CueChangeNotification plugins
-    Iterator<QualmPlugin> iter = cuePlugins.iterator();
-    while (iter.hasNext()) {
-      ((qualm.plugins.CueChangeNotification)iter.next()).cueChange(controller);
+    for (QualmPlugin plugin : cuePlugins) {
+      ((qualm.plugins.CueChangeNotification)plugin).cueChange(controller);
     }
   }
 
   public void handlePatchPlugins(int ch, String name, Patch p) {
-    Iterator<QualmPlugin> iter = patchPlugins.iterator();
-    while (iter.hasNext()) {
-      ((qualm.plugins.PatchChangeNotification)iter.next()).patchChange(ch,name,p);
+    for (QualmPlugin plugin : patchPlugins) {
+      ((qualm.plugins.PatchChangeNotification)plugin).patchChange(ch,name,p);
     }
   }
 
   public void handleMapperPlugins() {
-    Iterator<QualmPlugin> iter = mapperPlugins.iterator();
-    while (iter.hasNext()) {
-      ((qualm.plugins.EventMapperNotification)iter.next()).activeEventMapper(controller);
+    for (QualmPlugin plugin : mapperPlugins) {
+      ((qualm.plugins.EventMapperNotification)plugin).activeEventMapper(controller);
     }
   }
 
