@@ -34,6 +34,7 @@ public class QualmREPL extends Thread {
   private final PrintWriter output;
   private String inputFilename = null;
   private boolean isRunning = false;
+  private boolean readlineHandlesPrompt = false;
 
   public QualmREPL( ) {
     this(new InputStreamReader( System.in ), new PrintWriter( System.out ));
@@ -71,11 +72,11 @@ public class QualmREPL extends Thread {
       reset();
   }
   
-  public void addController(QController qc) {
+  private void addController(QController qc) {
     controller.addController(qc);
   }
 
-  public void loadPreferences() {
+  private void loadPreferences() {
     // load all the preferences available.
     String pluginNames = prefs.get(PLUGINS_PREFKEY,"");
     StringTokenizer st = new StringTokenizer(pluginNames,",");
@@ -90,7 +91,7 @@ public class QualmREPL extends Thread {
     }
   }
 
-  public void savePreferences() {
+  private void savePreferences() {
     // store all the preferences information
     boolean init;
     String out;
@@ -114,7 +115,7 @@ public class QualmREPL extends Thread {
     prefs.put(PLUGINS_PREFKEY,out);
   }
 
-  public String promptString() {
+  private String promptString() {
     String prompt="";
     
     boolean init = true;
@@ -146,7 +147,7 @@ public class QualmREPL extends Thread {
     output.flush();
   }
 
-
+  @Override
   public void run() {
     isRunning = true;
 
@@ -175,7 +176,7 @@ public class QualmREPL extends Thread {
     return controller.mainQC();
   }
 
-  boolean readlineHandlesPrompt = false;
+  
   public void updateCue( Collection<QEvent> c ) {
     // signal new cue...If we could interrupt the readline call, that
     // would be best, but instead we'll just print the new prompt
@@ -211,23 +212,24 @@ public class QualmREPL extends Thread {
     }
   }
 
-  public void reset() { 
+  private void reset() { 
     gotoCue("0.0");
   }
 
-  public void advanceController (String line) {
+  private void advanceController (String line) {
     String stream_id = line.substring(line.indexOf(" ")).trim();
     controller.advanceStream(stream_id);
   }
 
-  public void reverseController (String line) {
+  private void reverseController (String line) {
     String stream_id = line.substring(line.indexOf(" ")).trim();
     controller.reverseStream(stream_id);
   }
 
-  public void gotoCue(String cueName) { controller.gotoCue(cueName); }
+  private void gotoCue(String cueName) { controller.gotoCue(cueName); }
 
-  public void processLine( String line ) {
+  /* visible for unit testing */
+  void processLine( String line ) {
     readlineHandlesPrompt = true;
 
     if (line == null || line.trim().equals("") ||
@@ -357,7 +359,7 @@ public class QualmREPL extends Thread {
   }
 
 
-  public void parsePluginLine(String line) {
+  private void parsePluginLine(String line) {
     // XXX there's probably a better way to handle plugins.  Checkout 
     // http://jpf.sourceforge.net
     StringTokenizer st = new StringTokenizer(line);
@@ -396,19 +398,19 @@ public class QualmREPL extends Thread {
     }
   }
 
-  public void handleCuePlugins() {
+  private void handleCuePlugins() {
     for (QualmPlugin plugin : cuePlugins) {
       ((qualm.plugins.CueChangeNotification)plugin).cueChange(controller);
     }
   }
 
-  public void handlePatchPlugins(int ch, String name, Patch p) {
+  private void handlePatchPlugins(int ch, String name, Patch p) {
     for (QualmPlugin plugin : patchPlugins) {
       ((qualm.plugins.PatchChangeNotification)plugin).patchChange(ch,name,p);
     }
   }
 
-  public void handleMapperPlugins() {
+  private void handleMapperPlugins() {
     for (QualmPlugin plugin : mapperPlugins) {
       ((qualm.plugins.EventMapperNotification)plugin).activeEventMapper(controller);
     }
