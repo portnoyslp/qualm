@@ -2,6 +2,7 @@ package qualm;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -20,9 +21,11 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import qualm.plugins.CueChangeNotification;
+import qualm.plugins.EventMapperNotification;
+import qualm.plugins.PatchChangeNotification;
 
 /**
- * Unit tests for {@link QualmREPL} 
+ * Unit tests for {@link QualmREPL}.
  */
 public class QualmREPLTest {
   
@@ -126,9 +129,7 @@ public class QualmREPLTest {
 
   @Test
   public void basicPluginHandling() throws Exception {
-    when(subController.getQData()).thenReturn(minimalData());
-
-    String pluginName = "qualm.QualmREPLTest$MockChangePlugin";
+    String pluginName = "qualm.QualmREPLTest$AllPlugin";
     repl.processLine("plugin " + pluginName);
     assertEquals(1, pluginCount.get());
     
@@ -137,6 +138,29 @@ public class QualmREPLTest {
     
     repl.processLine("plugin remove " + pluginName);
     assertEquals(0, pluginCount.get());
+  }
+
+  @Test
+  public void cuePluginUpdate() throws Exception {
+    QData qd = minimalData();
+    when(subController.getQData()).thenReturn(qd);
+    when(subController.getCurrentCue())
+      .thenReturn(qd.getCueStreams().iterator().next().getCues().first());
+    String pluginName = "qualm.QualmREPLTest$AllPlugin";
+    repl.processLine("plugin " + pluginName);
+    repl.updatePrompt();
+    assertEquals("1.1", lastCue.get());
+  }
+
+  @Test
+  public void loadingAndReloading() throws Exception {
+    String filename = "tests/qualm/qdl-1.xml";
+    repl.processLine("load " + filename);
+    repl.processLine("reload");
+
+    // for each line, we should have removed all controllers, and added a control for each stream
+    verify(controller, times(2)).removeControllers();
+    verify(controller, times(4)).addController((QController)anyObject());
   }
 
   private QData minimalData() {
@@ -152,8 +176,10 @@ public class QualmREPLTest {
   }
   
   @SuppressWarnings("unused") // called by name
-  private static class MockChangePlugin implements CueChangeNotification {
-    public MockChangePlugin() { }
+  private static class AllPlugin 
+    implements CueChangeNotification, PatchChangeNotification, EventMapperNotification {
+
+    public AllPlugin() { }
     
     @Override public void initialize() { 
       pluginCount.incrementAndGet();
@@ -167,7 +193,11 @@ public class QualmREPLTest {
     public void cueChange(MasterController mc) {
       lastCue.set(mc.mainQC().getCurrentCue().getCueNumber());
     }
-    
-  }
 
+    @Override
+    public void patchChange(int channel, String channelName, Patch patch) { }
+
+    @Override
+    public void activeEventMapper(MasterController mc) { }
+    }
 }

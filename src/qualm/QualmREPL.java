@@ -323,12 +323,14 @@ public class QualmREPL extends Thread {
   private void removePlugin(String name) {
     boolean found = false;
 
+    Set<QualmPlugin> removed = new HashSet<QualmPlugin>();
+
     Iterator<CueChangeNotification> cuePluginIter = cuePlugins.iterator();
     while(cuePluginIter.hasNext()) {
       CueChangeNotification obj = cuePluginIter.next();
       // remove plugins that match the name.
       if (obj.getClass().getName().equals( name )) {
-	obj.shutdown();
+	removed.add(obj);
 	cuePluginIter.remove();
 	output.println("Removed cue plugin " + obj.getClass().getName());
 	found = true;
@@ -339,13 +341,17 @@ public class QualmREPL extends Thread {
       // remove plugins that match the name.
       PatchChangeNotification obj = patchPluginIter.next();
       if (obj.getClass().getName().equals( name )) {
-	obj.shutdown();
+	removed.add(obj);
 	patchPluginIter.remove();
 	output.println("Removed patch plugin " + obj.getClass().getName());
 	found = true;
       }
     }
-    
+
+    // shutdown all the removed plugins
+    for (QualmPlugin qp : removed) 
+      qp.shutdown();
+
     if (!found)
       output.println("Unable to find running plugin of type '" + name + "'");
   }
