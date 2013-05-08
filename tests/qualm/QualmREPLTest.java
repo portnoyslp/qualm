@@ -2,7 +2,6 @@ package qualm;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -12,10 +11,15 @@ import java.io.PipedReader;
 import java.io.PipedWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import qualm.plugins.CueChangeNotification;
 
 /**
  * Unit tests for {@link QualmREPL} 
@@ -27,6 +31,8 @@ public class QualmREPLTest {
   StringWriter output;
   Writer input;
   QualmREPL repl;
+  final static AtomicReference<String> lastCue = new AtomicReference<String>(null);
+  final static AtomicInteger pluginCount = new AtomicInteger(0);
   
   @Before
   public void setUp() throws Exception {
@@ -35,6 +41,8 @@ public class QualmREPLTest {
     input = new PipedWriter(reader);
     repl = new QualmREPL(reader, output);
     setupController();
+    pluginCount.set(0);
+    lastCue.set(null);
   }
 
   private void setupController() throws Exception {
@@ -104,6 +112,33 @@ public class QualmREPLTest {
     verify(controller).setDebugMIDI(false);
   }
 
+  @Test
+  public void addUnknownPlugin() throws Exception {
+    repl.processLine("plugin qualm.plugins.DoesNotExist");
+    Assert.assertTrue(output.toString().startsWith("Unable to create or identify"));
+  }
+  
+  @Test
+  public void removeUnknownPlugin() throws Exception {
+    repl.processLine("plugin remove qualm.plugins.DoesNotExist");
+    Assert.assertTrue(output.toString().startsWith("Unable to find running"));
+  }
+
+  @Test
+  public void basicPluginHandling() throws Exception {
+    when(subController.getQData()).thenReturn(minimalData());
+
+    String pluginName = "qualm.QualmREPLTest$MockChangePlugin";
+    repl.processLine("plugin " + pluginName);
+    assertEquals(1, pluginCount.get());
+    
+    repl.processLine("plugin list");
+    Assert.assertTrue(output.toString().contains(pluginName));
+    
+    repl.processLine("plugin remove " + pluginName);
+    assertEquals(0, pluginCount.get());
+  }
+
   private QData minimalData() {
     return new QDataBuilder()
       .withTitle("Minimal")
@@ -114,6 +149,25 @@ public class QualmREPLTest {
 			 .build())
 		 .build())
       .build();
+  }
+  
+  @SuppressWarnings("unused") // called by name
+  private static class MockChangePlugin implements CueChangeNotification {
+    public MockChangePlugin() { }
+    
+    @Override public void initialize() { 
+      pluginCount.incrementAndGet();
+    }
+
+    @Override public void shutdown() {
+      pluginCount.decrementAndGet();
+    }
+    
+    @Override
+    public void cueChange(MasterController mc) {
+      lastCue.set(mc.mainQC().getCurrentCue().getCueNumber());
+    }
+    
   }
 
 }
