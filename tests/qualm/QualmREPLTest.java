@@ -1,7 +1,9 @@
 package qualm;
 
+import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -12,12 +14,13 @@ import java.io.PipedReader;
 import java.io.PipedWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.Preferences;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -122,6 +125,19 @@ public class QualmREPLTest {
   }
   
   @Test
+  public void cueUpdateOutput() throws Exception {
+    when(subController.getQData()).thenReturn(minimalData());
+    Cue cue = minimalData().getCueStreams().iterator().next().getCues().first();
+    Patch p = new Patch("Patch1", 23);
+    p.setDescription("aPatch");
+    ProgramChangeEvent pce = new ProgramChangeEvent(0, cue, p);
+    Collection<QEvent> evts = new ArrayList<QEvent>();
+    evts.add(pce);
+    repl.updateCue(evts);
+    assertThat(output.toString(), containsString("Ch1 -> aPatch"));
+  }
+  
+  @Test
   public void setMidiOutput() throws Exception {
     repl.processLine("showmidi");
     verify(controller).setDebugMIDI(true);
@@ -132,13 +148,13 @@ public class QualmREPLTest {
   @Test
   public void addUnknownPlugin() throws Exception {
     repl.processLine("plugin qualm.plugins.DoesNotExist");
-    Assert.assertTrue(output.toString().startsWith("Unable to create or identify"));
+    assertThat(output.toString(), containsString("Unable to create or identify"));
   }
   
   @Test
   public void removeUnknownPlugin() throws Exception {
     repl.processLine("plugin remove qualm.plugins.DoesNotExist");
-    Assert.assertTrue(output.toString().startsWith("Unable to find running"));
+    assertThat(output.toString(), containsString("Unable to find running"));
   }
 
   @Test
@@ -148,7 +164,7 @@ public class QualmREPLTest {
     assertEquals(1, pluginCount.get());
     
     repl.processLine("plugin list");
-    Assert.assertTrue(output.toString().contains(pluginName));
+    assertThat(output.toString(), containsString(pluginName));
     
     repl.processLine("plugin remove " + pluginName);
     assertEquals(0, pluginCount.get());
@@ -159,11 +175,11 @@ public class QualmREPLTest {
     String pluginName = "qualm.QualmREPLTest$AllPlugin";
     repl.processLine("plugin " + pluginName);
     repl.processLine("save");
-   assertEquals(pluginName, prefs.get(PLUGIN_KEY, ""));
+    assertEquals(pluginName, prefs.get(PLUGIN_KEY, ""));
     
     repl.loadPreferences();
     repl.processLine("plugin list");
-    Assert.assertTrue(output.toString().contains(pluginName));
+    assertThat(output.toString(), containsString(pluginName));
 
     repl.processLine("plugin remove " + pluginName);
     repl.processLine("save");
