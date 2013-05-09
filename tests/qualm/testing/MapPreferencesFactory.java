@@ -8,6 +8,7 @@ import java.util.prefs.Preferences;
 import java.util.prefs.PreferencesFactory;
 
 public class MapPreferencesFactory implements PreferencesFactory {
+  static MapPreferences rootPreferences = null;
 
   @Override
   public Preferences systemRoot() {
@@ -16,7 +17,10 @@ public class MapPreferencesFactory implements PreferencesFactory {
 
   @Override
   public Preferences userRoot() {
-    return new MapPreferences(null, "");
+    if (rootPreferences == null) {
+      rootPreferences = new MapPreferences(null, "");
+    }
+    return rootPreferences;
   }
   
   private class MapPreferences extends AbstractPreferences {
