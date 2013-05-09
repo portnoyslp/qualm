@@ -8,6 +8,12 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+/**
+ * The main controller for Qualm.  It manages and dispatches incoming
+ * events to the individual QControllers for the streams, and serves
+ * as the controller for the application.
+ */
+
 public class MasterController implements QReceiver {
 
   QReceiver midiOut;
@@ -197,4 +203,4 @@ public class MasterController implements QReceiver {
     }
   }
 
-} // QController
+}
