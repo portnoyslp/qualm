@@ -141,14 +141,6 @@ public class QDataXMLReader implements XMLReader {
     handler.characters(str.toCharArray(),0,str.length());
   }
 
-  public void parseAsHexData(byte[] data) throws SAXException {
-    StringBuilder hex = new StringBuilder();
-    for (byte b : data)
-      hex.append(String.format("%1$02X", b));
-    String hStr = hex.toString();
-    handler.characters(hStr.toCharArray(),0,hStr.length());
-  }
-
   public void parse(Patch p) throws SAXException {
     if (handler == null) {
       throw new SAXException("No handler defined.");
