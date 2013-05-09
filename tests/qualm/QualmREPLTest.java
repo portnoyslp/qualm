@@ -14,7 +14,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.prefs.Preferences;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +31,7 @@ import qualm.plugins.PatchChangeNotification;
  */
 public class QualmREPLTest {
   
+  private static final String PLUGIN_KEY = "plugins";
   @Mock MasterController controller;
   @Mock QController subController;
   StringWriter output;
@@ -36,6 +39,8 @@ public class QualmREPLTest {
   QualmREPL repl;
   final static AtomicReference<String> lastCue = new AtomicReference<String>(null);
   final static AtomicInteger pluginCount = new AtomicInteger(0);
+  Preferences prefs = Preferences.userNodeForPackage(QualmREPL.class);
+  String oldPreferences;
   
   @Before
   public void setUp() throws Exception {
@@ -46,7 +51,16 @@ public class QualmREPLTest {
     setupController();
     pluginCount.set(0);
     lastCue.set(null);
+
+    // save old preferences
+    oldPreferences = prefs.get(PLUGIN_KEY, "");
   }
+  
+  @After
+  public void tearDown() throws Exception {
+    prefs.put(PLUGIN_KEY, oldPreferences);
+  }
+  
 
   private void setupController() throws Exception {
     controller = mock(MasterController.class);
@@ -140,6 +154,22 @@ public class QualmREPLTest {
     assertEquals(0, pluginCount.get());
   }
 
+  @Test
+  public void preferenceSavingAndLoading() throws Exception {  
+    String pluginName = "qualm.QualmREPLTest$AllPlugin";
+    repl.processLine("plugin " + pluginName);
+    repl.processLine("save");
+   assertEquals(pluginName, prefs.get(PLUGIN_KEY, ""));
+    
+    repl.loadPreferences();
+    repl.processLine("plugin list");
+    Assert.assertTrue(output.toString().contains(pluginName));
+
+    repl.processLine("plugin remove " + pluginName);
+    repl.processLine("save");
+    assertEquals("", prefs.get(PLUGIN_KEY, ""));
+  }
+  
   @Test
   public void cuePluginUpdate() throws Exception {
     QData qd = minimalData();

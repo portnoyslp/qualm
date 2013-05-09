@@ -76,7 +76,8 @@ public class QualmREPL extends Thread {
     controller.addController(qc);
   }
 
-  private void loadPreferences() {
+  // visible for testing
+  void loadPreferences() {
     // load all the preferences available.
     String pluginNames = prefs.get(PLUGINS_PREFKEY,"");
     StringTokenizer st = new StringTokenizer(pluginNames,",");
