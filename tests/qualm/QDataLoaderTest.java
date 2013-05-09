@@ -149,7 +149,7 @@ public class QDataLoaderTest {
     assertEquals(5,countMatches(outputDoc,"<control-change ")); // 5 because the global event-map is copied to the separate cues.
   }
 
-  public int countMatches(String input, String find) {
+  private int countMatches(String input, String find) {
     Pattern p = Pattern.compile(find);
     Matcher m = p.matcher(input);
     int i = 0;
@@ -158,18 +158,11 @@ public class QDataLoaderTest {
     return i;
   }
 
-  public String removeCRs ( String input ) {
+  private String removeCRs ( String input ) {
     String output = input.replaceAll("\n\\s*", "");
     // also get rid of the header
     output = output.replaceFirst("^.*<qualm-data>","<qualm-data>");
     return output;
-  }
-  public String readFileAsString( String filename ) throws java.io.IOException {
-    byte[] buffer = new byte[(int) new File(filename).length()];
-    BufferedInputStream f = new BufferedInputStream(new FileInputStream(filename));
-    f.read(buffer);
-    f.close();
-    return new String(buffer);
   }
 
 }
