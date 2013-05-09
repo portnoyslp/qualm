@@ -407,11 +407,5 @@ public class QDataLoader extends DefaultHandler {
       Qualm.LOG.warning("   " + err.getMessage());
     }
   }
-
-  public static void main(String[] args) {
-    for(int i=0; i<args.length; i++)
-      System.out.println(args[i] + "=>" + Utilities.noteNameToMidi(args[i]));
-  }
-
 }
 
