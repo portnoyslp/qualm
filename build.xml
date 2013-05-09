@@ -135,7 +135,7 @@
 	     destdir="${instrumentdir}"
 	     metadatafile="${coveragedir}/metadata.emma"
 	     merge="true">
-	   <filter includes="qualm.*" excludes="qualm.*Test*"/>
+	<filter includes="qualm.*" excludes="qualm.*Test*, qualm.testing.*"/>
       </instr>
     </emma>
 
