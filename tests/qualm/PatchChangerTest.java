@@ -1,6 +1,7 @@
 package qualm;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -43,5 +44,16 @@ public class PatchChangerTest {
     ProgramChangeEvent pce = new ProgramChangeEvent( 1, null, null ); // don't care about Cue or Patch
     PatchChanger.patchChange(pce, null);
   }
-
+  
+  @Test
+  public void partialDelegateNamesHandled() {
+    PatchChanger.addPatchChanger(1, "Alesis 8.1");
+    assertEquals(qualm.delegates.AlesisDelegate.class, PatchChanger.delegateForChannel(1).getClass());
+  }
+  
+  @Test(expected=RuntimeException.class)
+  public void unknownDelegate() {
+    PatchChanger.addPatchChanger(1, "Foobar Baz");
+    assertNull(PatchChanger.delegateForChannel(1));
+  }
 }

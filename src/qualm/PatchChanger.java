@@ -76,18 +76,23 @@ public class PatchChanger {
 					       QReceiver midiOut ) {
     int ch = pce.getChannel();
     if (changer[ch] != null) {
-      changer[ch].getChangeDelegate().patchChange(pce, midiOut);
+      delegateForChannel(ch).patchChange(pce, midiOut);
     } else {
       throw new RuntimeException("Could not execute program change " + pce
 				 + " on unknown channel " + ch);
     }
+  }
+  
+  // visible for testing
+  static ChangeDelegate delegateForChannel(int ch) {
+    return changer[ch].getChangeDelegate();
   }
 
   public static synchronized void noteWindowChange( NoteWindowChangeEvent nwce,
 						    QReceiver midiOut ) {
     int ch = nwce.getChannel();
     if (changer[ch] != null) {
-      changer[ch].getChangeDelegate().noteWindowChange(nwce, midiOut);
+      delegateForChannel(ch).noteWindowChange(nwce, midiOut);
     } else {
       throw new RuntimeException("Could not execute note-window change " + nwce
 				 + " on unknown channel " + ch);
