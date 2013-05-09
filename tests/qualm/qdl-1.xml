@@ -26,7 +26,10 @@
       </map-events>
     </global>
     <cue song="3" measure="1">
-      <events><program-change channel="1" patch="P1"/></events>
+      <events>
+        <program-change channel="1" patch="P1"/>
+	<note-on channel="2" note="d#5"/>
+      </events>
       <trigger delay="2.5"><note-on channel="2" note="g2"/></trigger>
     </cue>
     <cue song="3" measure="16">
@@ -40,7 +43,7 @@
   </cue-stream>
   <cue-stream id="Second_Stream">
     <global>
-      <trigger><note-on channel="2" note="c6"/></trigger>
+      <trigger><note-off channel="2" note="c6"/></trigger>
     </global>
     <cue song="1" measure="1">
       <events><program-change channel="2" patch="P2"/></events>
@@ -48,6 +51,7 @@
     <cue song="2" measure="10">
       <events>
 	<program-change channel="2" patch="P3_2"/>
+	<note-off channel="2" note="ab3"/>
 	<advance stream="First_Stream"/>
       </events>
     </cue>
