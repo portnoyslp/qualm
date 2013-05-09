@@ -42,11 +42,14 @@ public class QualmREPLTest {
   QualmREPL repl;
   final static AtomicReference<String> lastCue = new AtomicReference<String>(null);
   final static AtomicInteger pluginCount = new AtomicInteger(0);
-  Preferences prefs = Preferences.userNodeForPackage(QualmREPL.class);
-  String oldPreferences;
+  Preferences prefs;
   
   @Before
   public void setUp() throws Exception {
+    // set up system preferences to use testing class
+    System.setProperty("java.util.prefs.PreferencesFactory", "qualm.testing.MapPreferencesFactory");
+    prefs = Preferences.userNodeForPackage(QualmREPL.class);
+
     output = new StringWriter();
     PipedReader reader = new PipedReader();
     input = new PipedWriter(reader);
@@ -54,17 +57,8 @@ public class QualmREPLTest {
     setupController();
     pluginCount.set(0);
     lastCue.set(null);
-
-    // save old preferences
-    oldPreferences = prefs.get(PLUGIN_KEY, "");
   }
   
-  @After
-  public void tearDown() throws Exception {
-    prefs.put(PLUGIN_KEY, oldPreferences);
-  }
-  
-
   private void setupController() throws Exception {
     controller = mock(MasterController.class);
     subController = mock(QController.class);
