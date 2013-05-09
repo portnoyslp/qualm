@@ -6,6 +6,8 @@ import javax.sound.midi.ShortMessage;
 
 import org.junit.Test;
 
+import qualm.testing.FakeMIDI;
+
 public class StreamTester {
 
   @Test

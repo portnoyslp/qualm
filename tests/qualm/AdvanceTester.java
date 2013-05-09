@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import qualm.testing.FakeMIDI;
+
 public class AdvanceTester {
   @Test
   public void testAdvance() throws Exception {
