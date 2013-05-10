@@ -6,11 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
@@ -27,9 +24,6 @@ public class QualmREPL extends Thread {
     Preferences.userNodeForPackage(QualmREPL.class);
 
   private MasterController controller = null;
-  private final List<CueChangeNotification> cuePlugins = new ArrayList<CueChangeNotification>();
-  private final List<PatchChangeNotification> patchPlugins = new ArrayList<PatchChangeNotification>();
-  private final List<EventMapperNotification> mapperPlugins = new ArrayList<EventMapperNotification>();
   private final BufferedReader reader;
   private final PrintWriter output;
   private String inputFilename = null;
@@ -63,7 +57,7 @@ public class QualmREPL extends Thread {
     for(QStream qs : qdata.getCueStreams()) {
       QController qc = new QController( controller.getMidiOut(), 
 					qs, qdata );
-      addController(qc);
+      controller.addController(qc);
     }
 
     output.println( "Loaded data from " + filename );
@@ -72,10 +66,6 @@ public class QualmREPL extends Thread {
       reset();
   }
   
-  private void addController(QController qc) {
-    controller.addController(qc);
-  }
-
   // visible for testing
   void loadPreferences() {
     // load all the preferences available.
@@ -99,10 +89,10 @@ public class QualmREPL extends Thread {
 
     // combine cue and patch plugins into one
     Set<String> plugins = new HashSet<String>();
-    for (PatchChangeNotification plugin : patchPlugins) {
+    for (PatchChangeNotification plugin : controller.getPatchPlugins()) {
       plugins.add(plugin.getClass().getName());
     }
-    for (CueChangeNotification plugin : cuePlugins) {
+    for (CueChangeNotification plugin : controller.getCuePlugins()) {
       plugins.add(plugin.getClass().getName());
     }
 
@@ -142,8 +132,8 @@ public class QualmREPL extends Thread {
   }
 
   public void updatePrompt() {
-    handleCuePlugins();
-    handleMapperPlugins();
+    controller.handleCuePlugins(this);
+    controller.handleMapperPlugins(this);
     output.print( promptString() );
     output.flush();
   }
@@ -173,11 +163,6 @@ public class QualmREPL extends Thread {
     }
   }
 
-  private QController mainQC() {
-    return controller.mainQC();
-  }
-
-  
   public void updateCue( Collection<QEvent> c ) {
     // signal new cue...If we could interrupt the readline call, that
     // would be best, but instead we'll just print the new prompt
@@ -188,7 +173,7 @@ public class QualmREPL extends Thread {
     }
 
     // print out the cue changes
-    QData qd = mainQC().getQData();
+    QData qd = controller.mainQC().getQData();
     for (QEvent obj : c) {
       if (obj instanceof ProgramChangeEvent) {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
@@ -198,7 +183,7 @@ public class QualmREPL extends Thread {
 			    patch.getDescription() );
 	
 	// update the PatchChange plugins
-	handlePatchPlugins( ch, qd.getMidiChannels()[ch], patch);
+	controller.handlePatchPlugins( this, ch, qd.getMidiChannels()[ch], patch);
       }
       else if (obj instanceof NoteWindowChangeEvent) {
 	NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
@@ -237,7 +222,7 @@ public class QualmREPL extends Thread {
 	line.trim().startsWith("\\") ||
 	line.trim().startsWith("]")) {
       // advance the "mainline" patch
-      mainQC().advancePatch();
+      controller.mainQC().advancePatch();
     } else {
       String lowerCase = line.toLowerCase();
 
@@ -246,7 +231,7 @@ public class QualmREPL extends Thread {
       }
 
       if (lowerCase.equals("dump")) {
-	mainQC().getQData().dump(output);
+	controller.mainQC().getQData().dump(output);
       
       } else if (lowerCase.equals("reset")) {
 	reset();
@@ -275,7 +260,7 @@ public class QualmREPL extends Thread {
 	loadFilename( filename );
 
       } else if (lowerCase.startsWith("showxml")) {
-    	QDataXMLReader.outputXML(mainQC().getQData(), output);
+    	QDataXMLReader.outputXML(controller.mainQC().getQData(), output);
     	output.println("");
     	  
       } else if (lowerCase.startsWith("reload")) {
@@ -303,15 +288,15 @@ public class QualmREPL extends Thread {
 	qp.initialize();
 	boolean added = false;
 	if (Class.forName("qualm.plugins.CueChangeNotification").isAssignableFrom(cls)) {
-	  cuePlugins.add( (CueChangeNotification) qp );
+	  controller.addCuePlugin( (CueChangeNotification) qp );
 	  added = true;
 	}
 	if (Class.forName("qualm.plugins.PatchChangeNotification").isAssignableFrom(cls)) {
-	  patchPlugins.add( (PatchChangeNotification) qp );
+	  controller.addPatchPlugin( (PatchChangeNotification) qp );
 	  added = true;
 	}
 	if (Class.forName("qualm.plugins.EventMapperNotification").isAssignableFrom(cls)) {
-	  mapperPlugins.add( (EventMapperNotification) qp );
+	  controller.addMapperPlugin( (EventMapperNotification) qp );
 	  added = true;
 	}
 	if (added) {
@@ -323,40 +308,17 @@ public class QualmREPL extends Thread {
     throw new IllegalArgumentException("Could not start plugin '" + name + "'");
   }
 
+  /**
+   * @deprecated Use {@link qualm.MasterController#removePlugin(String)} instead
+   */
   private void removePlugin(String name) {
-    boolean found = false;
-
-    Set<QualmPlugin> removed = new HashSet<QualmPlugin>();
-
-    Iterator<CueChangeNotification> cuePluginIter = cuePlugins.iterator();
-    while(cuePluginIter.hasNext()) {
-      CueChangeNotification obj = cuePluginIter.next();
-      // remove plugins that match the name.
-      if (obj.getClass().getName().equals( name )) {
-	removed.add(obj);
-	cuePluginIter.remove();
-	output.println("Removed cue plugin " + obj.getClass().getName());
-	found = true;
-      }
+    Set<QualmPlugin> removed = controller.removePlugin(name);
+    for(QualmPlugin plugin : removed) {
+      output.println("Removed plugin " + plugin.getClass().getName());
     }
-    Iterator<PatchChangeNotification> patchPluginIter = patchPlugins.iterator();
-    while (patchPluginIter.hasNext()) {
-      // remove plugins that match the name.
-      PatchChangeNotification obj = patchPluginIter.next();
-      if (obj.getClass().getName().equals( name )) {
-	removed.add(obj);
-	patchPluginIter.remove();
-	output.println("Removed patch plugin " + obj.getClass().getName());
-	found = true;
-      }
+    if (removed.size() == 0) {
+      output.println("Unable to find running plugin " + name);
     }
-
-    // shutdown all the removed plugins
-    for (QualmPlugin qp : removed) 
-      qp.shutdown();
-
-    if (!found)
-      output.println("Unable to find running plugin of type '" + name + "'");
   }
 
 
@@ -374,13 +336,13 @@ public class QualmREPL extends Thread {
 
     tok = st.nextToken();
     if (tok.equals("list")) {
-      for (CueChangeNotification ccn : cuePlugins)
+      for (CueChangeNotification ccn : controller.getCuePlugins())
 	output.println("cue " + ccn.getClass().getName());
 
-      for (PatchChangeNotification pcn : patchPlugins)
+      for (PatchChangeNotification pcn : controller.getPatchPlugins())
 	output.println("patch " + pcn.getClass().getName());
 
-      for (EventMapperNotification emn : mapperPlugins)
+      for (EventMapperNotification emn : controller.getMapperPlugins())
 	output.println("mapper " + emn.getClass().getName());
       return;
 
@@ -398,24 +360,5 @@ public class QualmREPL extends Thread {
       output.println("Unable to create or identify requested plugin '" + tok + "; ignoring request.");
     }
   }
-
-  private void handleCuePlugins() {
-    for (QualmPlugin plugin : cuePlugins) {
-      ((qualm.plugins.CueChangeNotification)plugin).cueChange(controller);
-    }
-  }
-
-  private void handlePatchPlugins(int ch, String name, Patch p) {
-    for (QualmPlugin plugin : patchPlugins) {
-      ((qualm.plugins.PatchChangeNotification)plugin).patchChange(ch,name,p);
-    }
-  }
-
-  private void handleMapperPlugins() {
-    for (QualmPlugin plugin : mapperPlugins) {
-      ((qualm.plugins.EventMapperNotification)plugin).activeEventMapper(controller);
-    }
-  }
-
 
 }
