@@ -1,5 +1,7 @@
 package qualm;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Properties;
 
 import org.junit.Before;
@@ -21,7 +23,8 @@ public class JavaMidiReceiverFactoryTest {
   @Test(expected=RuntimeException.class)
   public void unknownDevice() throws Exception {
     props.setProperty("inputPort", "FOOBAR");
-    JavaMidiReceiver jmr = JavaMidiReceiverFactory.buildFromProperties(props);    
+    JavaMidiReceiver jmr = JavaMidiReceiverFactory.buildFromProperties(props);
+    assertNotNull(jmr);
   }
 
 }

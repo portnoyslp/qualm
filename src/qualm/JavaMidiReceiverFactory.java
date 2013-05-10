@@ -247,6 +247,7 @@ public class JavaMidiReceiverFactory {
         }
         lin = br.readLine();
       }
+      br.close();
     } catch (IOException ioe) {
       Qualm.LOG.info("Couldn't read " + ALSA_CLIENTS_FILE + ": " + ioe);
       return null;

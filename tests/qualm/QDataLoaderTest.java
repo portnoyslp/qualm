@@ -4,9 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -82,17 +79,17 @@ public class QDataLoaderTest {
     // check a subset of the cues
     QStream s = (QStream) ((List<QStream>)qd.getCueStreams()).get(0);
     Cue q = (Cue) s.getCues().first();
-    assertEquals(q,new Cue("3.1"));
-    assertEquals(q.getEvents().size(), 1);
-    assertEquals(q.getEventMaps().size(), 1);
-    assertEquals(q.getTriggers().size(), 3);
+    assertEquals(new Cue("3.1"), q);
+    assertEquals(2, q.getEvents().size());
+    assertEquals(1, q.getEventMaps().size());
+    assertEquals(3, q.getTriggers().size());
     
     s = (QStream) ((List<QStream>)qd.getCueStreams()).get(1);
     q = (Cue) s.getCues().last();
-    assertEquals(q,new Cue("2.10"));
-    assertEquals(q.getEvents().size(), 2);
-    assertEquals(q.getEventMaps().size(), 0);
-    assertEquals(q.getTriggers().size(), 1);
+    assertEquals(new Cue("2.10"), q);
+    assertEquals(3, q.getEvents().size());
+    assertEquals(0, q.getEventMaps().size());
+    assertEquals(1, q.getTriggers().size());
   }
 
   @Test
