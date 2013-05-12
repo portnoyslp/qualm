@@ -3,17 +3,12 @@ package qualm;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import qualm.plugins.CueChangeNotification;
-import qualm.plugins.EventMapperNotification;
-import qualm.plugins.PatchChangeNotification;
 import qualm.plugins.QualmPlugin;
 
 /**
@@ -29,14 +24,12 @@ public class MasterController implements QReceiver {
   QualmREPL REPL = null;
   boolean debugMIDI = false;
   boolean silentErrorHandling = true;
+  private PluginManager pluginManager;
   
-  private List<CueChangeNotification> cuePlugins = new ArrayList<CueChangeNotification>();
-  private List<PatchChangeNotification> patchPlugins = new ArrayList<PatchChangeNotification>();
-  private List<EventMapperNotification> mapperPlugins = new ArrayList<EventMapperNotification>();
-
   public MasterController( QReceiver out ) {
     midiOut = new VerboseReceiver(out);
     controllers = new TreeMap<String, QController>();
+    setPluginManager(new PluginManager());
   }
 
   public QReceiver getMidiOut() { return midiOut; }
@@ -44,6 +37,11 @@ public class MasterController implements QReceiver {
   public void setREPL(QualmREPL newREPL) { REPL = newREPL; }
   public QualmREPL getREPL() { return REPL; }
 
+  public void setPluginManager(PluginManager pm) {
+    pluginManager = pm;
+  }
+  public PluginManager getPluginManager() { return pluginManager; }
+  
   public void addController( QController qc ) {
     controllers.put( qc.getTitle(), qc );
     qc.setMaster( this );
@@ -215,75 +213,7 @@ public class MasterController implements QReceiver {
     }
   }
 
-  /* Plugin Handling */
-  void addCuePlugin(CueChangeNotification plugin) {
-    getCuePlugins().add(plugin);
-  }
-  void addPatchPlugin(PatchChangeNotification plugin) {
-    getPatchPlugins().add(plugin);
-  }
-  void addMapperPlugin(EventMapperNotification plugin) {
-    getMapperPlugins().add(plugin);
-  }
-
-  
-  void handleCuePlugins() {
-    for (CueChangeNotification plugin : getCuePlugins()) {
-      plugin.cueChange(this);
-    }
-  }
-
-  void handlePatchPlugins(int ch, String name, Patch p) {
-    for (PatchChangeNotification plugin : getPatchPlugins()) {
-      plugin.patchChange(ch,name,p);
-    }
-  }
-
-  void handleMapperPlugins() {
-    for (EventMapperNotification plugin : getMapperPlugins()) {
-      plugin.activeEventMapper(this);
-    }
-  }
-
   Set<QualmPlugin> removePlugin(String name) {
-    Set<QualmPlugin> removed = new HashSet<QualmPlugin>();
-  
-    Iterator<CueChangeNotification> cuePluginIter = getCuePlugins().iterator();
-    while(cuePluginIter.hasNext()) {
-      CueChangeNotification obj = cuePluginIter.next();
-      // remove plugins that match the name.
-      if (obj.getClass().getName().equals( name )) {
-        removed.add(obj);
-        cuePluginIter.remove();
-      }
-    }
-    Iterator<PatchChangeNotification> patchPluginIter = getPatchPlugins().iterator();
-    while (patchPluginIter.hasNext()) {
-      // remove plugins that match the name.
-      PatchChangeNotification obj = patchPluginIter.next();
-      if (obj.getClass().getName().equals( name )) {
-        removed.add(obj);
-        patchPluginIter.remove();
-      }
-    }
-  
-    // shutdown all the removed plugins
-    for (QualmPlugin qp : removed) 
-      qp.shutdown();
-  
-    return removed;
+    return pluginManager.removePlugin(name);
   }
-
-  List<CueChangeNotification> getCuePlugins() {
-    return cuePlugins;
-  }
-
-  List<PatchChangeNotification> getPatchPlugins() {
-    return patchPlugins;
-  }
-
-  List<EventMapperNotification> getMapperPlugins() {
-    return mapperPlugins;
-  }
-
 }

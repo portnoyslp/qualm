@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -39,6 +40,7 @@ public class QualmREPLTest {
   private static final String PLUGIN_KEY = "plugins";
   @Mock MasterController controller;
   @Mock QController subController;
+  @Mock PluginManager pluginManager;
   StringWriter output;
   Writer input;
   QualmREPL repl;
@@ -59,12 +61,15 @@ public class QualmREPLTest {
     setupController();
     pluginCount.set(0);
     lastCue.set(null);
+    
   }
   
   private void setupController() throws Exception {
     controller = mock(MasterController.class);
     subController = mock(QController.class);
+    pluginManager = mock(PluginManager.class);
     when(controller.mainQC()).thenReturn(subController);
+    when(controller.getPluginManager()).thenReturn(pluginManager);
     repl.setMasterController(controller);
   }
   
@@ -143,7 +148,10 @@ public class QualmREPLTest {
 
   @Test
   public void addUnknownPlugin() throws Exception {
-    repl.processLine("plugin qualm.plugins.DoesNotExist");
+    String badPlugin = "qualm.plugins.DoesNotExist";
+    doThrow(new IllegalArgumentException())
+      .when(pluginManager).addPlugin(badPlugin);
+    repl.processLine("plugin " + badPlugin);
     assertThat(output.toString(), containsString("Unable to create or identify"));
   }
   
@@ -157,9 +165,7 @@ public class QualmREPLTest {
   public void basicPluginHandling() throws Exception {
     String pluginName = "qualm.QualmREPLTest$AllPlugin";
     repl.processLine("plugin " + pluginName);
-    verify(controller).addCuePlugin((CueChangeNotification) argThat(new InstanceOf(AllPlugin.class)));
-    verify(controller).addPatchPlugin((PatchChangeNotification) argThat(new InstanceOf(AllPlugin.class)));
-    verify(controller).addMapperPlugin((EventMapperNotification) argThat(new InstanceOf(AllPlugin.class)));
+    verify(pluginManager).addPlugin(pluginName);
     
     repl.processLine("plugin remove " + pluginName);
     verify(controller).removePlugin(pluginName);
@@ -169,7 +175,7 @@ public class QualmREPLTest {
   public void pluginList() throws Exception {
     List<CueChangeNotification> plugins = new ArrayList<CueChangeNotification>();
     plugins.add(new AllPlugin());
-    when(controller.getCuePlugins()).thenReturn(plugins);
+    when(pluginManager.getCuePlugins()).thenReturn(plugins);
 
     repl.processLine("plugin list");
     assertThat(output.toString(), containsString("cue qualm.QualmREPLTest$AllPlugin"));
@@ -182,8 +188,8 @@ public class QualmREPLTest {
     cuePlugins.add(new AllPlugin());
     patchPlugins.add(new AllPlugin());
     String pluginName = "qualm.QualmREPLTest$AllPlugin";
-    when(controller.getCuePlugins()).thenReturn(cuePlugins);
-    when(controller.getPatchPlugins()).thenReturn(patchPlugins);
+    when(pluginManager.getCuePlugins()).thenReturn(cuePlugins);
+    when(pluginManager.getPatchPlugins()).thenReturn(patchPlugins);
 
     repl.processLine("plugin " + pluginName);
     repl.processLine("save");
@@ -194,9 +200,7 @@ public class QualmREPLTest {
   public void preferenceLoading() throws Exception {
     prefs.put(PLUGIN_KEY, "qualm.QualmREPLTest$AllPlugin");
     repl.loadPreferences();
-    verify(controller).addCuePlugin((CueChangeNotification) argThat(new InstanceOf(AllPlugin.class)));
-    verify(controller).addPatchPlugin((PatchChangeNotification) argThat(new InstanceOf(AllPlugin.class)));
-    verify(controller).addMapperPlugin((EventMapperNotification) argThat(new InstanceOf(AllPlugin.class)));
+    verify(pluginManager).addPlugin("qualm.QualmREPLTest$AllPlugin");
   }
   
   @Test

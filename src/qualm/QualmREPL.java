@@ -86,13 +86,14 @@ public class QualmREPL extends Thread {
     // store all the preferences information
     boolean init;
     String out;
+    PluginManager pm = controller.getPluginManager();
 
     // combine cue and patch plugins into one
     Set<String> plugins = new HashSet<String>();
-    for (PatchChangeNotification plugin : controller.getPatchPlugins()) {
+    for (PatchChangeNotification plugin : pm.getPatchPlugins()) {
       plugins.add(plugin.getClass().getName());
     }
-    for (CueChangeNotification plugin : controller.getCuePlugins()) {
+    for (CueChangeNotification plugin : pm.getCuePlugins()) {
       plugins.add(plugin.getClass().getName());
     }
 
@@ -132,8 +133,8 @@ public class QualmREPL extends Thread {
   }
 
   public void updatePrompt() {
-    controller.handleCuePlugins();
-    controller.handleMapperPlugins();
+    controller.getPluginManager().handleCuePlugins(controller);
+    controller.getPluginManager().handleMapperPlugins(controller);
     output.print( promptString() );
     output.flush();
   }
@@ -183,7 +184,7 @@ public class QualmREPL extends Thread {
 			    patch.getDescription() );
 	
 	// update the PatchChange plugins
-	controller.handlePatchPlugins( ch, qd.getMidiChannels()[ch], patch);
+	controller.getPluginManager().handlePatchPlugins( ch, qd.getMidiChannels()[ch], patch);
       }
       else if (obj instanceof NoteWindowChangeEvent) {
 	NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
@@ -278,39 +279,11 @@ public class QualmREPL extends Thread {
   }
 
   private void addPlugin(String name) {
-    // should be a class spec; try instantiating an object for this
-    Class<?> cls;
-    try {
-      cls = Class.forName(name);
-      QualmPlugin qp;
-      if (Class.forName("qualm.plugins.QualmPlugin").isAssignableFrom(cls)) {
-	qp = (QualmPlugin)cls.newInstance();
-	qp.initialize();
-	boolean added = false;
-	if (Class.forName("qualm.plugins.CueChangeNotification").isAssignableFrom(cls)) {
-	  controller.addCuePlugin( (CueChangeNotification) qp );
-	  added = true;
-	}
-	if (Class.forName("qualm.plugins.PatchChangeNotification").isAssignableFrom(cls)) {
-	  controller.addPatchPlugin( (PatchChangeNotification) qp );
-	  added = true;
-	}
-	if (Class.forName("qualm.plugins.EventMapperNotification").isAssignableFrom(cls)) {
-	  controller.addMapperPlugin( (EventMapperNotification) qp );
-	  added = true;
-	}
-	if (added) {
-	  return;
-	}
-      }
-    } catch (Exception e) { }
-    
-    throw new IllegalArgumentException("Could not start plugin '" + name + "'");
+    if (controller != null) {
+      controller.getPluginManager().addPlugin(name);
+    }
   }
 
-  /**
-   * @deprecated Use {@link qualm.MasterController#removePlugin(String)} instead
-   */
   private void removePlugin(String name) {
     Set<QualmPlugin> removed = controller.removePlugin(name);
     for(QualmPlugin plugin : removed) {
@@ -320,7 +293,6 @@ public class QualmREPL extends Thread {
       output.println("Unable to find running plugin " + name);
     }
   }
-
 
   private void parsePluginLine(String line) {
     // XXX there's probably a better way to handle plugins.  Checkout 
@@ -336,13 +308,14 @@ public class QualmREPL extends Thread {
 
     tok = st.nextToken();
     if (tok.equals("list")) {
-      for (CueChangeNotification ccn : controller.getCuePlugins())
+      PluginManager pm = controller.getPluginManager();
+      for (CueChangeNotification ccn : pm.getCuePlugins())
 	output.println("cue " + ccn.getClass().getName());
 
-      for (PatchChangeNotification pcn : controller.getPatchPlugins())
+      for (PatchChangeNotification pcn : pm.getPatchPlugins())
 	output.println("patch " + pcn.getClass().getName());
 
-      for (EventMapperNotification emn : controller.getMapperPlugins())
+      for (EventMapperNotification emn : pm.getMapperPlugins())
 	output.println("mapper " + emn.getClass().getName());
       return;
 
