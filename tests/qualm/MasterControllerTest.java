@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 
+import qualm.plugins.CueChangeNotification;
+
 public class MasterControllerTest {
   MasterController mc;
   QReceiver mockQR;
@@ -50,4 +52,12 @@ public class MasterControllerTest {
     verify(mockControl).handleMidiCommand( null );
   }
 
+  @Test
+  public void cuePluginUpdate() throws Exception {
+    CueChangeNotification ccn = mock(CueChangeNotification.class);
+    mc.addCuePlugin(ccn);
+    
+    mc.handleCuePlugins();
+    verify(ccn).cueChange(mc);
+  }
 }

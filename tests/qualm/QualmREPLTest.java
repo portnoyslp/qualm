@@ -17,6 +17,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.Preferences;
@@ -160,41 +161,44 @@ public class QualmREPLTest {
     verify(controller).addPatchPlugin((PatchChangeNotification) argThat(new InstanceOf(AllPlugin.class)));
     verify(controller).addMapperPlugin((EventMapperNotification) argThat(new InstanceOf(AllPlugin.class)));
     
-   // repl.processLine("plugin list");
-   // assertThat(output.toString(), containsString(pluginName));
-    
     repl.processLine("plugin remove " + pluginName);
     verify(controller).removePlugin(pluginName);
   }
+  
+  @Test
+  public void pluginList() throws Exception {
+    List<CueChangeNotification> plugins = new ArrayList<CueChangeNotification>();
+    plugins.add(new AllPlugin());
+    when(controller.getCuePlugins()).thenReturn(plugins);
+
+    repl.processLine("plugin list");
+    assertThat(output.toString(), containsString("cue qualm.QualmREPLTest$AllPlugin"));
+  }
 
   @Test
-  public void preferenceSavingAndLoading() throws Exception {  
+  public void preferenceSaving() throws Exception {
+    List<CueChangeNotification> cuePlugins = new ArrayList<CueChangeNotification>();
+    List<PatchChangeNotification> patchPlugins = new ArrayList<PatchChangeNotification>();
+    cuePlugins.add(new AllPlugin());
+    patchPlugins.add(new AllPlugin());
     String pluginName = "qualm.QualmREPLTest$AllPlugin";
+    when(controller.getCuePlugins()).thenReturn(cuePlugins);
+    when(controller.getPatchPlugins()).thenReturn(patchPlugins);
+
     repl.processLine("plugin " + pluginName);
     repl.processLine("save");
     assertEquals(pluginName, prefs.get(PLUGIN_KEY, ""));
-    
-    repl.loadPreferences();
-    repl.processLine("plugin list");
-    assertThat(output.toString(), containsString(pluginName));
-
-    repl.processLine("plugin remove " + pluginName);
-    repl.processLine("save");
-    assertEquals("", prefs.get(PLUGIN_KEY, ""));
   }
   
   @Test
-  public void cuePluginUpdate() throws Exception {
-    QData qd = minimalData();
-    when(subController.getQData()).thenReturn(qd);
-    when(subController.getCurrentCue())
-      .thenReturn(qd.getCueStreams().iterator().next().getCues().first());
-    String pluginName = "qualm.QualmREPLTest$AllPlugin";
-    repl.processLine("plugin " + pluginName);
-    repl.updatePrompt();
-    assertEquals("1.1", lastCue.get());
+  public void preferenceLoading() throws Exception {
+    prefs.put(PLUGIN_KEY, "qualm.QualmREPLTest$AllPlugin");
+    repl.loadPreferences();
+    verify(controller).addCuePlugin((CueChangeNotification) argThat(new InstanceOf(AllPlugin.class)));
+    verify(controller).addPatchPlugin((PatchChangeNotification) argThat(new InstanceOf(AllPlugin.class)));
+    verify(controller).addMapperPlugin((EventMapperNotification) argThat(new InstanceOf(AllPlugin.class)));
   }
-
+  
   @Test
   public void loadingAndReloading() throws Exception {
     String filename = "tests/qualm/qdl-1.xml";
@@ -218,7 +222,6 @@ public class QualmREPLTest {
       .build();
   }
   
-  @SuppressWarnings("unused") // called by name
   private static class AllPlugin 
     implements CueChangeNotification, PatchChangeNotification, EventMapperNotification {
 

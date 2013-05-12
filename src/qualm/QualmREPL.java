@@ -132,8 +132,8 @@ public class QualmREPL extends Thread {
   }
 
   public void updatePrompt() {
-    controller.handleCuePlugins(this);
-    controller.handleMapperPlugins(this);
+    controller.handleCuePlugins();
+    controller.handleMapperPlugins();
     output.print( promptString() );
     output.flush();
   }
@@ -183,7 +183,7 @@ public class QualmREPL extends Thread {
 			    patch.getDescription() );
 	
 	// update the PatchChange plugins
-	controller.handlePatchPlugins( this, ch, qd.getMidiChannels()[ch], patch);
+	controller.handlePatchPlugins( ch, qd.getMidiChannels()[ch], patch);
       }
       else if (obj instanceof NoteWindowChangeEvent) {
 	NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;

@@ -227,29 +227,22 @@ public class MasterController implements QReceiver {
   }
 
   
-  void handleCuePlugins(QualmREPL qualmREPL) {
+  void handleCuePlugins() {
     for (CueChangeNotification plugin : getCuePlugins()) {
       plugin.cueChange(this);
     }
   }
 
-  void handlePatchPlugins(QualmREPL qualmREPL, int ch, String name, Patch p) {
+  void handlePatchPlugins(int ch, String name, Patch p) {
     for (PatchChangeNotification plugin : getPatchPlugins()) {
       plugin.patchChange(ch,name,p);
     }
   }
 
-  void handleMapperPlugins(QualmREPL qualmREPL) {
+  void handleMapperPlugins() {
     for (EventMapperNotification plugin : getMapperPlugins()) {
       plugin.activeEventMapper(this);
     }
-  }
-
-  /**
-   * @deprecated Use {@link #removePlugin(String)} instead
-   */
-  Set<QualmPlugin> removePlugin(QualmREPL qualmREPL, String name) {
-    return removePlugin(name);
   }
 
   Set<QualmPlugin> removePlugin(String name) {
