@@ -52,7 +52,7 @@
       <events>
 	<program-change channel="2" patch="P3_2"/>
 	<note-off channel="2" note="ab3"/>
-	<advance stream="First_Stream"/>
+	<advance stream="First_Stream" song="3" measure="1"/>
       </events>
     </cue>
   </cue-stream>
