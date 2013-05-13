@@ -1,10 +1,8 @@
 package qualm;
 
-
 import static org.junit.Assert.assertEquals;
-
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,11 +11,10 @@ import qualm.plugins.CueChangeNotification;
 import qualm.plugins.EventMapperNotification;
 import qualm.plugins.PatchChangeNotification;
 
+
 public class PluginManagerTest {
 
   private PluginManager pluginManager;
-  final static AtomicReference<String> lastCue = new AtomicReference<String>(null);
-  final static AtomicInteger pluginCount = new AtomicInteger(0);
 
   @Before
   public void setUp() throws Exception {
@@ -48,29 +45,69 @@ public class PluginManagerTest {
     assertEquals(1, pluginManager.getCuePlugins().size());
     assertEquals(plugin, pluginManager.getCuePlugins().iterator().next());
   }
+  
+  @Test
+  public void pluginInitialized() throws Exception {
+    CueChangeNotification ccn = mock(CueChangeNotification.class);
+    pluginManager.addPlugin(ccn);
+    verify(ccn).initialize();
+  }
+  
+  @Test(expected=IllegalArgumentException.class)
+  public void unknownPlugin() throws Exception {
+    pluginManager.addPlugin("qualm.UnknownPlugin");
+  }
+  
+  @Test
+  public void pluginShutdown() throws Exception {
+    CueChangeNotification ccn = mock(CueChangeNotification.class);
+    pluginManager.addPlugin(ccn);
+    pluginManager.removePlugin(ccn.getClass().getName());
+    verify(ccn).shutdown();
+  }
+  
+  @Test
+  public void handleCuePlugin() throws Exception {
+    CueChangeNotification ccn = mock(CueChangeNotification.class);
+    pluginManager.addPlugin(ccn);
+    MasterController mc = mock(MasterController.class);
+    
+    pluginManager.handleCuePlugins(mc);
+    verify(ccn).cueChange(mc);
+  }
+  
+  @Test
+  public void handlePatchPlugin() throws Exception {
+    PatchChangeNotification pcn = mock(PatchChangeNotification.class);
+    pluginManager.addPlugin(pcn);
+    Patch p = new Patch("P1", 3);
+    pluginManager.handlePatchPlugins(1, "K1", p);
+    verify(pcn).patchChange(1, "K1", p);
+  }
+  
+  @Test
+  public void handleMapperPlugin() throws Exception {
+    EventMapperNotification emn = mock(EventMapperNotification.class);
+    pluginManager.addPlugin(emn);
+    
+    MasterController mc = mock(MasterController.class);
+    pluginManager.handleMapperPlugins(mc);
+    verify(emn).activeEventMapper(mc);
+  }
 
   private static class AllPlugin 
   implements CueChangeNotification, PatchChangeNotification, EventMapperNotification {
 
     public AllPlugin() { }
 
-    @Override public void initialize() { 
-      pluginCount.incrementAndGet();
-    }
+    @Override public void initialize() { }
 
-    @Override public void shutdown() {
-      pluginCount.decrementAndGet();
-    }
+    @Override public void shutdown() { }
 
-    @Override
-    public void cueChange(MasterController mc) {
-      lastCue.set(mc.mainQC().getCurrentCue().getCueNumber());
-    }
+    @Override public void cueChange(MasterController mc) { }
 
-    @Override
-    public void patchChange(int channel, String channelName, Patch patch) { }
+    @Override public void patchChange(int channel, String channelName, Patch patch) { }
 
-    @Override
-    public void activeEventMapper(MasterController mc) { }
+    @Override public void activeEventMapper(MasterController mc) { }
   }
 }
