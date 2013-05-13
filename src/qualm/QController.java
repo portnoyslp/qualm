@@ -8,26 +8,24 @@ public class QController extends AbstractQReceiver {
 
   MasterController master;
   QAdvancer advancer;
-  QData qdata;
   String title;
 
   private static final int ignoreEventsTimeMsec = 1000; // 1 second
   private static final int minWaitTimeMsec = 200;
   private static final int minimalSleepMsec = 100;
 
-  public QController( QReceiver out, QStream qstream, QData data ) {
+  public QController( QReceiver out, QStream qstream, MasterController mc) {
     setTarget(out);
-    qdata = data;
     title = qstream.getTitle();
-    advancer = new QAdvancer( qstream, data );
+    setMaster( mc );
 
+    advancer = new QAdvancer( qstream, mc.getQData() );
     setupTriggers();
   }
 
   public String getTitle() { return title; }
   public void setTitle(String t) { title=t; }
 
-  public QData getQData() { return qdata; }
   public Cue getCurrentCue() { return advancer.getCurrentCue(); }
   public Cue getPendingCue() { return advancer.getPendingCue(); }
 

@@ -89,11 +89,11 @@ public class FakeMIDI implements QReceiver {
     QData qd = (new QDataLoader()).
       readSource(new org.xml.sax.InputSource(new java.io.StringReader(xmlString)));
     MasterController mc = new MasterController ( fm );
+    mc.setQData(qd);
     mc.setSilentErrorHandling(false);
 
-    Iterator<QStream> iter = qd.getCueStreams().iterator();
-    while (iter.hasNext()) 
-      mc.addController (new QController( fm, iter.next(), qd ));
+    for (QStream qs : qd.getCueStreams()) 
+      mc.addController (new QController( fm, qs, mc ));
     fm.setReceiver( mc );
     mc.setDebugMIDI(true);
 

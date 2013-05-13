@@ -3,9 +3,12 @@ package qualm;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static qualm.MidiCommand.NOTE_ON;
 
 import java.util.ArrayList;
@@ -38,8 +41,8 @@ public class QControllerTest {
     qd.addCueStream( qs );
     qd.prepareCueStreams();
 
-    qc = new QController( mockReceiver, qs, qd );
-    qc.setMaster( mockMaster );
+    when(mockMaster.getQData()).thenReturn(qd);
+    qc = new QController( mockReceiver, qs, mockMaster );
 
     // override the clock
     timeSource = new TestTimeSource();
@@ -81,7 +84,7 @@ public class QControllerTest {
 
     timeSource.setMillis((long) 1500); // not accepting triggers
     qc.handleMidiCommand( new MidiCommand( 0, NOTE_ON, 60, 100 ) );
-    verifyNoMoreInteractions(mockMaster);
+    verify(mockMaster, never()).sendEvents(argThat(containsEvents(firstCue().getEvents())));
     assertEquals( second, qc.getCurrentCue() );
 
     timeSource.setMillis((long) 2200); // accepting triggers again
@@ -96,12 +99,13 @@ public class QControllerTest {
     // We use a 200ms timeout for verify's here, because the extra thread might take a while.
     qc.changesForCue( "1.1" );
     Cue pending = qc.getPendingCue();
+    ContainsEventMatcher matchesSecondCue = containsEvents(secondCue().getEvents());
+
     timeSource.setMillis((long) 1000); // set time
     qc.handleMidiCommand( new MidiCommand( 0, NOTE_ON, 108, 100 ) ); // delay of 10 seconds = 10000
-    verifyNoMoreInteractions(mockMaster);
+    verify(mockMaster, never()).sendEvents(argThat(matchesSecondCue));
 
     timeSource.setMillis((long) 5000); // time not there, we shouldn't see any triggers
-    ContainsEventMatcher matchesSecondCue = containsEvents(secondCue().getEvents());
     verify(mockMaster, timeout(200).never()).sendEvents(argThat(matchesSecondCue));
 
     timeSource.setMillis((long) 12000); // by now we should have triggered
@@ -114,12 +118,13 @@ public class QControllerTest {
   public void doubleTriggerGetsIgnored() {
     // We use a 200ms timeout for verify's here, because the extra thread might take a while.
     qc.changesForCue( "1.1" );
-    Cue pending = qc.getPendingCue();
-    timeSource.setMillis((long) 1000); // set time
-    qc.handleMidiCommand( new MidiCommand( 0, NOTE_ON, 108, 100 ) ); // delay of 10 seconds = 10000
-    verifyNoMoreInteractions(mockMaster);
-
+    Cue pending = qc.getPendingCue(); 
     ContainsEventMatcher matchesSecondCue = containsEvents(secondCue().getEvents());
+
+   timeSource.setMillis((long) 1000); // set time
+    qc.handleMidiCommand( new MidiCommand( 0, NOTE_ON, 108, 100 ) ); // delay of 10 seconds = 10000
+    verify(mockMaster, never()).sendEvents(argThat(matchesSecondCue));
+
     timeSource.setMillis((long) 5000); // time not there, we shouldn't see any triggers
     verify(mockMaster, timeout(200).never()).sendEvents(argThat(matchesSecondCue));
 

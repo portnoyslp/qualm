@@ -98,14 +98,14 @@ public class QualmREPLTest {
 
   @Test
   public void dumpCommand() throws Exception {
-    when(subController.getQData()).thenReturn(minimalData());
+    when(controller.getQData()).thenReturn(minimalData());
     repl.processLine("dump");
     assertNotNull(output.toString());
   }
 
   @Test
   public void showXmlCommand() throws Exception {
-    when(subController.getQData()).thenReturn(minimalData());
+    when(controller.getQData()).thenReturn(minimalData());
     repl.processLine("showxml");
     assertNotNull(output.toString());
   }
@@ -124,7 +124,7 @@ public class QualmREPLTest {
   
   @Test
   public void cueUpdateOutput() throws Exception {
-    when(subController.getQData()).thenReturn(minimalData());
+    when(controller.getQData()).thenReturn(minimalData());
     Cue cue = minimalData().getCueStreams().iterator().next().getCues().first();
     Patch p = new Patch("Patch1", 23);
     p.setDescription("aPatch");

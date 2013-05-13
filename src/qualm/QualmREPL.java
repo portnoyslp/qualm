@@ -52,11 +52,11 @@ public class QualmREPL extends Thread {
     controller.removeControllers();
 
     QData qdata = Qualm.loadQDataFromFilename(filename);
+    controller.setQData(qdata);
 
     // For each cue stream, start a controller
     for(QStream qs : qdata.getCueStreams()) {
-      QController qc = new QController( controller.getMidiOut(), 
-					qs, qdata );
+      QController qc = new QController( controller.getMidiOut(), qs, controller );
       controller.addController(qc);
     }
 
@@ -174,7 +174,7 @@ public class QualmREPL extends Thread {
     }
 
     // print out the cue changes
-    QData qd = controller.mainQC().getQData();
+    QData qd = controller.getQData();
     for (QEvent obj : c) {
       if (obj instanceof ProgramChangeEvent) {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
@@ -232,7 +232,7 @@ public class QualmREPL extends Thread {
       }
 
       if (lowerCase.equals("dump")) {
-	controller.mainQC().getQData().dump(output);
+	controller.getQData().dump(output);
       
       } else if (lowerCase.equals("reset")) {
 	reset();
@@ -261,7 +261,7 @@ public class QualmREPL extends Thread {
 	loadFilename( filename );
 
       } else if (lowerCase.startsWith("showxml")) {
-    	QDataXMLReader.outputXML(controller.mainQC().getQData(), output);
+    	QDataXMLReader.outputXML(controller.getQData(), output);
     	output.println("");
     	  
       } else if (lowerCase.startsWith("reload")) {

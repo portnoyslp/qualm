@@ -25,6 +25,7 @@ public class MasterController implements QReceiver {
   boolean debugMIDI = false;
   boolean silentErrorHandling = true;
   private PluginManager pluginManager;
+  private QData qdata;
   
   public MasterController( QReceiver out ) {
     midiOut = new VerboseReceiver(out);
@@ -50,6 +51,9 @@ public class MasterController implements QReceiver {
   public void removeControllers() {
     controllers.clear();
   }
+
+  public QData getQData() { return qdata; }
+  public void setQData(QData qdata) { this.qdata = qdata; }
 
   public QController mainQC() { 
     return (QController) controllers.get(controllers.firstKey()); 
