@@ -1,9 +1,9 @@
 package qualm;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import qualm.plugins.CueChangeNotification;
@@ -12,32 +12,32 @@ import qualm.plugins.PatchChangeNotification;
 import qualm.plugins.QualmPlugin;
 
 public class PluginManager {
-  public List<CueChangeNotification> cuePlugins = new ArrayList<CueChangeNotification>();
-  public List<PatchChangeNotification> patchPlugins = new ArrayList<PatchChangeNotification>();
-  public List<EventMapperNotification> mapperPlugins = new ArrayList<EventMapperNotification>();
+  public Collection<CueChangeNotification> cuePlugins = new ArrayList<CueChangeNotification>();
+  public Collection<PatchChangeNotification> patchPlugins = new ArrayList<PatchChangeNotification>();
+  public Collection<EventMapperNotification> mapperPlugins = new ArrayList<EventMapperNotification>();
   
-  public List<CueChangeNotification> getCuePlugins() {
+  public Collection<CueChangeNotification> getCuePlugins() {
     return cuePlugins;
   }
   
-  public List<PatchChangeNotification> getPatchPlugins() {
+  public Collection<PatchChangeNotification> getPatchPlugins() {
     return patchPlugins;
   }
   
-  public List<EventMapperNotification> getMapperPlugins() {
+  public Collection<EventMapperNotification> getMapperPlugins() {
     return mapperPlugins;
   }
   
-  public void addCuePlugin(CueChangeNotification plugin) {
-    getCuePlugins().add(plugin);
+  private void addCuePlugin(CueChangeNotification plugin) {
+    cuePlugins.add(plugin);
   }
   
-  public void addPatchPlugin(PatchChangeNotification plugin) {
-    getPatchPlugins().add(plugin);
+  private void addPatchPlugin(PatchChangeNotification plugin) {
+    patchPlugins.add(plugin);
   }
   
-  public void addMapperPlugin(EventMapperNotification plugin) {
-    getMapperPlugins().add(plugin);
+  private void addMapperPlugin(EventMapperNotification plugin) {
+    mapperPlugins.add(plugin);
   }
 
   public void handleCuePlugins(MasterController masterController) {
@@ -64,14 +64,17 @@ public class PluginManager {
     try {
       cls = Class.forName(name);
       if (Class.forName("qualm.plugins.QualmPlugin").isAssignableFrom(cls)) {
-        addPlugin((QualmPlugin)cls.newInstance());
+        boolean added = addPlugin((QualmPlugin)cls.newInstance());
+        if (added) {
+          return;
+        }
       }
     } catch (Exception e) { }
     
     throw new IllegalArgumentException("Could not start plugin '" + name + "'");
   }
 
-  private boolean addPlugin(QualmPlugin qp) throws ClassNotFoundException {
+  public boolean addPlugin(QualmPlugin qp) throws ClassNotFoundException {
     Class<? extends QualmPlugin> cls = qp.getClass();
     qp.initialize();
     boolean added = false;
@@ -111,7 +114,16 @@ public class PluginManager {
         patchPluginIter.remove();
       }
     }
-  
+    Iterator<EventMapperNotification> mapperPluginIter = getMapperPlugins().iterator();
+    while(mapperPluginIter.hasNext()) {
+      EventMapperNotification obj = mapperPluginIter.next();
+      // remove plugins that match the name.
+      if (obj.getClass().getName().equals( name )) {
+        removed.add(obj);
+        mapperPluginIter.remove();
+      }
+    }
+
     // shutdown all the removed plugins
     for (QualmPlugin qp : removed) 
       qp.shutdown();

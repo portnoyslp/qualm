@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.anyObject;
-import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -26,8 +25,6 @@ import java.util.prefs.Preferences;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.InstanceOf;
-
 import qualm.plugins.CueChangeNotification;
 import qualm.plugins.EventMapperNotification;
 import qualm.plugins.PatchChangeNotification;
@@ -249,5 +246,5 @@ public class QualmREPLTest {
 
     @Override
     public void activeEventMapper(MasterController mc) { }
-    }
+  }
 }

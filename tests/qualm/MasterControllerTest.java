@@ -55,7 +55,7 @@ public class MasterControllerTest {
   @Test
   public void cuePluginUpdate() throws Exception {
     CueChangeNotification ccn = mock(CueChangeNotification.class);
-    mc.getPluginManager().addCuePlugin(ccn);
+    mc.getPluginManager().addPlugin(ccn);
     mc.getPluginManager().handleCuePlugins(mc);
     verify(ccn).cueChange(mc);
   }
