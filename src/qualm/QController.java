@@ -58,6 +58,7 @@ public class QController extends AbstractQReceiver {
     waitForTime=-1;
     return false;
   }
+  
   private void setTimeOut() {
     waitForTime = Clock.asMillis() + ignoreEventsTimeMsec;
   }

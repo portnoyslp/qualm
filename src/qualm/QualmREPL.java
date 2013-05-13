@@ -223,7 +223,7 @@ public class QualmREPL extends Thread {
 	line.trim().startsWith("\\") ||
 	line.trim().startsWith("]")) {
       // advance the "mainline" patch
-      controller.mainQC().advancePatch();
+      controller.advanceMainPatch();
     } else {
       String lowerCase = line.toLowerCase();
 

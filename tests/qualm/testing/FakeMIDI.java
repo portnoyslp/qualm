@@ -1,8 +1,6 @@
 package qualm.testing;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import qualm.MasterController;
 import qualm.MidiCommand;
 import qualm.QController;

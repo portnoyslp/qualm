@@ -63,9 +63,7 @@ public class QualmREPLTest {
   
   private void setupController() throws Exception {
     controller = mock(MasterController.class);
-    subController = mock(QController.class);
     pluginManager = mock(PluginManager.class);
-    when(controller.mainQC()).thenReturn(subController);
     when(controller.getPluginManager()).thenReturn(pluginManager);
     repl.setMasterController(controller);
   }
@@ -81,7 +79,7 @@ public class QualmREPLTest {
     repl.processLine(null);
     repl.processLine("]");  // oops; hit the wrong key and rolled to the enter key
     repl.processLine("\\"); // oops; hit the wrong key and rolled to the enter key
-    verify(subController, times(4)).advancePatch();
+    verify(controller, times(4)).advanceMainPatch();
   }
 
   @Test

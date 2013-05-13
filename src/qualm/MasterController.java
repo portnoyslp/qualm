@@ -59,6 +59,10 @@ public class MasterController implements QReceiver {
     return (QController) controllers.get(controllers.firstKey()); 
   }
 
+  public void advanceMainPatch() {
+    mainQC().advancePatch();
+  }
+  
   public void gotoCue(String cueName) {
     // send all controllers to the cue number named in the line
     Collection<QEvent> sentPCs = new ArrayList<QEvent>();
