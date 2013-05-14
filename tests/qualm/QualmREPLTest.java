@@ -4,7 +4,6 @@ import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -18,8 +17,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.Preferences;
 
 import org.junit.Before;
@@ -41,8 +38,6 @@ public class QualmREPLTest {
   StringWriter output;
   Writer input;
   QualmREPL repl;
-  final static AtomicReference<String> lastCue = new AtomicReference<String>(null);
-  final static AtomicInteger pluginCount = new AtomicInteger(0);
   Preferences prefs;
   
   @Before
@@ -55,10 +50,7 @@ public class QualmREPLTest {
     PipedReader reader = new PipedReader();
     input = new PipedWriter(reader);
     repl = new QualmREPL(reader, output);
-    setupController();
-    pluginCount.set(0);
-    lastCue.set(null);
-    
+    setupController();   
   }
   
   private void setupController() throws Exception {
@@ -216,23 +208,14 @@ public class QualmREPLTest {
 
     public AllPlugin() { }
     
-    @Override public void initialize() { 
-      pluginCount.incrementAndGet();
-    }
+    @Override public void initialize() { }
 
-    @Override public void shutdown() {
-      pluginCount.decrementAndGet();
-    }
+    @Override public void shutdown() { }
     
-    @Override
-    public void cueChange(MasterController mc) {
-      lastCue.set(mc.mainQC().getCurrentCue().getCueNumber());
-    }
+    @Override public void cueChange(MasterController mc) { }
 
-    @Override
-    public void patchChange(int channel, String channelName, Patch patch) { }
+    @Override public void patchChange(int channel, String channelName, Patch patch) { }
 
-    @Override
-    public void activeEventMapper(MasterController mc) { }
+    @Override public void activeEventMapper(MasterController mc) { }
   }
 }
