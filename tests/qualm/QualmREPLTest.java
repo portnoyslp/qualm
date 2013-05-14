@@ -196,9 +196,7 @@ public class QualmREPLTest {
     repl.processLine("load " + filename);
     repl.processLine("reload");
 
-    // for each line, we should have removed all controllers, and added a control for each stream
-    verify(controller, times(2)).removeControllers();
-    verify(controller, times(4)).addController((QController)anyObject());
+    verify(controller, times(2)).loadFilename(filename);
   }
 
   private QData minimalData() {

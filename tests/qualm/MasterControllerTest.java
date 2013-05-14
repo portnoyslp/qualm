@@ -1,6 +1,8 @@
 package qualm;
 
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,5 +60,13 @@ public class MasterControllerTest {
     mc.getPluginManager().addPlugin(ccn);
     mc.getPluginManager().handleCuePlugins(mc);
     verify(ccn).cueChange(mc);
+  }
+  
+  public void loading() throws Exception {
+    String filename = "tests/qualm/qdl-1.xml";
+    mc.loadFilename(filename);
+    // we should have removed all controllers, and added a control for each stream
+    verify(mc, times(1)).removeControllers();
+    verify(mc, times(2)).addController((QController)anyObject());
   }
 }

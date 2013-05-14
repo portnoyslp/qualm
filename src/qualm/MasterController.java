@@ -228,4 +228,19 @@ public class MasterController implements QReceiver {
   Set<QualmPlugin> removePlugin(String name) {
     return pluginManager.removePlugin(name);
   }
+  
+  public void loadFilename( String filename ) {
+    // remove existing controllers
+    removeControllers();
+
+    QData qdata = Qualm.loadQDataFromFilename(filename);
+    setQData(qdata);
+
+    // For each cue stream, start a controller
+    for(QStream qs : qdata.getCueStreams()) {
+      QController qc = new QController( getMidiOut(), qs, this );
+      addController(qc);
+    }
+  }
+
 }

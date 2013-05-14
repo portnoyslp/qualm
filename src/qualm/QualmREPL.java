@@ -41,19 +41,7 @@ public class QualmREPL extends Thread {
 
   public void loadFilename( String filename ) {
     inputFilename = filename;
-
-    // remove existing controllers
-    controller.removeControllers();
-
-    QData qdata = Qualm.loadQDataFromFilename(filename);
-    controller.setQData(qdata);
-
-    // For each cue stream, start a controller
-    for(QStream qs : qdata.getCueStreams()) {
-      QController qc = new QController( controller.getMidiOut(), qs, controller );
-      controller.addController(qc);
-    }
-
+    controller.loadFilename(filename);
     output.println( "Loaded data from " + filename );
 
     if (isRunning)
