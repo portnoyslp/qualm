@@ -18,6 +18,7 @@ import qualm.plugins.QualmPlugin;
  */
 
 public class MasterController implements QReceiver {
+  private static PreferencesManager preferencesManager = new PreferencesManager();
 
   QReceiver midiOut;
   SortedMap<String, QController> controllers;
@@ -31,6 +32,7 @@ public class MasterController implements QReceiver {
     midiOut = new VerboseReceiver(out);
     controllers = new TreeMap<String, QController>();
     setPluginManager(new PluginManager());
+    preferencesManager.setController(this);
   }
 
   public QReceiver getMidiOut() { return midiOut; }
@@ -42,6 +44,8 @@ public class MasterController implements QReceiver {
     pluginManager = pm;
   }
   public PluginManager getPluginManager() { return pluginManager; }
+  
+  public PreferencesManager getPreferencesManager() { return preferencesManager; }
   
   public void addController( QController qc ) {
     controllers.put( qc.getTitle(), qc );

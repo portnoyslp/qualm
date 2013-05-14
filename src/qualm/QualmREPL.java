@@ -7,10 +7,8 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.prefs.Preferences;
 
 import qualm.plugins.CueChangeNotification;
 import qualm.plugins.EventMapperNotification;
@@ -18,14 +16,10 @@ import qualm.plugins.PatchChangeNotification;
 import qualm.plugins.QualmPlugin;
 
 public class QualmREPL extends Thread {
-  // Preference keys
-  private static final String PLUGINS_PREFKEY = "plugins";
-  private static Preferences prefs = 
-    Preferences.userNodeForPackage(QualmREPL.class);
-
-  private MasterController controller = null;
+  
+  MasterController controller = null;
   private final BufferedReader reader;
-  private final PrintWriter output;
+  final PrintWriter output;
   private String inputFilename = null;
   private boolean isRunning = false;
   private boolean readlineHandlesPrompt = false;
@@ -68,43 +62,18 @@ public class QualmREPL extends Thread {
   
   // visible for testing
   void loadPreferences() {
-    // load all the preferences available.
-    String pluginNames = prefs.get(PLUGINS_PREFKEY,"");
-    StringTokenizer st = new StringTokenizer(pluginNames,",");
-    while (st.hasMoreTokens()) {
-      String pluginName = st.nextToken();
-      try {
-	addPlugin(pluginName);
-      } catch(IllegalArgumentException iae) {
-	output.println("Preferences: could not create or identify plugin '" + pluginName +
-			   "'; ignoring.");
-      }
+    try {
+      if (controller != null && controller.getPreferencesManager() != null)
+        controller.getPreferencesManager().loadPreferences();
+      
+    } catch (IllegalArgumentException iae) {
+      output.println("Preferences: could not create or identify plugin '" + iae.getMessage() +
+      "'; ignoring.");
     }
   }
 
   private void savePreferences() {
-    // store all the preferences information
-    boolean init;
-    String out;
-    PluginManager pm = controller.getPluginManager();
-
-    // combine cue and patch plugins into one
-    Set<String> plugins = new HashSet<String>();
-    for (PatchChangeNotification plugin : pm.getPatchPlugins()) {
-      plugins.add(plugin.getClass().getName());
-    }
-    for (CueChangeNotification plugin : pm.getCuePlugins()) {
-      plugins.add(plugin.getClass().getName());
-    }
-
-    // and now we get all the names at once...
-    init = true;
-    out = "";
-    for (String name : plugins) {
-      out += (init ? "" : ",") + name;
-      init = false;
-    }
-    prefs.put(PLUGINS_PREFKEY,out);
+    controller.getPreferencesManager().savePreferences();
   }
 
   private String promptString() {
@@ -278,7 +247,7 @@ public class QualmREPL extends Thread {
     readlineHandlesPrompt = false;
   }
 
-  private void addPlugin(String name) {
+  void addPlugin(String name) {
     if (controller != null) {
       controller.getPluginManager().addPlugin(name);
     }

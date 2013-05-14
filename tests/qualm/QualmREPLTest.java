@@ -34,10 +34,10 @@ import qualm.plugins.PatchChangeNotification;
  */
 public class QualmREPLTest {
   
-  private static final String PLUGIN_KEY = "plugins";
   @Mock MasterController controller;
-  @Mock QController subController;
   @Mock PluginManager pluginManager;
+  @Mock PreferencesManager preferencesManager;
+  
   StringWriter output;
   Writer input;
   QualmREPL repl;
@@ -64,7 +64,9 @@ public class QualmREPLTest {
   private void setupController() throws Exception {
     controller = mock(MasterController.class);
     pluginManager = mock(PluginManager.class);
+    preferencesManager = mock(PreferencesManager.class);
     when(controller.getPluginManager()).thenReturn(pluginManager);
+    when(controller.getPreferencesManager()).thenReturn(preferencesManager);
     repl.setMasterController(controller);
   }
   
@@ -178,24 +180,14 @@ public class QualmREPLTest {
 
   @Test
   public void preferenceSaving() throws Exception {
-    List<CueChangeNotification> cuePlugins = new ArrayList<CueChangeNotification>();
-    List<PatchChangeNotification> patchPlugins = new ArrayList<PatchChangeNotification>();
-    cuePlugins.add(new AllPlugin());
-    patchPlugins.add(new AllPlugin());
-    String pluginName = "qualm.QualmREPLTest$AllPlugin";
-    when(pluginManager.getCuePlugins()).thenReturn(cuePlugins);
-    when(pluginManager.getPatchPlugins()).thenReturn(patchPlugins);
-
-    repl.processLine("plugin " + pluginName);
     repl.processLine("save");
-    assertEquals(pluginName, prefs.get(PLUGIN_KEY, ""));
+    verify(preferencesManager).savePreferences();
   }
   
   @Test
   public void preferenceLoading() throws Exception {
-    prefs.put(PLUGIN_KEY, "qualm.QualmREPLTest$AllPlugin");
     repl.loadPreferences();
-    verify(pluginManager).addPlugin("qualm.QualmREPLTest$AllPlugin");
+    verify(preferencesManager).loadPreferences();
   }
   
   @Test
