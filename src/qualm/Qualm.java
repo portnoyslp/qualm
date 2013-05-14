@@ -145,8 +145,7 @@ public class Qualm {
     MasterController mc = new MasterController( jmr );
     if (debugMIDI) mc.setDebugMIDI(true);
 
-    QualmREPL repl = new QualmREPL();
-    repl.setMasterController( mc );
+    QualmREPL repl = new QualmREPL( mc );
 
     // connect the transmitter to the receiver.
     if (!skipMIDI)

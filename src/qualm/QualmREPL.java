@@ -24,21 +24,18 @@ public class QualmREPL extends Thread {
   private boolean isRunning = false;
   private boolean readlineHandlesPrompt = false;
 
-  public QualmREPL( ) {
-    this(new InputStreamReader( System.in ), new PrintWriter( System.out ));
+  public QualmREPL( MasterController mc ) {
+    this(new InputStreamReader( System.in ), new PrintWriter( System.out ), mc);
   }
 
-  QualmREPL(Reader reader, Writer output) {
+  QualmREPL(Reader reader, Writer output, MasterController mc) {
     this.reader = new BufferedReader(reader);
     this.output = new PrintWriter(output);
+    controller = mc;
+    controller.setREPL(this);
     loadPreferences();
   }
   
-  public void setMasterController(MasterController mc) { 
-    controller = mc; 
-    controller.setREPL(this);
-  }
-
   public void loadFilename( String filename ) {
     inputFilename = filename;
     controller.loadFilename(filename);

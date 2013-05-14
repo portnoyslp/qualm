@@ -197,7 +197,6 @@ public class MasterController implements QReceiver {
       REPL.updateCue( c );
   }
 
-
   public void setDebugMIDI(boolean flag) { 
     debugMIDI=flag; 
     if (midiOut instanceof VerboseReceiver) 

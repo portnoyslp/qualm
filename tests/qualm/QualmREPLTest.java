@@ -49,8 +49,8 @@ public class QualmREPLTest {
     output = new StringWriter();
     PipedReader reader = new PipedReader();
     input = new PipedWriter(reader);
-    repl = new QualmREPL(reader, output);
-    setupController();   
+    setupController();
+    repl = new QualmREPL(reader, output, controller);
   }
   
   private void setupController() throws Exception {
@@ -59,7 +59,6 @@ public class QualmREPLTest {
     preferencesManager = mock(PreferencesManager.class);
     when(controller.getPluginManager()).thenReturn(pluginManager);
     when(controller.getPreferencesManager()).thenReturn(preferencesManager);
-    repl.setMasterController(controller);
   }
   
   @Test
@@ -177,8 +176,7 @@ public class QualmREPLTest {
   }
   
   @Test
-  public void preferenceLoading() throws Exception {
-    repl.loadPreferences();
+  public void preferenceLoadingAtStartup() throws Exception {
     verify(preferencesManager).loadPreferences();
   }
   
