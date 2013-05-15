@@ -22,9 +22,10 @@ import java.util.prefs.Preferences;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import qualm.plugins.CueChangeNotification;
-import qualm.plugins.EventMapperNotification;
-import qualm.plugins.PatchChangeNotification;
+
+import qualm.notification.CueChangeNotification;
+import qualm.notification.EventMapperNotification;
+import qualm.notification.PatchChangeNotification;
 
 /**
  * Unit tests for {@link QualmREPL}.

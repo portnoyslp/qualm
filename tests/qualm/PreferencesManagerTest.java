@@ -14,8 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import qualm.plugins.CueChangeNotification;
-import qualm.plugins.PatchChangeNotification;
+import qualm.notification.CueChangeNotification;
+import qualm.notification.PatchChangeNotification;
 
 public class PreferencesManagerTest {
   Preferences prefs;

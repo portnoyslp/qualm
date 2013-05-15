@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 
-import qualm.plugins.CueChangeNotification;
+import qualm.notification.CueChangeNotification;
 
 public class MasterControllerTest {
   MasterController mc;

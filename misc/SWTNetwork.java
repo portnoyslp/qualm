@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import qualm.plugins.NetworkNotificationProtocol;
+import qualm.notification.NetworkNotificationProtocol;
 
 public class SWTNetwork extends Thread {
 

@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import qualm.plugins.CueChangeNotification;
-import qualm.plugins.EventMapperNotification;
-import qualm.plugins.PatchChangeNotification;
-import qualm.plugins.QualmPlugin;
+import qualm.notification.CueChangeNotification;
+import qualm.notification.EventMapperNotification;
+import qualm.notification.PatchChangeNotification;
+import qualm.notification.QualmPlugin;
 
 public class PluginManager {
   public Collection<CueChangeNotification> cuePlugins = new ArrayList<CueChangeNotification>();
@@ -63,7 +63,7 @@ public class PluginManager {
     Class<?> cls;
     try {
       cls = Class.forName(name);
-      if (Class.forName("qualm.plugins.QualmPlugin").isAssignableFrom(cls)) {
+      if (QualmPlugin.class.isAssignableFrom(cls)) {
         boolean added = addPlugin((QualmPlugin)cls.newInstance());
         if (added) {
           return;
@@ -78,15 +78,15 @@ public class PluginManager {
     Class<? extends QualmPlugin> cls = qp.getClass();
     qp.initialize();
     boolean added = false;
-    if (Class.forName("qualm.plugins.CueChangeNotification").isAssignableFrom(cls)) {
+    if (CueChangeNotification.class.isAssignableFrom(cls)) {
       addCuePlugin( (CueChangeNotification) qp );
       added = true;
     }
-    if (Class.forName("qualm.plugins.PatchChangeNotification").isAssignableFrom(cls)) {
+    if (PatchChangeNotification.class.isAssignableFrom(cls)) {
       addPatchPlugin( (PatchChangeNotification) qp );
       added = true;
     }
-    if (Class.forName("qualm.plugins.EventMapperNotification").isAssignableFrom(cls)) {
+    if (EventMapperNotification.class.isAssignableFrom(cls)) {
       addMapperPlugin( (EventMapperNotification) qp );
       added = true;
     }

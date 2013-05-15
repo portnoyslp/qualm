@@ -5,8 +5,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
 
-import qualm.plugins.CueChangeNotification;
-import qualm.plugins.PatchChangeNotification;
+import qualm.notification.CueChangeNotification;
+import qualm.notification.PatchChangeNotification;
 
 public class PreferencesManager {
   private Preferences prefs = Preferences.userNodeForPackage(PreferencesManager.class);

@@ -10,10 +10,10 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import qualm.plugins.CueChangeNotification;
-import qualm.plugins.EventMapperNotification;
-import qualm.plugins.PatchChangeNotification;
-import qualm.plugins.QualmPlugin;
+import qualm.notification.CueChangeNotification;
+import qualm.notification.EventMapperNotification;
+import qualm.notification.PatchChangeNotification;
+import qualm.notification.QualmPlugin;
 
 public class QualmREPL extends Thread {
   

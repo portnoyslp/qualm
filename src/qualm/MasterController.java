@@ -9,7 +9,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import qualm.plugins.QualmPlugin;
+import qualm.notification.QualmPlugin;
 
 /**
  * The main controller for Qualm.  It manages and dispatches incoming

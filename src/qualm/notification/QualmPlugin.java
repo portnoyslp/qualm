@@ -1,4 +1,4 @@
-package qualm.plugins;
+package qualm.notification;
 
 public interface QualmPlugin {
   public void initialize();

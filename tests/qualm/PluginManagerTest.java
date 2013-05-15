@@ -7,9 +7,9 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import qualm.plugins.CueChangeNotification;
-import qualm.plugins.EventMapperNotification;
-import qualm.plugins.PatchChangeNotification;
+import qualm.notification.CueChangeNotification;
+import qualm.notification.EventMapperNotification;
+import qualm.notification.PatchChangeNotification;
 
 
 public class PluginManagerTest {

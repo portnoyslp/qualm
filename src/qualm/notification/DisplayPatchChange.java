@@ -1,4 +1,4 @@
-package qualm.plugins;
+package qualm.notification;
 
 import java.awt.BorderLayout;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package qualm.plugins;
+package qualm.notification;
 
 import qualm.MasterController;
 

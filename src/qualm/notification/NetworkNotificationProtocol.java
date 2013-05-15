@@ -1,4 +1,4 @@
-package qualm.plugins;
+package qualm.notification;
 
 /*
  * The protocol information for sending and receiving queue and patch
