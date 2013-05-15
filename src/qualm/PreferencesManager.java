@@ -45,7 +45,7 @@ public class PreferencesManager {
     while (st.hasMoreTokens()) {
       String pluginName = st.nextToken();
       try {
-        controller.getPluginManager().addPlugin(pluginName);
+        controller.getPluginManager().addNotification(pluginName);
       } catch(IllegalArgumentException iae) {
         throw new IllegalArgumentException(pluginName, iae);
       }
@@ -60,10 +60,10 @@ public class PreferencesManager {
   
     // combine cue and patch plugins into one
     Set<String> plugins = new HashSet<String>();
-    for (PatchChange plugin : pm.getPatchPlugins()) {
+    for (PatchChange plugin : pm.getPatchNotifiers()) {
       plugins.add(plugin.getClass().getName());
     }
-    for (CueChange plugin : pm.getCuePlugins()) {
+    for (CueChange plugin : pm.getCueNotifiers()) {
       plugins.add(plugin.getClass().getName());
     }
   

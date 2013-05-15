@@ -87,8 +87,8 @@ public class QualmREPL extends Thread {
   }
 
   public void updatePrompt() {
-    controller.getPluginManager().handleCuePlugins(controller);
-    controller.getPluginManager().handleMapperPlugins(controller);
+    controller.getPluginManager().handleCueChanges(controller);
+    controller.getPluginManager().handleMapActivations(controller);
     output.print( promptString() );
     output.flush();
   }
@@ -138,7 +138,7 @@ public class QualmREPL extends Thread {
 			    patch.getDescription() );
 	
 	// update the PatchChange plugins
-	controller.getPluginManager().handlePatchPlugins( ch, qd.getMidiChannels()[ch], patch);
+	controller.getPluginManager().handlePatchChanges( ch, qd.getMidiChannels()[ch], patch);
       }
       else if (obj instanceof NoteWindowChangeEvent) {
 	NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
@@ -234,7 +234,7 @@ public class QualmREPL extends Thread {
 
   void addPlugin(String name) {
     if (controller != null) {
-      controller.getPluginManager().addPlugin(name);
+      controller.getPluginManager().addNotification(name);
     }
   }
 
@@ -263,13 +263,13 @@ public class QualmREPL extends Thread {
     tok = st.nextToken();
     if (tok.equals("list")) {
       NotificationManager pm = controller.getPluginManager();
-      for (CueChange ccn : pm.getCuePlugins())
+      for (CueChange ccn : pm.getCueNotifiers())
 	output.println("cue " + ccn.getClass().getName());
 
-      for (PatchChange pcn : pm.getPatchPlugins())
+      for (PatchChange pcn : pm.getPatchNotifiers())
 	output.println("patch " + pcn.getClass().getName());
 
-      for (EventMapActivation emn : pm.getMapperPlugins())
+      for (EventMapActivation emn : pm.getMapNotifiers())
 	output.println("mapper " + emn.getClass().getName());
       return;
 

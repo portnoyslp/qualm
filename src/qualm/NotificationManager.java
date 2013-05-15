@@ -12,59 +12,59 @@ import qualm.notification.PatchChange;
 import qualm.notification.QualmNotification;
 
 public class NotificationManager {
-  public Collection<CueChange> cuePlugins = new ArrayList<CueChange>();
-  public Collection<PatchChange> patchPlugins = new ArrayList<PatchChange>();
-  public Collection<EventMapActivation> mapperPlugins = new ArrayList<EventMapActivation>();
+  public Collection<CueChange> cueNotifiers = new ArrayList<CueChange>();
+  public Collection<PatchChange> patchNotifiers = new ArrayList<PatchChange>();
+  public Collection<EventMapActivation> mapNotifiers = new ArrayList<EventMapActivation>();
   
-  public Collection<CueChange> getCuePlugins() {
-    return cuePlugins;
+  public Collection<CueChange> getCueNotifiers() {
+    return cueNotifiers;
   }
   
-  public Collection<PatchChange> getPatchPlugins() {
-    return patchPlugins;
+  public Collection<PatchChange> getPatchNotifiers() {
+    return patchNotifiers;
   }
   
-  public Collection<EventMapActivation> getMapperPlugins() {
-    return mapperPlugins;
+  public Collection<EventMapActivation> getMapNotifiers() {
+    return mapNotifiers;
   }
   
-  private void addCuePlugin(CueChange plugin) {
-    cuePlugins.add(plugin);
+  private void addCueNotifier(CueChange notifier) {
+    cueNotifiers.add(notifier);
   }
   
-  private void addPatchPlugin(PatchChange plugin) {
-    patchPlugins.add(plugin);
+  private void addPatchNotifier(PatchChange notifier) {
+    patchNotifiers.add(notifier);
   }
   
-  private void addMapperPlugin(EventMapActivation plugin) {
-    mapperPlugins.add(plugin);
+  private void addMapNotifier(EventMapActivation notifier) {
+    mapNotifiers.add(notifier);
   }
 
-  public void handleCuePlugins(MasterController masterController) {
-    for (CueChange plugin : getCuePlugins()) {
-      plugin.cueChange(masterController);
+  public void handleCueChanges(MasterController masterController) {
+    for (CueChange change : getCueNotifiers()) {
+      change.cueChange(masterController);
     }
   }
   
-  public void handlePatchPlugins(int ch, String name, Patch p) {
-    for (PatchChange plugin : getPatchPlugins()) {
-      plugin.patchChange(ch,name,p);
+  public void handlePatchChanges(int ch, String name, Patch p) {
+    for (PatchChange change : getPatchNotifiers()) {
+      change.patchChange(ch,name,p);
     }
   }
   
-  public void handleMapperPlugins(MasterController masterController) {
-    for (EventMapActivation plugin : getMapperPlugins()) {
-      plugin.activeEventMapper(masterController);
+  public void handleMapActivations(MasterController masterController) {
+    for (EventMapActivation activation : getMapNotifiers()) {
+      activation.activeEventMapper(masterController);
     }
   }
   
-  public void addPlugin(String name) {
+  public void addNotification(String name) {
     // should be a class spec; try instantiating an object for this
     Class<?> cls;
     try {
       cls = Class.forName(name);
       if (QualmNotification.class.isAssignableFrom(cls)) {
-        boolean added = addPlugin((QualmNotification)cls.newInstance());
+        boolean added = addNotification((QualmNotification)cls.newInstance());
         if (added) {
           return;
         }
@@ -74,57 +74,54 @@ public class NotificationManager {
     throw new IllegalArgumentException("Could not start plugin '" + name + "'");
   }
 
-  public boolean addPlugin(QualmNotification qp) throws ClassNotFoundException {
+  public boolean addNotification(QualmNotification qp) throws ClassNotFoundException {
     Class<? extends QualmNotification> cls = qp.getClass();
     qp.initialize();
     boolean added = false;
     if (CueChange.class.isAssignableFrom(cls)) {
-      addCuePlugin( (CueChange) qp );
+      addCueNotifier( (CueChange) qp );
       added = true;
     }
     if (PatchChange.class.isAssignableFrom(cls)) {
-      addPatchPlugin( (PatchChange) qp );
+      addPatchNotifier( (PatchChange) qp );
       added = true;
     }
     if (EventMapActivation.class.isAssignableFrom(cls)) {
-      addMapperPlugin( (EventMapActivation) qp );
+      addMapNotifier( (EventMapActivation) qp );
       added = true;
     }
     return added;
   }
 
-  public Set<QualmNotification> removePlugin(String name) {
+  public Set<QualmNotification> removeNotification(String name) {
     Set<QualmNotification> removed = new HashSet<QualmNotification>();
   
-    Iterator<CueChange> cuePluginIter = getCuePlugins().iterator();
-    while(cuePluginIter.hasNext()) {
-      CueChange obj = cuePluginIter.next();
-      // remove plugins that match the name.
+    Iterator<CueChange> cueNotificationIter = getCueNotifiers().iterator();
+    while(cueNotificationIter.hasNext()) {
+      CueChange obj = cueNotificationIter.next();
       if (obj.getClass().getName().equals( name )) {
         removed.add(obj);
-        cuePluginIter.remove();
+        cueNotificationIter.remove();
       }
     }
-    Iterator<PatchChange> patchPluginIter = getPatchPlugins().iterator();
-    while (patchPluginIter.hasNext()) {
-      // remove plugins that match the name.
-      PatchChange obj = patchPluginIter.next();
+    Iterator<PatchChange> patchNotificationIter = getPatchNotifiers().iterator();
+    while (patchNotificationIter.hasNext()) {
+      PatchChange obj = patchNotificationIter.next();
       if (obj.getClass().getName().equals( name )) {
         removed.add(obj);
-        patchPluginIter.remove();
+        patchNotificationIter.remove();
       }
     }
-    Iterator<EventMapActivation> mapperPluginIter = getMapperPlugins().iterator();
-    while(mapperPluginIter.hasNext()) {
-      EventMapActivation obj = mapperPluginIter.next();
-      // remove plugins that match the name.
+    Iterator<EventMapActivation> mapNotificationIter = getMapNotifiers().iterator();
+    while(mapNotificationIter.hasNext()) {
+      EventMapActivation obj = mapNotificationIter.next();
       if (obj.getClass().getName().equals( name )) {
         removed.add(obj);
-        mapperPluginIter.remove();
+        mapNotificationIter.remove();
       }
     }
 
-    // shutdown all the removed plugins
+    // shutdown all the removed notifications
     for (QualmNotification qp : removed) 
       qp.shutdown();
   

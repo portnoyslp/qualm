@@ -139,7 +139,7 @@ public class QualmREPLTest {
   public void addUnknownPlugin() throws Exception {
     String badPlugin = "qualm.plugins.DoesNotExist";
     doThrow(new IllegalArgumentException())
-      .when(pluginManager).addPlugin(badPlugin);
+      .when(pluginManager).addNotification(badPlugin);
     repl.processLine("plugin " + badPlugin);
     assertThat(output.toString(), containsString("Unable to create or identify"));
   }
@@ -154,7 +154,7 @@ public class QualmREPLTest {
   public void basicPluginHandling() throws Exception {
     String pluginName = "qualm.QualmREPLTest$AllPlugin";
     repl.processLine("plugin " + pluginName);
-    verify(pluginManager).addPlugin(pluginName);
+    verify(pluginManager).addNotification(pluginName);
     
     repl.processLine("plugin remove " + pluginName);
     verify(controller).removePlugin(pluginName);
@@ -164,7 +164,7 @@ public class QualmREPLTest {
   public void pluginList() throws Exception {
     List<CueChange> plugins = new ArrayList<CueChange>();
     plugins.add(new AllPlugin());
-    when(pluginManager.getCuePlugins()).thenReturn(plugins);
+    when(pluginManager.getCueNotifiers()).thenReturn(plugins);
 
     repl.processLine("plugin list");
     assertThat(output.toString(), containsString("cue qualm.QualmREPLTest$AllPlugin"));

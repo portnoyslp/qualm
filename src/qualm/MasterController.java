@@ -225,7 +225,7 @@ public class MasterController implements QReceiver {
   }
 
   Set<QualmNotification> removePlugin(String name) {
-    return pluginManager.removePlugin(name);
+    return pluginManager.removeNotification(name);
   }
   
   public void loadFilename( String filename ) {

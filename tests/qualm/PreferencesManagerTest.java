@@ -42,7 +42,7 @@ public class PreferencesManagerTest {
   public void preferenceLoading() throws Exception {
     prefs.put(PLUGIN_KEY, "qualm.QualmREPLTest$AllPlugin");
     preferencesManager.loadPreferences();
-    verify(pluginManager).addPlugin("qualm.QualmREPLTest$AllPlugin");
+    verify(pluginManager).addNotification("qualm.QualmREPLTest$AllPlugin");
   }
   
   @Test
@@ -51,8 +51,8 @@ public class PreferencesManagerTest {
     List<PatchChange> patchPlugins = new ArrayList<PatchChange>();
     cuePlugins.add(new CuePlugin());
     patchPlugins.add(new PatchPlugin());
-    when(pluginManager.getCuePlugins()).thenReturn(cuePlugins);
-    when(pluginManager.getPatchPlugins()).thenReturn(patchPlugins);
+    when(pluginManager.getCueNotifiers()).thenReturn(cuePlugins);
+    when(pluginManager.getPatchNotifiers()).thenReturn(patchPlugins);
 
     preferencesManager.savePreferences();
     assertThat(prefs.get(PLUGIN_KEY, ""), containsString("qualm.PreferencesManagerTest$CuePlugin"));
