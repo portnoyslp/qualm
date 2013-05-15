@@ -2,6 +2,6 @@ package qualm.notification;
 
 import qualm.MasterController;
 
-public interface CueChangeNotification extends QualmNotification { 
+public interface CueChangeNote extends QualmNotification { 
   public void cueChange(MasterController mc);
 }

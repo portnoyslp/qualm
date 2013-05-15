@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 
-import qualm.notification.CueChangeNotification;
+import qualm.notification.CueChangeNote;
 
 public class MasterControllerTest {
   MasterController mc;
@@ -56,7 +56,7 @@ public class MasterControllerTest {
 
   @Test
   public void cuePluginUpdate() throws Exception {
-    CueChangeNotification ccn = mock(CueChangeNotification.class);
+    CueChangeNote ccn = mock(CueChangeNote.class);
     mc.getPluginManager().addPlugin(ccn);
     mc.getPluginManager().handleCuePlugins(mc);
     verify(ccn).cueChange(mc);

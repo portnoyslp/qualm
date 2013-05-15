@@ -23,9 +23,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import qualm.notification.CueChangeNotification;
-import qualm.notification.EventMapperNotification;
-import qualm.notification.PatchChangeNotification;
+import qualm.notification.CueChangeNote;
+import qualm.notification.EventMapperNote;
+import qualm.notification.PatchChangeNote;
 
 /**
  * Unit tests for {@link QualmREPL}.
@@ -162,7 +162,7 @@ public class QualmREPLTest {
   
   @Test
   public void pluginList() throws Exception {
-    List<CueChangeNotification> plugins = new ArrayList<CueChangeNotification>();
+    List<CueChangeNote> plugins = new ArrayList<CueChangeNote>();
     plugins.add(new AllPlugin());
     when(pluginManager.getCuePlugins()).thenReturn(plugins);
 
@@ -203,7 +203,7 @@ public class QualmREPLTest {
   }
   
   private static class AllPlugin 
-    implements CueChangeNotification, PatchChangeNotification, EventMapperNotification {
+    implements CueChangeNote, PatchChangeNote, EventMapperNote {
 
     public AllPlugin() { }
     

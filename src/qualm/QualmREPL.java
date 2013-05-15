@@ -10,9 +10,9 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import qualm.notification.CueChangeNotification;
-import qualm.notification.EventMapperNotification;
-import qualm.notification.PatchChangeNotification;
+import qualm.notification.CueChangeNote;
+import qualm.notification.EventMapperNote;
+import qualm.notification.PatchChangeNote;
 import qualm.notification.QualmNotification;
 
 public class QualmREPL extends Thread {
@@ -263,13 +263,13 @@ public class QualmREPL extends Thread {
     tok = st.nextToken();
     if (tok.equals("list")) {
       NotificationManager pm = controller.getPluginManager();
-      for (CueChangeNotification ccn : pm.getCuePlugins())
+      for (CueChangeNote ccn : pm.getCuePlugins())
 	output.println("cue " + ccn.getClass().getName());
 
-      for (PatchChangeNotification pcn : pm.getPatchPlugins())
+      for (PatchChangeNote pcn : pm.getPatchPlugins())
 	output.println("patch " + pcn.getClass().getName());
 
-      for (EventMapperNotification emn : pm.getMapperPlugins())
+      for (EventMapperNote emn : pm.getMapperPlugins())
 	output.println("mapper " + emn.getClass().getName());
       return;
 

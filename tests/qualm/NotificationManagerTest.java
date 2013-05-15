@@ -7,9 +7,9 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import qualm.notification.CueChangeNotification;
-import qualm.notification.EventMapperNotification;
-import qualm.notification.PatchChangeNotification;
+import qualm.notification.CueChangeNote;
+import qualm.notification.EventMapperNote;
+import qualm.notification.PatchChangeNote;
 
 
 public class NotificationManagerTest {
@@ -48,7 +48,7 @@ public class NotificationManagerTest {
   
   @Test
   public void pluginInitialized() throws Exception {
-    CueChangeNotification ccn = mock(CueChangeNotification.class);
+    CueChangeNote ccn = mock(CueChangeNote.class);
     pluginManager.addPlugin(ccn);
     verify(ccn).initialize();
   }
@@ -60,7 +60,7 @@ public class NotificationManagerTest {
   
   @Test
   public void pluginShutdown() throws Exception {
-    CueChangeNotification ccn = mock(CueChangeNotification.class);
+    CueChangeNote ccn = mock(CueChangeNote.class);
     pluginManager.addPlugin(ccn);
     pluginManager.removePlugin(ccn.getClass().getName());
     verify(ccn).shutdown();
@@ -68,7 +68,7 @@ public class NotificationManagerTest {
   
   @Test
   public void handleCuePlugin() throws Exception {
-    CueChangeNotification ccn = mock(CueChangeNotification.class);
+    CueChangeNote ccn = mock(CueChangeNote.class);
     pluginManager.addPlugin(ccn);
     MasterController mc = mock(MasterController.class);
     
@@ -78,7 +78,7 @@ public class NotificationManagerTest {
   
   @Test
   public void handlePatchPlugin() throws Exception {
-    PatchChangeNotification pcn = mock(PatchChangeNotification.class);
+    PatchChangeNote pcn = mock(PatchChangeNote.class);
     pluginManager.addPlugin(pcn);
     Patch p = new Patch("P1", 3);
     pluginManager.handlePatchPlugins(1, "K1", p);
@@ -87,7 +87,7 @@ public class NotificationManagerTest {
   
   @Test
   public void handleMapperPlugin() throws Exception {
-    EventMapperNotification emn = mock(EventMapperNotification.class);
+    EventMapperNote emn = mock(EventMapperNote.class);
     pluginManager.addPlugin(emn);
     
     MasterController mc = mock(MasterController.class);
@@ -96,7 +96,7 @@ public class NotificationManagerTest {
   }
 
   private static class AllPlugin 
-  implements CueChangeNotification, PatchChangeNotification, EventMapperNotification {
+  implements CueChangeNote, PatchChangeNote, EventMapperNote {
 
     public AllPlugin() { }
 

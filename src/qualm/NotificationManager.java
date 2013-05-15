@@ -6,54 +6,54 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import qualm.notification.CueChangeNotification;
-import qualm.notification.EventMapperNotification;
-import qualm.notification.PatchChangeNotification;
+import qualm.notification.CueChangeNote;
+import qualm.notification.EventMapperNote;
+import qualm.notification.PatchChangeNote;
 import qualm.notification.QualmNotification;
 
 public class NotificationManager {
-  public Collection<CueChangeNotification> cuePlugins = new ArrayList<CueChangeNotification>();
-  public Collection<PatchChangeNotification> patchPlugins = new ArrayList<PatchChangeNotification>();
-  public Collection<EventMapperNotification> mapperPlugins = new ArrayList<EventMapperNotification>();
+  public Collection<CueChangeNote> cuePlugins = new ArrayList<CueChangeNote>();
+  public Collection<PatchChangeNote> patchPlugins = new ArrayList<PatchChangeNote>();
+  public Collection<EventMapperNote> mapperPlugins = new ArrayList<EventMapperNote>();
   
-  public Collection<CueChangeNotification> getCuePlugins() {
+  public Collection<CueChangeNote> getCuePlugins() {
     return cuePlugins;
   }
   
-  public Collection<PatchChangeNotification> getPatchPlugins() {
+  public Collection<PatchChangeNote> getPatchPlugins() {
     return patchPlugins;
   }
   
-  public Collection<EventMapperNotification> getMapperPlugins() {
+  public Collection<EventMapperNote> getMapperPlugins() {
     return mapperPlugins;
   }
   
-  private void addCuePlugin(CueChangeNotification plugin) {
+  private void addCuePlugin(CueChangeNote plugin) {
     cuePlugins.add(plugin);
   }
   
-  private void addPatchPlugin(PatchChangeNotification plugin) {
+  private void addPatchPlugin(PatchChangeNote plugin) {
     patchPlugins.add(plugin);
   }
   
-  private void addMapperPlugin(EventMapperNotification plugin) {
+  private void addMapperPlugin(EventMapperNote plugin) {
     mapperPlugins.add(plugin);
   }
 
   public void handleCuePlugins(MasterController masterController) {
-    for (CueChangeNotification plugin : getCuePlugins()) {
+    for (CueChangeNote plugin : getCuePlugins()) {
       plugin.cueChange(masterController);
     }
   }
   
   public void handlePatchPlugins(int ch, String name, Patch p) {
-    for (PatchChangeNotification plugin : getPatchPlugins()) {
+    for (PatchChangeNote plugin : getPatchPlugins()) {
       plugin.patchChange(ch,name,p);
     }
   }
   
   public void handleMapperPlugins(MasterController masterController) {
-    for (EventMapperNotification plugin : getMapperPlugins()) {
+    for (EventMapperNote plugin : getMapperPlugins()) {
       plugin.activeEventMapper(masterController);
     }
   }
@@ -78,16 +78,16 @@ public class NotificationManager {
     Class<? extends QualmNotification> cls = qp.getClass();
     qp.initialize();
     boolean added = false;
-    if (CueChangeNotification.class.isAssignableFrom(cls)) {
-      addCuePlugin( (CueChangeNotification) qp );
+    if (CueChangeNote.class.isAssignableFrom(cls)) {
+      addCuePlugin( (CueChangeNote) qp );
       added = true;
     }
-    if (PatchChangeNotification.class.isAssignableFrom(cls)) {
-      addPatchPlugin( (PatchChangeNotification) qp );
+    if (PatchChangeNote.class.isAssignableFrom(cls)) {
+      addPatchPlugin( (PatchChangeNote) qp );
       added = true;
     }
-    if (EventMapperNotification.class.isAssignableFrom(cls)) {
-      addMapperPlugin( (EventMapperNotification) qp );
+    if (EventMapperNote.class.isAssignableFrom(cls)) {
+      addMapperPlugin( (EventMapperNote) qp );
       added = true;
     }
     return added;
@@ -96,27 +96,27 @@ public class NotificationManager {
   public Set<QualmNotification> removePlugin(String name) {
     Set<QualmNotification> removed = new HashSet<QualmNotification>();
   
-    Iterator<CueChangeNotification> cuePluginIter = getCuePlugins().iterator();
+    Iterator<CueChangeNote> cuePluginIter = getCuePlugins().iterator();
     while(cuePluginIter.hasNext()) {
-      CueChangeNotification obj = cuePluginIter.next();
+      CueChangeNote obj = cuePluginIter.next();
       // remove plugins that match the name.
       if (obj.getClass().getName().equals( name )) {
         removed.add(obj);
         cuePluginIter.remove();
       }
     }
-    Iterator<PatchChangeNotification> patchPluginIter = getPatchPlugins().iterator();
+    Iterator<PatchChangeNote> patchPluginIter = getPatchPlugins().iterator();
     while (patchPluginIter.hasNext()) {
       // remove plugins that match the name.
-      PatchChangeNotification obj = patchPluginIter.next();
+      PatchChangeNote obj = patchPluginIter.next();
       if (obj.getClass().getName().equals( name )) {
         removed.add(obj);
         patchPluginIter.remove();
       }
     }
-    Iterator<EventMapperNotification> mapperPluginIter = getMapperPlugins().iterator();
+    Iterator<EventMapperNote> mapperPluginIter = getMapperPlugins().iterator();
     while(mapperPluginIter.hasNext()) {
-      EventMapperNotification obj = mapperPluginIter.next();
+      EventMapperNote obj = mapperPluginIter.next();
       // remove plugins that match the name.
       if (obj.getClass().getName().equals( name )) {
         removed.add(obj);

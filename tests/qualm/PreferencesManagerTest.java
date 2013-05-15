@@ -14,8 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import qualm.notification.CueChangeNotification;
-import qualm.notification.PatchChangeNotification;
+import qualm.notification.CueChangeNote;
+import qualm.notification.PatchChangeNote;
 
 public class PreferencesManagerTest {
   Preferences prefs;
@@ -47,8 +47,8 @@ public class PreferencesManagerTest {
   
   @Test
   public void preferenceSaving() throws Exception {
-    List<CueChangeNotification> cuePlugins = new ArrayList<CueChangeNotification>();
-    List<PatchChangeNotification> patchPlugins = new ArrayList<PatchChangeNotification>();
+    List<CueChangeNote> cuePlugins = new ArrayList<CueChangeNote>();
+    List<PatchChangeNote> patchPlugins = new ArrayList<PatchChangeNote>();
     cuePlugins.add(new CuePlugin());
     patchPlugins.add(new PatchPlugin());
     when(pluginManager.getCuePlugins()).thenReturn(cuePlugins);
@@ -59,14 +59,14 @@ public class PreferencesManagerTest {
     assertThat(prefs.get(PLUGIN_KEY, ""), containsString("qualm.PreferencesManagerTest$PatchPlugin"));
   }
   
-  private static class CuePlugin implements CueChangeNotification {
+  private static class CuePlugin implements CueChangeNote {
     @Override public void cueChange(MasterController mc) { }
 
     @Override public void initialize() { }
     @Override public void shutdown() { }
   }
 
-  private static class PatchPlugin implements PatchChangeNotification {
+  private static class PatchPlugin implements PatchChangeNote {
     @Override public void patchChange(int channel, String chName, Patch p) { }
 
     @Override public void initialize() { }
