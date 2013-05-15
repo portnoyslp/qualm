@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import qualm.notification.CueChangeNote;
-import qualm.notification.EventMapperNote;
+import qualm.notification.EventMapActivation;
 import qualm.notification.PatchChangeNote;
 import qualm.notification.QualmNotification;
 
@@ -269,7 +269,7 @@ public class QualmREPL extends Thread {
       for (PatchChangeNote pcn : pm.getPatchPlugins())
 	output.println("patch " + pcn.getClass().getName());
 
-      for (EventMapperNote emn : pm.getMapperPlugins())
+      for (EventMapActivation emn : pm.getMapperPlugins())
 	output.println("mapper " + emn.getClass().getName());
       return;
 

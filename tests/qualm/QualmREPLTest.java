@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import qualm.notification.CueChangeNote;
-import qualm.notification.EventMapperNote;
+import qualm.notification.EventMapActivation;
 import qualm.notification.PatchChangeNote;
 
 /**
@@ -203,7 +203,7 @@ public class QualmREPLTest {
   }
   
   private static class AllPlugin 
-    implements CueChangeNote, PatchChangeNote, EventMapperNote {
+    implements CueChangeNote, PatchChangeNote, EventMapActivation {
 
     public AllPlugin() { }
     

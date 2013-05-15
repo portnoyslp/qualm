@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import qualm.notification.CueChangeNote;
-import qualm.notification.EventMapperNote;
+import qualm.notification.EventMapActivation;
 import qualm.notification.PatchChangeNote;
 
 
@@ -87,7 +87,7 @@ public class NotificationManagerTest {
   
   @Test
   public void handleMapperPlugin() throws Exception {
-    EventMapperNote emn = mock(EventMapperNote.class);
+    EventMapActivation emn = mock(EventMapActivation.class);
     pluginManager.addPlugin(emn);
     
     MasterController mc = mock(MasterController.class);
@@ -96,7 +96,7 @@ public class NotificationManagerTest {
   }
 
   private static class AllPlugin 
-  implements CueChangeNote, PatchChangeNote, EventMapperNote {
+  implements CueChangeNote, PatchChangeNote, EventMapActivation {
 
     public AllPlugin() { }
 

@@ -7,14 +7,14 @@ import java.util.Iterator;
 import java.util.Set;
 
 import qualm.notification.CueChangeNote;
-import qualm.notification.EventMapperNote;
+import qualm.notification.EventMapActivation;
 import qualm.notification.PatchChangeNote;
 import qualm.notification.QualmNotification;
 
 public class NotificationManager {
   public Collection<CueChangeNote> cuePlugins = new ArrayList<CueChangeNote>();
   public Collection<PatchChangeNote> patchPlugins = new ArrayList<PatchChangeNote>();
-  public Collection<EventMapperNote> mapperPlugins = new ArrayList<EventMapperNote>();
+  public Collection<EventMapActivation> mapperPlugins = new ArrayList<EventMapActivation>();
   
   public Collection<CueChangeNote> getCuePlugins() {
     return cuePlugins;
@@ -24,7 +24,7 @@ public class NotificationManager {
     return patchPlugins;
   }
   
-  public Collection<EventMapperNote> getMapperPlugins() {
+  public Collection<EventMapActivation> getMapperPlugins() {
     return mapperPlugins;
   }
   
@@ -36,7 +36,7 @@ public class NotificationManager {
     patchPlugins.add(plugin);
   }
   
-  private void addMapperPlugin(EventMapperNote plugin) {
+  private void addMapperPlugin(EventMapActivation plugin) {
     mapperPlugins.add(plugin);
   }
 
@@ -53,7 +53,7 @@ public class NotificationManager {
   }
   
   public void handleMapperPlugins(MasterController masterController) {
-    for (EventMapperNote plugin : getMapperPlugins()) {
+    for (EventMapActivation plugin : getMapperPlugins()) {
       plugin.activeEventMapper(masterController);
     }
   }
@@ -86,8 +86,8 @@ public class NotificationManager {
       addPatchPlugin( (PatchChangeNote) qp );
       added = true;
     }
-    if (EventMapperNote.class.isAssignableFrom(cls)) {
-      addMapperPlugin( (EventMapperNote) qp );
+    if (EventMapActivation.class.isAssignableFrom(cls)) {
+      addMapperPlugin( (EventMapActivation) qp );
       added = true;
     }
     return added;
@@ -114,9 +114,9 @@ public class NotificationManager {
         patchPluginIter.remove();
       }
     }
-    Iterator<EventMapperNote> mapperPluginIter = getMapperPlugins().iterator();
+    Iterator<EventMapActivation> mapperPluginIter = getMapperPlugins().iterator();
     while(mapperPluginIter.hasNext()) {
-      EventMapperNote obj = mapperPluginIter.next();
+      EventMapActivation obj = mapperPluginIter.next();
       // remove plugins that match the name.
       if (obj.getClass().getName().equals( name )) {
         removed.add(obj);
