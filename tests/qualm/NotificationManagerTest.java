@@ -12,18 +12,18 @@ import qualm.notification.EventMapperNotification;
 import qualm.notification.PatchChangeNotification;
 
 
-public class PluginManagerTest {
+public class NotificationManagerTest {
 
-  private PluginManager pluginManager;
+  private NotificationManager pluginManager;
 
   @Before
   public void setUp() throws Exception {
-    pluginManager = new PluginManager();
+    pluginManager = new NotificationManager();
   }
 
   @Test
   public void addPluginToAllLists() throws Exception {
-    pluginManager.addPlugin("qualm.PluginManagerTest$AllPlugin");
+    pluginManager.addPlugin(AllPlugin.class.getName());
     assertEquals(1, pluginManager.getCuePlugins().size());
     assertEquals(1, pluginManager.getPatchPlugins().size());
     assertEquals(1, pluginManager.getMapperPlugins().size());
@@ -32,7 +32,7 @@ public class PluginManagerTest {
   @Test
   public void removePluginFromAllLists() throws Exception {
     addPluginToAllLists();
-    pluginManager.removePlugin("qualm.PluginManagerTest$AllPlugin");
+    pluginManager.removePlugin(AllPlugin.class.getName());
     assertEquals(0, pluginManager.getCuePlugins().size());
     assertEquals(0, pluginManager.getPatchPlugins().size());
     assertEquals(0, pluginManager.getMapperPlugins().size());

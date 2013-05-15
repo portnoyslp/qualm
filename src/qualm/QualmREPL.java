@@ -262,7 +262,7 @@ public class QualmREPL extends Thread {
 
     tok = st.nextToken();
     if (tok.equals("list")) {
-      PluginManager pm = controller.getPluginManager();
+      NotificationManager pm = controller.getPluginManager();
       for (CueChangeNotification ccn : pm.getCuePlugins())
 	output.println("cue " + ccn.getClass().getName());
 

@@ -33,7 +33,7 @@ import qualm.notification.PatchChangeNotification;
 public class QualmREPLTest {
   
   @Mock MasterController controller;
-  @Mock PluginManager pluginManager;
+  @Mock NotificationManager pluginManager;
   @Mock PreferencesManager preferencesManager;
   
   StringWriter output;
@@ -56,7 +56,7 @@ public class QualmREPLTest {
   
   private void setupController() throws Exception {
     controller = mock(MasterController.class);
-    pluginManager = mock(PluginManager.class);
+    pluginManager = mock(NotificationManager.class);
     preferencesManager = mock(PreferencesManager.class);
     when(controller.getPluginManager()).thenReturn(pluginManager);
     when(controller.getPreferencesManager()).thenReturn(preferencesManager);

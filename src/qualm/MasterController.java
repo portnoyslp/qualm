@@ -25,13 +25,13 @@ public class MasterController implements QReceiver {
   QualmREPL REPL = null;
   boolean debugMIDI = false;
   boolean silentErrorHandling = true;
-  private PluginManager pluginManager;
+  private NotificationManager pluginManager;
   private QData qdata;
   
   public MasterController( QReceiver out ) {
     midiOut = new VerboseReceiver(out);
     controllers = new TreeMap<String, QController>();
-    setPluginManager(new PluginManager());
+    setPluginManager(new NotificationManager());
     preferencesManager.setController(this);
   }
 
@@ -40,10 +40,10 @@ public class MasterController implements QReceiver {
   public void setREPL(QualmREPL newREPL) { REPL = newREPL; }
   public QualmREPL getREPL() { return REPL; }
 
-  public void setPluginManager(PluginManager pm) {
+  public void setPluginManager(NotificationManager pm) {
     pluginManager = pm;
   }
-  public PluginManager getPluginManager() { return pluginManager; }
+  public NotificationManager getPluginManager() { return pluginManager; }
   
   public PreferencesManager getPreferencesManager() { return preferencesManager; }
   

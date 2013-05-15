@@ -21,7 +21,7 @@ public class PreferencesManagerTest {
   Preferences prefs;
   private static final String PLUGIN_KEY = "plugins";
   @Mock MasterController controller;
-  @Mock PluginManager pluginManager;
+  @Mock NotificationManager pluginManager;
   PreferencesManager preferencesManager;
 
   @Before
@@ -31,7 +31,7 @@ public class PreferencesManagerTest {
     prefs = Preferences.userNodeForPackage(QualmREPL.class);
     
     controller = mock(MasterController.class);
-    pluginManager = mock(PluginManager.class);
+    pluginManager = mock(NotificationManager.class);
     when(controller.getPluginManager()).thenReturn(pluginManager);
     
     preferencesManager= new PreferencesManager();

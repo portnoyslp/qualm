@@ -20,7 +20,7 @@ import qualm.Utilities;
  * Sends patch update information over the network to listeners.
  */
 
-public class NetworkNotifier extends BaseQualmPlugin
+public class NetworkNotifier extends BaseQualmNotification
   implements CueChangeNotification,PatchChangeNotification,EventMapperNotification {
 
   public NetworkNotifier() {

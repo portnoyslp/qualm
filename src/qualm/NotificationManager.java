@@ -11,7 +11,7 @@ import qualm.notification.EventMapperNotification;
 import qualm.notification.PatchChangeNotification;
 import qualm.notification.QualmNotification;
 
-public class PluginManager {
+public class NotificationManager {
   public Collection<CueChangeNotification> cuePlugins = new ArrayList<CueChangeNotification>();
   public Collection<PatchChangeNotification> patchPlugins = new ArrayList<PatchChangeNotification>();
   public Collection<EventMapperNotification> mapperPlugins = new ArrayList<EventMapperNotification>();

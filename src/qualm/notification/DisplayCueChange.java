@@ -10,7 +10,7 @@ import qualm.Cue;
 import qualm.MasterController;
 import qualm.QController;
 
-public class DisplayCueChange extends BaseQualmPlugin implements CueChangeNotification {
+public class DisplayCueChange extends BaseQualmNotification implements CueChangeNotification {
 
   public DisplayCueChange() {
     showDisplay();
