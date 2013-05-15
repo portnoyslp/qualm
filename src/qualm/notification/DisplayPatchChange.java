@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 
 import qualm.Patch;
 
-public class DisplayPatchChange extends BaseQualmNotification implements PatchChangeNote {
+public class DisplayPatchChange extends BaseQualmNotification implements PatchChange {
 
   TreeMap<Integer,String> channels = new TreeMap<Integer,String>();
 

@@ -6,21 +6,21 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import qualm.notification.CueChangeNote;
+import qualm.notification.CueChange;
 import qualm.notification.EventMapActivation;
-import qualm.notification.PatchChangeNote;
+import qualm.notification.PatchChange;
 import qualm.notification.QualmNotification;
 
 public class NotificationManager {
-  public Collection<CueChangeNote> cuePlugins = new ArrayList<CueChangeNote>();
-  public Collection<PatchChangeNote> patchPlugins = new ArrayList<PatchChangeNote>();
+  public Collection<CueChange> cuePlugins = new ArrayList<CueChange>();
+  public Collection<PatchChange> patchPlugins = new ArrayList<PatchChange>();
   public Collection<EventMapActivation> mapperPlugins = new ArrayList<EventMapActivation>();
   
-  public Collection<CueChangeNote> getCuePlugins() {
+  public Collection<CueChange> getCuePlugins() {
     return cuePlugins;
   }
   
-  public Collection<PatchChangeNote> getPatchPlugins() {
+  public Collection<PatchChange> getPatchPlugins() {
     return patchPlugins;
   }
   
@@ -28,11 +28,11 @@ public class NotificationManager {
     return mapperPlugins;
   }
   
-  private void addCuePlugin(CueChangeNote plugin) {
+  private void addCuePlugin(CueChange plugin) {
     cuePlugins.add(plugin);
   }
   
-  private void addPatchPlugin(PatchChangeNote plugin) {
+  private void addPatchPlugin(PatchChange plugin) {
     patchPlugins.add(plugin);
   }
   
@@ -41,13 +41,13 @@ public class NotificationManager {
   }
 
   public void handleCuePlugins(MasterController masterController) {
-    for (CueChangeNote plugin : getCuePlugins()) {
+    for (CueChange plugin : getCuePlugins()) {
       plugin.cueChange(masterController);
     }
   }
   
   public void handlePatchPlugins(int ch, String name, Patch p) {
-    for (PatchChangeNote plugin : getPatchPlugins()) {
+    for (PatchChange plugin : getPatchPlugins()) {
       plugin.patchChange(ch,name,p);
     }
   }
@@ -78,12 +78,12 @@ public class NotificationManager {
     Class<? extends QualmNotification> cls = qp.getClass();
     qp.initialize();
     boolean added = false;
-    if (CueChangeNote.class.isAssignableFrom(cls)) {
-      addCuePlugin( (CueChangeNote) qp );
+    if (CueChange.class.isAssignableFrom(cls)) {
+      addCuePlugin( (CueChange) qp );
       added = true;
     }
-    if (PatchChangeNote.class.isAssignableFrom(cls)) {
-      addPatchPlugin( (PatchChangeNote) qp );
+    if (PatchChange.class.isAssignableFrom(cls)) {
+      addPatchPlugin( (PatchChange) qp );
       added = true;
     }
     if (EventMapActivation.class.isAssignableFrom(cls)) {
@@ -96,19 +96,19 @@ public class NotificationManager {
   public Set<QualmNotification> removePlugin(String name) {
     Set<QualmNotification> removed = new HashSet<QualmNotification>();
   
-    Iterator<CueChangeNote> cuePluginIter = getCuePlugins().iterator();
+    Iterator<CueChange> cuePluginIter = getCuePlugins().iterator();
     while(cuePluginIter.hasNext()) {
-      CueChangeNote obj = cuePluginIter.next();
+      CueChange obj = cuePluginIter.next();
       // remove plugins that match the name.
       if (obj.getClass().getName().equals( name )) {
         removed.add(obj);
         cuePluginIter.remove();
       }
     }
-    Iterator<PatchChangeNote> patchPluginIter = getPatchPlugins().iterator();
+    Iterator<PatchChange> patchPluginIter = getPatchPlugins().iterator();
     while (patchPluginIter.hasNext()) {
       // remove plugins that match the name.
-      PatchChangeNote obj = patchPluginIter.next();
+      PatchChange obj = patchPluginIter.next();
       if (obj.getClass().getName().equals( name )) {
         removed.add(obj);
         patchPluginIter.remove();

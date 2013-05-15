@@ -5,8 +5,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
 
-import qualm.notification.CueChangeNote;
-import qualm.notification.PatchChangeNote;
+import qualm.notification.CueChange;
+import qualm.notification.PatchChange;
 
 public class PreferencesManager {
   private Preferences prefs = Preferences.userNodeForPackage(PreferencesManager.class);
@@ -60,10 +60,10 @@ public class PreferencesManager {
   
     // combine cue and patch plugins into one
     Set<String> plugins = new HashSet<String>();
-    for (PatchChangeNote plugin : pm.getPatchPlugins()) {
+    for (PatchChange plugin : pm.getPatchPlugins()) {
       plugins.add(plugin.getClass().getName());
     }
-    for (CueChangeNote plugin : pm.getCuePlugins()) {
+    for (CueChange plugin : pm.getCuePlugins()) {
       plugins.add(plugin.getClass().getName());
     }
   

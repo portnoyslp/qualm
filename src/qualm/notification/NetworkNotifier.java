@@ -21,7 +21,7 @@ import qualm.Utilities;
  */
 
 public class NetworkNotifier extends BaseQualmNotification
-  implements CueChangeNote,PatchChangeNote,EventMapActivation {
+  implements CueChange,PatchChange,EventMapActivation {
 
   public NetworkNotifier() {
     sockets = new ArrayList<Socket>();
