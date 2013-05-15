@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 import qualm.notification.CueChangeNotification;
 import qualm.notification.EventMapperNotification;
 import qualm.notification.PatchChangeNotification;
-import qualm.notification.QualmPlugin;
+import qualm.notification.QualmNotification;
 
 public class QualmREPL extends Thread {
   
@@ -239,8 +239,8 @@ public class QualmREPL extends Thread {
   }
 
   private void removePlugin(String name) {
-    Set<QualmPlugin> removed = controller.removePlugin(name);
-    for(QualmPlugin plugin : removed) {
+    Set<QualmNotification> removed = controller.removePlugin(name);
+    for(QualmNotification plugin : removed) {
       output.println("Removed plugin " + plugin.getClass().getName());
     }
     if (removed.size() == 0) {

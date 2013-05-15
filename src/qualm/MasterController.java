@@ -9,7 +9,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import qualm.notification.QualmPlugin;
+import qualm.notification.QualmNotification;
 
 /**
  * The main controller for Qualm.  It manages and dispatches incoming
@@ -224,7 +224,7 @@ public class MasterController implements QReceiver {
     }
   }
 
-  Set<QualmPlugin> removePlugin(String name) {
+  Set<QualmNotification> removePlugin(String name) {
     return pluginManager.removePlugin(name);
   }
   

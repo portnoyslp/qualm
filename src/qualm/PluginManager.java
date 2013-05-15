@@ -9,7 +9,7 @@ import java.util.Set;
 import qualm.notification.CueChangeNotification;
 import qualm.notification.EventMapperNotification;
 import qualm.notification.PatchChangeNotification;
-import qualm.notification.QualmPlugin;
+import qualm.notification.QualmNotification;
 
 public class PluginManager {
   public Collection<CueChangeNotification> cuePlugins = new ArrayList<CueChangeNotification>();
@@ -63,8 +63,8 @@ public class PluginManager {
     Class<?> cls;
     try {
       cls = Class.forName(name);
-      if (QualmPlugin.class.isAssignableFrom(cls)) {
-        boolean added = addPlugin((QualmPlugin)cls.newInstance());
+      if (QualmNotification.class.isAssignableFrom(cls)) {
+        boolean added = addPlugin((QualmNotification)cls.newInstance());
         if (added) {
           return;
         }
@@ -74,8 +74,8 @@ public class PluginManager {
     throw new IllegalArgumentException("Could not start plugin '" + name + "'");
   }
 
-  public boolean addPlugin(QualmPlugin qp) throws ClassNotFoundException {
-    Class<? extends QualmPlugin> cls = qp.getClass();
+  public boolean addPlugin(QualmNotification qp) throws ClassNotFoundException {
+    Class<? extends QualmNotification> cls = qp.getClass();
     qp.initialize();
     boolean added = false;
     if (CueChangeNotification.class.isAssignableFrom(cls)) {
@@ -93,8 +93,8 @@ public class PluginManager {
     return added;
   }
 
-  public Set<QualmPlugin> removePlugin(String name) {
-    Set<QualmPlugin> removed = new HashSet<QualmPlugin>();
+  public Set<QualmNotification> removePlugin(String name) {
+    Set<QualmNotification> removed = new HashSet<QualmNotification>();
   
     Iterator<CueChangeNotification> cuePluginIter = getCuePlugins().iterator();
     while(cuePluginIter.hasNext()) {
@@ -125,7 +125,7 @@ public class PluginManager {
     }
 
     // shutdown all the removed plugins
-    for (QualmPlugin qp : removed) 
+    for (QualmNotification qp : removed) 
       qp.shutdown();
   
     return removed;

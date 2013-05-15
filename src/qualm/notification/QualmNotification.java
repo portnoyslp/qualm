@@ -1,6 +1,6 @@
 package qualm.notification;
 
-public interface QualmPlugin {
+public interface QualmNotification {
   public void initialize();
   public void shutdown(); 
 }
