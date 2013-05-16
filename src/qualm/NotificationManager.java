@@ -128,4 +128,24 @@ public class NotificationManager {
     return removed;
   }
 
+  public void startNotifications() {
+    for (QualmNotifier qn: getAllNotifiers()) {
+      qn.beginNotifications();
+    }
+  }
+
+  public void endNotifications() {
+    for (QualmNotifier qn: getAllNotifiers()) {
+      qn.endNotifications();
+    }
+  }
+
+  private Set<QualmNotifier> getAllNotifiers() {
+    Set<QualmNotifier> allNotifiers = new HashSet<QualmNotifier>();
+    allNotifiers.addAll(cueNotifiers);
+    allNotifiers.addAll(patchNotifiers);
+    allNotifiers.addAll(mapNotifiers);
+    return allNotifiers;
+  }
+
 }

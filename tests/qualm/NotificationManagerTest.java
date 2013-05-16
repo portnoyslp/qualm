@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
+import qualm.notification.BaseQualmNotifier;
 import qualm.notification.CueChange;
 import qualm.notification.EventMapActivation;
 import qualm.notification.PatchChange;
@@ -95,19 +96,11 @@ public class NotificationManagerTest {
     verify(emn).activeEventMapper(mc);
   }
 
-  private static class AllNotifications 
+  private static class AllNotifications extends BaseQualmNotifier
   implements CueChange, PatchChange, EventMapActivation {
-
     public AllNotifications() { }
-
-    @Override public void initialize() { }
-
-    @Override public void shutdown() { }
-
     @Override public void cueChange(MasterController mc) { }
-
     @Override public void patchChange(int channel, String channelName, Patch patch) { }
-
     @Override public void activeEventMapper(MasterController mc) { }
   }
 }

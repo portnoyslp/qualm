@@ -15,7 +15,6 @@ import java.io.PipedWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -24,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import qualm.notification.BaseQualmNotifier;
 import qualm.notification.CueChange;
 import qualm.notification.EventMapActivation;
 import qualm.notification.PatchChange;
@@ -116,12 +116,12 @@ public class QualmREPLTest {
   }
   
   @Test
-  public void cueUpdateOutput() throws Exception {
+  public void endNotificationsUpdatesPrompt() throws Exception {
     QController qc = mock(QController.class);
     when(controller.getControllers()).thenReturn(Collections.singleton(qc));
     when(qc.getCurrentCue()).thenReturn(new Cue("1.1"));
     when(qc.getPendingCue()).thenReturn(new Cue("2.5"));
-    repl.cueChange(controller);
+    repl.endNotifications();
     verify(qc).getCurrentCue();
     verify(qc).getPendingCue();
     assertThat(output.toString(), containsString("1.1-2.5"));
@@ -210,19 +210,12 @@ public class QualmREPLTest {
       .build();
   }
   
-  private static class AllPlugin 
+  private static class AllPlugin extends BaseQualmNotifier
     implements CueChange, PatchChange, EventMapActivation {
 
     public AllPlugin() { }
-    
-    @Override public void initialize() { }
-
-    @Override public void shutdown() { }
-    
     @Override public void cueChange(MasterController mc) { }
-
     @Override public void patchChange(int channel, String channelName, Patch patch) { }
-
     @Override public void activeEventMapper(MasterController mc) { }
   }
 }

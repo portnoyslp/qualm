@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import qualm.notification.BaseQualmNotifier;
 import qualm.notification.CueChange;
 import qualm.notification.PatchChange;
 
@@ -59,17 +60,11 @@ public class PreferencesManagerTest {
     assertThat(prefs.get(PLUGIN_KEY, ""), containsString("qualm.PreferencesManagerTest$PatchPlugin"));
   }
   
-  private static class CuePlugin implements CueChange {
+  private static class CuePlugin extends BaseQualmNotifier implements CueChange {
     @Override public void cueChange(MasterController mc) { }
-
-    @Override public void initialize() { }
-    @Override public void shutdown() { }
   }
 
-  private static class PatchPlugin implements PatchChange {
+  private static class PatchPlugin extends BaseQualmNotifier implements PatchChange {
     @Override public void patchChange(int channel, String chName, Patch p) { }
-
-    @Override public void initialize() { }
-    @Override public void shutdown() { }
   }
 }

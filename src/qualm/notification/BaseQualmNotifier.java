@@ -1,6 +1,8 @@
 package qualm.notification;
 
 public class BaseQualmNotifier implements QualmNotifier {
-  public void initialize() { }
-  public void shutdown() { } 
+  @Override public void initialize() { }
+  @Override public void shutdown() { }
+  @Override public void beginNotifications() { }
+  @Override public void endNotifications() { } 
 }

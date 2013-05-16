@@ -194,6 +194,8 @@ public class MasterController implements QReceiver {
 
   private void updateCue(Collection<QEvent> c) {
     // identify and notify all patch changes
+    getNotificationManager().startNotifications();
+    
     for (QEvent obj : c) {
       if (obj instanceof ProgramChangeEvent) {
         ProgramChangeEvent pce = (ProgramChangeEvent)obj;
@@ -214,6 +216,7 @@ public class MasterController implements QReceiver {
     getNotificationManager().handleMapActivations(this);
     // finally, tell notifiers about the new cue
     getNotificationManager().handleCueChanges(this);
+    getNotificationManager().endNotifications();
   }
 
   public void setDebugMIDI(boolean flag) { 
