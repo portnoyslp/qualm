@@ -76,7 +76,6 @@ public class NotificationManager {
 
   public boolean addNotifier(QualmNotifier qp) {
     Class<? extends QualmNotifier> cls = qp.getClass();
-    qp.initialize();
     boolean added = false;
     if (CueChange.class.isAssignableFrom(cls)) {
       addCueNotifier( (CueChange) qp );
@@ -120,11 +119,6 @@ public class NotificationManager {
         mapNotificationIter.remove();
       }
     }
-
-    // shutdown all the removed notifications
-    for (QualmNotifier qp : removed) 
-      qp.shutdown();
-  
     return removed;
   }
 

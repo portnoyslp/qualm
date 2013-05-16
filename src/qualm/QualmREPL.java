@@ -257,9 +257,6 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
 
   /* QualmNotification overrides */
   
-  @Override public void initialize() { }
-  @Override public void shutdown() { }
-
   @Override
   public void patchChange(int channel, String channelName, Patch patch) {
     output.println( channelName + " -> " + patch.getDescription() );

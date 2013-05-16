@@ -47,24 +47,9 @@ public class NotificationManagerTest {
     assertEquals(plugin, notificationMgr.getCueNotifiers().iterator().next());
   }
   
-  @Test
-  public void initalizedOnCreation() throws Exception {
-    CueChange ccn = mock(CueChange.class);
-    notificationMgr.addNotifier(ccn);
-    verify(ccn).initialize();
-  }
-  
   @Test(expected=IllegalArgumentException.class)
   public void unknownClass() throws Exception {
     notificationMgr.addNotification("qualm.UnknownPlugin");
-  }
-  
-  @Test
-  public void shutdownOnRemoval() throws Exception {
-    CueChange ccn = mock(CueChange.class);
-    notificationMgr.addNotifier(ccn);
-    notificationMgr.removeNotification(ccn.getClass().getName());
-    verify(ccn).shutdown();
   }
   
   @Test
