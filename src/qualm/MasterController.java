@@ -193,15 +193,12 @@ public class MasterController implements QReceiver {
   }
 
   private void updateCue(Collection<QEvent> c) {
-    // update the cue plugins
-    getNotificationManager().handleCueChanges(this);
-    
+    // identify and notify all patch changes
     for (QEvent obj : c) {
       if (obj instanceof ProgramChangeEvent) {
         ProgramChangeEvent pce = (ProgramChangeEvent)obj;
         int ch = pce.getChannel();
         Patch patch = pce.getPatch();
-        // update the PatchChange plugins
         getNotificationManager().handlePatchChanges( ch, qdata.getMidiChannels()[ch], patch);
       }
       
@@ -212,6 +209,11 @@ public class MasterController implements QReceiver {
         //output.println( qd.getMidiChannels()[ch] + " " + nwce );
       }
     }
+    
+    // tell notifiers about any new mapping info
+    getNotificationManager().handleMapActivations(this);
+    // finally, tell notifiers about the new cue
+    getNotificationManager().handleCueChanges(this);
   }
 
   public void setDebugMIDI(boolean flag) { 

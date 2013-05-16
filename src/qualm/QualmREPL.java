@@ -88,8 +88,6 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
   }
 
   public void updatePrompt() {
-    controller.getNotificationManager().handleCueChanges(controller);
-    controller.getNotificationManager().handleMapActivations(controller);
     output.print( promptString() );
     output.flush();
   }
@@ -267,18 +265,15 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
 
   @Override
   public void patchChange(int channel, String channelName, Patch patch) {
+    if (!readlineHandlesPrompt) {
+      // end the current line
+      output.print( "\n" );
+    }
     output.println( channelName + " -> " + patch.getDescription() );
   }
 
   @Override
   public void cueChange(MasterController mc) {
-    // signal new cue...If we could interrupt the readline call, that
-    // would be best, but instead we'll just print the new prompt
-    // string.
-    if (!readlineHandlesPrompt) {
-      // end the current line
-      output.print( "\n" );
-    }
     if (!readlineHandlesPrompt) {
       updatePrompt();
     }

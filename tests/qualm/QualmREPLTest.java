@@ -16,6 +16,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -33,7 +34,7 @@ import qualm.notification.PatchChange;
 public class QualmREPLTest {
   
   @Mock MasterController controller;
-  @Mock NotificationManager pluginManager;
+  @Mock NotificationManager notificationManager;
   @Mock PreferencesManager preferencesManager;
   
   StringWriter output;
@@ -56,15 +57,15 @@ public class QualmREPLTest {
   
   private void setupController() throws Exception {
     controller = mock(MasterController.class);
-    pluginManager = mock(NotificationManager.class);
+    notificationManager = mock(NotificationManager.class);
     preferencesManager = mock(PreferencesManager.class);
-    when(controller.getNotificationManager()).thenReturn(pluginManager);
+    when(controller.getNotificationManager()).thenReturn(notificationManager);
     when(controller.getPreferencesManager()).thenReturn(preferencesManager);
   }
   
   @Test
-  public void confirmControllerSetup() throws Exception {
-    verify(controller).setREPL(repl);
+  public void confirmSetupAsNotifier() throws Exception {
+    verify(notificationManager).addNotifier(repl);
   }
   
   @Test
@@ -116,14 +117,21 @@ public class QualmREPLTest {
   
   @Test
   public void cueUpdateOutput() throws Exception {
-    when(controller.getQData()).thenReturn(minimalData());
-    Cue cue = minimalData().getCueStreams().iterator().next().getCues().first();
+    QController qc = mock(QController.class);
+    when(controller.getControllers()).thenReturn(Collections.singleton(qc));
+    when(qc.getCurrentCue()).thenReturn(new Cue("1.1"));
+    when(qc.getPendingCue()).thenReturn(new Cue("2.5"));
+    repl.cueChange(controller);
+    verify(qc).getCurrentCue();
+    verify(qc).getPendingCue();
+    assertThat(output.toString(), containsString("1.1-2.5"));
+  }
+  
+  @Test
+  public void patchUpdateOutput() throws Exception {
     Patch p = new Patch("Patch1", 23);
     p.setDescription("aPatch");
-    ProgramChangeEvent pce = new ProgramChangeEvent(0, cue, p);
-    Collection<QEvent> evts = new ArrayList<QEvent>();
-    evts.add(pce);
-    repl.updateCue(evts);
+    repl.patchChange(0, "Ch1", p);
     assertThat(output.toString(), containsString("Ch1 -> aPatch"));
   }
   
@@ -139,7 +147,7 @@ public class QualmREPLTest {
   public void addUnknownPlugin() throws Exception {
     String badPlugin = "qualm.plugins.DoesNotExist";
     doThrow(new IllegalArgumentException())
-      .when(pluginManager).addNotification(badPlugin);
+      .when(notificationManager).addNotification(badPlugin);
     repl.processLine("plugin " + badPlugin);
     assertThat(output.toString(), containsString("Unable to create or identify"));
   }
@@ -154,7 +162,7 @@ public class QualmREPLTest {
   public void basicPluginHandling() throws Exception {
     String pluginName = "qualm.QualmREPLTest$AllPlugin";
     repl.processLine("plugin " + pluginName);
-    verify(pluginManager).addNotification(pluginName);
+    verify(notificationManager).addNotification(pluginName);
     
     repl.processLine("plugin remove " + pluginName);
     verify(controller).removePlugin(pluginName);
@@ -164,7 +172,7 @@ public class QualmREPLTest {
   public void pluginList() throws Exception {
     List<CueChange> plugins = new ArrayList<CueChange>();
     plugins.add(new AllPlugin());
-    when(pluginManager.getCueNotifiers()).thenReturn(plugins);
+    when(notificationManager.getCueNotifiers()).thenReturn(plugins);
 
     repl.processLine("plugin list");
     assertThat(output.toString(), containsString("cue qualm.QualmREPLTest$AllPlugin"));
