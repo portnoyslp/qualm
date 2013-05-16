@@ -74,7 +74,7 @@ public class NotificationManager {
     throw new IllegalArgumentException("Could not start plugin '" + name + "'");
   }
 
-  public boolean addNotification(QualmNotification qp) throws ClassNotFoundException {
+  public boolean addNotification(QualmNotification qp) {
     Class<? extends QualmNotification> cls = qp.getClass();
     qp.initialize();
     boolean added = false;

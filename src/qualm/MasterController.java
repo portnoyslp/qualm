@@ -193,8 +193,25 @@ public class MasterController implements QReceiver {
   }
 
   private void updateCue(Collection<QEvent> c) {
-    if (REPL != null)
-      REPL.updateCue( c );
+    // update the cue plugins
+    getPluginManager().handleCueChanges(this);
+    
+    for (QEvent obj : c) {
+      if (obj instanceof ProgramChangeEvent) {
+        ProgramChangeEvent pce = (ProgramChangeEvent)obj;
+        int ch = pce.getChannel();
+        Patch patch = pce.getPatch();
+        // update the PatchChange plugins
+        getPluginManager().handlePatchChanges( ch, qdata.getMidiChannels()[ch], patch);
+      }
+      
+      else if (obj instanceof NoteWindowChangeEvent) {
+        // TODO: new notification for NWCEs?
+        NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
+        //int ch = nwce.getChannel();
+        //output.println( qd.getMidiChannels()[ch] + " " + nwce );
+      }
+    }
   }
 
   public void setDebugMIDI(boolean flag) { 

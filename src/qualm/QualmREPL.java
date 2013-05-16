@@ -15,7 +15,7 @@ import qualm.notification.EventMapActivation;
 import qualm.notification.PatchChange;
 import qualm.notification.QualmNotification;
 
-public class QualmREPL extends Thread {
+public class QualmREPL extends Thread implements CueChange, PatchChange {
   
   MasterController controller = null;
   private final BufferedReader reader;
@@ -32,7 +32,8 @@ public class QualmREPL extends Thread {
     this.reader = new BufferedReader(reader);
     this.output = new PrintWriter(output);
     controller = mc;
-    controller.setREPL(this);
+    // add this controller to the notification manager
+    controller.getPluginManager().addNotification(this);
     loadPreferences();
   }
   
@@ -119,38 +120,6 @@ public class QualmREPL extends Thread {
   }
 
   public void updateCue( Collection<QEvent> c ) {
-    // signal new cue...If we could interrupt the readline call, that
-    // would be best, but instead we'll just print the new prompt
-    // string.
-    if (!readlineHandlesPrompt) {
-      // end the current line
-      output.print( "\n" );
-    }
-
-    // print out the cue changes
-    QData qd = controller.getQData();
-    for (QEvent obj : c) {
-      if (obj instanceof ProgramChangeEvent) {
-	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
-	int ch = pce.getChannel();
-	Patch patch = pce.getPatch();
-	output.println( qd.getMidiChannels()[ch] + " -> " +
-			    patch.getDescription() );
-	
-	// update the PatchChange plugins
-	controller.getPluginManager().handlePatchChanges( ch, qd.getMidiChannels()[ch], patch);
-      }
-      else if (obj instanceof NoteWindowChangeEvent) {
-	NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
-	int ch = nwce.getChannel();
-	output.println( qd.getMidiChannels()[ch] + " " + nwce );
-      }
-    }
-
-    // redo prompt
-    if (!readlineHandlesPrompt) {
-      updatePrompt();
-    }
   }
 
   private void reset() { 
@@ -285,6 +254,33 @@ public class QualmREPL extends Thread {
         addPlugin(tok);
     } catch (IllegalArgumentException iae) {
       output.println("Unable to create or identify requested plugin '" + tok + "; ignoring request.");
+    }
+  }
+
+  /* QualmNotification overrides */
+  
+  @Override
+  public void initialize() { }
+
+  @Override
+  public void shutdown() { }
+
+  @Override
+  public void patchChange(int channel, String channelName, Patch patch) {
+    output.println( channelName + " -> " + patch.getDescription() );
+  }
+
+  @Override
+  public void cueChange(MasterController mc) {
+    // signal new cue...If we could interrupt the readline call, that
+    // would be best, but instead we'll just print the new prompt
+    // string.
+    if (!readlineHandlesPrompt) {
+      // end the current line
+      output.print( "\n" );
+    }
+    if (!readlineHandlesPrompt) {
+      updatePrompt();
     }
   }
 
