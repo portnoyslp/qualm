@@ -41,7 +41,7 @@ public class NotificationManagerTest {
   @Test
   public void addDirect() throws Exception {
     AllNotifications plugin = new AllNotifications();
-    notificationMgr.addNotification(plugin);
+    notificationMgr.addNotifier(plugin);
     assertEquals(1, notificationMgr.getCueNotifiers().size());
     assertEquals(plugin, notificationMgr.getCueNotifiers().iterator().next());
   }
@@ -49,7 +49,7 @@ public class NotificationManagerTest {
   @Test
   public void initalizedOnCreation() throws Exception {
     CueChange ccn = mock(CueChange.class);
-    notificationMgr.addNotification(ccn);
+    notificationMgr.addNotifier(ccn);
     verify(ccn).initialize();
   }
   
@@ -61,7 +61,7 @@ public class NotificationManagerTest {
   @Test
   public void shutdownOnRemoval() throws Exception {
     CueChange ccn = mock(CueChange.class);
-    notificationMgr.addNotification(ccn);
+    notificationMgr.addNotifier(ccn);
     notificationMgr.removeNotification(ccn.getClass().getName());
     verify(ccn).shutdown();
   }
@@ -69,7 +69,7 @@ public class NotificationManagerTest {
   @Test
   public void handleCueChanges() throws Exception {
     CueChange ccn = mock(CueChange.class);
-    notificationMgr.addNotification(ccn);
+    notificationMgr.addNotifier(ccn);
     MasterController mc = mock(MasterController.class);
     
     notificationMgr.handleCueChanges(mc);
@@ -79,7 +79,7 @@ public class NotificationManagerTest {
   @Test
   public void handlePatchChanges() throws Exception {
     PatchChange pcn = mock(PatchChange.class);
-    notificationMgr.addNotification(pcn);
+    notificationMgr.addNotifier(pcn);
     Patch p = new Patch("P1", 3);
     notificationMgr.handlePatchChanges(1, "K1", p);
     verify(pcn).patchChange(1, "K1", p);
@@ -88,7 +88,7 @@ public class NotificationManagerTest {
   @Test
   public void handleMapActivations() throws Exception {
     EventMapActivation emn = mock(EventMapActivation.class);
-    notificationMgr.addNotification(emn);
+    notificationMgr.addNotifier(emn);
     
     MasterController mc = mock(MasterController.class);
     notificationMgr.handleMapActivations(mc);

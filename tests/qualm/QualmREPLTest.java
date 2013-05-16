@@ -58,7 +58,7 @@ public class QualmREPLTest {
     controller = mock(MasterController.class);
     pluginManager = mock(NotificationManager.class);
     preferencesManager = mock(PreferencesManager.class);
-    when(controller.getPluginManager()).thenReturn(pluginManager);
+    when(controller.getNotificationManager()).thenReturn(pluginManager);
     when(controller.getPreferencesManager()).thenReturn(preferencesManager);
   }
   

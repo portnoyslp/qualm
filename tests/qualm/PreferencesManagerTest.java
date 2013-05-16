@@ -32,7 +32,7 @@ public class PreferencesManagerTest {
     
     controller = mock(MasterController.class);
     pluginManager = mock(NotificationManager.class);
-    when(controller.getPluginManager()).thenReturn(pluginManager);
+    when(controller.getNotificationManager()).thenReturn(pluginManager);
     
     preferencesManager= new PreferencesManager();
     preferencesManager.setController(controller);

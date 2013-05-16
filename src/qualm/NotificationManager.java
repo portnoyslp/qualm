@@ -9,7 +9,7 @@ import java.util.Set;
 import qualm.notification.CueChange;
 import qualm.notification.EventMapActivation;
 import qualm.notification.PatchChange;
-import qualm.notification.QualmNotification;
+import qualm.notification.QualmNotifier;
 
 public class NotificationManager {
   public Collection<CueChange> cueNotifiers = new ArrayList<CueChange>();
@@ -63,8 +63,8 @@ public class NotificationManager {
     Class<?> cls;
     try {
       cls = Class.forName(name);
-      if (QualmNotification.class.isAssignableFrom(cls)) {
-        boolean added = addNotification((QualmNotification)cls.newInstance());
+      if (QualmNotifier.class.isAssignableFrom(cls)) {
+        boolean added = addNotifier((QualmNotifier)cls.newInstance());
         if (added) {
           return;
         }
@@ -74,8 +74,8 @@ public class NotificationManager {
     throw new IllegalArgumentException("Could not start plugin '" + name + "'");
   }
 
-  public boolean addNotification(QualmNotification qp) {
-    Class<? extends QualmNotification> cls = qp.getClass();
+  public boolean addNotifier(QualmNotifier qp) {
+    Class<? extends QualmNotifier> cls = qp.getClass();
     qp.initialize();
     boolean added = false;
     if (CueChange.class.isAssignableFrom(cls)) {
@@ -93,8 +93,8 @@ public class NotificationManager {
     return added;
   }
 
-  public Set<QualmNotification> removeNotification(String name) {
-    Set<QualmNotification> removed = new HashSet<QualmNotification>();
+  public Set<QualmNotifier> removeNotification(String name) {
+    Set<QualmNotifier> removed = new HashSet<QualmNotifier>();
   
     Iterator<CueChange> cueNotificationIter = getCueNotifiers().iterator();
     while(cueNotificationIter.hasNext()) {
@@ -122,7 +122,7 @@ public class NotificationManager {
     }
 
     // shutdown all the removed notifications
-    for (QualmNotification qp : removed) 
+    for (QualmNotifier qp : removed) 
       qp.shutdown();
   
     return removed;

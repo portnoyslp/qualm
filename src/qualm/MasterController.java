@@ -9,7 +9,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import qualm.notification.QualmNotification;
+import qualm.notification.QualmNotifier;
 
 /**
  * The main controller for Qualm.  It manages and dispatches incoming
@@ -25,13 +25,13 @@ public class MasterController implements QReceiver {
   QualmREPL REPL = null;
   boolean debugMIDI = false;
   boolean silentErrorHandling = true;
-  private NotificationManager pluginManager;
+  private NotificationManager notificationManager;
   private QData qdata;
   
   public MasterController( QReceiver out ) {
     midiOut = new VerboseReceiver(out);
     controllers = new TreeMap<String, QController>();
-    setPluginManager(new NotificationManager());
+    setNotificationManager(new NotificationManager());
     preferencesManager.setController(this);
   }
 
@@ -40,10 +40,10 @@ public class MasterController implements QReceiver {
   public void setREPL(QualmREPL newREPL) { REPL = newREPL; }
   public QualmREPL getREPL() { return REPL; }
 
-  public void setPluginManager(NotificationManager pm) {
-    pluginManager = pm;
+  public void setNotificationManager(NotificationManager pm) {
+    notificationManager = pm;
   }
-  public NotificationManager getPluginManager() { return pluginManager; }
+  public NotificationManager getNotificationManager() { return notificationManager; }
   
   public PreferencesManager getPreferencesManager() { return preferencesManager; }
   
@@ -194,7 +194,7 @@ public class MasterController implements QReceiver {
 
   private void updateCue(Collection<QEvent> c) {
     // update the cue plugins
-    getPluginManager().handleCueChanges(this);
+    getNotificationManager().handleCueChanges(this);
     
     for (QEvent obj : c) {
       if (obj instanceof ProgramChangeEvent) {
@@ -202,7 +202,7 @@ public class MasterController implements QReceiver {
         int ch = pce.getChannel();
         Patch patch = pce.getPatch();
         // update the PatchChange plugins
-        getPluginManager().handlePatchChanges( ch, qdata.getMidiChannels()[ch], patch);
+        getNotificationManager().handlePatchChanges( ch, qdata.getMidiChannels()[ch], patch);
       }
       
       else if (obj instanceof NoteWindowChangeEvent) {
@@ -241,8 +241,8 @@ public class MasterController implements QReceiver {
     }
   }
 
-  Set<QualmNotification> removePlugin(String name) {
-    return pluginManager.removeNotification(name);
+  Set<QualmNotifier> removePlugin(String name) {
+    return notificationManager.removeNotification(name);
   }
   
   public void loadFilename( String filename ) {

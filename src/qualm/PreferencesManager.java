@@ -45,7 +45,7 @@ public class PreferencesManager {
     while (st.hasMoreTokens()) {
       String pluginName = st.nextToken();
       try {
-        controller.getPluginManager().addNotification(pluginName);
+        controller.getNotificationManager().addNotification(pluginName);
       } catch(IllegalArgumentException iae) {
         throw new IllegalArgumentException(pluginName, iae);
       }
@@ -56,7 +56,7 @@ public class PreferencesManager {
    * Pull all the preferences that should be saved from the controller, and store them.
    */
   public void savePreferences() {
-    NotificationManager pm = getController().getPluginManager();
+    NotificationManager pm = getController().getNotificationManager();
   
     // combine cue and patch plugins into one
     Set<String> plugins = new HashSet<String>();

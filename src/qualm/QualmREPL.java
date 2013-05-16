@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 import qualm.notification.CueChange;
 import qualm.notification.EventMapActivation;
 import qualm.notification.PatchChange;
-import qualm.notification.QualmNotification;
+import qualm.notification.QualmNotifier;
 
 public class QualmREPL extends Thread implements CueChange, PatchChange {
   
@@ -33,7 +33,7 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
     this.output = new PrintWriter(output);
     controller = mc;
     // add this controller to the notification manager
-    controller.getPluginManager().addNotification(this);
+    controller.getNotificationManager().addNotifier(this);
     loadPreferences();
   }
   
@@ -88,8 +88,8 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
   }
 
   public void updatePrompt() {
-    controller.getPluginManager().handleCueChanges(controller);
-    controller.getPluginManager().handleMapActivations(controller);
+    controller.getNotificationManager().handleCueChanges(controller);
+    controller.getNotificationManager().handleMapActivations(controller);
     output.print( promptString() );
     output.flush();
   }
@@ -203,13 +203,13 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
 
   void addPlugin(String name) {
     if (controller != null) {
-      controller.getPluginManager().addNotification(name);
+      controller.getNotificationManager().addNotification(name);
     }
   }
 
   private void removePlugin(String name) {
-    Set<QualmNotification> removed = controller.removePlugin(name);
-    for(QualmNotification plugin : removed) {
+    Set<QualmNotifier> removed = controller.removePlugin(name);
+    for(QualmNotifier plugin : removed) {
       output.println("Removed plugin " + plugin.getClass().getName());
     }
     if (removed.size() == 0) {
@@ -231,7 +231,7 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
 
     tok = st.nextToken();
     if (tok.equals("list")) {
-      NotificationManager pm = controller.getPluginManager();
+      NotificationManager pm = controller.getNotificationManager();
       for (CueChange ccn : pm.getCueNotifiers())
 	output.println("cue " + ccn.getClass().getName());
 
