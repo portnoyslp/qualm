@@ -1,7 +1,6 @@
 package qualm;
 
 public class NoteWindowChangeEvent extends QEvent {
-  int channel;
   Integer bottomNote, topNote; // either or both may be null
   NoteWindowChangeEvent previous = null;
 
@@ -56,7 +55,7 @@ public class NoteWindowChangeEvent extends QEvent {
     }
 
     // create an event to set this top and bottom note
-    return new NoteWindowChangeEvent(this.channel, getCue(), bottom, top);
+    return new NoteWindowChangeEvent(getChannel(), getCue(), bottom, top);
   }
 
   /**
