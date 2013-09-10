@@ -23,7 +23,7 @@ public class JavaMidiReceiverFactoryTest {
   @Test(expected=RuntimeException.class)
   public void unknownDevice() throws Exception {
     props.setProperty("inputPort", "FOOBAR");
-    JavaMidiReceiver jmr = JavaMidiReceiverFactory.buildFromProperties(props);
+    JavaMidiReceiver jmr = new JavaMidiReceiverFactory().buildFromProperties(props);
     assertNotNull(jmr);
   }
   

@@ -110,7 +110,7 @@ public class PlayAllPatches {
     Properties props = new Properties();
     props.setProperty("inputPort", inputPort);
     props.setProperty("outputPort", outputPort);
-    midiOut = JavaMidiReceiverFactory.buildFromProperties(props);
+    midiOut = new JavaMidiReceiverFactory().buildFromProperties(props);
     midiIn = midiOut;
 
     loopThroughPatches(data);
