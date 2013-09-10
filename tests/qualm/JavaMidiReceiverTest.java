@@ -123,7 +123,7 @@ public class JavaMidiReceiverTest {
     
     // time passes...
     timeSource.setMillis(1100);
-    sendSecondSysex.join(200); // wait a little while for the spawned thread to finish
+    sendSecondSysex.join(10); // wait a little while for the spawned thread to finish
     assertTrue(!sendSecondSysex.isAlive());
     // should now have sent two sysex.
     verify(mockReceiver, times(2)).send( argThat(new MidiMatcher(sm)), anyLong() );

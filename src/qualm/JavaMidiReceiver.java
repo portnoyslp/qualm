@@ -17,7 +17,7 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
   private int sysexDelayMillis = 0;
   private long nextSysexTime = -1; // earliest millis at which next sysex may be sent
 
-  private static final int minimalSleepMsec = 100;
+  private static final int minimalSleepMsec = 1;
 
   public JavaMidiReceiver(Transmitter trans, Receiver rec) {
     midiIn = trans;
