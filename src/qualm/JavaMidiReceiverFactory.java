@@ -15,14 +15,15 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Transmitter;
 
-public class JavaMidiReceiverFactory {
+public class JavaMidiReceiverFactory implements AbstractQReceiverFactory {
   private static final String ALSA_CLIENTS_FILE = "/proc/asound/seq/clients";
   private static final String DEFAULT_PORT = "__default_port__";
 
   private static List<MidiDevice.Info> midiDeviceCache = null;
   private static Map<MidiDevice.Info, String> deviceDescriptionMap = null;
 
-  public static JavaMidiReceiver buildFromProperties(Properties props) {
+  @Override
+  public JavaMidiReceiver buildFromProperties(Properties props) {
     return buildMidiHandlers(props);
   }
 
