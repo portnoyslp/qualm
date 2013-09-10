@@ -57,6 +57,15 @@ public class JavaMidiReceiverFactory {
     }
 
     JavaMidiReceiver jmr = new JavaMidiReceiver(trans, rec);
+    
+    if (props.getProperty("sysexDelay") != null) {
+      try {
+        jmr.setSysexDelay(Integer.valueOf(props.getProperty("sysexDelayMillis")));
+      } catch (NumberFormatException nfe) {
+        throw new RuntimeException("Sysex delay value is not a number: " + nfe);
+      }
+    }
+    
     trans.setReceiver(jmr);
     return jmr;
   }

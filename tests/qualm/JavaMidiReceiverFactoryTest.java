@@ -26,5 +26,6 @@ public class JavaMidiReceiverFactoryTest {
     JavaMidiReceiver jmr = JavaMidiReceiverFactory.buildFromProperties(props);
     assertNotNull(jmr);
   }
-
+  
+  // TODO: Add tests for checking that JMR is correctly built from real data.
 }

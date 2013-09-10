@@ -14,12 +14,27 @@ import javax.sound.midi.Transmitter;
 public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Receiver {
   public Transmitter midiIn;
   public Receiver midiOut;
+  private int sysexDelayMillis = 0;
+  private long nextSysexTime = -1; // earliest millis at which next sysex may be sent
+
+  private static final int minimalSleepMsec = 100;
 
   public JavaMidiReceiver(Transmitter trans, Receiver rec) {
     midiIn = trans;
     midiOut = rec;
   }
-  
+
+  /* Sets a minimum time (in milliseconds) which must elapse between
+   * successive SysEx command transmissions.  Useful for coping with
+   * lower-quality USB MIDI interfaces.
+   *
+   * Caution: this option introduces a BLOCKING DELAY into Qualm's
+   * MIDI event handling!
+   */
+  public void setSysexDelay(int millis) {
+    this.sysexDelayMillis = millis;
+  }
+
   /* Receives the given MidiCommand from Qualm and sends it out through the MIDI interface.
    * @see qualm.BasicReceiver#handleMidiCommand(qualm.MidiCommand)
    */
@@ -31,7 +46,23 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
         byte[] data = mc.getData();
         msg = new SysexMessage();
         ((SysexMessage)msg).setMessage(data,data.length);
-        
+
+        if (sysexDelayMillis > 0) {
+          // delay this sysex if not enough time has elapsed since the
+          // previous one
+          long delayMillis = nextSysexTime - Clock.asMillis();
+          if (delayMillis > 0) {
+            Qualm.LOG.finer("Delaying "+delayMillis+"ms before sending SysEx");
+            try {
+              while (Clock.asMillis() < nextSysexTime) {
+                Thread.sleep(minimalSleepMsec);
+              }
+            } catch (InterruptedException e) {}
+          }
+          // note earliest time at which a subsequent SysEx may be sent
+          nextSysexTime = Clock.asMillis() + sysexDelayMillis;
+        }
+
       } else {
         msg = new ShortMessage();
         ((ShortMessage)msg).setMessage(mc.getType(),mc.getChannel(),mc.getData1(),mc.getData2());

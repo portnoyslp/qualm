@@ -10,8 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Qualm {
-  
   public static final Logger LOG = Logger.getLogger("Qualm.core");
+  static boolean validateInput = false;
   
   private static void usage() {
     System.out.println("Usage: java qualm.Qualm <options> <filename>");
@@ -22,6 +22,8 @@ public class Qualm {
     System.out.println("  --nomidi | -n   Ignore MIDI ports");
     System.out.println("  --debugmidi     Print debug output, including received MIDI events.");
     System.out.println("  --lint          Carefully check the input file for errors.");
+    System.out.println("  --sysexdelay <ms>");
+    System.out.println("      Blocking delay in milliseconds between successive SysEx messages");
     System.out.println("  --version | -v  Give information on the build identifier.");
     System.out.println("  --help | -h     Prints this message.");
     System.out.println("  <filename>      The Qualm filename to execute.");
@@ -63,17 +65,17 @@ public class Qualm {
   }
 
   public static void main(String[] args) throws Exception {
-
     loadProperties();
 
     String inputPort = null;
     String outputPort = null;
     boolean debugMIDI = false;
     boolean skipMIDI = false;
-
+    String sysexDelay = null;
+    
     // handle argument list
     int i = 0;
-    LongOpt[] longopts = new LongOpt[8];
+    LongOpt[] longopts = new LongOpt[9];
     longopts[i++] = new LongOpt("output", LongOpt.REQUIRED_ARGUMENT, null, 'o');
     longopts[i++] = new LongOpt("input", LongOpt.REQUIRED_ARGUMENT, null, 'i');
     longopts[i++] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
@@ -81,6 +83,7 @@ public class Qualm {
     longopts[i++] = new LongOpt("debug", LongOpt.NO_ARGUMENT, null, 0);
     longopts[i++] = new LongOpt("debugmidi", LongOpt.NO_ARGUMENT, null, 0);
     longopts[i++] = new LongOpt("lint", LongOpt.NO_ARGUMENT, null, 1);
+    longopts[i++] = new LongOpt("sysexdelay", LongOpt.REQUIRED_ARGUMENT, null, 2);
     longopts[i++] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
 
     Getopt g = new Getopt("Qualm", args, "o:i:hlnv", longopts);
@@ -95,8 +98,14 @@ public class Qualm {
 	case 1:
 	  // lint option
 	  validateInput = true;
+          break;
+        case 2:
+          // sysexdelay
+          sysexDelay = g.getOptarg();
+          break;
 	case 'n':
 	  skipMIDI = true;
+          break;
 	case 'i':
 	  inputPort = g.getOptarg();
 	  break;
@@ -133,6 +142,8 @@ public class Qualm {
     Properties props = new Properties();
     if (inputPort != null) props.setProperty("inputPort", inputPort);
     if (outputPort != null) props.setProperty("outputPort", outputPort);
+    props.setProperty("sysexDelayMillis", getSysexDelay(sysexDelay));
+    
     JavaMidiReceiver jmr = null;
     if (!skipMIDI)
       try {
@@ -163,7 +174,13 @@ public class Qualm {
     repl.start();
   }
 
-  static boolean validateInput = false;
-
+  /** 
+   * Fetches the sysex delay value, either through the given string or the loaded system properties.
+   */
+  private static String getSysexDelay(String delayArg) throws NumberFormatException {
+    return (delayArg != null ? delayArg :
+      System.getProperty("qualm.midi.sysex-delay", delayArg));    
+  }
 }
+
 

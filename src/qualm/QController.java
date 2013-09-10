@@ -111,9 +111,12 @@ public class QController extends AbstractQReceiver {
     setTimeOut();
 
     // anything that's very short isn't worth creating a thread for.
-    if (trig.getDelay() < minWaitTimeMsec)
+    if (trig.getDelay() < minWaitTimeMsec) {
       executeTriggerWithoutDelay(trig);
-
+      // reset timeout *after* trigger completes, in case it blocked
+      // for a significant amount of time
+      setTimeOut();
+    }
     else {
       // check to see if this trigger is already represented in the
       // list of pending trigger threads.

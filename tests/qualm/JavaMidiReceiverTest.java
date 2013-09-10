@@ -1,8 +1,10 @@
 package qualm;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
@@ -26,7 +28,8 @@ public class JavaMidiReceiverTest {
   Receiver mockReceiver;
   QReceiver mockQR;
   JavaMidiReceiver jmr;
-
+  TestTimeSource timeSource = new TestTimeSource();
+  
   @Before
   public void setUp() {
     mockTransmitter = mock(Transmitter.class);
@@ -34,6 +37,7 @@ public class JavaMidiReceiverTest {
     jmr = new JavaMidiReceiver(mockTransmitter, mockReceiver);
     mockQR = mock(QReceiver.class);
     jmr.setTarget( mockQR );
+    Clock.setTimeSource(timeSource);
   }
 
   @Test
@@ -89,6 +93,41 @@ public class JavaMidiReceiverTest {
 
     verify(mockReceiver).send( argThat(new MidiMatcher(sm)), anyLong() );
   }
+  
+  @Test
+  public void sysexDelayWhenSpecified() throws Exception {
+    jmr.setSysexDelay(1000);
+    timeSource.setMillis(0);
+    
+    byte[] data = new byte[]{ (byte)0xF0, 1, 2, 4, 8, (byte)0xF7 };
+    MidiCommand sysexCmd = new MidiCommand();
+    sysexCmd.setSysex(data);
+    jmr.handleMidiCommand(sysexCmd);
+    
+    SysexMessage sm = new SysexMessage();
+    try { sm.setMessage(data, data.length); }
+    catch (Exception e) {}
+    
+    verify(mockReceiver).send( argThat(new MidiMatcher(sm)), anyLong() );
+
+    // immediately send another message. This will block, so do it in a separate thread.
+    final MidiCommand sysexCmdCopy = sysexCmd; 
+    Thread sendSecondSysex = new Thread(new Runnable() {
+      public void run() {
+        jmr.handleMidiCommand(sysexCmdCopy);
+      }
+    });
+    sendSecondSysex.start();
+    // still should only have sent one sysex.
+    verify(mockReceiver).send( argThat(new MidiMatcher(sm)), anyLong() );
+    
+    // time passes...
+    timeSource.setMillis(1100);
+    sendSecondSysex.join(200); // wait a little while for the spawned thread to finish
+    assertTrue(!sendSecondSysex.isAlive());
+    // should now have sent two sysex.
+    verify(mockReceiver, times(2)).send( argThat(new MidiMatcher(sm)), anyLong() );
+  }
 
   @Test
   public void closeClosesBothTransmitterAndReceiver() {
@@ -96,8 +135,6 @@ public class JavaMidiReceiverTest {
     verify(mockTransmitter).close();
     verify(mockReceiver).close();
   }
-
-
 
   /* We create a MidiMatcher method because MidiMessages don't have equals() */
   class MidiMatcher extends ArgumentMatcher<MidiMessage> {
@@ -113,4 +150,9 @@ public class JavaMidiReceiverTest {
     }
   }
 
+  class TestTimeSource implements TimeSource {
+    long curTime = 0;
+    public long millis() { return curTime; }
+    public void setMillis(long t) { curTime = t; }
+  }
 }
