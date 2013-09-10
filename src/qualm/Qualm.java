@@ -144,23 +144,23 @@ public class Qualm {
     if (outputPort != null) props.setProperty("outputPort", outputPort);
     props.setProperty("sysexDelayMillis", getSysexDelay(sysexDelay));
     
-    JavaMidiReceiver jmr = null;
+    AbstractQReceiver aqr = null;
     if (!skipMIDI)
       try {
-        jmr = JavaMidiReceiverFactory.buildFromProperties(props);       
+        aqr = JavaMidiReceiverFactory.buildFromProperties(props);       
       } catch (Exception e) {
         LOG.warning(e.getMessage());
         System.exit(0);
       }
     
-    MasterController mc = new MasterController( jmr );
+    MasterController mc = new MasterController( aqr );
     if (debugMIDI) mc.setDebugMIDI(true);
 
     QualmREPL repl = new QualmREPL( mc );
 
     // connect the transmitter to the receiver.
     if (!skipMIDI)
-      jmr.setTarget( mc );
+      aqr.setTarget( mc );
 
     if (inputFilename == null) {
       System.out.println("No filename given.\n");
