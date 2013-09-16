@@ -13,5 +13,4 @@ public abstract class AbstractQReceiver implements QReceiver {
       throw new IllegalArgumentException("Setting target to null; this shouldn't happen");
     this.target = t; 
   }
-  
 }
