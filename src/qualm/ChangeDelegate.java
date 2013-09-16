@@ -37,7 +37,7 @@ public abstract class ChangeDelegate {
    * device.  Can be used to determine if the bank description and
    * patch number have valid values.
    *
-   * Subclasses of ChangeDelegate may implment this at their
+   * Subclasses of ChangeDelegate may implement this at their
    * discretion; the default implementation is to mark all events as
    * valid.
    *
