@@ -5,9 +5,13 @@ package qualm;
  */
 public abstract class AbstractQReceiver implements QReceiver {
 
-  public QReceiver target;
+  private QReceiver target;
   
   public QReceiver getTarget() { return target; }
-  public void setTarget(QReceiver t) { this.target = t; }
+  public void setTarget(QReceiver t) {
+    if (t == null) 
+      throw new IllegalArgumentException("Setting target to null; this shouldn't happen");
+    this.target = t; 
+  }
   
 }

@@ -88,7 +88,7 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
     if (message instanceof ShortMessage) {
       ShortMessage sm = (ShortMessage)message;
       MidiCommand mc = new MidiCommand(sm.getChannel(),sm.getCommand(),sm.getData1(),sm.getData2());
-      getTarget().handleMidiCommand(mc);
+      handleCommand(mc);
     }
     if (message instanceof SysexMessage) {
       SysexMessage sysex = (SysexMessage)message;
@@ -98,6 +98,12 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
       data[0] = (byte) sysex.getStatus();
       System.arraycopy(sysex.getData(), 0, data, 1, sysex.getLength() - 1);
       mc.setSysex(data);
+      handleCommand(mc);
+    }
+  }
+
+  private void handleCommand(MidiCommand mc) {
+    if (getTarget() != null) {
       getTarget().handleMidiCommand(mc);
     }
   }
