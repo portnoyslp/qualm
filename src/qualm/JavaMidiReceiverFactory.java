@@ -59,9 +59,11 @@ public class JavaMidiReceiverFactory implements AbstractQReceiverFactory {
 
     JavaMidiReceiver jmr = new JavaMidiReceiver(trans, rec);
     
-    if (props.getProperty("sysexDelay") != null) {
+    if (props.getProperty("sysexDelayMillis") != null) {
       try {
-        jmr.setSysexDelay(Integer.valueOf(props.getProperty("sysexDelayMillis")));
+        int sysexDelayMillis = Integer.valueOf(props.getProperty("sysexDelayMillis"));
+        Qualm.LOG.info("Using sysex-delay = "+sysexDelayMillis+" ms");
+        jmr.setSysexDelay(sysexDelayMillis);
       } catch (NumberFormatException nfe) {
         throw new RuntimeException("Sysex delay value is not a number: " + nfe);
       }

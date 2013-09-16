@@ -71,7 +71,7 @@ public class Qualm {
     String outputPort = null;
     boolean debugMIDI = false;
     boolean skipMIDI = false;
-    String sysexDelay = null;
+    String sysexDelay = System.getProperty("qualm.midi.sysex-delay");
     
     // handle argument list
     int i = 0;
@@ -142,7 +142,7 @@ public class Qualm {
     Properties props = new Properties();
     if (inputPort != null) props.setProperty("inputPort", inputPort);
     if (outputPort != null) props.setProperty("outputPort", outputPort);
-    props.setProperty("sysexDelayMillis", getSysexDelay(sysexDelay));
+    if (sysexDelay != null) props.setProperty("sysexDelayMillis", sysexDelay);
     
     AbstractQReceiverFactory factory = new JavaMidiReceiverFactory();
     AbstractQReceiver aqr = null;
@@ -168,14 +168,6 @@ public class Qualm {
   
     // start the REPL
     repl.start();
-  }
-
-  /** 
-   * Fetches the sysex delay value, either through the given string or the loaded system properties.
-   */
-  private static String getSysexDelay(String delayArg) throws NumberFormatException {
-    return (delayArg != null ? delayArg :
-      System.getProperty("qualm.midi.sysex-delay", delayArg));    
   }
 }
 
