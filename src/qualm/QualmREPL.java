@@ -7,8 +7,10 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 import qualm.notification.CueChange;
 import qualm.notification.EventMapActivation;
@@ -229,15 +231,7 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
 
     tok = st.nextToken();
     if (tok.equals("list")) {
-      NotificationManager pm = controller.getNotificationManager();
-      for (CueChange ccn : pm.getCueNotifiers())
-	output.println("cue " + ccn.getClass().getName());
-
-      for (PatchChange pcn : pm.getPatchNotifiers())
-	output.println("patch " + pcn.getClass().getName());
-
-      for (EventMapActivation emn : pm.getMapNotifiers())
-	output.println("mapper " + emn.getClass().getName());
+      displayPluginList();
       return;
 
     } else if (tok.equals("remove")) {
@@ -252,6 +246,23 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
         addPlugin(tok);
     } catch (IllegalArgumentException iae) {
       output.println("Unable to create or identify requested plugin '" + tok + "; ignoring request.");
+    }
+  }
+
+  private void displayPluginList() {
+    NotificationManager pm = controller.getNotificationManager();
+    NotificationMap notifiers = new NotificationMap();
+    for (CueChange ccn : pm.getCueNotifiers())
+      notifiers.add(ccn.getClass().getName(), "cue"); 
+    
+    for (PatchChange pcn : pm.getPatchNotifiers())
+      notifiers.add(pcn.getClass().getName(), "patch");
+
+    for (EventMapActivation emn : pm.getMapNotifiers())
+      notifiers.add(emn.getClass().getName(), "mapper");
+    
+    for (String name : notifiers.keySet()) {
+      output.print(name + ": " + notifiers.joinedValues(name, ", "));
     }
   }
 
@@ -279,4 +290,30 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
     }
   }
 
+  // a simple multi-map implmentation
+  class NotificationMap extends HashMap<String, Set<String>> {
+    private static final long serialVersionUID = 1L;
+    public void add(String key, String val) {
+      if (!containsKey(key)) {
+        put(key, new TreeSet<String>());
+      }
+      Set<String> vals = get(key);
+      vals.add(val);
+      put(key, vals);
+    }
+    
+    public String joinedValues(String key, String delim) {
+      boolean first = true;
+      StringBuilder output = new StringBuilder();
+      for (String val : get(key)) {
+        if (!first) {
+          output.append(delim);
+        }
+        output.append(val);
+        first = false;
+      }
+      return output.toString();
+    }
+  }
+  
 }

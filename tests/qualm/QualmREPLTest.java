@@ -175,7 +175,8 @@ public class QualmREPLTest {
     when(notificationManager.getCueNotifiers()).thenReturn(plugins);
 
     repl.processLine("plugin list");
-    assertThat(output.toString(), containsString("cue qualm.QualmREPLTest$AllPlugin"));
+    // we only get the cue plugin, because that's all the mock notification manager returns.
+    assertThat(output.toString(), containsString("qualm.QualmREPLTest$AllPlugin: cue"));
   }
 
   @Test
