@@ -26,15 +26,6 @@ public class PreferencesManager {
   /**
    * Load all the preferences information, and re-install into the controller.
    * @throws IllegalArgumentException if a plugin cannot be reinstated.
-   * @deprecated Use {@link #loadPreferences()} instead
-   */
-  public void loadPreferences(QualmREPL repl) throws IllegalArgumentException {
-    loadPreferences();
-  }
-
-  /**
-   * Load all the preferences information, and re-install into the controller.
-   * @throws IllegalArgumentException if a plugin cannot be reinstated.
    */
   public void loadPreferences() throws IllegalArgumentException {
     // if there's no controller available, don't need to do anything.
