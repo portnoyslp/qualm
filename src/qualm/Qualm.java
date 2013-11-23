@@ -144,10 +144,9 @@ public class Qualm {
     if (outputPort != null) props.setProperty("outputPort", outputPort);
     if (sysexDelay != null) props.setProperty("sysexDelayMillis", sysexDelay);
     
-    AbstractQReceiverFactory factory = new JavaMidiReceiverFactory();
-    AbstractQReceiver aqr = null;
-    if (!skipMIDI)
-      aqr = factory.buildFromProperties(props);       
+    AbstractQReceiverFactory factory = 
+      (skipMIDI ? new NullQReceiverFactory() : new JavaMidiReceiverFactory());
+    AbstractQReceiver aqr = factory.buildFromProperties(props);       
     
     MasterController mc = new MasterController( aqr );
     if (debugMIDI) mc.setDebugMIDI(true);
