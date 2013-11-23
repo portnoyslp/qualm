@@ -154,8 +154,7 @@ public class Qualm {
     QualmREPL repl = new QualmREPL( mc );
 
     // connect the transmitter to the receiver.
-    if (!skipMIDI)
-      aqr.setTarget( mc );
+    aqr.setTarget( mc );
 
     if (inputFilename == null) {
       System.out.println("No filename given.\n");
