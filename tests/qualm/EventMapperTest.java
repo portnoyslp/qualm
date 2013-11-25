@@ -20,11 +20,11 @@ public class EventMapperTest {
   }
 
   @Test
-  public void nullWhenNoMatch() {
+  public void emptyWhenNoMatch() {
     EventMapper em = new EventMapper();
     em.setFromTemplate( EventTemplate.noteOn ( 0, null ) );
     MidiCommand[] out = em.mapEvent( new MidiCommand( 0, NOTE_OFF, 60 )); 
-    assertNull( out );
+    assertArrayEquals( out, new MidiCommand[0] );
   }
     
   @Test

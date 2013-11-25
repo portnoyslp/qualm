@@ -20,7 +20,7 @@ public class EventMapper {
 
   public MidiCommand[] mapEvent(MidiCommand cmd) {
     if (!match(cmd)) 
-      return null;
+      return new MidiCommand[0];
 
     // OK, we have a match.  Generate a series of new MIDI messages for the output.
     MidiCommand out[] = new MidiCommand[ mapToList.size() ];
