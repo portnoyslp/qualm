@@ -147,25 +147,25 @@ public class QDataLoader extends DefaultHandler {
 	if (targetPatch == null)
 	  System.err.println("WARNING: could not find patch with id " + 
 			     targetID);
+	else {
+	  // duplicate bank and number of target patch (but id and
+	  // description will be different)
+	  patch = new Patch( attributes.getValue("id"),
+	      targetPatch.getNumber() );
 
-	// duplicate bank and number of target patch (but id and
-	// description will be different)
-	patch = new Patch( attributes.getValue("id"),
-			   targetPatch.getNumber() );
+	  patch.setBank( targetPatch.getBank() );
 
-	patch.setBank( targetPatch.getBank() );
-
-	// duplicate volume of target patch unless the patch-alias
-	// sets its own independent volume attribute
-	if (attributes.getValue("volume") != null) {
-	  currentAttribute = "volume";
-	  String volStr = attributes.getValue("volume");
-	  int vol = parseIntOrPercent( volStr, 127 );
-	  patch.setVolume( new Integer(vol) );
+	  // duplicate volume of target patch unless the patch-alias
+	  // sets its own independent volume attribute
+	  if (attributes.getValue("volume") != null) {
+	    currentAttribute = "volume";
+	    String volStr = attributes.getValue("volume");
+	    int vol = parseIntOrPercent( volStr, 127 );
+	    patch.setVolume( new Integer(vol) );
+	  }
+	  else
+	    patch.setVolume( targetPatch.getVolume() );
 	}
-	else
-	  patch.setVolume( targetPatch.getVolume() );
-
       } else if (qName.equals("cue-stream")) {
 	qstream = new QStream();
 	qstream.setTitle(attributes.getValue("id"));
