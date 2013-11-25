@@ -98,6 +98,7 @@ public class Qualm {
 	case 1:
 	  // lint option
 	  validateInput = true;
+	  skipMIDI = true;
           break;
         case 2:
           // sysexdelay
@@ -165,7 +166,8 @@ public class Qualm {
     repl.loadFilename( inputFilename );
   
     // start the REPL
-    repl.start();
+    if (!validateInput)
+      repl.start();
   }
 }
 
