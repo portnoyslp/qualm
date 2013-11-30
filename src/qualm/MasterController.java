@@ -255,7 +255,7 @@ public class MasterController implements QReceiver {
     // remove existing controllers
     removeControllers();
 
-    QData qdata = Qualm.loadQDataFromFilename(filename);
+    QData qdata = QDataLoader.loadQDataFromFilename(filename);
     setQData(qdata);
 
     // For each cue stream, start a controller

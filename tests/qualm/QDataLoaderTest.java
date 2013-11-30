@@ -22,10 +22,9 @@ public class QDataLoaderTest {
   String fname;
   
   @Before
-  public void loadQDL1() {
+  public void loadQDL1() throws Exception {
     fname = "tests/qualm/qdl-1.xml";
-    QDataLoader qdl = new QDataLoader();
-    qd = qdl.readFile( new java.io.File(fname) );
+    qd = new QDataLoader().load( fname );
   }
   
   @Test

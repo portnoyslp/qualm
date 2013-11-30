@@ -5,6 +5,7 @@ import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -204,16 +205,11 @@ public class AuditionPatches {
     
     QDataLoader qdl = new QDataLoader();
     qdl.setIgnorePatchAliases(ignoreAliases);
-    
-    if (inputFilename.startsWith("http:") ||
-	inputFilename.startsWith("ftp:") ||
-	inputFilename.startsWith("file:")) {
-      // assume we have a URL
-      data = qdl.readSource( new org.xml.sax.InputSource(inputFilename));
-    } else {
-      data = qdl.readFile( new java.io.File( inputFilename ));
+    try {
+      data = qdl.load(inputFilename);
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to load file: " + inputFilename, e);
     }
-
   }
 
   public static void main(String[] args) {

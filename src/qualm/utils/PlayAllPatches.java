@@ -63,7 +63,7 @@ public class PlayAllPatches {
   }
 
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
 
     String inputPort = null;
     String outputPort = null;
@@ -94,17 +94,7 @@ public class PlayAllPatches {
     }
     String inputFilename = args[g.getOptind()];
 
-    QDataLoader qdl = new QDataLoader();
-    QData data;
-    
-    if (inputFilename.startsWith("http:") ||
-	inputFilename.startsWith("ftp:") ||
-	inputFilename.startsWith("file:")) {
-      // assume we have a URL
-      data = qdl.readSource( new org.xml.sax.InputSource(inputFilename));
-    } else {
-      data = qdl.readFile( new java.io.File( inputFilename ));
-    }
+    QData data = new QDataLoader().load(inputFilename);
     
     // Set up MIDI ports
     Properties props = new Properties();
