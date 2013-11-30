@@ -3,6 +3,10 @@ package qualm;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
@@ -46,21 +50,26 @@ public class Qualm {
       " (build " + System.getProperty("qualm.version.build") + ")";
   }
 
-  public static QData loadQDataFromFilename(String inputFilename) {
+  public static QData loadQDataFromFilename(String inputFilename) throws IOException {
     QData data;
 
     // Load the qualm file
     QDataLoader qdl = new QDataLoader( validateInput );
 
-    if (inputFilename.startsWith("http:") ||
-	inputFilename.startsWith("ftp:") ||
-	inputFilename.startsWith("file:")) {
-      // assume we have a URL
-      data = qdl.readSource( new org.xml.sax.InputSource(inputFilename));
-    } else {
-      data = qdl.readFile( new java.io.File( inputFilename ));
+    URL inputURL;
+    try {
+      inputURL = new URL(inputFilename);
+    } catch (MalformedURLException e) {
+      // not a URL, treat it as a filename.
+      try {
+        inputURL = new java.io.File(inputFilename)
+          .toURI().toURL();
+      } catch (MalformedURLException e1) {
+        throw new IllegalArgumentException("unable to build filename", e1);
+      }
     }
-
+    InputStream inputStream = inputURL.openConnection().getInputStream();
+    data = qdl.readSource( new org.xml.sax.InputSource(inputStream));
     return data;
   }
 

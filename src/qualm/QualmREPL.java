@@ -2,6 +2,7 @@ package qualm;
 
 import java.io.BufferedReader;
 import java.io.EOFException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -41,7 +42,11 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
   
   public void loadFilename( String filename ) {
     inputFilename = filename;
-    controller.loadFilename(filename);
+    try {
+      controller.loadFilename(filename);
+    } catch (IOException e) {
+      output.println( "Unable to load " + filename + ": " + e);
+    }
     output.println( "Loaded data from " + filename );
 
     if (isRunning)

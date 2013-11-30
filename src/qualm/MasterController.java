@@ -1,5 +1,6 @@
 package qualm;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -250,7 +251,7 @@ public class MasterController implements QReceiver {
     return notificationManager.removeNotification(name);
   }
   
-  public void loadFilename( String filename ) {
+  public void loadFilename( String filename ) throws IOException {
     // remove existing controllers
     removeControllers();
 
