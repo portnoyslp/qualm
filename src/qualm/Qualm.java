@@ -4,9 +4,6 @@ import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Properties;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
@@ -50,27 +47,11 @@ public class Qualm {
       " (build " + System.getProperty("qualm.version.build") + ")";
   }
 
+  /**
+   * @deprecated Use {@link QDataLoader#loadQDataFromFilename(String)} instead
+   */
   public static QData loadQDataFromFilename(String inputFilename) throws IOException {
-    QData data;
-
-    // Load the qualm file
-    QDataLoader qdl = new QDataLoader( validateInput );
-
-    URL inputURL;
-    try {
-      inputURL = new URL(inputFilename);
-    } catch (MalformedURLException e) {
-      // not a URL, treat it as a filename.
-      try {
-        inputURL = new java.io.File(inputFilename)
-          .toURI().toURL();
-      } catch (MalformedURLException e1) {
-        throw new IllegalArgumentException("unable to build filename", e1);
-      }
-    }
-    InputStream inputStream = inputURL.openConnection().getInputStream();
-    data = qdl.readSource( new org.xml.sax.InputSource(inputStream));
-    return data;
+    return QDataLoader.loadQDataFromFilename(inputFilename);
   }
 
   public static void main(String[] args) throws Exception {

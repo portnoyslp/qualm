@@ -1,7 +1,10 @@
 package qualm;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,16 +44,23 @@ public class QDataLoader extends DefaultHandler {
     }
   }
 
-  public QData readFile( File f ) {
+  public QData load(String fileSpecification) throws IOException {
+    URL inputURL;
     try {
-      parser.parse( f, this );
-      qdata.prepareCueStreams();
-      return qdata;
-    } catch (Exception e) {
-      System.out.println("Couldn't parse " + f + ": " + e);
-      return null;
+      inputURL = new URL(fileSpecification);
+    } catch (MalformedURLException e) {
+      // not a URL, treat it as a filename.
+      try {
+        inputURL = new java.io.File(fileSpecification)
+          .toURI().toURL();
+      } catch (MalformedURLException e1) {
+        throw new IllegalArgumentException("unable to build filename", e1);
+      }
     }
+    InputStream inputStream = inputURL.openConnection().getInputStream();
+    return readSource( new org.xml.sax.InputSource(inputStream));
   }
+  
   public QData readSource( org.xml.sax.InputSource f ) {
     try {
       parser.parse( f, this );
@@ -405,6 +415,14 @@ public class QDataLoader extends DefaultHandler {
 			 + ", line " + err.getLineNumber()
 			 + ", uri " + err.getSystemId());
       Qualm.LOG.warning("   " + err.getMessage());
+    }
+  }
+  
+  public static QData loadQDataFromFilename(String fileName) {
+    try {
+      return new QDataLoader().load(fileName);
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to load file: " + fileName, e);
     }
   }
 }
