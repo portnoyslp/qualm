@@ -3,7 +3,6 @@ package qualm;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
-import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
@@ -45,13 +44,6 @@ public class Qualm {
   public static String versionString() {
     return "Qualm v" + System.getProperty("qualm.version.number") +
       " (build " + System.getProperty("qualm.version.build") + ")";
-  }
-
-  /**
-   * @deprecated Use {@link QDataLoader#loadQDataFromFilename(String)} instead
-   */
-  public static QData loadQDataFromFilename(String inputFilename) throws IOException {
-    return QDataLoader.loadQDataFromFilename(inputFilename);
   }
 
   public static void main(String[] args) throws Exception {
