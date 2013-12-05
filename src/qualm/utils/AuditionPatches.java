@@ -27,40 +27,17 @@ public class AuditionPatches {
   static Patch defaultPatch = null;
   static boolean playSingle = false;
   static boolean ignoreAliases = false;
+  static int channel = 0;
 
-  public static void playArpeggiatedChord(int holdTime) {
-    // play a Cmaj chord with increasing strength from p (30) to ff
-    // (96) [ c4, e4, g4, c5 (60,64,67,72)]
-
+  public static void playAudition(int holdTime) {
     try {
       // slight delay to give synth time to process patch change
       Thread.sleep(500);
 
-      if (playSingle) {
-	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 60, 70 ));
-      } else {
-	
-	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 60, 30 ));
-	Thread.sleep(500);
-	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 64, 52 ));
-	Thread.sleep(500);
-	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 67, 74 ));
-	Thread.sleep(500);
-	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 72, 96 ));
-      }
-
-      // let it ring before silencing.
-      Thread.sleep(holdTime);
-
-      if (playSingle) {
-	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 60, 0 ));
-
-      } else {
-	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 60, 0 ));
-	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 64, 0 ));
-	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 67, 0 ));
-	midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, 0, 72, 0 ));
-      }
+      if (playSingle)
+        playSingleNote(holdTime);
+      else
+	playArpeggiatedChord(holdTime);
       
       // delay another 1s
       Thread.sleep(800);
@@ -68,6 +45,33 @@ public class AuditionPatches {
       e.printStackTrace();
       return;
     }
+  }
+
+  private static void playSingleNote(int holdTime) throws InterruptedException {
+    midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, channel, 60, 70 ));
+    Thread.sleep(holdTime);
+    midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, channel, 60, 0 ));
+  }
+  
+  private static void playArpeggiatedChord(int holdTime) throws InterruptedException {
+    // play a Cmaj chord with increasing strength from p (30) to ff
+    // (96) [ c4, e4, g4, c5 (60,64,67,72)]
+
+    midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, channel, 60, 30 ));
+    Thread.sleep(500);
+    midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, channel, 64, 52 ));
+    Thread.sleep(500);
+    midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, channel, 67, 74 ));
+    Thread.sleep(500);
+    midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, channel, 72, 96 ));
+    
+    // let it ring before silencing.
+    Thread.sleep(holdTime);
+
+    midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, channel, 60, 0 ));
+    midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, channel, 64, 0 ));
+    midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, channel, 67, 0 ));
+    midiOut.handleMidiCommand(new MidiCommand( NOTE_ON, channel, 72, 0 ));
   }
 
   public static void auditionPatch(Patch p) {
@@ -80,15 +84,15 @@ public class AuditionPatches {
 
     // for each patch, we play it, then we play the default, then we
     // play the original again with a slightly longer hold time.
-    PatchChanger.patchChange( new ProgramChangeEvent( 0, null, p ),
+    PatchChanger.patchChange( new ProgramChangeEvent( channel, null, p ),
 			      midiOut );
-    playArpeggiatedChord( 1000 );
-    PatchChanger.patchChange( new ProgramChangeEvent( 0, null, defaultPatch ),
+    playAudition( 1000 );
+    PatchChanger.patchChange( new ProgramChangeEvent( channel, null, defaultPatch ),
 			      midiOut );
-    playArpeggiatedChord( 1000 );
-    PatchChanger.patchChange( new ProgramChangeEvent( 0, null, p ),
+    playAudition( 1000 );
+    PatchChanger.patchChange( new ProgramChangeEvent( channel, null, p ),
 			      midiOut );
-    playArpeggiatedChord( 1500 );
+    playAudition( 1500 );
     
   }
 
@@ -222,7 +226,8 @@ public class AuditionPatches {
     longopts[i++] = new LongOpt("default", LongOpt.REQUIRED_ARGUMENT, null, 'p');
     longopts[i++] = new LongOpt("single", LongOpt.NO_ARGUMENT, null, 's');
     longopts[i++] = new LongOpt("ignore-aliases", LongOpt.NO_ARGUMENT, null, 'i');
-    Getopt g = new Getopt("Qualm", args, "o:p:si", longopts);
+    longopts[i++] = new LongOpt("channel", LongOpt.REQUIRED_ARGUMENT, null, 'c');
+    Getopt g = new Getopt("Qualm", args, "o:p:c:si", longopts);
 
     int c;
     String defaultPatchName = "Piano";
@@ -234,6 +239,9 @@ public class AuditionPatches {
 	  break;
 	case 'p':
 	  defaultPatchName = g.getOptarg();
+	  break;
+	case 'c':
+	  channel = Integer.parseInt(g.getOptarg()) - 1;
 	  break;
 	case 's':
 	  playSingle = true;
