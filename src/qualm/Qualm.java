@@ -131,7 +131,7 @@ public class Qualm {
       (skipMIDI ? new NullQReceiverFactory() : new JavaMidiReceiverFactory());
     AbstractQReceiver aqr = factory.buildFromProperties(props);       
     
-    MasterController mc = new MasterController( aqr) );
+    MasterController mc = new MasterController( aqr );
     if (debugMIDI) VerboseReceiver.setDebugMIDI(true);
 
     QualmREPL repl = new QualmREPL( mc );
