@@ -166,9 +166,9 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
 	reset();
 
       } else if (lowerCase.equals("showmidi")) {
-	controller.setDebugMIDI(true);
+        VerboseReceiver.setDebugMIDI(true);
       } else if (lowerCase.equals("unshowmidi")) {
-	controller.setDebugMIDI(false);
+        VerboseReceiver.setDebugMIDI(false);
 
       } else if (lowerCase.startsWith("plugin")) {
 	parsePluginLine(line);

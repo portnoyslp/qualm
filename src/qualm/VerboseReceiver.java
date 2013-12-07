@@ -4,14 +4,14 @@ package qualm;
 
 public class VerboseReceiver extends AbstractQReceiver {
 
-  boolean debugMIDI;
+  static boolean debugMIDI;
 
   public VerboseReceiver( QReceiver out ) {
     setTarget( out );
   }
 
-  public boolean getDebugMIDI() { return debugMIDI; }
-  public void setDebugMIDI(boolean db) { debugMIDI = db; }
+  public static boolean getDebugMIDI() { return debugMIDI; }
+  public static void setDebugMIDI(boolean db) { debugMIDI = db; }
 
   public void handleMidiCommand(MidiCommand midiCommand) {
     if (debugMIDI)

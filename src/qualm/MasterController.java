@@ -24,7 +24,6 @@ public class MasterController implements QReceiver {
   QReceiver midiOut;
   SortedMap<String, QController> controllers;
   QualmREPL REPL = null;
-  boolean debugMIDI = false;
   boolean silentErrorHandling = true;
   private NotificationManager notificationManager;
   private QData qdata;
@@ -220,20 +219,12 @@ public class MasterController implements QReceiver {
     getNotificationManager().endNotifications();
   }
 
-  public void setDebugMIDI(boolean flag) { 
-    debugMIDI=flag; 
-    if (midiOut instanceof VerboseReceiver) 
-      ((VerboseReceiver)midiOut).setDebugMIDI(flag);
-  }
   public void setSilentErrorHandling(boolean flag) { silentErrorHandling=flag; }
 
   /* Forwards the given midi command to all the controllers.
    * @see qualm.QReceiver#handleMidiCommand(qualm.MidiCommand)
    */
   public void handleMidiCommand(MidiCommand midi) {
-    if (debugMIDI) 
-      Qualm.LOG.fine( "Rec'd" + midi );
-
     try {
       for (QController qc : controllers.values() ) {
         qc.handleMidiCommand(midi);

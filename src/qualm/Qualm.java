@@ -131,13 +131,13 @@ public class Qualm {
       (skipMIDI ? new NullQReceiverFactory() : new JavaMidiReceiverFactory());
     AbstractQReceiver aqr = factory.buildFromProperties(props);       
     
-    MasterController mc = new MasterController( aqr );
-    if (debugMIDI) mc.setDebugMIDI(true);
+    MasterController mc = new MasterController( aqr) );
+    if (debugMIDI) VerboseReceiver.setDebugMIDI(true);
 
     QualmREPL repl = new QualmREPL( mc );
 
     // connect the transmitter to the receiver.
-    aqr.setTarget( mc );
+    aqr.setTarget( new VerboseReceiver(mc) );
 
     if (inputFilename == null) {
       System.out.println("No filename given.\n");
