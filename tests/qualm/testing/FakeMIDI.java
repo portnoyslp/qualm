@@ -8,6 +8,7 @@ import qualm.QData;
 import qualm.QDataLoader;
 import qualm.QReceiver;
 import qualm.QStream;
+import qualm.VerboseReceiver;
 
 import junit.framework.Assert;
 
@@ -63,7 +64,6 @@ public class FakeMIDI implements QReceiver {
     }
   }
     
-
   public void run() {
     long firstStamp = ((TimestampedMsg)outgoingMessages.get(0)).timestamp ;
     long runStartTime = System.currentTimeMillis() - firstStamp;
@@ -92,8 +92,8 @@ public class FakeMIDI implements QReceiver {
 
     for (QStream qs : qd.getCueStreams()) 
       mc.addController (new QController( fm, qs, mc ));
-    fm.setReceiver( mc );
-    mc.setDebugMIDI(true);
+    fm.setReceiver( new VerboseReceiver(mc) );
+    VerboseReceiver.setDebugMIDI(true);
 
     mc.gotoCue("0.0");
    

@@ -138,9 +138,9 @@ public class QualmREPLTest {
   @Test
   public void setMidiOutput() throws Exception {
     repl.processLine("showmidi");
-    verify(controller).setDebugMIDI(true);
+    assertEquals(true, VerboseReceiver.getDebugMIDI());
     repl.processLine("unshowmidi");
-    verify(controller).setDebugMIDI(false);
+    assertEquals(false, VerboseReceiver.getDebugMIDI());
   }
 
   @Test
