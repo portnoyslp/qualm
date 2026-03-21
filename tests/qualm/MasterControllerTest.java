@@ -24,6 +24,7 @@ public class MasterControllerTest {
   @Test
   public void addingControllerSetsMaster() {
     QController mockControl = mock(QController.class);
+    when(mockControl.getTitle()).thenReturn("mock");
     mc.addController(mockControl);
     verify(mockControl).setMaster(mc);
   }
@@ -49,6 +50,7 @@ public class MasterControllerTest {
   @Test
   public void handleMidiCommandCallsQController() {
     QController mockControl = mock(QController.class);
+    when(mockControl.getTitle()).thenReturn("mock");
     mc.addController(mockControl);
     mc.handleMidiCommand( null );
     verify(mockControl).handleMidiCommand( null );

@@ -108,5 +108,9 @@ public class PatchChanger {
 
   private static PatchChanger[] changer = new PatchChanger[16];
 
+  static void resetForTesting() {
+    changer = new PatchChanger[16];
+  }
+
 } 
 

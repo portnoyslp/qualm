@@ -15,6 +15,7 @@ public class QDataTest {
 
   @Before
   public void setup() {
+    PatchChanger.resetForTesting();
     testData = new QDataBuilder()
       .addMidiChannel( 0, null, "Ch1")
       .addStream(new QStreamBuilder()
@@ -34,7 +35,7 @@ public class QDataTest {
   public void addingMidiChannelUpdatesPatchChanger() {
     QData qd = new QData();
     qd.addMidiChannel( 2, null, "Test");
-    assertEquals(PatchChanger.getRequestedDeviceForChannel(2), null);
+    assertEquals(null, PatchChanger.getRequestedDeviceForChannel(2));
   }
 
   @Test	public void dumpWorks() {
