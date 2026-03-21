@@ -1,0 +1,784 @@
+<?xml version="1.0"?>
+<!DOCTYPE qualm-data PUBLIC "-//QUALM/DTD Qualm Data//EN" "http://qualm.berlios.de/qualm.dtd">
+
+<qualm-data>
+  <title>Wild Party Keyboards</title>
+  
+  <midi-channels>
+    <channel num="3">K1 - Piano</channel>
+    <channel num="1">K2</channel>
+    <channel num="2">K2 Layer 2</channel>
+  </midi-channels>
+
+  <patches>
+    <patch id="Mute" bank="User" num="3">Mute</patch>
+    <patch id="125 Fast Solo Tenor/126 Dynamic Tpt" bank="User" num="2" volume="80%"
+	   comment="Split between F#4 and C4">125 Fast Solo Tenor/126 Dynamic Tpt</patch>
+    <patch id="232 Power B-3 2" bank="PrA" num="50" volume="80%">232 Power B-3 2</patch>
+    <patch id="43 Synthitar Lead" bank="PrA" num="121" volume="80%">43 Synthitar Lead</patch>
+    <!-- India Jams all based on A101 T1,3 -->
+    <patch id="808 India Jam/Bells" bank="User" num="4" volume="80%"
+	   comment="Split between A3 and E6">808 India Jam/Bells</patch>
+    <patch id="808 India Jam/Da Klav" bank="User" num="5" volume="80%"
+	   comment="Split between G3 and E4">808 India Jam/Da Klav</patch>
+    <patch id="808 India Jam/Vibes" bank="User" num="6" volume="80%"
+	   comment="Split between A3 and C4">808 India Jam/Vibes</patch>
+    <patch id="82 Synth Bass (sounds 8vb)" bank="User" num="7" volume="80%">82 Synth Bass (sounds 8vb)</patch>
+    <patch id="Acoustic Gtr/Harp" bank="User" num="8" volume="80%"
+	   comment="Split between G4 and B4">Acoustic Gtr/Harp</patch>
+    <patch id="Andy's Brass 8va/Tpts Harmon 8vb" bank="User" num="9" volume="80%"
+	   comment="Split between D4 and F4">Andy's Brass 8va/Tpts Harmon 8vb</patch>
+    <patch id="Banjo" bank="PrD" num="106" volume="80%">Banjo</patch>
+    <patch id="Bass Clar." bank="XpA" num="104" volume="80%">Bass Clar.</patch>
+    <patch id="Bass Clar./Flutes" bank="User" num="10" volume="80%"
+	   comment="Split between G3 and G4">Bass Clar./Flutes</patch>
+    <patch id="Brass" bank="XpA" num="168" volume="80%">Brass</patch>
+    <patch id="Calliope" bank="PrD" num="83" volume="80%">Calliope</patch>
+    <patch id="Celesta" bank="XpA" num="201" volume="80%">Celesta</patch>
+    <patch id="Clarinets" bank="XpA" num="102" volume="70%">Clarinets</patch>
+    <patch id="Da Klav" bank="PrA" num="34" volume="80%">Da Klav</patch>
+    <patch id="Da Klav/Banjo" bank="User" num="12" volume="80%"
+	   comment="Split between D3 and C4">Da Klav/Banjo</patch>
+    <patch id="Da Klav/Vibes" bank="User" num="13" volume="80%"
+	   comment="Split between D3 and F3">Da Klav/Vibes</patch>
+    <patch id="Da Klav/Vibes 2" bank="User" num="14" volume="80%"
+	   comment="Split between F2 and D3">Da Klav/Vibes</patch>
+    <patch id="Flute" bank="XpA" num="87" volume="80%">Flute</patch>
+    <patch id="French Horn" bank="XpA" num="123" volume="80%">French Horn</patch>
+    <patch id="Jazz Gtr" bank="PrD" num="27" volume="80%">Jazz Gtr</patch>
+    <patch id="Kotolin" bank="PrD" num="108" volume="80%">Kotolin</patch>
+    <patch id="Marimba" bank="XpA" num="204" volume="80%">Marimba</patch>
+    <patch id="Mbira" bank="PrA" num="104" volume="80%">Mbira</patch>
+    <patch id="Orch Bell 8va" bank="User" num="15" volume="80%">Orch Bell 8va</patch>
+    <patch id="Orch Bells" bank="XpA" num="217" volume="80%">Orch Bells</patch>
+    <patch id="Organ" bank="PrA" num="47" volume="80%">Organ</patch>
+    <patch id="Perc Organ (loco+8va)" bank="User" num="16" volume="80%">Perc Organ (loco+8va)</patch>
+    <patch id="Piano" bank="PrA" num="2" volume="100%">Piano</patch>
+    <patch id="Piano in Db (Sounds up 1/2)" bank="User" num="17" volume="80%">Piano in Db (Sounds up 1/2)</patch>
+    <patch id="Piano+Electric" bank="User" num="18" volume="80%">Piano+Electric</patch>
+    <patch id="Piano+Marimba/Piano loco + Vibes 8va" bank="User" num="19" volume="80%"
+	   comment="Split between Bb3 and B3">Piano+Marimba/Piano loco + Vibes 8va</patch>
+    <patch id="Piano/Piano loco + Vibes 8va" bank="User" num="20" volume="80%"
+	   comment="Split between F2 and A3">Piano/Piano loco + Vibes 8va</patch>
+    <patch id="Piano/Vibes" bank="User" num="21" volume="80%"
+	   comment="Split between E4 and G4">Piano/Vibes</patch>
+    <patch id="Saxophones" bank="PrB" num="116" volume="70%">Saxophones</patch>
+    <patch id="Solo Cello/Piano" bank="User" num="22" volume="80%"
+	   comment="Splite between A3 and A#3">Solo Cello/Piano</patch>
+    <patch id="Solo Cello/Piano 2" bank="User" num="23" volume="80%"
+	   comment="Splite between F3 and F#3">Solo Cello/Piano</patch>
+    <patch id="Solo Violin" bank="XpA" num="10" volume="80%">Solo Violin</patch>
+    <patch id="Strings" bank="XpA" num="43" volume="80%">Strings</patch>
+    <patch id="Strings/Meditation Pad" bank="User" num="24" volume="80%"
+	   comment="Split between C2 and B3">Strings/Meditation Pad</patch>
+    <patch id="Strings/String Harmonics" bank="User" num="25" volume="80%"
+	   comment="Split between E4 and D7">Strings/String Harmonics</patch>
+    <patch id="Tbns + Fr Horns" bank="User" num="26" volume="80%">Tbns + Fr Horns</patch>
+    <patch id="Tpts with Harmon" bank="XpA" num="120" volume="80%">Tpts with Harmon</patch>
+    <patch id="Trem Strings" bank="PrC" num="41" volume="80%">Trem Strings</patch>
+    <patch id="Vc/Cb Arco+Pizz/Horns/Vioilins" bank="User" num="29" volume="80%"
+	   comment="Splits between G3 and D4, G4 and C5" >Vc/Cb Arco+Pizz/Horns/Vioilins</patch>
+    <patch id="Vibes" bank="XpA" num="207" volume="100%">Vibes</patch>
+    <patch id="Vibes (loco+8va)" bank="User" num="30" volume="80%">Vibes (loco+8va)</patch>
+    <patch id="Vibes (loco+8vb)" bank="User" num="31" volume="80%">Vibes (loco+8vb)</patch>
+    <patch id="Vibes (long sustain)" bank="User" num="32" volume="80%">Vibes (long sustain)</patch>
+    <patch id="Warm Bass/Duke's Lead" bank="User" num="33" volume="80%"
+	   comment="Split between F3 and D4">Warm Bass/Duke's Lead</patch>
+    <patch id="Xylo" bank="XpA" num="210" volume="80%">Xylo</patch>
+    <patch id="Yama Bass/189 Choir Strings" bank="User" num="34" volume="80%"
+	   comment="Split between E2 and A4">Yama Bass/189 Choir Strings</patch>
+    <patch id="Yama Bass/Fr Hn Section" bank="User" num="35" volume="80%"
+	   comment="Split between C#3 and F3">Yama Bass/Fr Hn Section</patch>
+    <patch id="Yama Bass/Mbira (loco, 8va and 8vb)" bank="User" num="36" volume="80%"
+	   comment="Split between A2 and G3">Yama Bass/Mbira (loco, 8va and 8vb)</patch>
+    <patch-alias id="Andy's Brass" target="Brass">Andy's Brass</patch-alias>
+    <patch-alias id="124 Saxes" target="Saxophones">124 Saxes</patch-alias>
+    <patch-alias id="126 Dynamic Brass" target="Brass">126 Dynamic Brass</patch-alias>
+    <patch-alias id="126 Dynamic Tpt" target="Brass">126 Dynamic Tpt</patch-alias>
+    <patch-alias id="128 Str. Mute Tpt" target="Tpts with Harmon">128 Str. Mute Tpt</patch-alias>
+    <patch-alias id="133 Hip Brass" target="Brass">133 Hip Brass</patch-alias>
+    <patch-alias id="186 Synth Strings" target="Strings">186 Synth Strings</patch-alias>
+    <patch-alias id="Big String Ens." target="Strings">Big String Ens.</patch-alias>
+    <patch-alias id="Bright Miami Brass" target="Brass">Bright Miami Brass</patch-alias>
+    <patch-alias id="Perc Organ" target="Organ">Perc Organ</patch-alias>
+    <patch-alias id="Pipe Organ" target="Organ">Pipe Organ</patch-alias>
+    <patch-alias id="Gospel Organ" target="Organ">Gospel Organ</patch-alias>
+    <patch-alias id="Tack Piano" target="Piano">Tack Piano</patch-alias>
+    <patch-alias id="Fast Solo Tenor Sax" target="Saxophones">Fast Solo Tenor Sax</patch-alias>
+    <patch-alias id="Flat of Hand on Keys (Random Clusters)" target="Piano">Flat of Hand on Keys (Random Clusters)</patch-alias>
+    <patch-alias id="Flugels" target="Brass">Flugels</patch-alias>
+    <patch-alias id="Symphonic Strings" target="Strings">Symphonic Strings</patch-alias>
+    <patch-alias id="87 Strrummer Gtr" target="Jazz Gtr">87 Strrummer Gtr</patch-alias>
+    <patch-alias id="Legato Strings" target="Strings">Legato Strings</patch-alias>
+    <patch-alias id="Low Strings" target="Strings">Low Strings</patch-alias>
+    <patch-alias id="Piano/Chase" target="Piano">Piano/Chase</patch-alias>
+    <patch-alias id="233 Ballad Organ 3" target="Organ">233 Ballad Organ 3</patch-alias>
+    <patch-alias id="95 Perc Organ 2500" target="Organ">95 Perc Organ 2500</patch-alias>
+    <patch-alias id="Solo Tenor Sax" target="Saxophones">Solo Tenor Sax</patch-alias> 
+    <patch-alias id="Cello Section/Violin Section" target="Strings"
+	   comment="Split between A4 and D5">Cello Section/Violin Section</patch-alias>
+    <!-- volume changes -->
+    <patch-alias id="Quiet Strings" target="Strings" volume="50%">pp Strings</patch-alias>
+    <patch-alias id="Quiet 126 Dynamic Brass" target="Brass" volume="50%">pp 126 Dynamic Tpt</patch-alias>
+    <patch-alias id="Quiet 124 Saxes" target="Saxophones" volume="50%">pp 124 Saxes</patch-alias>
+
+ </patches>
+
+  <cue-stream id="K1">
+    <!-- Piano the whole way through; no triggers -->
+    <cue song="1" measure="1">
+      <events><program-change patch="Piano" channel="3"/></events>
+    </cue>
+  </cue-stream>
+
+  <cue-stream id="K2">
+    <global>
+      <trigger><note-on channel="1" note="c8"/></trigger>
+      <trigger><note-on channel="3" note="c8"/></trigger>
+      <trigger reverse="yes"><note-on channel="1" note="a0"/></trigger>
+    </global>
+
+    <cue song="1" measure="3">
+      <events><program-change patch="Piano in Db (Sounds up 1/2)" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="1" measure="10">
+      <events><program-change patch="Bright Miami Brass" channel="1"/></events>
+    </cue>
+    <cue song="1" measure="28">
+      <events><program-change patch="Bass Clar./Flutes" channel="1"/></events>
+    </cue>
+    <cue song="1" measure="34">
+      <events><program-change patch="Tack Piano" channel="1"/></events>
+    </cue>
+    <cue song="1" measure="46">
+      <events><program-change patch="Bass Clar./Flutes" channel="1"/></events>
+    </cue>
+    <cue song="1" measure="63">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="1" measure="81">
+      <events><program-change patch="Legato Strings" channel="1"/></events>
+    </cue>
+    <cue song="1" measure="89">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="1a" measure="115">
+      <events><program-change patch="Solo Violin" channel="1"/></events>
+    </cue>
+    <cue song="1a" measure="139">
+      <events><program-change patch="Pipe Organ" channel="1"/></events>
+    </cue>
+    <cue song="1a" measure="142">
+      <events><program-change patch="Kotolin" channel="1"/></events>
+    </cue>
+    <cue song="1a" measure="146">
+      <events><program-change patch="Pipe Organ" channel="1"/></events>
+    </cue>
+    <cue song="1a" measure="148">
+      <events><program-change patch="Kotolin" channel="1"/></events>
+    </cue>
+    <cue song="1a" measure="153">
+      <events><program-change patch="Pipe Organ" channel="1"/></events>
+    </cue>
+    <cue song="1a" measure="163">
+      <events><program-change patch="Big String Ens." channel="1"/></events>
+    </cue>
+    <cue song="1a" measure="233">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="2" measure="1">
+      <events><program-change patch="808 India Jam/Vibes" channel="1"/></events>
+    </cue>
+    <cue song="2" measure="30">
+      <events><program-change patch="Gospel Organ" channel="1"/></events>
+    </cue>
+    <cue song="2" measure="53">
+      <events><program-change patch="808 India Jam/Bells" channel="1"/></events>
+    </cue>
+    <cue song="2" measure="67">
+      <events><program-change patch="Gospel Organ" channel="1"/></events>
+    </cue>
+    <cue song="2" measure="78">
+      <events>
+	<program-change patch="Marimba" channel="1"/>
+	<program-change patch="Flute" channel="2"/>
+      </events>
+    </cue>
+    <cue song="2" measure="98">
+      <events><program-change patch="808 India Jam/Da Klav" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="2" measure="133">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="2a" measure="142">
+      <events><program-change patch="Da Klav/Vibes 2" channel="1"/></events>
+    </cue>
+    <cue song="2a" measure="179">
+      <events><program-change patch="Da Klav/Vibes" channel="1"/></events>
+    </cue>
+    <cue song="2a" measure="201">
+      <events><program-change patch="Clarinets" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="a">
+      <events><program-change patch="Strings" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="19">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="55">
+      <events><program-change patch="Tbns + Fr Horns" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="65">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="83">
+      <events><program-change patch="Clarinets" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="101">
+      <events><program-change patch="Bass Clar." channel="1"/></events>
+    </cue>
+    <cue song="3" measure="118">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="123">
+      <events><program-change patch="Marimba" channel="1"/>
+      <program-change patch="Flute" channel="2"/></events>
+    </cue>
+    <cue song="3" measure="127">
+      <events><program-change patch="Vibes" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="3" measure="141">
+      <events><program-change patch="186 Synth Strings" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="165">
+      <events><program-change patch="124 Saxes" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="169">
+      <events><program-change patch="Strings" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="183">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="1">
+      <events><program-change patch="Piano" channel="1"/>
+      <program-change patch="Orch Bells" channel="2"/>
+      </events>
+    </cue>
+    <cue song="4" measure="19">
+      <events><program-change patch="Da Klav/Vibes" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="4" measure="91">
+      <events><program-change patch="Vibes (loco+8vb)" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="110">
+      <events><program-change patch="Symphonic Strings" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="117">
+      <events><program-change patch="Solo Tenor Sax" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="123">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="139">
+      <events><program-change patch="Vibes (loco+8vb)" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="148">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="150">
+      <events>
+	<program-change patch="Strings" channel="2"/>
+      </events>
+    </cue>
+    <cue song="4" measure="176">
+      <events><program-change patch="Clarinets" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="5" measure="1">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="10">
+      <events><program-change patch="Bright Miami Brass" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="16">
+      <events><program-change patch="Fast Solo Tenor Sax" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="31">
+      <events><program-change patch="Bright Miami Brass" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="47">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="53">
+      <events><program-change patch="Bright Miami Brass" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="63">
+      <events><program-change patch="Fast Solo Tenor Sax" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="73">
+      <events><program-change patch="Bright Miami Brass" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="87">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="126">
+      <events><program-change patch="Da Klav" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="144">
+      <events><program-change patch="Fast Solo Tenor Sax" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="154">
+      <events><program-change patch="Bright Miami Brass" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="170">
+      <events><program-change patch="Solo Tenor Sax" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="176">
+      <events><program-change patch="Bright Miami Brass" channel="1"/></events>
+    </cue>
+    <cue song="5a" measure="1">
+      <events><program-change patch="Piano/Piano loco + Vibes 8va" channel="1"/></events>
+    </cue>
+    <cue song="5a" measure="7">
+      <events><program-change patch="Piano+Marimba/Piano loco + Vibes 8va" channel="1"/></events>
+    </cue>
+    <cue song="5a" measure="32">
+      <events><program-change patch="Yama Bass/Fr Hn Section" channel="1"/></events>
+    </cue>
+    <cue song="5a" measure="56">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="6" measure="1">
+      <events>
+	<program-change patch="Quiet 126 Dynamic Brass" channel="1"/>
+	<program-change patch="Quiet 124 Saxes" channel="2"/>
+      </events>
+    </cue>
+    <cue song="6" measure="11">
+      <events>
+	<program-change patch="Vibes" channel="1"/>
+	<program-change patch="Mute" channel="2"/>
+      </events>
+    </cue>
+    <cue song="6" measure="21">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="6" measure="34">
+      <events>
+	<program-change patch="Celesta" channel="1"/>
+	<program-change patch="Orch Bells" channel="2"/>
+      </events>
+    </cue>
+    <cue song="6" measure="39">
+      <events>
+	<program-change patch="126 Dynamic Tpt" channel="1"/>
+	<program-change patch="Mute" channel="2"/>
+      </events>
+    </cue>
+    <cue song="6" measure="53">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="6" measure="60">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/></events>
+    </cue>
+    <cue song="7" measure="1">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="7" measure="39">
+      <events><program-change patch="Vibes (loco+8va)" channel="1"/></events>
+    </cue>
+    <cue song="7" measure="43">
+      <events><program-change patch="Tack Piano" channel="1"/></events>
+    </cue>
+    <cue song="7" measure="57a">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="7" measure="182">
+      <events><program-change patch="Vibes (loco+8va)" channel="1"/></events>
+    </cue>
+    <cue song="7" measure="186">
+      <events><program-change patch="Vibes (long sustain)" channel="1"/>
+      <program-change patch="Piano" channel="2"/>
+      </events>
+    </cue>
+    <cue song="7" measure="200">
+      <events><program-change patch="Acoustic Gtr/Harp" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="8" measure="1">
+      <events><program-change patch="Clarinets" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="7">
+      <events><program-change patch="Da Klav/Banjo" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="24">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="35">
+      <events><program-change patch="Orch Bell 8va" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="40">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="48">
+      <events><program-change patch="128 Str. Mute Tpt" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="56">
+      <events><program-change patch="Da Klav/Banjo" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="73">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="105">
+      <events><program-change patch="128 Str. Mute Tpt" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="121">
+      <events><program-change patch="Piano" channel="1"/>
+      <program-change patch="Celesta" channel="2"/></events>
+    </cue>
+    <cue song="9" measure="137">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="9" measure="145">
+      <events><program-change patch="126 Dynamic Brass" channel="1"/></events>
+    </cue>
+    <cue song="10" measure="1">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/></events>
+    </cue>
+    <cue song="10" measure="19">
+      <events><program-change patch="Marimba" channel="1"/>
+      <program-change patch="Jazz Gtr" channel="2"/></events>
+    </cue>
+    <cue song="10" measure="58">
+      <events><program-change patch="Brass" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="10" measure="60">
+      <events><program-change patch="Marimba" channel="1"/></events>
+    </cue>
+    <cue song="11" measure="9">
+      <events><program-change patch="233 Ballad Organ 3" channel="1"/></events>
+    </cue>
+    <cue song="11" measure="28">
+      <events><program-change patch="Piano" channel="1"/>
+      <program-change patch="Vibes" channel="2"/></events>
+    </cue>
+    <cue song="11" measure="115">
+      <events><program-change patch="233 Ballad Organ 3" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="11" measure="174">
+      <events>
+	<program-change patch="Piano" channel="1"/>
+	<program-change patch="Vibes" channel="2"/>
+      </events>
+    </cue>
+    <cue song="11" measure="178">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="11" measure="183">
+      <events>
+	<program-change patch="Piano" channel="1"/>
+	<program-change patch="Vibes" channel="2"/>
+      </events>
+    </cue>
+    <cue song="12" measure="31">
+      <events><program-change patch="95 Perc Organ 2500" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="13" measure="1">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="13" measure="57">
+      <events>
+	<program-change patch="Brass" channel="1"/>
+	<program-change patch="Saxophones" channel="2"/>
+      </events>
+    </cue>
+    <cue song="13" measure="66">
+      <events>
+	<program-change patch="Piano" channel="1"/>
+	<program-change patch="Mute" channel="2"/>
+      </events>
+    </cue>
+    <cue song="13a" measure="12">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="13b" measure="1">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="13b" measure="31">
+      <events><program-change patch="Strings" channel="1"/></events>
+    </cue>
+    <cue song="14" measure="1">
+      <events><program-change patch="Strings/String Harmonics" channel="1"/></events>
+    </cue>
+    <cue song="14" measure="3">
+      <events><program-change patch="Strings" channel="1"/></events>
+    </cue>
+    <cue song="15" measure="1">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="15" measure="32">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/></events>
+    </cue>
+    <cue song="15" measure="40">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="15" measure="54">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="15" measure="59">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/></events>
+    </cue>
+    <cue song="15" measure="71">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="15" measure="83">
+      <events><program-change patch="126 Dynamic Brass" channel="1"/></events>
+    </cue>
+    <cue song="15a" measure="1">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="16" measure="17">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="16" measure="36">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="16" measure="52">
+      <events><program-change patch="Piano/Vibes" channel="1"/></events>
+    </cue>
+    <cue song="16" measure="68">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="16" measure="82">
+      <events><program-change patch="125 Fast Solo Tenor/126 Dynamic Tpt" channel="1"/></events>
+    </cue>
+    <cue song="16a" measure="1">
+      <events><program-change patch="Andy's Brass 8va/Tpts Harmon 8vb" channel="1"/></events>
+    </cue>
+    <cue song="17" measure="1">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="17" measure="19">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="17" measure="39">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="17" measure="48">
+      <events><program-change patch="Trem Strings" channel="1"/></events>
+    </cue>
+    <cue song="17" measure="52">
+      <events><program-change patch="Strings" channel="1"/></events>
+    </cue>
+    <cue song="17" measure="77">
+      <events><program-change patch="French Horn" channel="1"/></events>
+    </cue>
+    <cue song="17" measure="83">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="17" measure="84">
+      <events><program-change patch="French Horn" channel="1"/></events>
+    </cue>
+    <cue song="17b" measure="1">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="17b" measure="17">
+      <events><program-change patch="Perc Organ (loco+8va)" channel="1"/></events>
+    </cue>
+    <cue song="17b" measure="40">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="17b" measure="45">
+      <events><program-change patch="Perc Organ" channel="1"/></events>
+    </cue>
+    <cue song="17b" measure="61">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="18" measure="9">
+      <events><program-change patch="Strings" channel="1"/></events>
+    </cue>
+    <cue song="19" measure="1">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="19" measure="16">
+      <events><program-change patch="Piano/Chase" channel="1"/></events>
+    </cue>
+    <cue song="19" measure="51">
+      <events><program-change patch="Calliope" channel="1"/></events>
+    </cue>
+    <cue song="19" measure="72">
+      <events><program-change patch="Flat of Hand on Keys (Random Clusters)" channel="1"/></events>
+    </cue>
+    <cue song="19a" measure="1">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="19a" measure="15">
+      <events><program-change patch="232 Power B-3 2" channel="1"/></events>
+    </cue>
+    <cue song="19a" measure="145">
+      <events><program-change patch="82 Synth Bass (sounds 8vb)" channel="1"/></events>
+    </cue>
+    <cue song="19a" measure="177">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/></events>
+    </cue>
+    <cue song="19a" measure="188">
+      <events><program-change patch="Brass" channel="1"/></events>
+    </cue>
+    <cue song="19a" measure="201">
+      <events><program-change patch="Organ" channel="1"/></events>
+    </cue>
+    <cue song="21" measure="1">
+      <events><program-change patch="43 Synthitar Lead" channel="1"/></events>
+    </cue>
+    <cue song="21" measure="9">
+      <events><program-change patch="Piano+Electric" channel="1"/></events>
+    </cue>
+    <cue song="21" measure="26">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="21" measure="43">
+      <events><program-change patch="Andy's Brass" channel="1"/></events>
+    </cue>
+<!-- These measures were cut
+    <cue song="21" measure="45">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="21" measure="53">
+      <events><program-change patch="Andy's Brass" channel="1"/></events>
+    </cue>
+    <cue song="21" measure="75">
+      <events><program-change patch="Xylo" channel="1"/></events>
+    </cue>
+-->
+    <cue song="21" measure="85">
+      <events><program-change patch="Piano+Electric" channel="1"/></events>
+    </cue>
+    <cue song="22" measure="1">
+      <events><program-change patch="87 Strrummer Gtr" channel="1"/></events>
+    </cue>
+    <cue song="23" measure="a">
+      <events><program-change patch="Vc/Cb Arco+Pizz/Horns/Vioilins" channel="1"/></events>
+    </cue>
+    <cue song="23" measure="1">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="23" measure="13">
+      <events><program-change patch="Strings" channel="1"/></events>
+    </cue>
+    <cue song="23" measure="68">
+      <events><program-change patch="Gospel Organ" channel="1"/></events>
+    </cue>
+    <cue song="24" measure="108">
+      <events><program-change patch="Mbira" channel="1"/></events>
+    </cue>
+    <cue song="24" measure="136">
+      <events><program-change patch="Yama Bass/189 Choir Strings" channel="1"/></events>
+    </cue>
+    <cue song="24" measure="163">
+      <events><program-change patch="Gospel Organ" channel="1"/></events>
+    </cue>
+    <cue song="24" measure="184">
+      <events><program-change patch="Mbira" channel="1"/>
+      <program-change patch="Piano" channel="2"/></events>
+    </cue>
+    <cue song="24" measure="212">
+      <events><program-change patch="Yama Bass/Mbira (loco, 8va and 8vb)" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="24" measure="260">
+      <events><program-change patch="Gospel Organ" channel="1"/></events>
+    </cue>
+    <cue song="24a" measure="1">
+      <events><program-change patch="Warm Bass/Duke's Lead" channel="1"/></events>
+    </cue>
+    <cue song="25" measure="1">
+      <events><program-change patch="Solo Cello/Piano" channel="1"/></events>
+    </cue>
+    <cue song="25" measure="32">
+      <events><program-change patch="Solo Cello/Piano" channel="1"/></events>
+    </cue>
+    <cue song="25" measure="61">
+      <events><program-change patch="Cello Section/Violin Section" channel="1"/></events>
+    </cue>
+    <cue song="25" measure="105">
+      <events><program-change patch="Solo Cello/Piano" channel="1"/></events>
+    </cue>
+    <cue song="25a" measure="1">
+      <events><program-change patch="Strings/Meditation Pad" channel="1"/></events>
+    </cue>
+    <cue song="26" measure="1">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/></events>
+    </cue>
+    <cue song="26" measure="12">
+      <events><program-change patch="Low Strings" channel="1"/>
+      <program-change patch="Organ" channel="2"/></events>
+    </cue>
+    <cue song="26" measure="38">
+      <events><program-change patch="95 Perc Organ 2500" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="26" measure="113">
+      <events><program-change patch="Banjo" channel="1"/></events>
+    </cue>
+    <cue song="26" measure="129">
+      <events><program-change patch="126 Dynamic Tpt" channel="1"/></events>
+    </cue>
+    <cue song="26a" measure="17">
+      <events><program-change patch="Piano" channel="1"/>
+      <program-change patch="Vibes" channel="2"/></events>
+    </cue>
+    <cue song="27" measure="19">
+      <events><program-change patch="Clarinets" channel="1"/>
+      <program-change patch="Mute" channel="2"/></events>
+    </cue>
+    <cue song="27" measure="31">
+      <events><program-change patch="Flugels" channel="1"/></events>
+    </cue>
+    <cue song="27" measure="37">
+      <events><program-change patch="Andy's Brass" channel="1"/></events>
+    </cue>
+    <cue song="27" measure="84">
+      <events><program-change patch="Tpts with Harmon" channel="1"/></events>
+    </cue>
+    <cue song="27" measure="92">
+      <events><program-change patch="Andy's Brass" channel="1"/></events>
+    </cue>
+    <cue song="27" measure="102">
+      <events><program-change patch="Clarinets" channel="1"/></events>
+    </cue>
+    <cue song="27" measure="106">
+      <events><program-change patch="Tack Piano" channel="1"/></events>
+    </cue>
+    <cue song="27" measure="115">
+      <events>
+	<program-change patch="Andy's Brass" channel="1"/>
+	<program-change patch="Saxophones" channel="2"/>
+      </events>
+    </cue>
+    <cue song="28" measure="12">
+      <events>
+	<program-change patch="133 Hip Brass" channel="1"/>
+	<program-change patch="Mute" channel="2"/>
+      </events>
+    </cue>
+    <cue song="28" measure="21">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+    <cue song="28" measure="47">
+      <events><program-change patch="Andy's Brass" channel="1"/></events>
+    </cue>
+    <cue song="29" measure="1">
+      <events><program-change patch="Organ" channel="1"/></events>
+    </cue>
+  </cue-stream>
+
+</qualm-data>

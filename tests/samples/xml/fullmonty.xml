@@ -1,0 +1,595 @@
+<?xml version="1.0"?>
+<!DOCTYPE qualm-data PUBLIC "-//QUALM/DTD Qualm Data//EN" "http://qualm.berlios.de/qualm.dtd">
+
+<qualm-data>
+  <title>Full Monty Keyboards</title>
+
+  <midi-channels>
+    <channel num="1">K1</channel>
+    <channel num="2">K2</channel>
+    <channel num="3">Perc</channel>
+  </midi-channels>
+
+  <patches>
+    <patch id="Accordion" bank="PrD" num="22">Accordion</patch>
+    <patch id="Acoustic Piano" bank="User" num="01">Acoustic Piano</patch>
+    <patch id="Arco Stg Bass" bank="XpA" num="32">Arco Stg Bass</patch>
+    <patch id="Ballad Pno/Stngs" bank="User" num="04" comment="Piano up to G2, Brt El Pno+light Stgs above that.">Ballad Pno/Stngs</patch>
+    <patch id="Bass Clarinet" bank="XpA" num="104">Bass Clarinet</patch>
+    <patch id="Brass" bank="XpA" num="126">Brass</patch>
+    <patch id="Celeste" bank="XpA" num="203">Celeste</patch>
+    <patch id="Cellos" bank="XpA" num="25">Cellos</patch>
+    <patch id="Cheeze" bank="User" num="03" comment="organ sound? -- need to make vel sens">Cheeze</patch>
+    <patch id="Clarinet" bank="XpA" num="102">Clarinet</patch>
+    <patch id="Clavinet" bank="PrA" num="34">Clavinet</patch>
+    <patch id="Congas" bank="User" num="999">Congas</patch>
+    <patch id="Deep Stgs" bank="XpA" num="49">Deep Stgs</patch>
+    <patch id="Distortion Guitar" bank="User" num="08">Distortion Guitar</patch>
+    <patch id="Elec. Piano" bank="PrA" num="16">Elec. Piano</patch>
+    <patch id="EPiano+Stgs" bank="User" num="999" comment="Electric Piano 60%/Stgs 40%">EPiano+Stgs</patch>
+    <patch id="Hammond B3" bank="PrA" num="50" comment="need to make velsens">Hammond B3</patch>
+    <patch id="Hammond B3 / Moog Bass" bank="User" num="999" comment="no vibrato, split Bb2 - F4">Hammond B3 / Moog Bass</patch>
+    <patch id="Hammond B3 w/ Leslie" bank="User" num="999">Hammond B3 w/ Leslie</patch>
+    <patch id="Harp" bank="User" num="999" comment="(transposed Db -> Ab?)">Harp</patch>
+    <patch id="Honky Tonk" bank="PrD" num="4">Honky Tonk</patch>
+    <patch id="Low Brass" bank="XpA" num="122">Low Brass</patch>
+    <patch id="Marcato Stgs" bank="XpA" num="82">Marcato Stgs</patch>
+    <patch id="Marimba" bank="XpA" num="204">Marimba</patch>
+    <patch id="Moog Bass" bank="PrB" num="44">Moog Bass</patch>
+    <patch id="Northern Winds" bank="User" num="05" comment="C120 minus T3">Northern Winds</patch>
+    <patch id="Ocarinas or Recorders" bank="XpA" num="91">Ocarinas or Recorders</patch>
+    <patch id="Orch Bells" bank="XpA" num="212">Orch Bells</patch>
+    <patch id="Orch Ensemble" bank="User" num="02" comment="XA176 minus T2">Orch Ensemble</patch>
+    <patch id="Organ" bank="PrA" num="52">Organ</patch>
+    <patch id="Piano+Strings" bank="User" num="999">Piano+Strings</patch>
+    <patch id="Pizz Stgs" bank="XpA" num="76">Pizz Stgs</patch>
+    <patch id="Rhodes" bank="PrA" num="30">Rhodes</patch>
+    <patch id="Rhodes+Strings" bank="User" num="999">Rhodes+Strings</patch>
+    <patch id="Rok Piano" bank="PrA" num="2">Rok Piano</patch>
+    <patch id="Saxes" bank="PrB" num="117">Saxes</patch>
+    <patch id="Stadium Organ" bank="PrA" num="47">Stadium Organ</patch>
+    <patch id="Steel Drums" bank="PrA" num="99">Steel Drums</patch>
+    <patch id="Stgs/Cellos" bank="User" num="999" comment="split at B2/D3, with cellos sounding 8va -- or possibly the other way">Stgs/Cellos</patch>
+    <patch id="Strings" bank="XpA" num="43">Strings</patch>
+    <patch id="Suitcase Piano" bank="PrA" num="10">Suitcase Piano</patch>
+    <patch id="Sus Stgs" bank="XpA" num="34">Sus Stgs</patch>
+    <patch id="Synth Brass" bank="PrC" num="3">Synth Brass</patch>
+    <patch id="Synth Brass / Moog Bass" bank="User" num="999" comment="split at Bb2-F3">Synth Brass / Moog Bass</patch>
+    <patch id="Synth Trumpets" bank="PrB" num="127">Synth Trumpets</patch>
+    <patch id="Temple Blocks" bank="User" num="999">Temple Blocks</patch>
+    <patch id="Timpani" bank="XpA" num="238" comment="Timpani 3">Timpani</patch>
+    <patch id="Trombones" bank="XpA" num="151">Trombones</patch>
+    <patch id="Vibes" bank="XpA" num="207">Vibes</patch>
+    <patch id="Vibes+Harp" bank="User" num="999">Vibes+Harp</patch>
+    <patch id="Warm Stgs" bank="XpA" num="33" comment="(pedal control?)">Warm Stgs</patch>
+    <patch id="Weird spacial effects?" bank="PrC" num="125" comment="optional patch">Weird spacial effects?</patch>
+
+    <patch-alias id="Distortion Guitar #2" target="Distortion Guitar" comment="plays bass">Distortion Guitar #2</patch-alias>
+    <patch-alias id="Regular Stgs" target="Strings">Regular Stgs</patch-alias>
+    <patch-alias id="Stgs" target="Strings">Stgs</patch-alias>
+    <patch-alias id="String Pad" target="Strings" comment="(touch sensitive)">String Pad</patch-alias>
+  </patches>
+
+  <cue-stream id="K1">
+    <global>
+      <trigger><note-on channel="1" note="c8"/></trigger>
+      <trigger reverse="yes"><note-on channel="1" note="a0"/></trigger>
+    </global>
+
+    <cue song="1" measure="0">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="41c">
+      <events><program-change patch="Celeste" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="58">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="62">
+      <events><program-change patch="Marimba" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="65">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="1">
+      <events><program-change patch="Acoustic Piano" channel="1"/></events>
+    </cue>
+    <cue song="5b" measure="22">
+      <events><program-change patch="Cheeze" channel="1"/></events>
+    </cue>
+    <cue song="6" measure="c">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+    <cue song="6a" measure="19">
+      <events><program-change patch="Elec. Piano" channel="1"/></events>
+    </cue>
+    <cue song="6a" measure="44">
+      <events><program-change patch="Acoustic Piano" channel="1"/></events>
+    </cue>
+    <cue song="6b" measure="5">
+      <events><program-change patch="Elec. Piano" channel="1"/></events>
+    </cue>
+    <cue song="6b" measure="27">
+      <events><program-change patch="Acoustic Piano" channel="1"/></events>
+    </cue>
+    <cue song="6c" measure="1">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+    <cue song="8" measure="2">
+      <events><program-change patch="Vibes+Harp" channel="1"/></events>
+    </cue>
+    <cue song="8" measure="5">
+      <events><program-change patch="Acoustic Piano" channel="1"/></events>
+    </cue>
+    <cue song="8a" measure="1">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="81">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="85">
+      <events><program-change patch="Ballad Pno/Stngs" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="126">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="188">
+      <events><program-change patch="Northern Winds" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="192">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+    <cue song="11" measure="1">
+      <events><program-change patch="Acoustic Piano" channel="1"/></events>
+    </cue>
+    <cue song="11" measure="61">
+      <events><program-change patch="Honky Tonk" channel="1"/></events>
+    </cue>
+    <cue song="11" measure="68">
+      <events><program-change patch="Acoustic Piano" channel="1"/></events>
+    </cue>
+    <cue song="11a" measure="a">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+    <cue song="12" measure="1">
+      <events><program-change patch="Suitcase Piano" channel="1"/></events>
+    </cue>
+    <cue song="12a" measure="1">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+    <cue song="12a" measure="5">
+      <events><program-change patch="Marimba" channel="1"/></events>
+    </cue>
+    <cue song="12a" measure="19">
+      <events><program-change patch="Elec. Piano" channel="1"/></events>
+    </cue>
+    <cue song="13" measure="a">
+      <events><program-change patch="Clavinet" channel="1"/></events>
+    </cue>
+    <cue song="13" measure="77">
+      <events><program-change patch="Celeste" channel="1"/></events>
+    </cue>
+    <cue song="13" measure="86">
+      <events><program-change patch="Marimba" channel="1"/></events>
+    </cue>
+    <cue song="13" measure="91">
+      <events><program-change patch="Clavinet" channel="1"/></events>
+    </cue>
+    <cue song="13a" measure="17">
+      <events><program-change patch="Acoustic Piano" channel="1"/></events>
+    </cue>
+    <cue song="13a" measure="29">
+      <events><program-change patch="Vibes+Harp" channel="1"/></events>
+    </cue>
+    <cue song="13a" measure="42">
+      <events><program-change patch="Clavinet" channel="1"/></events>
+    </cue>
+    <cue song="13b" measure="1">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+    <cue song="13d" measure="aa">
+      <events><program-change patch="Suitcase Piano" channel="1"/></events>
+    </cue>
+    <cue song="14" measure="1">
+      <events><program-change patch="Acoustic Piano" channel="1"/></events>
+    </cue>
+    <cue song="14b" measure="1">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+    <cue song="14c" measure="4">
+      <events><program-change patch="Vibes+Harp" channel="1"/></events>
+    </cue>
+    <cue song="15" measure="1">
+      <events><program-change patch="Acoustic Piano" channel="1"/></events>
+    </cue>
+    <cue song="15a" measure="1">
+      <events><program-change patch="Rok Piano" channel="1"/></events>
+    </cue>
+  </cue-stream>
+
+  <cue-stream id="K2">
+    <global>
+      <trigger><note-on channel="2" note="c8"/></trigger>
+      <trigger reverse="yes"><note-on channel="2" note="a0"/></trigger>
+    </global>
+	
+    <cue song="1" measure="4">
+      <events><program-change patch="Rhodes" channel="1"/></events>
+    </cue>
+    <cue song="2" measure="3">
+      <events><program-change patch="Clarinet" channel="1"/></events>
+    </cue>
+    <cue song="2" measure="13">
+      <events><program-change patch="Clavinet" channel="1"/></events>
+    </cue>
+    <cue song="2" measure="125">
+      <events><program-change patch="Acoustic Piano" channel="1"/></events>
+    </cue>
+    <cue song="2a" measure="1">
+      <events><program-change patch="Clavinet" channel="1"/></events>
+    </cue>
+    <cue song="2a" measure="22">
+      <events><program-change patch="Synth Brass" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="a">
+      <events><program-change patch="Synth Brass / Moog Bass" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="16">
+      <events><program-change patch="Hammond B3 / Moog Bass" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="25">
+      <events><program-change patch="Synth Brass / Moog Bass" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="37">
+      <events><program-change patch="Hammond B3 / Moog Bass" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="46">
+      <events><program-change patch="Synth Brass" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="62">
+      <events><program-change patch="Hammond B3 / Moog Bass" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="92">
+      <events><program-change patch="Synth Brass" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="11">
+      <events><program-change patch="Orch Ensemble" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="41c">
+      <events><program-change patch="Regular Stgs" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="77">
+      <events><program-change patch="Orch Ensemble" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="94">
+      <events><program-change patch="Regular Stgs" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="97">
+      <events><program-change patch="Marcato Stgs" channel="1"/></events>
+    </cue>
+    <cue song="4a" measure="4">
+      <events><program-change patch="Regular Stgs" channel="1"/></events>
+    </cue>
+    <cue song="4a" measure="11">
+      <events><program-change patch="Orch Ensemble" channel="1"/></events>
+    </cue>
+    <cue song="4b" measure="3">
+      <events><program-change patch="Clavinet" channel="1"/></events>
+    </cue>
+    <cue song="4c" measure="1">
+      <events><program-change patch="Bass Clarinet" channel="1"/></events>
+    </cue>
+    <cue song="4c" measure="7">
+      <events><program-change patch="Moog Bass" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="17">
+      <events><program-change patch="String Pad" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="22">
+      <events><program-change patch="Ocarinas or Recorders" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="34">
+      <events><program-change patch="Regular Stgs" channel="1"/></events>
+    </cue>
+    <cue song="5b" measure="25">
+      <events><program-change patch="Pizz Stgs" channel="1"/></events>
+    </cue>
+    <cue song="5b" measure="44">
+      <events><program-change patch="Harp" channel="1"/></events>
+    </cue>
+    <cue song="6" measure="c">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="6" measure="k">
+      <events><program-change patch="Regular Stgs" channel="1"/></events>
+    </cue>
+    <cue song="6" measure="5">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="6a" measure="19">
+      <events><program-change patch="Regular Stgs" channel="1"/></events>
+    </cue>
+    <cue song="6a" measure="37">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="6a" measure="45">
+      <events><program-change patch="Regular Stgs" channel="1"/></events>
+    </cue>
+    <cue song="6a" measure="61">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="6b" measure="8">
+      <events><program-change patch="Pizz Stgs" channel="1"/></events>
+    </cue>
+    <cue song="6b" measure="27">
+      <events><program-change patch="Sus Stgs" channel="1"/></events>
+    </cue>
+    <cue song="6b" measure="36">
+      <events><program-change patch="Accordion" channel="1"/></events>
+    </cue>
+    <cue song="6b" measure="44">
+      <events><program-change patch="Regular Stgs" channel="1"/></events>
+    </cue>
+    <cue song="7" measure="11">
+      <events><program-change patch="Synth Brass" channel="1"/></events>
+    </cue>
+    <cue song="7" measure="52">
+      <events><program-change patch="Hammond B3 w/ Leslie" channel="1"/></events>
+    </cue>
+    <cue song="7" measure="98">
+      <events><program-change patch="Synth Brass" channel="1"/></events>
+    </cue>
+    <cue song="7b" measure="1">
+      <events><program-change patch="Hammond B3 w/ Leslie" channel="1"/></events>
+    </cue>
+    <cue song="8" measure="1">
+      <events><program-change patch="EPiano+Stgs" channel="1"/></events>
+    </cue>
+    <cue song="8" measure="44">
+      <events><program-change patch="Hammond B3 w/ Leslie" channel="1"/></events>
+    </cue>
+    <cue song="8" measure="65">
+      <events><program-change patch="EPiano+Stgs" channel="1"/></events>
+    </cue>
+    <cue song="8a" measure="1">
+      <events><program-change patch="Clavinet" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="46">
+      <events><program-change patch="Hammond B3 w/ Leslie" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="64">
+      <events><program-change patch="Synth Trumpets" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="93">
+      <events><program-change patch="Weird spacial effects?" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="123">
+      <events><program-change patch="Synth Brass" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="151">
+      <events><program-change patch="Arco Stg Bass" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="179">
+      <events><program-change patch="Synth Brass" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="191">
+      <events><program-change patch="Low Brass" channel="1"/></events>
+    </cue>
+    <cue song="9" measure="206">
+      <events><program-change patch="Stadium Organ" channel="1"/></events>
+    </cue>
+    <cue song="10" measure="a">
+      <events><program-change patch="Organ" channel="1"/></events>
+    </cue>
+    <cue song="10" measure="21">
+      <events><program-change patch="Rhodes" channel="1"/></events>
+    </cue>
+    <cue song="11a" measure="6">
+      <events><program-change patch="Moog Bass" channel="1"/></events>
+    </cue>
+    <cue song="11b" measure="1">
+      <events><program-change patch="Clavinet" channel="1"/></events>
+    </cue>
+    <cue song="12" measure="5">
+      <events><program-change patch="Warm Stgs" channel="1"/></events>
+    </cue>
+    <cue song="12a" measure="7">
+      <events><program-change patch="Pizz Stgs" channel="1"/></events>
+    </cue>
+    <cue song="12a" measure="11">
+      <events><program-change patch="Accordion" channel="1"/></events>
+    </cue>
+    <cue song="12a" measure="16">
+      <events><program-change patch="Pizz Stgs" channel="1"/></events>
+    </cue>
+    <cue song="12a" measure="27">
+      <events><program-change patch="Steel Drums" channel="1"/></events>
+    </cue>
+    <cue song="13" measure="b">
+      <events><program-change patch="Distortion Guitar" channel="1"/></events>
+    </cue>
+    <cue song="13" measure="60">
+      <events><program-change patch="Distortion Guitar #2" channel="1"/></events>
+    </cue>
+    <cue song="13" measure="104">
+      <events><program-change patch="Synth Brass" channel="1"/></events>
+    </cue>
+    <cue song="13a" measure="1">
+      <events><program-change patch="Distortion Guitar" channel="1"/></events>
+    </cue>
+    <cue song="13a" measure="18">
+      <events><program-change patch="Strings" channel="1"/></events>
+    </cue>
+    <cue song="13a" measure="26">
+      <events><program-change patch="EPiano+Stgs" channel="1"/></events>
+    </cue>
+    <cue song="13a" measure="48">
+      <events><program-change patch="Synth Brass" channel="1"/></events>
+    </cue>
+    <cue song="13b" measure="16">
+      <events><program-change patch="Clavinet" channel="1"/></events>
+    </cue>
+    <cue song="13d" measure="aa">
+      <events><program-change patch="Stgs" channel="1"/></events>
+    </cue>
+    <cue song="14" measure="3">
+      <events><program-change patch="Cellos" channel="1"/></events>
+    </cue>
+    <cue song="14" measure="11">
+      <events><program-change patch="Stgs/Cellos" channel="1"/></events>
+    </cue>
+    <cue song="14a" measure="1">
+      <events><program-change patch="Strings" channel="1"/></events>
+    </cue>
+    <cue song="14b" measure="1">
+      <events><program-change patch="Clavinet" channel="1"/></events>
+    </cue>
+    <cue song="14c" measure="1">
+      <events><program-change patch="Rhodes+Strings" channel="1"/></events>
+    </cue>
+    <cue song="15" measure="1">
+      <events><program-change patch="Piano+Strings" channel="1"/></events>
+    </cue>
+    <cue song="15" measure="12">
+      <events><program-change patch="Deep Stgs" channel="1"/></events>
+    </cue>
+    <cue song="15a" measure="1">
+      <events><program-change patch="Clavinet" channel="1"/></events>
+    </cue>
+    <cue song="16" measure="24">
+      <events><program-change patch="Synth Brass" channel="1"/></events>
+    </cue>
+    <cue song="16" measure="41">
+      <events><program-change patch="Clavinet" channel="1"/></events>
+    </cue>
+    <cue song="16" measure="90">
+      <events><program-change patch="Synth Brass" channel="1"/></events>
+    </cue>
+    <cue song="18" measure="4a">
+      <events><program-change patch="Trombones" channel="1"/></events>
+    </cue>
+    <cue song="18" measure="14">
+      <events><program-change patch="Hammond B3" channel="1"/></events>
+    </cue>
+    <cue song="18" measure="27">
+      <events><program-change patch="Synth Brass" channel="1"/></events>
+    </cue>
+    <cue song="18" measure="41">
+      <events><program-change patch="Saxes" channel="1"/></events>
+    </cue>
+    <cue song="18" measure="53">
+      <events><program-change patch="Brass" channel="1"/></events>
+    </cue>
+  </cue-stream>
+
+  <cue-stream id="Perc">
+    <cue song="1" measure="16">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="1" measure="37">
+      <events><program-change patch="Congas" channel="1"/></events>
+    </cue>
+    <cue song="1" measure="56">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="1" measure="72">
+      <events><program-change patch="Congas" channel="1"/></events>
+    </cue>
+    <cue song="2" measure="5">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="2" measure="85">
+      <events><program-change patch="Temple Blocks" channel="1"/></events>
+    </cue>
+    <cue song="2" measure="144">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="2a" measure="22">
+      <events><program-change patch="Congas" channel="1"/></events>
+    </cue>
+    <cue song="3" measure="64">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="11">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="41c">
+      <events><program-change patch="Orch Bells" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="94">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="4" measure="97">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="26">
+      <events><program-change patch="Orch Bells" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="66">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="5a" measure="12">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="5b" measure="1">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="5b" measure="43">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="6" measure="5">
+      <events><program-change patch="Congas" channel="1"/></events>
+    </cue>
+    <cue song="6" measure="100">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="6b" measure="52">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="8" measure="11">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="8" measure="67">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="10" measure="a">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="10" measure="37">
+      <events><program-change patch="Congas" channel="1"/></events>
+    </cue>
+    <cue song="10" measure="64">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="11" measure="70">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="11b" measure="4">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="12a" measure="20">
+      <events><program-change patch="Congas" channel="1"/></events>
+    </cue>
+    <cue song="13" measure="104">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="13a" measure="26">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="13a" measure="49">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+    <cue song="13d" measure="aa">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="14a" measure="4">
+      <events><program-change patch="Orch Bells" channel="1"/></events>
+    </cue>
+    <cue song="15" measure="16">
+      <events><program-change patch="Vibes" channel="1"/></events>
+    </cue>
+    <cue song="15" measure="26">
+      <events><program-change patch="Timpani" channel="1"/></events>
+    </cue>
+  </cue-stream>
+</qualm-data>

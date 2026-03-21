@@ -1,0 +1,91 @@
+title: "QDL-1"
+
+midi_channels:
+  1:
+    name: "Lower Kbd"
+  2:
+    name: "Upper Kbd"
+  10:
+    name: "Drums"
+
+patches:
+  P1:
+    name: "Patch 1"
+    bank: User
+    num: 1
+  P2:
+    name: "Patch 2"
+    bank: PrA
+    num: 2
+    volume: 20
+  P3:
+    name: "Patch 3"
+    bank: XpA
+    num: 3
+    volume: "80%"
+  Timpani:
+    bank: PrA
+    num: 5
+  P3_2:
+    name: "Patch 3 Alias"
+    target: P3
+    volume: "100%"
+
+cue_streams:
+  First_Stream:
+    channel: 1
+    global:
+      triggers:
+        - "1:c6"
+        - reverse: "1:c2"
+      event_maps:
+        - from:
+            control_change:
+              control: damper
+          to:
+            - control_change:
+                channel: 2
+                control: "80"
+    cues:
+      "3.1":
+        triggers:
+          - note_on:
+              channel: 2
+              note: g2
+            delay: 2500
+        pc: P1
+        events:
+          - note_on:
+              channel: 2
+              note: d#5
+      "3.16":
+        pc:
+          10: Timpani
+          1: P3
+        events:
+          - control_change:
+              channel: 2
+              control: pan
+              value: 10
+          - sysex: "F04110 421240 007F00 41F7"
+
+  Second_Stream:
+    channel: 2
+    global:
+      triggers:
+        - note_off:
+            channel: 2
+            note: c6
+    cues:
+      "1.1":
+        pc: P2
+      "2.10":
+        pc: P3_2
+        events:
+          - note_off:
+              channel: 2
+              note: ab3
+          - advance:
+              stream: First_Stream
+              song: "3"
+              measure: "1"

@@ -1,0 +1,97 @@
+title: "Test File for Qualm"
+
+midi_channels:
+  1:
+    name: "Lower Keyboard"
+    device_type: "Roland JV-1080"
+  2:
+    name: "Upper Keyboard"
+  4:
+    name: "Drum Kit"
+    device_type: "Alesis"
+
+patches:
+  Nice_Piano:
+    bank: User
+    num: 1
+  P2:
+    name: "TremStr/Str"
+    bank: User
+    num: 2
+  P3:
+    name: "Strs/FzzClav"
+    bank: User
+    num: 3
+    comment: "split at C5"
+  P4:
+    name: "Rhodes"
+    bank: PrA
+    num: 15
+    volume: "23%"
+  P5:
+    name: "Good Piano"
+    target: Nice_Piano
+  P95:
+    num: 95
+  P96:
+    num: 96
+
+cue_streams:
+  First_Stream:
+    channel: 1
+    global:
+      triggers:
+        - "1:c6"
+        - reverse: "1:c2"
+      event_maps:
+        - from:
+            control_change:
+              control: damper
+          to:
+            - control_change:
+                channel: 2
+                control: "80"
+    cues:
+      "1a.10":
+        pc: P3
+      "2.35":
+        pc: Nice_Piano
+        event_maps:
+          - from:
+              note_on:
+                note: "C4-D5"
+            to:
+              - note_on:
+                  channel: 2
+          - from:
+              note_off:
+                note: "C4-D5"
+            to:
+              - note_off:
+                  channel: 2
+      "2.102":
+        pc: P4
+      "3.1":
+        triggers:
+          - "2:g2"
+        pc:
+          2: P3
+      "3.16":
+        pc:
+          4: P96
+          1: P5
+
+  Second_Stream:
+    channel: 2
+    global:
+      triggers:
+        - "2:c6"
+    cues:
+      "1.1":
+        pc: P96
+      "2.10":
+        pc: P95
+        events:
+          - control_change:
+              control: "10"
+              value: 140

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE qualm-data PUBLIC "-//QUALM/DTD Qualm Data//EN" "http://qualm.berlios.de/qualm.dtd">
+
+<qualm-data>
+  <title>Reefer Madness</title>
+
+  <midi-channels>
+    <channel num="1" device-type="Roland JV-1080">Lower Keyboard</channel>
+    <channel num="2" device-type="Roland JV-1080">Upper Keyboard</channel>
+  </midi-channels>
+
+  <patches>
+    <patch id="Accordion" bank="PrD" num="22">Accordion</patch>
+    <patch id="Brass" bank="XpA" num="167">Brass</patch>
+    <patch id="BrassTimpani" bank="User" num="7">Brass+Timpani</patch>
+    <patch id="BrightRhodesEP" bank="PrA" num="28">Bright Rhodes EP</patch>
+    <patch id="Rickshaw" bank="User" num="2">Chinese 'Rickshaw'</patch>
+    <patch id="E.Piano" bank="User" num="29">Electric Piano</patch>
+    <patch id="GospelOrgan" bank="PrA" num="52">Organ</patch>
+    <patch id="Horns" bank="XpA" num="126">Horns</patch>
+    <patch id="MusicBox" bank="PrD" num="11">Music Box</patch>
+    <patch id="Piano" bank="User" num="44">Piano</patch>
+    <patch id="PianoStr" bank="PrA" num="12">Piano+Str</patch>
+    <patch id="PipeOrgan" bank="User" num="27">Pipe Organ</patch>
+    <patch id="Rhodes" bank="PrA" num="16">Rhodes</patch>
+    <patch id="Strings" bank="User" num="38">Strings</patch>
+    <patch id="Newscast" bank="User" num="3">'Newscast' Sound</patch>
+    <patch id="SynthOboe" bank="XpA" num="92">Synth Oboe</patch>
+    <patch id="Synth" bank="PrA" num="16">Synth</patch>
+    <patch id="Woodblocks" bank="PrD" num="116">Woodblocks</patch>
+  </patches>
+
+  <cue-stream>
+    <global>
+      <trigger><note-on channel="1" note="c8"/></trigger>
+      <trigger><note-on channel="2" note="c8"/></trigger>
+      <trigger><note-on channel="3" note="c8"/></trigger>
+      <trigger reverse="yes"><note-on channel="1" note="a0"/></trigger>
+      <trigger reverse="yes"><note-on channel="2" note="a0"/></trigger>
+
+<!--
+      <map-events>
+	<map-from><control-change channel="1" control="sustain"/></map-from>
+	<map-to><control-change channel="2" control="sustain"/></map-to>
+      </map-events>
+-->
+    </global>
+
+    <cue song="1" measure="1">
+      <events><program-change patch="Piano" channel="1"/>
+      <program-change patch="PipeOrgan" channel="2"/>
+      </events>
+    </cue>
+    <cue song="1" measure="83">
+      <events><program-change patch="Brass" channel="2"/></events>
+    </cue>
+    <cue song="2" measure="1">
+      <events><program-change patch="PianoStr" channel="1"/></events>
+    </cue>
+    <cue song="5" measure="1">
+      <events><program-change patch="Piano" channel="1"/>
+      <program-change patch="Strings" channel="2"/>
+      </events>
+    </cue>
+    <cue song="6" measure="1">
+      <events><program-change patch="PipeOrgan" channel="2"/></events>
+    </cue>
+    <cue song="8" measure="1">
+      <events><program-change patch="Strings" channel="2"/></events>
+    </cue>
+    <cue song="13" measure="61">
+      <events><program-change patch="SynthOboe" channel="2"/></events>
+    </cue>
+    <cue song="13" measure="95">
+      <events><program-change patch="Strings" channel="2"/></events>
+    </cue>
+    <cue song="16" measure="1">
+      <events><program-change patch="PianoStr" channel="1"/>
+      <program-change patch="PipeOrgan" channel="2"/>
+      </events>
+    </cue>
+    <cue song="17" measure="1">
+      <events><program-change patch="Piano" channel="1"/></events>
+      <events><program-change patch="BrassTimpani" channel="2"/></events>
+    </cue>
+    <cue song="20" measure="1">
+      <events><program-change patch="Strings" channel="2"/></events>
+    </cue>
+    <cue song="21" measure="1">
+      <events><program-change patch="MusicBox" channel="2"/></events>
+    </cue>
+    <cue song="23" measure="1">
+      <events><program-change patch="Strings" channel="2"/></events>
+    </cue>
+    <cue song="23" measure="39">
+      <events><program-change patch="E.Piano" channel="1"/></events>
+    </cue>
+    <cue song="23" measure="47">
+      <events><program-change patch="Piano" channel="1"/>
+      <program-change patch="Strings" channel="2"/>
+      </events>
+    </cue>
+    <cue song="23" measure="113">
+      <events><program-change patch="Horns" channel="2"/></events>
+    </cue>
+    <cue song="24" measure="1">
+      <events><program-change patch="PianoStr" channel="1"/></events>
+    </cue>
+    <cue song="24" measure="9">
+      <events>
+	<program-change patch="Piano" channel="1"/>
+	<program-change patch="Newscast" channel="2"/>
+      </events>
+    </cue>
+    <cue song="25" measure="1">
+      <events><program-change patch="BrightRhodesEP" channel="2"/></events>
+    </cue>
+    <cue song="25" measure="9">
+      <events><program-change patch="Rhodes" channel="2"/></events>
+    </cue>
+    <cue song="25" measure="71">
+      <events><program-change patch="Rickshaw" channel="2"/>
+      </events>
+    </cue>
+    <cue song="25" measure="75">
+      <events><program-change patch="Rhodes" channel="2"/></events>
+    </cue>
+    <cue song="26" measure="1">
+      <events><program-change patch="Brass" channel="2"/></events>
+    </cue>
+    <cue song="26" measure="24">
+      <events><program-change patch="Accordion" channel="1"/></events>
+    </cue>
+    <cue song="26" measure="26">
+      <events>
+	<program-change patch="Piano" channel="1"/>
+	<program-change patch="Brass" channel="2"/>
+      </events>
+    </cue>
+    <cue song="31" measure="1">
+      <events><program-change patch="PianoStr" channel="1"/></events>
+    </cue>
+    <cue song="33" measure="1">
+      <events><program-change patch="Synth" channel="1"/></events>
+    </cue>
+    <cue song="34" measure="1">
+      <events>
+	<program-change patch="Piano" channel="1"/>
+	<program-change patch="PipeOrgan" channel="2"/>
+      </events>
+    </cue>
+    <cue song="34" measure="91">
+      <events><program-change patch="Strings" channel="2"/></events>
+    </cue>
+    <cue song="34" measure="103">
+      <events><program-change patch="Woodblocks" channel="2"/></events>
+    </cue>
+    <cue song="34" measure="113">
+      <events><program-change patch="PipeOrgan" channel="2"/></events>
+    </cue>
+    <cue song="38" measure="1">
+      <events><program-change patch="BrassTimpani" channel="2"/></events>
+    </cue>
+    <cue song="39" measure="1">
+      <events><program-change patch="PipeOrgan" channel="2"/></events>
+    </cue>
+    <cue song="40" measure="1">
+      <events>
+	<program-change patch="GospelOrgan" channel="1"/>
+	<program-change patch="Piano" channel="2"/>
+      </events>
+    </cue>
+    <cue song="40" measure="106">
+      <events>
+	<program-change patch="Strings" channel="2"/>
+      </events>
+    </cue>
+    <cue song="40" measure="114">
+      <events>
+	<program-change patch="Brass" channel="2"/>
+      </events>
+    </cue>
+    <cue song="40" measure="118">
+      <events>
+	<program-change patch="Piano" channel="2"/>
+      </events>
+    </cue>
+    <cue song="40" measure="136">
+      <events>
+	<program-change patch="Brass" channel="2"/>
+      </events>
+    </cue>
+    <cue song="40" measure="144">
+      <events>
+	<program-change patch="BrassTimpani" channel="2"/>
+      </events>
+    </cue>
+    <cue song="41" measure="1">
+      <events><program-change patch="Piano" channel="1"/></events>
+    </cue>
+  </cue-stream>
+</qualm-data>

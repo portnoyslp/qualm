@@ -1,0 +1,216 @@
+title: "Reefer Madness"
+
+midi_channels:
+  1:
+    name: "Lower Keyboard"
+    device_type: "Roland JV-1080"
+  2:
+    name: "Upper Keyboard"
+    device_type: "Roland JV-1080"
+
+patches:
+  Accordion:
+    bank: PrD
+    num: 22
+  Brass:
+    bank: XpA
+    num: 167
+  BrassTimpani:
+    name: "Brass+Timpani"
+    bank: User
+    num: 7
+  BrightRhodesEP:
+    name: "Bright Rhodes EP"
+    bank: PrA
+    num: 28
+  Rickshaw:
+    name: "Chinese 'Rickshaw'"
+    bank: User
+    num: 2
+  E.Piano:
+    name: "Electric Piano"
+    bank: User
+    num: 29
+  GospelOrgan:
+    name: "Organ"
+    bank: PrA
+    num: 52
+  Horns:
+    bank: XpA
+    num: 126
+  MusicBox:
+    name: "Music Box"
+    bank: PrD
+    num: 11
+  Piano:
+    bank: User
+    num: 44
+  PianoStr:
+    name: "Piano+Str"
+    bank: PrA
+    num: 12
+  PipeOrgan:
+    name: "Pipe Organ"
+    bank: User
+    num: 27
+  Rhodes:
+    bank: PrA
+    num: 16
+  Strings:
+    bank: User
+    num: 38
+  Newscast:
+    name: "'Newscast' Sound"
+    bank: User
+    num: 3
+  SynthOboe:
+    name: "Synth Oboe"
+    bank: XpA
+    num: 92
+  Synth:
+    bank: PrA
+    num: 16
+  Woodblocks:
+    bank: PrD
+    num: 116
+
+# Single unnamed cue stream — ~ is the YAML null key.
+cue_streams:
+  ~:
+    global:
+      triggers:
+        - "1:c8"
+        - "2:c8"
+        - "3:c8"
+        - reverse: "1:a0"
+        - reverse: "2:a0"
+    cues:
+      "1.1":
+        pc:
+          1: Piano
+          2: PipeOrgan
+      "1.83":
+        pc:
+          2: Brass
+      "2.1":
+        pc:
+          1: PianoStr
+      "5.1":
+        pc:
+          1: Piano
+          2: Strings
+      "6.1":
+        pc:
+          2: PipeOrgan
+      "8.1":
+        pc:
+          2: Strings
+      "13.61":
+        pc:
+          2: SynthOboe
+      "13.95":
+        pc:
+          2: Strings
+      "16.1":
+        pc:
+          1: PianoStr
+          2: PipeOrgan
+      "17.1":
+        pc:
+          1: Piano
+          2: BrassTimpani
+      "20.1":
+        pc:
+          2: Strings
+      "21.1":
+        pc:
+          2: MusicBox
+      "23.1":
+        pc:
+          2: Strings
+      "23.39":
+        pc:
+          1: E.Piano
+      "23.47":
+        pc:
+          1: Piano
+          2: Strings
+      "23.113":
+        pc:
+          2: Horns
+      "24.1":
+        pc:
+          1: PianoStr
+      "24.9":
+        pc:
+          1: Piano
+          2: Newscast
+      "25.1":
+        pc:
+          2: BrightRhodesEP
+      "25.9":
+        pc:
+          2: Rhodes
+      "25.71":
+        pc:
+          2: Rickshaw
+      "25.75":
+        pc:
+          2: Rhodes
+      "26.1":
+        pc:
+          2: Brass
+      "26.24":
+        pc:
+          1: Accordion
+      "26.26":
+        pc:
+          1: Piano
+          2: Brass
+      "31.1":
+        pc:
+          1: PianoStr
+      "33.1":
+        pc:
+          1: Synth
+      "34.1":
+        pc:
+          1: Piano
+          2: PipeOrgan
+      "34.91":
+        pc:
+          2: Strings
+      "34.103":
+        pc:
+          2: Woodblocks
+      "34.113":
+        pc:
+          2: PipeOrgan
+      "38.1":
+        pc:
+          2: BrassTimpani
+      "39.1":
+        pc:
+          2: PipeOrgan
+      "40.1":
+        pc:
+          1: GospelOrgan
+          2: Piano
+      "40.106":
+        pc:
+          2: Strings
+      "40.114":
+        pc:
+          2: Brass
+      "40.118":
+        pc:
+          2: Piano
+      "40.136":
+        pc:
+          2: Brass
+      "40.144":
+        pc:
+          2: BrassTimpani
+      "41.1":
+        pc:
+          1: Piano
