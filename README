@@ -1,1 +1,8 @@
 "QuALM" is a cue advancer for Live MIDI.
+
+## Upcoming Format Migration
+
+The project is in the process of migrating its data format from XML to a
+leaner YAML representation. See `doc/parser-rewrite/PLAN.md` for the full
+project plan and `doc/parser-rewrite/YAML_SPEC.md` for the new YAML schema.
+

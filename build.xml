@@ -18,6 +18,7 @@
     <fileset dir="${basedir}">
       <!-- just in case there's no /usr/share/java... -->
       <include name="*-getopt*.jar"/>
+      <include name="snakeyaml*.jar"/>
     </fileset>
     <pathelement location="${builddir}"/>
   </path>
@@ -28,6 +29,9 @@
     <pathelement location="/usr/share/java/junit4.jar"/>
     <pathelement location="/usr/share/java/mockito-core.jar"/>
     <pathelement location="/usr/share/java/hamcrest-core.jar"/>
+    <fileset dir="${basedir}">
+      <include name="snakeyaml*.jar"/>
+    </fileset>
   </path>
 
   <!-- Added for code coverage -->
@@ -54,7 +58,7 @@
   </target>
 
   <target name="compile" depends="init">
-    <javac source="1.5" destdir="${builddir}" srcdir="${srcdir}"
+    <javac source="8" destdir="${builddir}" srcdir="${srcdir}"
 	   includeantruntime="false" debug="true">
       <classpath refid="classpath"/>
     </javac>
@@ -172,7 +176,7 @@
 
   <target name="compile-test">
   	<mkdir dir="${builddir.test}"/>
-    <javac source="1.5" srcdir="${srcdir};${srcdir.test}" destdir="${builddir.test}"
+    <javac source="8" srcdir="${srcdir};${srcdir.test}" destdir="${builddir.test}"
 	    includeantruntime="false" debug="true">
       <classpath refid="junit.classpath"/>
     </javac>
