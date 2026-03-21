@@ -7,12 +7,12 @@ import java.io.Writer;
 /**
  * Command-line converter: reads a Qualm XML file, writes YAML to stdout.
  *
- * Usage: java qualm.QToYAML <input.xml>
+ * Usage: java qualm.QualmXMLToYAML <input.xml>
  */
-public class QToYAML {
+public class QualmXMLToYAML {
 
   private static void usage() {
-    System.err.println("Usage: java qualm.QToYAML <input.xml>");
+    System.err.println("Usage: java qualm.QualmXMLToYAML <input.xml>");
     System.err.println("  Reads a Qualm XML file and writes YAML to stdout.");
     System.exit(1);
   }
