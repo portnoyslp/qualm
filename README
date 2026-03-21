@@ -1,5 +1,32 @@
 "QuALM" is a cue advancer for Live MIDI.
 
+## Building
+
+Requires Java 8+ and [Gradle](https://gradle.org/) (or use the system Ant if
+you prefer the legacy build).
+
+```
+# compile
+gradle build
+
+# run all tests
+gradle test
+
+# build a runnable jar
+gradle jar
+```
+
+The jar lands at `build/libs/qualm.jar`. Run it with:
+
+```
+java -jar build/libs/qualm.jar <control-file.xml>
+```
+
+## Data Format
+
+Control files are written in XML (see `doc/README` for the original format
+description) or in the newer YAML format (see `doc/parser-rewrite/YAML_SPEC.md`).
+
 ## Upcoming Format Migration
 
 The project is in the process of migrating its data format from XML to a
