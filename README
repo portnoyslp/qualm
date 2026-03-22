@@ -2,8 +2,7 @@
 
 ## Building
 
-Requires Java 8+ and [Gradle](https://gradle.org/) (or use the system Ant if
-you prefer the legacy build).
+Requires Java 8+ and [Gradle](https://gradle.org/).
 
 ```
 # compile
