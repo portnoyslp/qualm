@@ -175,5 +175,26 @@ public class EventTemplate {
   protected int extra2Max;
 
   public static int DONT_CARE = -1;
-  
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) return true;
+    if (obj == null || obj.getClass() != this.getClass()) return false;
+    EventTemplate o = (EventTemplate) obj;
+    return type == o.type && channel == o.channel
+        && extra1Min == o.extra1Min && extra1Max == o.extra1Max
+        && extra2Min == o.extra2Min && extra2Max == o.extra2Max;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = type;
+    result = 31 * result + channel;
+    result = 31 * result + extra1Min;
+    result = 31 * result + extra1Max;
+    result = 31 * result + extra2Min;
+    result = 31 * result + extra2Max;
+    return result;
+  }
+
 }

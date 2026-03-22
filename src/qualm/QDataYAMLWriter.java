@@ -15,9 +15,8 @@ import java.util.List;
  * Mirrors QDataXMLReader.outputXML() for the XML format.
  * Uses shorthands where possible (pc: scalar, compact trigger strings).
  *
- * Note: the global: section cannot be reconstructed because global triggers
- * and event_maps are merged into each cue when loading; they are written
- * per-cue in the output.
+ * Global triggers and event_maps are reconstructed by finding the longest
+ * common prefix shared by all cues in a stream.
  */
 public class QDataYAMLWriter {
 
@@ -99,10 +98,66 @@ public class QDataYAMLWriter {
     if (defaultChannel >= 0)
       out.println("    channel: " + (defaultChannel + 1));
 
+    List<Trigger> globalTriggers = detectGlobalTriggerPrefix(qs);
+    List<EventMapper> globalMaps = detectGlobalMapPrefix(qs);
+
+    if (!globalTriggers.isEmpty() || !globalMaps.isEmpty()) {
+      out.println("    global:");
+      if (!globalTriggers.isEmpty()) {
+        out.println("      triggers:");
+        for (Trigger t : globalTriggers)
+          writeTrigger(t, defaultChannel, "        ");
+      }
+      if (!globalMaps.isEmpty()) {
+        out.println("      event_maps:");
+        for (EventMapper em : globalMaps)
+          writeEventMapper(em, defaultChannel, "        ");
+      }
+    }
+
     if (!qs.getCues().isEmpty()) {
       out.println("    cues:");
       for (Cue cue : qs.getCues())
-        writeCue(cue, defaultChannel, "      ");
+        writeCue(cue, defaultChannel, globalTriggers.size(), globalMaps.size(), "      ");
+    }
+  }
+
+  private List<Trigger> detectGlobalTriggerPrefix(QStream qs) {
+    return detectCommonPrefix(qs, true);
+  }
+
+  private List<EventMapper> detectGlobalMapPrefix(QStream qs) {
+    return detectCommonPrefix(qs, false);
+  }
+
+  private <T> List<T> detectCommonPrefix(QStream qs, boolean forTriggers) {
+    List<Cue> cues = new ArrayList<>(qs.getCues());
+    if (cues.size() < 2) return Collections.emptyList();
+
+    List<T> candidate = cueTriggerOrMapList(cues.get(0), forTriggers);
+    for (int i = 1; i < cues.size(); i++) {
+      List<T> cueList = cueTriggerOrMapList(cues.get(i), forTriggers);
+      int prefixLen = 0;
+      while (prefixLen < candidate.size() && prefixLen < cueList.size()
+          && candidate.get(prefixLen).equals(cueList.get(prefixLen)))
+        prefixLen++;
+      candidate = candidate.subList(0, prefixLen);
+      if (candidate.isEmpty()) return Collections.emptyList();
+    }
+    return new ArrayList<>(candidate);
+  }
+
+  private <T> List<T> cueTriggerOrMapList(Cue cue, boolean forTriggers) {
+    if (forTriggers) {
+      List<Trigger> t = cue.getTriggers() == null ? Collections.<Trigger>emptyList()
+          : new ArrayList<>(cue.getTriggers());
+      @SuppressWarnings("unchecked") List<T> result = (List<T>) t;
+      return result;
+    } else {
+      List<EventMapper> m = cue.getEventMaps() == null ? Collections.<EventMapper>emptyList()
+          : new ArrayList<>(cue.getEventMaps());
+      @SuppressWarnings("unchecked") List<T> result = (List<T>) m;
+      return result;
     }
   }
 
@@ -124,7 +179,8 @@ public class QDataYAMLWriter {
 
   // --- cue ---
 
-  private void writeCue(Cue cue, int defaultChannel, String indent) {
+  private void writeCue(Cue cue, int defaultChannel,
+      int globalTriggerCount, int globalMapCount, String indent) {
     out.println(indent + "\"" + cue.getCueNumber() + "\":");
     String i2 = indent + "  ";
 
@@ -156,15 +212,25 @@ public class QDataYAMLWriter {
         writeEvent(ev, defaultChannel, i2 + "  ");
     }
 
-    if (cue.getTriggers() != null && !cue.getTriggers().isEmpty()) {
+    // write only the cue-local triggers (after the global prefix)
+    List<Trigger> cueTriggers = cue.getTriggers() == null
+        ? Collections.<Trigger>emptyList()
+        : new ArrayList<>(cue.getTriggers()).subList(
+            globalTriggerCount, cue.getTriggers().size());
+    if (!cueTriggers.isEmpty()) {
       out.println(i2 + "triggers:");
-      for (Trigger t : cue.getTriggers())
+      for (Trigger t : cueTriggers)
         writeTrigger(t, defaultChannel, i2 + "  ");
     }
 
-    if (cue.getEventMaps() != null && !cue.getEventMaps().isEmpty()) {
+    // write only the cue-local event_maps (after the global prefix)
+    List<EventMapper> cueMaps = cue.getEventMaps() == null
+        ? Collections.<EventMapper>emptyList()
+        : new ArrayList<>(cue.getEventMaps()).subList(
+            globalMapCount, cue.getEventMaps().size());
+    if (!cueMaps.isEmpty()) {
       out.println(i2 + "event_maps:");
-      for (EventMapper em : cue.getEventMaps())
+      for (EventMapper em : cueMaps)
         writeEventMapper(em, defaultChannel, i2 + "  ");
     }
   }

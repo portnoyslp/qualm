@@ -41,8 +41,20 @@ public class EventMapper {
 
   public String toString() { return "EM[" + mapFrom + "=>" + mapToList + "]"; }
 
-  
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) return true;
+    if (obj == null || obj.getClass() != this.getClass()) return false;
+    EventMapper o = (EventMapper) obj;
+    return mapFrom.equals(o.mapFrom) && mapToList.equals(o.mapToList);
+  }
+
+  @Override
+  public int hashCode() {
+    return 31 * mapFrom.hashCode() + mapToList.hashCode();
+  }
+
   EventTemplate mapFrom;
   List<EventTemplate> mapToList = new ArrayList<EventTemplate>();
-  
+
 }

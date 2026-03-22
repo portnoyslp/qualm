@@ -34,5 +34,22 @@ public class Trigger {
   protected int delay;
   protected boolean reverse = false;
   protected EventTemplate template;
-  
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) return true;
+    if (obj == null || obj.getClass() != this.getClass()) return false;
+    Trigger o = (Trigger) obj;
+    return reverse == o.reverse && delay == o.delay
+        && template.equals(o.template);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = template.hashCode();
+    result = 31 * result + (reverse ? 1 : 0);
+    result = 31 * result + delay;
+    return result;
+  }
+
 }
