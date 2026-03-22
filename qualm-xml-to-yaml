@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cwd=`/usr/bin/dirname $0`
+java -cp $cwd/build/libs/qualm.jar qualm.QualmXMLToYAML "$@"
