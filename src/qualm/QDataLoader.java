@@ -64,7 +64,6 @@ public class QDataLoader extends DefaultHandler {
   public QData readSource( org.xml.sax.InputSource f ) {
     try {
       parser.parse( f, this );
-      qdata.prepareCueStreams();
       return qdata;
     } catch (Exception e) {
       System.out.println("Couldn't parse " + f + ": " + e);

@@ -52,7 +52,6 @@ public class QDataBuilder {
       qd.addPatch(p);
     for(QStream qs : cueStreams)
       qd.addCueStream(qs);
-    qd.prepareCueStreams();
     return qd;
   }
 }

@@ -37,7 +37,6 @@ public class QControllerTest {
     
     qd.addMidiChannel( 0, null, "Ch1" );
     qd.addCueStream( qs );
-    qd.prepareCueStreams();
 
     when(mockMaster.getQData()).thenReturn(qd);
     qc = new QController( mockReceiver, qs, mockMaster );

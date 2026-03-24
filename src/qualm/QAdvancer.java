@@ -2,7 +2,6 @@ package qualm;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -77,12 +76,11 @@ public class QAdvancer {
   } 
 
   public Collection<QEvent> reversePatch() {
-    // find previous patch
     SortedSet<Cue> cueset = qstream.getCues();
     SortedSet<Cue> head;
-    try { 
-      head = cueset.headSet ( currentCue ) ;
-    } 
+    try {
+      head = cueset.headSet( currentCue );
+    }
     catch (NullPointerException npe) {
       return switchToMeasure( "0.0" );
     }
@@ -92,24 +90,68 @@ public class QAdvancer {
 
     Cue previousCue = head.last();
 
-    // OK, now we have to back out the patch.  We're going to create
-    // new PCE's which will back out the patch whenever possible.
-    Collection<QEvent> out = new ArrayList<QEvent>();
-    for (QEvent obj : currentCue.getEvents() ) {
+    List<QEvent> out = new ArrayList<QEvent>();
+    for (QEvent obj : currentCue.getEvents()) {
       if (obj instanceof ProgramChangeEvent) {
-	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
-	if (pce.getPreviousPatch() != null)
-	  out.add( new ProgramChangeEvent(pce.getChannel(), pce.getCue(),
-					  pce.getPreviousPatch()) );
-      }
-      else if (obj instanceof NoteWindowChangeEvent) {
-	out.add( ((NoteWindowChangeEvent)obj).getUndoEvent() );
+        ProgramChangeEvent pce = (ProgramChangeEvent) obj;
+        Patch prior = findEffectivePatch(previousCue, pce.getChannel());
+        if (prior != null)
+          out.add(new ProgramChangeEvent(pce.getChannel(), pce.getCue(), prior));
+      } else if (obj instanceof NoteWindowChangeEvent) {
+        NoteWindowChangeEvent nwce = (NoteWindowChangeEvent) obj;
+        out.add(findEffectiveNoteWindow(previousCue, nwce.getChannel(),
+            nwce.getTopNote() != null, nwce.getBottomNote() != null, nwce.getCue()));
       }
     }
 
     pendingCue = currentCue;
     currentCue = previousCue;
     return out;
+  }
+
+  /** Scans backward from startCue (inclusive) to find the most recent patch on the given channel. */
+  private Patch findEffectivePatch(Cue startCue, int channel) {
+    SortedSet<Cue> headset = qstream.getCues();
+    Cue loopQ = startCue;
+    while (loopQ != null) {
+      for (QEvent obj : loopQ.getEvents()) {
+        if (obj instanceof ProgramChangeEvent) {
+          ProgramChangeEvent pce = (ProgramChangeEvent) obj;
+          if (pce.getChannel() == channel)
+            return pce.getPatch();
+        }
+      }
+      headset = headset.headSet(loopQ);
+      loopQ = headset.isEmpty() ? null : headset.last();
+    }
+    return null;
+  }
+
+  /**
+   * Scans backward from startCue (inclusive) to reconstruct the note-window state for a channel.
+   * Only fills in the top/bottom components that the original event controlled (needTop/needBottom).
+   */
+  private NoteWindowChangeEvent findEffectiveNoteWindow(Cue startCue, int channel,
+      boolean needTop, boolean needBottom, Cue cueRef) {
+    Integer top = null, bottom = null;
+    SortedSet<Cue> headset = qstream.getCues();
+    Cue loopQ = startCue;
+    while (loopQ != null && ((needTop && top == null) || (needBottom && bottom == null))) {
+      for (QEvent obj : loopQ.getEvents()) {
+        if (obj instanceof NoteWindowChangeEvent) {
+          NoteWindowChangeEvent nwce = (NoteWindowChangeEvent) obj;
+          if (nwce.getChannel() == channel) {
+            if (needTop && top == null && nwce.getTopNote() != null)
+              top = nwce.getTopNote();
+            if (needBottom && bottom == null && nwce.getBottomNote() != null)
+              bottom = nwce.getBottomNote();
+          }
+        }
+      }
+      headset = headset.headSet(loopQ);
+      loopQ = headset.isEmpty() ? null : headset.last();
+    }
+    return new NoteWindowChangeEvent(channel, cueRef, bottom, top);
   }
 
   private Collection<QEvent> getPatchChanges(Cue c) {
@@ -141,62 +183,44 @@ public class QAdvancer {
 
   private Collection<QEvent> revertPatchChanges() {
     String[] midiChans = qdata.getMidiChannels();
-    int channelCount = 0;
-    for(int i=0; i<midiChans.length; i++) 
-      if (midiChans[i] != null) channelCount++;
 
-    ProgramChangeEvent[] events = new ProgramChangeEvent[ midiChans.length ];
-    for(int i=0; i<events.length; i++) events[i] = null;
+    ProgramChangeEvent[] pceEvents = new ProgramChangeEvent[midiChans.length];
+    Integer[] nwcTop = new Integer[midiChans.length];
+    Integer[] nwcBottom = new Integer[midiChans.length];
+    boolean[] nwcSeen = new boolean[midiChans.length];
 
-    NoteWindowChangeEvent[] nwcEvents = new NoteWindowChangeEvent[ midiChans.length ];
-    for(int i=0; i<nwcEvents.length; i++) nwcEvents[i] = null;
-
-    int programCount = 0, noteWindowCount = 0;
-
-    // go backward through the events
     SortedSet<Cue> headset = qstream.getCues();
     Cue loopQ = currentCue;
-    while ( loopQ != null && (programCount < channelCount ||
-			      noteWindowCount < channelCount) ) {
-      Iterator<QEvent> iter = loopQ.getEvents().iterator();
-      while (iter.hasNext()) {
-	QEvent obj = iter.next();
-	if (programCount < channelCount &&
-	    obj instanceof ProgramChangeEvent) {
-	  ProgramChangeEvent pce = (ProgramChangeEvent)obj;
-	  int ch = pce.getChannel();
-	  if (events[ch] == null && midiChans[ch] != null) {
-	    events[ch] = pce;
-	    programCount++;
-	  }
-	}
-	else if (noteWindowCount < channelCount &&
-		 obj instanceof NoteWindowChangeEvent) {
-	  NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
-	  int ch = nwce.getChannel();
-	  if (nwcEvents[ch] == null && midiChans[ch] != null) {
-	    nwcEvents[ch] = nwce.getPostStateEvent();
-	    noteWindowCount++;
-	  }
-	}
+    while (loopQ != null) {
+      for (QEvent obj : loopQ.getEvents()) {
+        if (obj instanceof ProgramChangeEvent) {
+          ProgramChangeEvent pce = (ProgramChangeEvent) obj;
+          int ch = pce.getChannel();
+          if (pceEvents[ch] == null && midiChans[ch] != null)
+            pceEvents[ch] = pce;
+        } else if (obj instanceof NoteWindowChangeEvent) {
+          NoteWindowChangeEvent nwce = (NoteWindowChangeEvent) obj;
+          int ch = nwce.getChannel();
+          if (midiChans[ch] != null) {
+            nwcSeen[ch] = true;
+            if (nwcTop[ch] == null && nwce.getTopNote() != null)
+              nwcTop[ch] = nwce.getTopNote();
+            if (nwcBottom[ch] == null && nwce.getBottomNote() != null)
+              nwcBottom[ch] = nwce.getBottomNote();
+          }
+        }
       }
-
-      //Update headset
-      headset = headset.headSet( loopQ );
-      if (headset.size() == 0) {
-	loopQ = null;
-      } else
-	loopQ = headset.last();
+      headset = headset.headSet(loopQ);
+      loopQ = headset.isEmpty() ? null : headset.last();
     }
 
     List<QEvent> out = new ArrayList<QEvent>();
-    for(int i=0; i<events.length; i++) {
-      if (events[i] != null)
-	out.add(events[i]);
+    for (int i = 0; i < pceEvents.length; i++) {
+      if (pceEvents[i] != null) out.add(pceEvents[i]);
     }
-    for(int i=0; i<nwcEvents.length; i++) {
-      if (nwcEvents[i] != null)
-	out.add(nwcEvents[i]);
+    for (int i = 0; i < midiChans.length; i++) {
+      if (nwcSeen[i])
+        out.add(new NoteWindowChangeEvent(i, currentCue, nwcBottom[i], nwcTop[i]));
     }
     return out;
   }

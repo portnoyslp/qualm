@@ -5,13 +5,10 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 /**
  * Holds all data for the cue handling...
@@ -66,64 +63,6 @@ public class QData {
       qs.dump(output);
   }
   
-
-  public void prepareCueStreams() {
-    // go through the different cue streams, and populate the cues'
-    // program changes with info on how to reverse the patch changes
-    // properly.
-
-    // we do this first by creating a "master plot" of cue changes
-
-    // problem with a master plot is that we can't use the normal
-    // comparator for Cues, we have to use our own which will allow
-    // two cues with the same measure number to exist in the set.
-    Comparator<Cue> cueCompare = new Comparator<Cue>() {
-	public int compare(Cue a, Cue b) {
-	  int out = a.compareTo(b);
-	  if (out == 0)
-	    return a.hashCode()-b.hashCode();
-	  else return out;
-	}
-      };
-    TreeSet<Cue> masterCues = new TreeSet<Cue>(cueCompare);
-    Iterator<QStream> iter = cueStreams.iterator();
-    while(iter.hasNext()) {
-      masterCues.addAll( iter.next().getCues() );
-    }
-    
-    // next, we go through the cues' patch changes, and populate them
-    // with back-patch info
-    Patch[] patches = new Patch[16];
-    NoteWindowChangeEvent[] noteWindowChangeEvents =
-      new NoteWindowChangeEvent[16];
-
-    Iterator<Cue> cueIter = masterCues.iterator();
-    while (cueIter.hasNext()) {
-      Cue q = cueIter.next();
-
-      Collection<QEvent> events = q.getEvents();
-      Iterator<QEvent> j = events.iterator();
-      while(j.hasNext()) {
-	QEvent obj = j.next();
-	if (obj instanceof ProgramChangeEvent) {
-	  ProgramChangeEvent pce = (ProgramChangeEvent)obj;
-	  int ch = pce.getChannel();
-	  if (patches[ch] != null) {
-	    pce.setPreviousPatch(patches[ch]);
-	  }
-
-	  patches[ch] = pce.getPatch();
-	}
-	else if (obj instanceof NoteWindowChangeEvent) {
-	  NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
-	  int ch = nwce.getChannel();
-	  nwce.setPrevious(noteWindowChangeEvents[ch]);
-	  noteWindowChangeEvents[ch] = nwce;
-	}
-      }
-    }
-    
-  }
 
   @Override
   public boolean equals(Object obj) {

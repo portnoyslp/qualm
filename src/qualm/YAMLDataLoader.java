@@ -40,9 +40,7 @@ public class YAMLDataLoader {
   @SuppressWarnings("unchecked")
   public QData readStream(InputStream stream) {
     Map<String, Object> doc = (Map<String, Object>) new Yaml().load(stream);
-    QData qdata = buildQData(doc);
-    qdata.prepareCueStreams();
-    return qdata;
+    return buildQData(doc);
   }
 
   @SuppressWarnings("unchecked")
