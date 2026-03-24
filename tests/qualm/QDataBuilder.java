@@ -38,8 +38,8 @@ public class QDataBuilder {
   }
 
   public QDataBuilder addMidiChannel( int ch, String devType, String desc) {
-    this.channelTypes.put(new Integer(ch), devType);
-    this.channelDesc.put(new Integer(ch), desc);
+    this.channelTypes.put(ch, devType);
+    this.channelDesc.put(ch, desc);
     return this;
   }
 

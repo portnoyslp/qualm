@@ -109,7 +109,7 @@ public class SWTNetwork extends Thread {
 	  } else if (nnp.type == NetworkNotificationProtocol.PATCH) {
 	    if (patchFilter == null || 
 		nnp.channelName.matches(patchFilter))
-	      patchLabels.put(new Integer(nnp.channelNum),nnp);
+	      patchLabels.put(nnp.channelNum,nnp);
 	  }
 	  
 	  updateLabels();

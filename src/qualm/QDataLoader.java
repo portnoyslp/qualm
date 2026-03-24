@@ -144,7 +144,7 @@ public class QDataLoader extends DefaultHandler {
 	  currentAttribute = "volume";
 	  String volStr = attributes.getValue("volume");
 	  int vol = parseIntOrPercent( volStr , 127 );
-	  patch.setVolume( new Integer(vol) );
+	  patch.setVolume( vol );
 	}
 
       } else if (qName.equals("patch-alias") && !ignorePatchAliases ) {
@@ -170,7 +170,7 @@ public class QDataLoader extends DefaultHandler {
 	    currentAttribute = "volume";
 	    String volStr = attributes.getValue("volume");
 	    int vol = parseIntOrPercent( volStr, 127 );
-	    patch.setVolume( new Integer(vol) );
+	    patch.setVolume( vol );
 	  }
 	  else
 	    patch.setVolume( targetPatch.getVolume() );
@@ -207,11 +207,11 @@ public class QDataLoader extends DefaultHandler {
 	currentAttribute = "bottom";
 	String bottom = attributes.getValue("bottom");
 	if (bottom != null)
-	  bottomNote = new Integer(Utilities.noteNameToMidi(bottom));
+	  bottomNote = Utilities.noteNameToMidi(bottom);
 	currentAttribute = "top";
 	String top = attributes.getValue("top");
 	if (top != null)
-	  topNote = new Integer(Utilities.noteNameToMidi(top));
+	  topNote = Utilities.noteNameToMidi(top);
 	if (bottom == null && top == null) {
 	  System.err.println("WARNING: found note-window-change specifying neither top nor bottom");
 	}

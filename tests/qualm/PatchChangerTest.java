@@ -33,8 +33,8 @@ public class PatchChangerTest {
   @Test
   public void confirmNoteWindowMessagesSent() {
     NoteWindowChangeEvent nwce = new NoteWindowChangeEvent( 0, null, 
-							    new Integer(30), 
-							    new Integer(50) ); 
+							    30, 
+							    50 ); 
     PatchChanger.noteWindowChange(nwce, null);
     verify(mockDelegate).noteWindowChange( nwce, null );
   }

@@ -24,11 +24,11 @@ public class AlesisDelegate extends ChangeDelegate {
   private static Map<String,Integer> bankNameMap = createBankNameMap();
   private static final Map<String,Integer> createBankNameMap() {
     Map<String, Integer> m = new HashMap<String,Integer>();
-    m.put("User", new Integer(0));
+    m.put("User", 0);
     for(int i=1;i<=4;i++)
-      m.put("Pr" + i, new Integer(i));
+      m.put("Pr" + i, i);
     for(int i=1;i<=8;i++)       
-      m.put("Card" + i, new Integer(i+4));
+      m.put("Card" + i, i+4);
     return m;
   }
   

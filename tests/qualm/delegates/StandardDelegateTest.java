@@ -28,7 +28,7 @@ public class StandardDelegateTest {
   @Test
   public void setPatchVolume() {
     Patch patch = new Patch("P1", 10);
-    patch.setVolume(new Integer(40));
+    patch.setVolume(40);
     delegate.patchChange( new ProgramChangeEvent( 0, null, patch ), mockQR );
 
     // note that patch numbers are 1 less than the specified.

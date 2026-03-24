@@ -49,7 +49,7 @@ public class AlesisDelegateTest {
 
   @Test
   public void noteWindowChangeLow() {
-    delegate.noteWindowChange( new NoteWindowChangeEvent( 0, null, new Integer(30), null ), mockQR );
+    delegate.noteWindowChange( new NoteWindowChangeEvent( 0, null, 30, null ), mockQR );
 
     // Alesis sends a SYSEX with the following: F0 00 00 0E 0E 10 24 00
     // <0[channel][bot/top]x> <0xxxxxxx> where x is the value, and bot/top is whether its the low or hi range.
@@ -63,7 +63,7 @@ public class AlesisDelegateTest {
 
   @Test
   public void noteWindowChangeHigh() {
-    delegate.noteWindowChange( new NoteWindowChangeEvent( 0, null, null, new Integer(60)), mockQR );
+    delegate.noteWindowChange( new NoteWindowChangeEvent( 0, null, null, 60), mockQR );
 
     // Alesis sends a SYSEX with the following: F0 00 00 0E 0E 10 24 00
     // <0[channel][bot/top]x> <0xxxxxxx> where x is the value, and bot/top is whether its the low or hi range.

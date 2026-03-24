@@ -127,12 +127,12 @@ public class ExampleNetworkReader extends Thread {
             
 	  } else if (nnp.type == NetworkNotificationProtocol.PATCH) {
 	    if (nnp.channelName.contains(keyboard)) {
-	      patchLabels.put(new Integer(nnp.channelNum),nnp);
+	      patchLabels.put(nnp.channelNum,nnp);
               updated = true;
             }
 	  } else if (nnp.type == NetworkNotificationProtocol.MAPPER) {
             // OK, do we have a map for the destination channel?
-            Integer toChan = new Integer(nnp.toChannel);
+            Integer toChan = nnp.toChannel;
             if (patchLabels.containsKey(toChan)) {
               eventMappers.put(toChan, nnp);
               updated = true;
@@ -178,7 +178,7 @@ public class ExampleNetworkReader extends Thread {
 
       // only show if we have a matching mapper.
       NetworkNotificationProtocol mapper = 
-        (NetworkNotificationProtocol) eventMappers.get(new Integer(nnp.channelNum));
+        (NetworkNotificationProtocol) eventMappers.get(nnp.channelNum);
       if (mapper != null) {
         if (!text.equals("")) 
           text = text + "\n";

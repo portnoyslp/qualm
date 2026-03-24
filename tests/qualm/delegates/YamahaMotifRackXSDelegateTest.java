@@ -82,7 +82,7 @@ public class YamahaMotifRackXSDelegateTest {
   @Test
   public void setPatchVolume() {
     Patch patch = new Patch("P1", 10);
-    patch.setVolume(new Integer(40));
+    patch.setVolume(40);
     delegate.patchChange( new ProgramChangeEvent( 0, null, patch ), mockQR );
 
     verify(mockQR).handleMidiCommand(sysexForPatch(9));
@@ -92,13 +92,13 @@ public class YamahaMotifRackXSDelegateTest {
 
   @Test
   public void noteWindowChangeLow() {
-    delegate.noteWindowChange( new NoteWindowChangeEvent( 0, null, new Integer(30), null ), mockQR );
+    delegate.noteWindowChange( new NoteWindowChangeEvent( 0, null, 30, null ), mockQR );
     verify(mockQR).handleMidiCommand(sysexForNoteWindow(30, false));
   }
 
   @Test
   public void noteWindowChangeHigh() {
-    delegate.noteWindowChange( new NoteWindowChangeEvent( 0, null, null, new Integer(60)), mockQR );
+    delegate.noteWindowChange( new NoteWindowChangeEvent( 0, null, null, 60), mockQR );
     verify(mockQR).handleMidiCommand(sysexForNoteWindow(60, true));
   }
 

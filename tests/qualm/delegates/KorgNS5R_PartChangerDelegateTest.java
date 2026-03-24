@@ -95,7 +95,7 @@ public class KorgNS5R_PartChangerDelegateTest {
   @Test
   public void setPatchVolume() {
     Patch patch = new Patch("P1", 10);
-    patch.setVolume(new Integer(40));
+    patch.setVolume(40);
     delegate.patchChange( new ProgramChangeEvent( 0, null, patch ), mockQR );
 
     verify(mockQR).handleMidiCommand(sysexForPatchChange(9));
@@ -105,7 +105,7 @@ public class KorgNS5R_PartChangerDelegateTest {
 
   @Test
   public void noteWindowChangeLow() {
-    delegate.noteWindowChange( new NoteWindowChangeEvent( 0, null, new Integer(30), null ), mockQR );
+    delegate.noteWindowChange( new NoteWindowChangeEvent( 0, null, 30, null ), mockQR );
 
     // Korg part delegate expects a SYSEX with the following: F0 42 30 42 12 01 <ch> 15 <note> F7
     byte[] data = new byte[] { (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 0x01, 0, 0x15, 30, (byte) 0xF7 };
@@ -116,7 +116,7 @@ public class KorgNS5R_PartChangerDelegateTest {
 
   @Test
   public void noteWindowChangeHigh() {
-    delegate.noteWindowChange( new NoteWindowChangeEvent( 0, null, null, new Integer(60)), mockQR );
+    delegate.noteWindowChange( new NoteWindowChangeEvent( 0, null, null, 60), mockQR );
 
     // Korg part delegate expects a SYSEX with the following: F0 42 30 42 12 01 <ch> 16 <note> F7
     byte[] data = new byte[] { (byte) 0xF0, 0x42, 0x30, 0x42, 0x12, 0x01, 0, 0x16, 60, (byte) 0xF7 };

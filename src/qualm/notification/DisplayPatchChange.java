@@ -32,7 +32,7 @@ public class DisplayPatchChange extends BaseQualmNotifier implements PatchChange
 
   public void patchChange(int channel, String channelName, Patch patch) {
     // Store the info
-    Integer channelNum = new Integer(channel);
+    Integer channelNum = channel;
 
     // Generate text for description
     channels.put(channelNum, channelName + ": " + patch.getDescription());
