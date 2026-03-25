@@ -27,6 +27,7 @@ public class MasterController implements QReceiver {
   boolean silentErrorHandling = true;
   private NotificationManager notificationManager;
   private QData qdata;
+  private PatchChanger patchChanger = new PatchChanger();
   
   public MasterController( QReceiver out ) {
     midiOut = new VerboseReceiver(out);
@@ -57,7 +58,10 @@ public class MasterController implements QReceiver {
   }
 
   public QData getQData() { return qdata; }
-  public void setQData(QData qdata) { this.qdata = qdata; }
+  public void setQData(QData qdata) {
+    this.qdata = qdata;
+    patchChanger = PatchChanger.fromQData(qdata);
+  }
 
   public QController mainQC() { 
     return (QController) controllers.get(controllers.firstKey()); 
@@ -87,7 +91,7 @@ public class MasterController implements QReceiver {
 	ProgramChangeEvent pce = (ProgramChangeEvent)obj;
 	int channel = pce.getChannel();
 	if (!sent_channel[ channel ]) {
-	  PatchChanger.patchChange(pce, mainQC().getTarget() );
+	  patchChanger.patchChange(pce, mainQC().getTarget() );
 	  sentPCs.add(pce);
 	  sent_channel[channel] = true;
 	}
@@ -95,7 +99,7 @@ public class MasterController implements QReceiver {
 	NoteWindowChangeEvent nwce = (NoteWindowChangeEvent)obj;
 	int channel = nwce.getChannel();
 	if (!sent_nw_on_channel[ channel ]) {
-	  PatchChanger.noteWindowChange(nwce, mainQC().getTarget() );
+	  patchChanger.noteWindowChange(nwce, mainQC().getTarget() );
 	  sentPCs.add(nwce);
 	  sent_nw_on_channel[channel] = true;
 	}
@@ -125,11 +129,11 @@ public class MasterController implements QReceiver {
   }
   
   private void sendPatchChange(ProgramChangeEvent pce) {
-    PatchChanger.patchChange(pce, midiOut);
+    patchChanger.patchChange(pce, midiOut);
   }
-  
+
   private void sendNoteWindowChange(NoteWindowChangeEvent nwce) {
-    PatchChanger.noteWindowChange(nwce, midiOut);
+    patchChanger.noteWindowChange(nwce, midiOut);
   }
   
   protected void sendEvents( Collection<QEvent> c ) {

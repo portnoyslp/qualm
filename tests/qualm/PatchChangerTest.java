@@ -1,7 +1,6 @@
 package qualm;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -10,50 +9,49 @@ import org.junit.Test;
 
 public class PatchChangerTest {
 
+  PatchChanger patchChanger;
   ChangeDelegate mockDelegate;
 
   @Before
   public void setup() {
+    patchChanger = new PatchChanger();
     mockDelegate = mock(ChangeDelegate.class);
-    PatchChanger.installDelegateForChannel(0, mockDelegate, "MockDelegate");
+    patchChanger.installDelegateForChannel(0, mockDelegate, "MockDelegate");
   }
 
   @Test
   public void confirmDelegateInstalled() {
-    assertEquals("MockDelegate", PatchChanger.getRequestedDeviceForChannel(0));
+    assertEquals("MockDelegate", patchChanger.getRequestedDeviceForChannel(0));
   }
 
   @Test
   public void confirmPatchChangeMessagesSent() {
-    ProgramChangeEvent pce = new ProgramChangeEvent( 0, null, null ); // don't care about Cue or Patch
-    PatchChanger.patchChange(pce, null);
+    ProgramChangeEvent pce = new ProgramChangeEvent( 0, null, null );
+    patchChanger.patchChange(pce, null);
     verify(mockDelegate).patchChange( pce, null );
   }
 
   @Test
   public void confirmNoteWindowMessagesSent() {
-    NoteWindowChangeEvent nwce = new NoteWindowChangeEvent( 0, null, 
-							    30, 
-							    50 ); 
-    PatchChanger.noteWindowChange(nwce, null);
+    NoteWindowChangeEvent nwce = new NoteWindowChangeEvent( 0, null, 30, 50 );
+    patchChanger.noteWindowChange(nwce, null);
     verify(mockDelegate).noteWindowChange( nwce, null );
   }
 
   @Test(expected=RuntimeException.class)
   public void exceptionForUnknownChannel() {
-    ProgramChangeEvent pce = new ProgramChangeEvent( 1, null, null ); // don't care about Cue or Patch
-    PatchChanger.patchChange(pce, null);
+    ProgramChangeEvent pce = new ProgramChangeEvent( 1, null, null );
+    patchChanger.patchChange(pce, null);
   }
-  
+
   @Test
   public void partialDelegateNamesHandled() {
-    PatchChanger.addPatchChanger(1, "Alesis 8.1");
-    assertEquals(qualm.delegates.AlesisDelegate.class, PatchChanger.delegateForChannel(1).getClass());
+    patchChanger.addPatchChanger(1, "Alesis 8.1");
+    assertEquals(qualm.delegates.AlesisDelegate.class, patchChanger.delegateForChannel(1).getClass());
   }
-  
+
   @Test(expected=RuntimeException.class)
   public void unknownDelegate() {
-    PatchChanger.addPatchChanger(1, "Foobar Baz");
-    assertNull(PatchChanger.delegateForChannel(1));
+    patchChanger.addPatchChanger(1, "Foobar Baz");
   }
 }

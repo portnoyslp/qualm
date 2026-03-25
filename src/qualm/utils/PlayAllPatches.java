@@ -24,10 +24,12 @@ public class PlayAllPatches {
   static QReceiver midiOut = null;
 
   public static void loopThroughPatches(QData data) {
-    TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator<Patch>() { 
+    PatchChanger patchChanger = PatchChanger.fromQData(data);
+
+    TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator<Patch>() {
 	public int compare(Patch a, Patch b) {
 	  return a.getID().compareTo( b.getID() );
-	}	  
+	}
       });
     patches.addAll(data.getPatches());
 
@@ -35,7 +37,7 @@ public class PlayAllPatches {
     while(iter.hasNext()) {
       Patch p = iter.next();
       System.out.println("Switching to patch " + p);
-      PatchChanger.patchChange( new ProgramChangeEvent( 0, null, p ),
+      patchChanger.patchChange( new ProgramChangeEvent( 0, null, p ),
 				midiOut );
       // play a chord: c4, e4, g4, c5 (60,64,67,72)
       

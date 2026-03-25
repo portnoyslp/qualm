@@ -24,6 +24,7 @@ import qualm.QReceiver;
 public class AuditionPatches {
 
   static QReceiver midiOut = null;
+  static PatchChanger patchChanger = null;
   static Patch defaultPatch = null;
   static boolean playSingle = false;
   static boolean ignoreAliases = false;
@@ -84,13 +85,13 @@ public class AuditionPatches {
 
     // for each patch, we play it, then we play the default, then we
     // play the original again with a slightly longer hold time.
-    PatchChanger.patchChange( new ProgramChangeEvent( channel, null, p ),
+    patchChanger.patchChange( new ProgramChangeEvent( channel, null, p ),
 			      midiOut );
     playAudition( 1000 );
-    PatchChanger.patchChange( new ProgramChangeEvent( channel, null, defaultPatch ),
+    patchChanger.patchChange( new ProgramChangeEvent( channel, null, defaultPatch ),
 			      midiOut );
     playAudition( 1000 );
-    PatchChanger.patchChange( new ProgramChangeEvent( channel, null, p ),
+    patchChanger.patchChange( new ProgramChangeEvent( channel, null, p ),
 			      midiOut );
     playAudition( 1500 );
     
@@ -214,6 +215,7 @@ public class AuditionPatches {
     } catch (IOException e) {
       throw new RuntimeException("Unable to load file: " + inputFilename, e);
     }
+    patchChanger = PatchChanger.fromQData(data);
   }
 
   public static void main(String[] args) {

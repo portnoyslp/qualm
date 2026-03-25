@@ -102,7 +102,7 @@ public class QDataXMLReader implements XMLReader {
           // output the channel
           atts.clear();
           addAttribute("num", Integer.toString(i+1));
-          String dev = PatchChanger.getRequestedDeviceForChannel(i);
+          String dev = qd.getMidiChannelDeviceTypes()[i];
           if (dev != null)
             addAttribute("device", dev);
           nl(4);

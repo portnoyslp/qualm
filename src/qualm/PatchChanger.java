@@ -3,42 +3,26 @@ package qualm;
 import java.util.regex.Pattern;
 
 public class PatchChanger {
-  // instance methods
-  private PatchChanger() { }
-  private void setChangeDelegate(ChangeDelegate cd) {
-    changeDelegate = cd;
-  }
-  private ChangeDelegate getChangeDelegate() { return changeDelegate; }
-  private void setRequestedDevice(String deviceName) {
-    this.requestedDevice = deviceName;
-  }
-  private String getRequestedDevice() { return requestedDevice; }
-  
+
+  private ChangeDelegate[] delegates = new ChangeDelegate[16];
+  private String[] requestedDevices = new String[16];
+
   private static String delegatePrefix = "qualm.delegates.";
 
-  public static void installDelegateForChannel( int ch,
-						ChangeDelegate cd,
-						String deviceType ) {
-    if (changer[ch] == null)
-      changer[ch] = new PatchChanger();
-
+  public void installDelegateForChannel( int ch, ChangeDelegate cd, String deviceType ) {
     if (deviceType != null)
-      changer[ch].setRequestedDevice(deviceType);
-
-    changer[ch].setChangeDelegate(cd);
+      requestedDevices[ch] = deviceType;
+    delegates[ch] = cd;
   }
 
-  public static void addPatchChanger( int ch, String deviceType ) {
+  public void addPatchChanger( int ch, String deviceType ) {
     installDelegateForChannel( ch, lookupDelegateFromType(deviceType), deviceType );
   }
 
   private static ChangeDelegate lookupDelegateFromType( String deviceType ) {
-    // for now, we default to "Standard" as the device type
-    
-    if (deviceType == null) 
+    if (deviceType == null)
       deviceType = "Standard";
 
-    // find the ChangeDelegate based on the deviceType name.
     Class<?> delegate = null;
     String delegateName = deviceType;
     Pattern pattern = Pattern.compile( "\\W" );
@@ -50,19 +34,18 @@ public class PatchChanger {
 	delegate = null;
     } catch (ClassNotFoundException cnfe) { }
 
-    // if not found yet, just try the first word in the device type.
     if (delegate == null) {
-      delegateName = deviceType.substring(0,deviceType.indexOf(' '));
+      delegateName = deviceType.substring(0, deviceType.indexOf(' '));
       delegateName = pattern.matcher(delegateName).replaceAll("");
       try {
 	delegate = Class.forName( delegatePrefix + delegateName + "Delegate" );
-	if (!ChangeDelegate.class.isAssignableFrom(delegate)) 
+	if (!ChangeDelegate.class.isAssignableFrom(delegate))
 	  delegate = null;
       } catch (ClassNotFoundException cnfe) { }
     }
 
     if (delegate == null)
-      throw new RuntimeException("Could not locate patch changer for device type '" 
+      throw new RuntimeException("Could not locate patch changer for device type '"
 				 + deviceType + "'");
 
     try {
@@ -72,45 +55,45 @@ public class PatchChanger {
     }
   }
 
-  public static synchronized void patchChange( ProgramChangeEvent pce,
-					       QReceiver midiOut ) {
+  public synchronized void patchChange( ProgramChangeEvent pce, QReceiver midiOut ) {
     int ch = pce.getChannel();
-    if (changer[ch] != null) {
-      delegateForChannel(ch).patchChange(pce, midiOut);
+    if (delegates[ch] != null) {
+      delegates[ch].patchChange(pce, midiOut);
     } else {
       throw new RuntimeException("Could not execute program change " + pce
 				 + " on unknown channel " + ch);
     }
   }
-  
-  // visible for testing
-  static ChangeDelegate delegateForChannel(int ch) {
-    return changer[ch].getChangeDelegate();
-  }
 
-  public static synchronized void noteWindowChange( NoteWindowChangeEvent nwce,
-						    QReceiver midiOut ) {
+  public synchronized void noteWindowChange( NoteWindowChangeEvent nwce, QReceiver midiOut ) {
     int ch = nwce.getChannel();
-    if (changer[ch] != null) {
-      delegateForChannel(ch).noteWindowChange(nwce, midiOut);
+    if (delegates[ch] != null) {
+      delegates[ch].noteWindowChange(nwce, midiOut);
     } else {
       throw new RuntimeException("Could not execute note-window change " + nwce
 				 + " on unknown channel " + ch);
     }
   }
 
-  public static String getRequestedDeviceForChannel(int ch) {
-    return changer[ch].getRequestedDevice();
-  }
-  
-  private ChangeDelegate changeDelegate;
-  private String requestedDevice;
-
-  private static PatchChanger[] changer = new PatchChanger[16];
-
-  static void resetForTesting() {
-    changer = new PatchChanger[16];
+  public String getRequestedDeviceForChannel( int ch ) {
+    return requestedDevices[ch];
   }
 
-} 
+  // visible for testing
+  ChangeDelegate delegateForChannel( int ch ) {
+    return delegates[ch];
+  }
 
+  /** Constructs a PatchChanger configured from the channel info stored in qdata. */
+  public static PatchChanger fromQData( QData qdata ) {
+    PatchChanger pc = new PatchChanger();
+    String[] channels = qdata.getMidiChannels();
+    String[] deviceTypes = qdata.getMidiChannelDeviceTypes();
+    for (int i = 0; i < channels.length; i++) {
+      if (channels[i] != null)
+	pc.addPatchChanger(i, deviceTypes[i]); // null deviceType defaults to Standard
+    }
+    return pc;
+  }
+
+}

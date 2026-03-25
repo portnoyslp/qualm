@@ -10,12 +10,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * Holds all data for the cue handling...
  */
 
 public class QData {
   String[] channels;
+  String[] channelDeviceTypes;
   Map<String, Patch> patches;
   Collection<QStream> cueStreams;
   String title;
@@ -23,18 +25,20 @@ public class QData {
   public QData( ) {
     title = null;
     channels = new String[16];
+    channelDeviceTypes = new String[16];
     patches = new HashMap<String, Patch>();
     cueStreams = new ArrayList<QStream>();
-  } 
+  }
 
   public String getTitle() { return title; }
   public void setTitle(String t) { title=t; }
 
   public void addMidiChannel( int num, String deviceType, String desc ) {
     channels[num] = desc;
-    PatchChanger.addPatchChanger( num, deviceType );
+    channelDeviceTypes[num] = deviceType;
   }
   public String[] getMidiChannels() { return channels; }
+  public String[] getMidiChannelDeviceTypes() { return channelDeviceTypes; }
   public Collection<Patch> getPatches() { return patches.values(); }
 
   public void addPatch( Patch p ) {
@@ -71,7 +75,8 @@ public class QData {
 
     QData qd = (QData)obj;
     return (title == null ? qd.getTitle() == null : title.equals(qd.getTitle()))
-      && Arrays.equals(qd.getMidiChannels(),this.getMidiChannels())
+      && Arrays.equals(qd.getMidiChannels(), this.getMidiChannels())
+      && Arrays.equals(qd.getMidiChannelDeviceTypes(), this.getMidiChannelDeviceTypes())
       // convert getPatches() to HashSet so equals() works.
       && (new HashSet<Patch>(getPatches())).equals(new HashSet<Patch>(qd.getPatches()))
       && (cueStreams == null ? qd.getCueStreams() == null : cueStreams.equals(qd.getCueStreams()))
@@ -83,6 +88,7 @@ public class QData {
     int result = 1;
     result =  prime * result + (title==null ? 0 : title.hashCode());
     result += prime * result + (Arrays.hashCode(channels));
+    result += prime * result + (Arrays.hashCode(channelDeviceTypes));
     result += prime * result + (getPatches() == null ? 0 : getPatches().hashCode());
     result += prime * result + (cueStreams == null ? 0 : cueStreams.hashCode());
     
