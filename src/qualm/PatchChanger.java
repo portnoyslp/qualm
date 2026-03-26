@@ -49,7 +49,7 @@ public class PatchChanger {
 				 + deviceType + "'");
 
     try {
-      return (ChangeDelegate) delegate.newInstance();
+      return (ChangeDelegate) delegate.getDeclaredConstructor().newInstance();
     } catch (Exception ie) {
       throw new RuntimeException("Could not create patch changer " + delegate.getName());
     }

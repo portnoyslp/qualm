@@ -188,8 +188,8 @@ public class QDataYAMLWriter {
     List<QEvent> otherEvents = new ArrayList<>();
     if (cue.getEvents() != null) {
       for (QEvent ev : cue.getEvents()) {
-        if (ev instanceof ProgramChangeEvent)
-          pcs.add((ProgramChangeEvent) ev);
+        if (ev instanceof ProgramChangeEvent pce)
+          pcs.add(pce);
         else
           otherEvents.add(ev);
       }
@@ -238,8 +238,8 @@ public class QDataYAMLWriter {
   // --- events ---
 
   private void writeEvent(QEvent ev, int defaultChannel, String indent) {
-    if (ev instanceof MidiEvent) {
-      MidiCommand cmd = ((MidiEvent) ev).getMidiCommand();
+    if (ev instanceof MidiEvent me) {
+      MidiCommand cmd = me.getMidiCommand();
       int ch = cmd.getChannel();
       switch (cmd.getType()) {
         case MidiCommand.NOTE_ON:
@@ -269,16 +269,14 @@ public class QDataYAMLWriter {
         default:
           out.println(indent + "# unrecognized event type: " + cmd.getType());
       }
-    } else if (ev instanceof StreamAdvance) {
-      StreamAdvance sa = (StreamAdvance) ev;
+    } else if (ev instanceof StreamAdvance sa) {
       out.println(indent + "- advance:");
       out.println(indent + "    stream: " + sa.getStreamID());
       if (sa.getSong() != null)
         out.println(indent + "    song: \"" + sa.getSong() + "\"");
       if (sa.getMeasure() != null)
         out.println(indent + "    measure: \"" + sa.getMeasure() + "\"");
-    } else if (ev instanceof NoteWindowChangeEvent) {
-      NoteWindowChangeEvent nw = (NoteWindowChangeEvent) ev;
+    } else if (ev instanceof NoteWindowChangeEvent nw) {
       int ch = nw.getChannel();
       out.println(indent + "- note_window_change:");
       if (ch != defaultChannel)

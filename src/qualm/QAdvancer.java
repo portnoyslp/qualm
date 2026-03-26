@@ -92,13 +92,11 @@ public class QAdvancer {
 
     List<QEvent> out = new ArrayList<QEvent>();
     for (QEvent obj : currentCue.getEvents()) {
-      if (obj instanceof ProgramChangeEvent) {
-        ProgramChangeEvent pce = (ProgramChangeEvent) obj;
+      if (obj instanceof ProgramChangeEvent pce) {
         Patch prior = findEffectivePatch(previousCue, pce.getChannel());
         if (prior != null)
           out.add(new ProgramChangeEvent(pce.getChannel(), pce.getCue(), prior));
-      } else if (obj instanceof NoteWindowChangeEvent) {
-        NoteWindowChangeEvent nwce = (NoteWindowChangeEvent) obj;
+      } else if (obj instanceof NoteWindowChangeEvent nwce) {
         out.add(findEffectiveNoteWindow(previousCue, nwce.getChannel(),
             nwce.getTopNote() != null, nwce.getBottomNote() != null, nwce.getCue()));
       }
@@ -115,8 +113,7 @@ public class QAdvancer {
     Cue loopQ = startCue;
     while (loopQ != null) {
       for (QEvent obj : loopQ.getEvents()) {
-        if (obj instanceof ProgramChangeEvent) {
-          ProgramChangeEvent pce = (ProgramChangeEvent) obj;
+        if (obj instanceof ProgramChangeEvent pce) {
           if (pce.getChannel() == channel)
             return pce.getPatch();
         }
@@ -138,8 +135,7 @@ public class QAdvancer {
     Cue loopQ = startCue;
     while (loopQ != null && ((needTop && top == null) || (needBottom && bottom == null))) {
       for (QEvent obj : loopQ.getEvents()) {
-        if (obj instanceof NoteWindowChangeEvent) {
-          NoteWindowChangeEvent nwce = (NoteWindowChangeEvent) obj;
+        if (obj instanceof NoteWindowChangeEvent nwce) {
           if (nwce.getChannel() == channel) {
             if (needTop && top == null && nwce.getTopNote() != null)
               top = nwce.getTopNote();
@@ -193,13 +189,11 @@ public class QAdvancer {
     Cue loopQ = currentCue;
     while (loopQ != null) {
       for (QEvent obj : loopQ.getEvents()) {
-        if (obj instanceof ProgramChangeEvent) {
-          ProgramChangeEvent pce = (ProgramChangeEvent) obj;
+        if (obj instanceof ProgramChangeEvent pce) {
           int ch = pce.getChannel();
           if (pceEvents[ch] == null && midiChans[ch] != null)
             pceEvents[ch] = pce;
-        } else if (obj instanceof NoteWindowChangeEvent) {
-          NoteWindowChangeEvent nwce = (NoteWindowChangeEvent) obj;
+        } else if (obj instanceof NoteWindowChangeEvent nwce) {
           int ch = nwce.getChannel();
           if (midiChans[ch] != null) {
             nwcSeen[ch] = true;

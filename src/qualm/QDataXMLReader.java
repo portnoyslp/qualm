@@ -78,12 +78,12 @@ public class QDataXMLReader implements XMLReader {
 
   @Override
   public void parse(InputSource source) throws IOException, SAXException {
-    if (source instanceof QDataInputSource) {
+    if (source instanceof QDataInputSource qdis) {
       // start handling data
       if (handler == null) {
         throw new SAXException("No handler defined.");
       }
-      QData qd = ((QDataInputSource)source).getQData();
+      QData qd = qdis.getQData();
 
       handler.startDocument();
       nl(0);
@@ -192,14 +192,14 @@ public class QDataXMLReader implements XMLReader {
     Iterator<QEvent> iter = cue.getEvents().iterator();
     while (iter.hasNext()) {
       QEvent obj = iter.next();
-      if (obj instanceof ProgramChangeEvent)
-        parse((ProgramChangeEvent)obj);
-      if (obj instanceof NoteWindowChangeEvent)
-        parse((NoteWindowChangeEvent)obj);
-      if (obj instanceof StreamAdvance)
-        parse((StreamAdvance)obj);
-      if (obj instanceof MidiEvent)
-        parse((MidiEvent)obj);
+      if (obj instanceof ProgramChangeEvent pce)
+        parse(pce);
+      if (obj instanceof NoteWindowChangeEvent nwce)
+        parse(nwce);
+      if (obj instanceof StreamAdvance sa)
+        parse(sa);
+      if (obj instanceof MidiEvent me)
+        parse(me);
     }
     nl(6);
     endElement("events");
