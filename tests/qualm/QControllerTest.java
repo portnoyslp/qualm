@@ -1,9 +1,10 @@
 package qualm;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.after;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -103,7 +104,7 @@ public class QControllerTest {
     verify(mockMaster, never()).sendEvents(argThat(matchesSecondCue));
 
     timeSource.setMillis((long) 5000); // time not there, we shouldn't see any triggers
-    verify(mockMaster, timeout(200).never()).sendEvents(argThat(matchesSecondCue));
+    verify(mockMaster, after(200).never()).sendEvents(argThat(matchesSecondCue));
 
     timeSource.setMillis((long) 12000); // by now we should have triggered
     verify(mockMaster, timeout(200).times(1)).sendEvents(argThat(matchesSecondCue));
@@ -123,10 +124,10 @@ public class QControllerTest {
     verify(mockMaster, never()).sendEvents(argThat(matchesSecondCue));
 
     timeSource.setMillis((long) 5000); // time not there, we shouldn't see any triggers
-    verify(mockMaster, timeout(200).never()).sendEvents(argThat(matchesSecondCue));
+    verify(mockMaster, after(200).never()).sendEvents(argThat(matchesSecondCue));
 
     qc.handleMidiCommand( new MidiCommand( 0, NOTE_ON, 108, 100 ) ); // same trigger, should get ignored.
-    verify(mockMaster, timeout(200).never()).sendEvents(argThat(matchesSecondCue));
+    verify(mockMaster, after(200).never()).sendEvents(argThat(matchesSecondCue));
 
     timeSource.setMillis((long) 16000); // by now we should have triggered, just the once.
     verify(mockMaster, timeout(200).times(1)).sendEvents(argThat(matchesSecondCue));
@@ -170,20 +171,14 @@ public class QControllerTest {
     public void setMillis(long t) { curTime = t; }
   }
   
-  class ContainsEventMatcher extends ArgumentMatcher<Collection<QEvent>> {
+  class ContainsEventMatcher implements ArgumentMatcher<Collection<QEvent>> {
     final Collection<QEvent> events;
-    
+
     public ContainsEventMatcher(Collection<QEvent> evts) {
       this.events = evts;
     }
-    
-    public void describeTo(org.hamcrest.Description desc) {
-      desc.appendText("matching events " + events);
-    }
-    
-    public boolean matches(Object obj) {
-      @SuppressWarnings("unchecked")
-      Collection<QEvent> coll = (Collection<QEvent>)obj;
+
+    public boolean matches(Collection<QEvent> coll) {
       for (QEvent match : events) {
         boolean matchFound = false;
         for (QEvent input : coll) {

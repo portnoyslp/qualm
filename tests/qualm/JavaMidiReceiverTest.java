@@ -1,8 +1,8 @@
 package qualm;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.argThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -137,15 +137,14 @@ public class JavaMidiReceiverTest {
   }
 
   /* We create a MidiMatcher method because MidiMessages don't have equals() */
-  class MidiMatcher extends ArgumentMatcher<MidiMessage> {
+  class MidiMatcher implements ArgumentMatcher<MidiMessage> {
     private final MidiMessage target;
     public MidiMatcher(MidiMessage mm) {
       target = mm;
     }
 
-    public boolean matches( Object obj ) {
-      MidiMessage mm = (MidiMessage) obj;
-      return (mm.getLength() == target.getLength() 
+    public boolean matches(MidiMessage mm) {
+      return (mm.getLength() == target.getLength()
               && Arrays.equals(mm.getMessage(), target.getMessage()));
     }
   }

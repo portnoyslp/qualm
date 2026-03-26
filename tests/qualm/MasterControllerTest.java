@@ -1,6 +1,6 @@
 package qualm;
 
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -69,6 +69,6 @@ public class MasterControllerTest {
     mc.loadFilename(filename);
     // we should have removed all controllers, and added a control for each stream
     verify(mc, times(1)).removeControllers();
-    verify(mc, times(2)).addController((QController)anyObject());
+    verify(mc, times(2)).addController(any(QController.class));
   }
 }

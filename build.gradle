@@ -27,18 +27,14 @@ sourceSets {
     test {
         java {
             srcDirs = ['tests']
-            // These two files use Mockito ArgumentMatcher as an interface,
-            // which was changed to a class in Mockito 2.x and breaks compilation.
-            // Pre-existing issue unrelated to the YAML loader work.
-            exclude '**/QControllerTest.java'
-            exclude '**/JavaMidiReceiverTest.java'
-        }
+            }
     }
 }
 
 test {
     // run from project root so relative paths in tests (e.g. "tests/qualm/qdl-1.yaml") resolve
     workingDir = projectDir
+    jvmArgs '-Dnet.bytebuddy.experimental=true'
     exclude '**/StressTest.class'
     testLogging {
         events 'passed', 'failed', 'skipped'
