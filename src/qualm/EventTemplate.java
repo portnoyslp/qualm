@@ -1,6 +1,30 @@
 package qualm;
 
+import java.util.Map;
+import static java.util.Map.entry;
+
 public class EventTemplate {
+
+  private static final Map<String, Integer> CC_NAMES = Map.ofEntries(
+    entry("modulation",         1),
+    entry("breath",             2),
+    entry("foot",               4),
+    entry("volume",             7),
+    entry("balance",            8),
+    entry("pan",               10),
+    entry("expression",        11),
+    entry("effect 1",          12),
+    entry("effect 2",          13),
+    entry("damper",            64),
+    entry("sustain",           64),
+    entry("portamento",        65),
+    entry("sustenuto",         66),
+    entry("soft",              67),
+    entry("legato",            68),
+    entry("all sound off",    120),
+    entry("reset controllers", 121),
+    entry("all notes off",    123)
+  );
 
   public EventTemplate () { } 
 
@@ -37,45 +61,10 @@ public class EventTemplate {
     try {
       extra1 = Integer.parseInt(ctrl);
     } catch (NumberFormatException nfe) {
-      if (ctrl.equals("modulation"))
-	extra1 = 1;
-      else if (ctrl.equals("breath")) 
-	extra1 = 2;
-      else if (ctrl.equals("foot"))
-	extra1 = 4;
-      else if (ctrl.equals("volume"))
-	extra1 = 7;
-      else if (ctrl.equals("balance"))
-	extra1 = 8;
-      else if (ctrl.equals("pan"))
-	extra1 = 10;
-      else if (ctrl.equals("expression"))
-	extra1 = 11;
-      else if (ctrl.equals("effect 1"))
-	extra1 = 12;
-      else if (ctrl.equals("effect 2"))
-	extra1 = 13;
-      else if (ctrl.equals("damper"))
-	extra1 = 64;
-      else if (ctrl.equals("sustain"))
-	extra1 = 64;
-      else if (ctrl.equals("portamento"))
-	extra1 = 65;
-      else if (ctrl.equals("sustenuto"))
-	extra1 = 66;
-      else if (ctrl.equals("soft"))
-	extra1 = 67;
-      else if (ctrl.equals("legato"))
-	extra1 = 68;
-      else if (ctrl.equals("all sound off"))
-	extra1 = 120;
-      else if (ctrl.equals("reset controllers"))
-	extra1 = 121;
-      else if (ctrl.equals("all notes off"))
-	extra1 = 123;
-      else 
-	throw new IllegalArgumentException("Cannot parse control change type '" +
-					   ctrl + "'");
+      Integer mapped = CC_NAMES.get(ctrl);
+      if (mapped == null)
+        throw new IllegalArgumentException("Cannot parse control change type '" + ctrl + "'");
+      extra1 = mapped;
     }
     // no range allowed for control events
     t.extra1Min = extra1;
