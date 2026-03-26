@@ -19,7 +19,7 @@ import qualm.notification.QualmNotifier;
  */
 
 public class MasterController implements QReceiver {
-  private static PreferencesManager preferencesManager = new PreferencesManager();
+  private PreferencesManager preferencesManager = new PreferencesManager();
 
   QReceiver midiOut;
   SortedMap<String, QController> controllers;
