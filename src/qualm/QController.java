@@ -3,6 +3,7 @@ package qualm;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class QController extends AbstractQReceiver {
 
@@ -33,13 +34,14 @@ public class QController extends AbstractQReceiver {
   public MasterController getMaster() { return master; }
 
   private void setupTriggers() {
-    // set up triggers
+    // interrupt and clear any pending delay threads
+    for (TriggerDelayThread th : triggerThreads)
+      th.interrupt();
+    triggerThreads.clear();
+
     triggers = new ArrayList<Trigger>();
     addCurrentTriggers();
     buildTriggerCache();
-
-    // also build the list of pending triggers...
-    triggerThreads = new ArrayList<TriggerDelayThread>();
   }
 
   public Collection<QEvent> changesForCue( String cuenum ) {
@@ -48,7 +50,7 @@ public class QController extends AbstractQReceiver {
     return events;
   }
 
-  long waitForTime = -1;
+  volatile long waitForTime = -1;
   private boolean ignoreEvents() {
     if (waitForTime == -1) 
       return false;
@@ -104,9 +106,6 @@ public class QController extends AbstractQReceiver {
       advancePatch();
   }
 
-  //TODO: Build a common thread pool so that if we advance the trigger
-  //through another means, we stop the delaying thread.
-
   private void executeTrigger(Trigger trig) {
     setTimeOut();
 
@@ -139,7 +138,7 @@ public class QController extends AbstractQReceiver {
 
   Trigger cachedTriggers[] = {};
   List<Trigger> triggers;
-  List<TriggerDelayThread> triggerThreads;
+  final List<TriggerDelayThread> triggerThreads = new CopyOnWriteArrayList<>();
 
   private void buildTriggerCache() {
     List<Trigger> l = new ArrayList<Trigger>();
@@ -165,10 +164,12 @@ public class QController extends AbstractQReceiver {
         while (Clock.asMillis() < wakeupTime) {
           sleep(minimalSleepMsec);
         }
-      } catch (InterruptedException ie) { } 
-      qc.executeTriggerWithoutDelay(trig);
-      // remove from trigger thread list
-      triggerThreads.remove(this);
+        qc.executeTriggerWithoutDelay(trig);
+      } catch (InterruptedException ie) {
+        // cancelled by setupTriggers(); do not fire
+      } finally {
+        triggerThreads.remove(this);
+      }
     }
     TriggerDelayThread(Trigger trig, QController qc) {
       this.trig = trig;
