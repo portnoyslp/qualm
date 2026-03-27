@@ -167,8 +167,8 @@ public class QDataYAMLWriter {
     for (Cue cue : qs.getCues()) {
       if (cue.getEvents() == null) continue;
       for (QEvent ev : cue.getEvents()) {
-        if (ev instanceof ProgramChangeEvent) {
-          int ch = ev.getChannel();
+        if (ev instanceof ProgramChangeEvent pce) {
+          int ch = pce.getChannel();
           if (found == Integer.MIN_VALUE) found = ch;
           else if (found != ch) return -1;
         }

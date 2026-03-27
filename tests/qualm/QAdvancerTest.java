@@ -35,7 +35,7 @@ public class QAdvancerTest {
     Collection<QEvent> evs = qa.advancePatch ( );
     assertEquals(1, evs.size());
     for (QEvent qe : evs) {
-      assertEquals( 0, qe.getChannel() );
+      assertEquals( 0, ((ChannelEvent) qe).getChannel() );
       assertEquals( "1.1", qe.getCue().getCueNumber() );
     }
   }
@@ -46,7 +46,7 @@ public class QAdvancerTest {
     evs = qa.advancePatch();
     assertEquals(1, evs.size());
     for (QEvent qe : evs) {
-      assertEquals( 0, qe.getChannel() );
+      assertEquals( 0, ((ChannelEvent) qe).getChannel() );
       assertEquals( "2.1", qe.getCue().getCueNumber() );
     }
   }
@@ -56,7 +56,7 @@ public class QAdvancerTest {
     Collection<QEvent> evs = qa.switchToMeasure( "2.1" );
     assertEquals(1, evs.size());
     for (QEvent qe : evs) {
-      assertEquals( 0, qe.getChannel() );
+      assertEquals( 0, ((ChannelEvent) qe).getChannel() );
       assertEquals( "2.1", qe.getCue().getCueNumber() );
     }
   }
@@ -67,7 +67,7 @@ public class QAdvancerTest {
     evs = qa.reversePatch();
     assertEquals(1, evs.size());
     for (QEvent qe : evs) {
-      assertEquals( 0, qe.getChannel() );
+      assertEquals( 0, ((ChannelEvent) qe).getChannel() );
       assertEquals( "2.1", qe.getCue().getCueNumber() );
     }
   }
@@ -99,7 +99,7 @@ public class QAdvancerTest {
     assertEquals(1, evs.size());
     for (QEvent qe : evs) {
       /* Only reverse to the one channel we care about */
-      assertEquals( 0, qe.getChannel() );
+      assertEquals( 0, ((ChannelEvent) qe).getChannel() );
     }
   }
 

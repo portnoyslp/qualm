@@ -1,7 +1,6 @@
 package qualm;
 
-public class ProgramChangeEvent extends QEvent {
-  int channel;
+public class ProgramChangeEvent extends ChannelEvent {
   Patch patch;
 
   public ProgramChangeEvent( int ch, Cue q, Patch p ) {

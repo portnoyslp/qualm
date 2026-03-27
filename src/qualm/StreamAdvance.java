@@ -9,7 +9,6 @@ public class StreamAdvance extends QEvent {
   public StreamAdvance (String stream, Cue q) {
     setStreamID(stream);
     setCue(q);
-    setChannel(-1); // dummy channel
   }
 
   public void setStreamID( String sid ) { streamID = sid; }

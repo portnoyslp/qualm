@@ -1,6 +1,6 @@
 package qualm;
 
-public class NoteWindowChangeEvent extends QEvent {
+public class NoteWindowChangeEvent extends ChannelEvent {
   Integer bottomNote, topNote; // either or both may be null
 
   public NoteWindowChangeEvent( int ch, Cue q, Integer bottomNote, Integer topNote )

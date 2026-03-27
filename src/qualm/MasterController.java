@@ -179,8 +179,10 @@ public class MasterController implements QReceiver {
 	  val = ca.getClass().getName().compareTo(cb.getClass().getName());
 	  if (val != 0)
 	    return val;
-	  // if same cue number and runtime class, use channel to disambiguate more.	  
-	  return ca.getChannel()-cb.getChannel();
+	  // if same cue number and runtime class, use channel to disambiguate more.
+	  int ch1 = (ca instanceof ChannelEvent ce) ? ce.getChannel() : -1;
+	  int ch2 = (cb instanceof ChannelEvent ce) ? ce.getChannel() : -1;
+	  return ch1 - ch2;
 	}
       });
    
