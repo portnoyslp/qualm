@@ -103,11 +103,7 @@ public class AuditionPatches {
   }
 
   private static TreeSet<Patch> setupPatches() {
-    TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator<Patch>() { 
-	public int compare(Patch a, Patch b) {
-	  return a.getID().compareTo( b.getID() );
-	}	  
-      });
+    TreeSet<Patch> patches = new TreeSet<>(Comparator.comparing(Patch::getID));
     patches.addAll(data.getPatches());
     return patches;
   }

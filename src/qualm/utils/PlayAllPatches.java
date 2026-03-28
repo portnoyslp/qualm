@@ -26,11 +26,7 @@ public class PlayAllPatches {
   public static void loopThroughPatches(QData data) {
     PatchChanger patchChanger = PatchChanger.fromQData(data);
 
-    TreeSet<Patch> patches = new TreeSet<Patch>( new Comparator<Patch>() {
-	public int compare(Patch a, Patch b) {
-	  return a.getID().compareTo( b.getID() );
-	}
-      });
+    TreeSet<Patch> patches = new TreeSet<>(Comparator.comparing(Patch::getID));
     patches.addAll(data.getPatches());
 
     Iterator<Patch> iter = patches.iterator();

@@ -62,9 +62,7 @@ public class QDataYAMLWriter {
   private void writePatches(Collection<Patch> patches) {
     if (patches.isEmpty()) return;
     List<Patch> sorted = new ArrayList<>(patches);
-    Collections.sort(sorted, new Comparator<Patch>() {
-      public int compare(Patch a, Patch b) { return a.getID().compareTo(b.getID()); }
-    });
+    sorted.sort(Comparator.comparing(Patch::getID));
 
     out.println();
     out.println("patches:");
