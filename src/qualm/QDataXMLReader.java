@@ -189,17 +189,13 @@ public class QDataXMLReader implements XMLReader {
 
     nl(6);
     startElement("events", null);
-    Iterator<QEvent> iter = cue.getEvents().iterator();
-    while (iter.hasNext()) {
-      QEvent obj = iter.next();
-      if (obj instanceof ProgramChangeEvent pce)
-        parse(pce);
-      if (obj instanceof NoteWindowChangeEvent nwce)
-        parse(nwce);
-      if (obj instanceof StreamAdvance sa)
-        parse(sa);
-      if (obj instanceof MidiEvent me)
-        parse(me);
+    for (QEvent obj : cue.getEvents()) {
+      switch (obj) {
+        case ProgramChangeEvent pce     -> parse(pce);
+        case NoteWindowChangeEvent nwce -> parse(nwce);
+        case StreamAdvance sa           -> parse(sa);
+        case MidiEvent me               -> parse(me);
+      }
     }
     nl(6);
     endElement("events");

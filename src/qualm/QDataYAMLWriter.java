@@ -236,54 +236,58 @@ public class QDataYAMLWriter {
   // --- events ---
 
   private void writeEvent(QEvent ev, int defaultChannel, String indent) {
-    if (ev instanceof MidiEvent me) {
-      MidiCommand cmd = me.getMidiCommand();
-      int ch = cmd.getChannel();
-      switch (cmd.getType()) {
-        case MidiCommand.NOTE_ON -> {
-          out.println(indent + "- note_on:");
-          if (ch != defaultChannel)
-            out.println(indent + "    channel: " + (ch + 1));
-          out.println(indent + "    note: " +
-              Utilities.midiNumberToNoteName(cmd.getData1()).toLowerCase());
+    switch (ev) {
+      case MidiEvent me -> {
+        MidiCommand cmd = me.getMidiCommand();
+        int ch = cmd.getChannel();
+        switch (cmd.getType()) {
+          case MidiCommand.NOTE_ON -> {
+            out.println(indent + "- note_on:");
+            if (ch != defaultChannel)
+              out.println(indent + "    channel: " + (ch + 1));
+            out.println(indent + "    note: " +
+                Utilities.midiNumberToNoteName(cmd.getData1()).toLowerCase());
+          }
+          case MidiCommand.NOTE_OFF -> {
+            out.println(indent + "- note_off:");
+            if (ch != defaultChannel)
+              out.println(indent + "    channel: " + (ch + 1));
+            out.println(indent + "    note: " +
+                Utilities.midiNumberToNoteName(cmd.getData1()).toLowerCase());
+          }
+          case MidiCommand.CONTROL_CHANGE -> {
+            out.println(indent + "- control_change:");
+            if (ch != defaultChannel)
+              out.println(indent + "    channel: " + (ch + 1));
+            out.println(indent + "    control: " + cmd.getData1());
+            out.println(indent + "    value: " + cmd.getData2());
+          }
+          case MidiCommand.SYSEX ->
+            out.println(indent + "- sysex: \"" + cmd.hexData() + "\"");
+          default ->
+            out.println(indent + "# unrecognized event type: " + cmd.getType());
         }
-        case MidiCommand.NOTE_OFF -> {
-          out.println(indent + "- note_off:");
-          if (ch != defaultChannel)
-            out.println(indent + "    channel: " + (ch + 1));
-          out.println(indent + "    note: " +
-              Utilities.midiNumberToNoteName(cmd.getData1()).toLowerCase());
-        }
-        case MidiCommand.CONTROL_CHANGE -> {
-          out.println(indent + "- control_change:");
-          if (ch != defaultChannel)
-            out.println(indent + "    channel: " + (ch + 1));
-          out.println(indent + "    control: " + cmd.getData1());
-          out.println(indent + "    value: " + cmd.getData2());
-        }
-        case MidiCommand.SYSEX ->
-          out.println(indent + "- sysex: \"" + cmd.hexData() + "\"");
-        default ->
-          out.println(indent + "# unrecognized event type: " + cmd.getType());
       }
-    } else if (ev instanceof StreamAdvance sa) {
-      out.println(indent + "- advance:");
-      out.println(indent + "    stream: " + sa.getStreamID());
-      if (sa.getSong() != null)
-        out.println(indent + "    song: \"" + sa.getSong() + "\"");
-      if (sa.getMeasure() != null)
-        out.println(indent + "    measure: \"" + sa.getMeasure() + "\"");
-    } else if (ev instanceof NoteWindowChangeEvent nw) {
-      int ch = nw.getChannel();
-      out.println(indent + "- note_window_change:");
-      if (ch != defaultChannel)
-        out.println(indent + "    channel: " + (ch + 1));
-      if (nw.getBottomNote() != null)
-        out.println(indent + "    bottom: " + nw.getBottomNote());
-      if (nw.getTopNote() != null)
-        out.println(indent + "    top: " + nw.getTopNote());
-    } else {
-      out.println(indent + "# unrecognized event: " + ev);
+      case StreamAdvance sa -> {
+        out.println(indent + "- advance:");
+        out.println(indent + "    stream: " + sa.getStreamID());
+        if (sa.getSong() != null)
+          out.println(indent + "    song: \"" + sa.getSong() + "\"");
+        if (sa.getMeasure() != null)
+          out.println(indent + "    measure: \"" + sa.getMeasure() + "\"");
+      }
+      case NoteWindowChangeEvent nw -> {
+        int ch = nw.getChannel();
+        out.println(indent + "- note_window_change:");
+        if (ch != defaultChannel)
+          out.println(indent + "    channel: " + (ch + 1));
+        if (nw.getBottomNote() != null)
+          out.println(indent + "    bottom: " + nw.getBottomNote());
+        if (nw.getTopNote() != null)
+          out.println(indent + "    top: " + nw.getTopNote());
+      }
+      case ProgramChangeEvent pce ->
+        out.println(indent + "# unexpected program-change event: " + pce);
     }
   }
 

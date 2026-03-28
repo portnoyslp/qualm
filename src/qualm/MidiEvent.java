@@ -4,7 +4,7 @@ package qualm;
  * Holder for simple MIDI commands that will be sent on cue trigger.
  */
 
-public class MidiEvent extends ChannelEvent {
+public final class MidiEvent extends ChannelEvent {
   MidiCommand cmd;
 
   @Override

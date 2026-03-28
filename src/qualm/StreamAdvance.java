@@ -1,6 +1,6 @@
 package qualm;
 
-public class StreamAdvance extends QEvent {
+public final class StreamAdvance extends QEvent {
   // these values are for the advance operation's target cue.
   String streamID;
   String song;

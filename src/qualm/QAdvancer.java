@@ -92,13 +92,17 @@ public class QAdvancer {
 
     List<QEvent> out = new ArrayList<>();
     for (QEvent obj : currentCue.getEvents()) {
-      if (obj instanceof ProgramChangeEvent pce) {
-        Patch prior = findEffectivePatch(previousCue, pce.getChannel());
-        if (prior != null)
-          out.add(new ProgramChangeEvent(pce.getChannel(), pce.getCue(), prior));
-      } else if (obj instanceof NoteWindowChangeEvent nwce) {
-        out.add(findEffectiveNoteWindow(previousCue, nwce.getChannel(),
-            nwce.getTopNote() != null, nwce.getBottomNote() != null, nwce.getCue()));
+      switch (obj) {
+        case ProgramChangeEvent pce -> {
+          Patch prior = findEffectivePatch(previousCue, pce.getChannel());
+          if (prior != null)
+            out.add(new ProgramChangeEvent(pce.getChannel(), pce.getCue(), prior));
+        }
+        case NoteWindowChangeEvent nwce ->
+          out.add(findEffectiveNoteWindow(previousCue, nwce.getChannel(),
+              nwce.getTopNote() != null, nwce.getBottomNote() != null, nwce.getCue()));
+        case MidiEvent me   -> {}
+        case StreamAdvance sa -> {}
       }
     }
 
@@ -189,19 +193,24 @@ public class QAdvancer {
     Cue loopQ = currentCue;
     while (loopQ != null) {
       for (QEvent obj : loopQ.getEvents()) {
-        if (obj instanceof ProgramChangeEvent pce) {
-          int ch = pce.getChannel();
-          if (pceEvents[ch] == null && midiChans[ch] != null)
-            pceEvents[ch] = pce;
-        } else if (obj instanceof NoteWindowChangeEvent nwce) {
-          int ch = nwce.getChannel();
-          if (midiChans[ch] != null) {
-            nwcSeen[ch] = true;
-            if (nwcTop[ch] == null && nwce.getTopNote() != null)
-              nwcTop[ch] = nwce.getTopNote();
-            if (nwcBottom[ch] == null && nwce.getBottomNote() != null)
-              nwcBottom[ch] = nwce.getBottomNote();
+        switch (obj) {
+          case ProgramChangeEvent pce -> {
+            int ch = pce.getChannel();
+            if (pceEvents[ch] == null && midiChans[ch] != null)
+              pceEvents[ch] = pce;
           }
+          case NoteWindowChangeEvent nwce -> {
+            int ch = nwce.getChannel();
+            if (midiChans[ch] != null) {
+              nwcSeen[ch] = true;
+              if (nwcTop[ch] == null && nwce.getTopNote() != null)
+                nwcTop[ch] = nwce.getTopNote();
+              if (nwcBottom[ch] == null && nwce.getBottomNote() != null)
+                nwcBottom[ch] = nwce.getBottomNote();
+            }
+          }
+          case MidiEvent me   -> {}
+          case StreamAdvance sa -> {}
         }
       }
       headset = headset.headSet(loopQ);

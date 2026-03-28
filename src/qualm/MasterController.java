@@ -90,23 +90,25 @@ public class MasterController implements QReceiver {
     for(int i=0;i<16;i++) sent_nw_on_channel[i] = false;
 
     for (QEvent obj : changes) {
-      if (obj instanceof ProgramChangeEvent pce) {
-	int channel = pce.getChannel();
-	if (!sent_channel[ channel ]) {
-	  patchChanger.patchChange(pce, mainQC().getTarget() );
-	  sentPCs.add(pce);
-	  sent_channel[channel] = true;
-	}
-      } else if (obj instanceof NoteWindowChangeEvent nwce) {
-	int channel = nwce.getChannel();
-	if (!sent_nw_on_channel[ channel ]) {
-	  patchChanger.noteWindowChange(nwce, mainQC().getTarget() );
-	  sentPCs.add(nwce);
-	  sent_nw_on_channel[channel] = true;
-	}
-      } else if (obj instanceof MidiEvent me) {
-        // Send the MIDI event.
-        sendMidiEvent(me);
+      switch (obj) {
+        case ProgramChangeEvent pce -> {
+          int channel = pce.getChannel();
+          if (!sent_channel[ channel ]) {
+            patchChanger.patchChange(pce, mainQC().getTarget() );
+            sentPCs.add(pce);
+            sent_channel[channel] = true;
+          }
+        }
+        case NoteWindowChangeEvent nwce -> {
+          int channel = nwce.getChannel();
+          if (!sent_nw_on_channel[ channel ]) {
+            patchChanger.noteWindowChange(nwce, mainQC().getTarget() );
+            sentPCs.add(nwce);
+            sent_nw_on_channel[channel] = true;
+          }
+        }
+        case MidiEvent me  -> sendMidiEvent(me);
+        case StreamAdvance sa -> {}
       }
     }
 
@@ -138,17 +140,13 @@ public class MasterController implements QReceiver {
   }
   
   protected void sendEvents( Collection<QEvent> c ) {
-    Iterator<QEvent> i = c.iterator();
-    while(i.hasNext()) {
-      QEvent obj = i.next();
-      if (obj instanceof ProgramChangeEvent pce)
-	sendPatchChange(pce);
-      else if (obj instanceof NoteWindowChangeEvent nwce)
-	sendNoteWindowChange(nwce);
-      else if (obj instanceof StreamAdvance sa)
-	advanceStream(sa);
-      else if (obj instanceof MidiEvent me)
-        sendMidiEvent(me);
+    for (QEvent obj : c) {
+      switch (obj) {
+        case ProgramChangeEvent pce     -> sendPatchChange(pce);
+        case NoteWindowChangeEvent nwce -> sendNoteWindowChange(nwce);
+        case StreamAdvance sa           -> advanceStream(sa);
+        case MidiEvent me               -> sendMidiEvent(me);
+      }
     }
 
     // update print loop
@@ -204,16 +202,17 @@ public class MasterController implements QReceiver {
     getNotificationManager().startNotifications();
     
     for (QEvent obj : c) {
-      if (obj instanceof ProgramChangeEvent pce) {
-        int ch = pce.getChannel();
-        Patch patch = pce.getPatch();
-        getNotificationManager().handlePatchChanges( ch, qdata.getMidiChannels()[ch], patch);
-      }
-
-      else if (obj instanceof NoteWindowChangeEvent) {
-        // TODO: new notification for NWCEs?
-        //int ch = nwce.getChannel();
-        //output.println( qd.getMidiChannels()[ch] + " " + nwce );
+      switch (obj) {
+        case ProgramChangeEvent pce -> {
+          int ch = pce.getChannel();
+          Patch patch = pce.getPatch();
+          getNotificationManager().handlePatchChanges( ch, qdata.getMidiChannels()[ch], patch);
+        }
+        case NoteWindowChangeEvent nwce -> {
+          // TODO: new notification for NWCEs?
+        }
+        case MidiEvent me   -> {}
+        case StreamAdvance sa -> {}
       }
     }
     
