@@ -12,9 +12,9 @@ import qualm.notification.PatchChange;
 import qualm.notification.QualmNotifier;
 
 public class NotificationManager {
-  public Collection<CueChange> cueNotifiers = new ArrayList<CueChange>();
-  public Collection<PatchChange> patchNotifiers = new ArrayList<PatchChange>();
-  public Collection<EventMapActivation> mapNotifiers = new ArrayList<EventMapActivation>();
+  private Collection<CueChange> cueNotifiers = new ArrayList<CueChange>();
+  private Collection<PatchChange> patchNotifiers = new ArrayList<PatchChange>();
+  private Collection<EventMapActivation> mapNotifiers = new ArrayList<EventMapActivation>();
   
   public Collection<CueChange> getCueNotifiers() {
     return cueNotifiers;

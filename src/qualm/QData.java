@@ -16,7 +16,7 @@ import java.util.Map;
  */
 
 public class QData {
-  String[] channels;
+  private String[] channels;
   String[] channelDeviceTypes;
   Map<String, Patch> patches;
   Collection<QStream> cueStreams;

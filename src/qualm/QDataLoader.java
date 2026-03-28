@@ -86,6 +86,7 @@ public class QDataLoader extends DefaultHandler {
 
   /* DefaultHandler overrides */
 
+  @Override
   public void startDocument() {
     qdata = new QData();
   }
@@ -118,6 +119,7 @@ public class QDataLoader extends DefaultHandler {
     }
   }
 
+  @Override
   public void startElement(String uri, String localName,
 			   String qName, Attributes attributes)
     throws NumberFormatException {
@@ -290,6 +292,7 @@ public class QDataLoader extends DefaultHandler {
     }
   }
 
+  @Override
   public void endElement(String uri, String localName, String qName) {
     switch (qName) {
       case "title"      -> qdata.setTitle(content);
@@ -368,10 +371,12 @@ public class QDataLoader extends DefaultHandler {
     eventMaps = new ArrayList<EventMapper>();
   }
 
+  @Override
   public void characters(char[] ch, int start, int length) {
     content += new String(ch,start,length);
   }
 
+  @Override
   public InputSource resolveEntity(String publicId, String systemId)
     throws org.xml.sax.SAXException {
     try {
@@ -387,6 +392,7 @@ public class QDataLoader extends DefaultHandler {
   }
 
   // handle validation errors if appropriate
+  @Override
   public void error(org.xml.sax.SAXParseException err) {
     if (validateInput) {
       LOG.severe("Validation Error: "
@@ -395,6 +401,7 @@ public class QDataLoader extends DefaultHandler {
       LOG.severe("   " + err.getMessage());
     }
   }
+  @Override
   public void warning(org.xml.sax.SAXParseException err) {
     if (validateInput) {
       LOG.warning("Validation warning: "

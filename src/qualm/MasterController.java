@@ -2,6 +2,7 @@ package qualm;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -195,7 +196,7 @@ public class MasterController implements QReceiver {
   }
 
   public Collection<QController> getControllers() {
-    return controllers.values();
+    return Collections.unmodifiableCollection(controllers.values());
   }
 
   private void updateCue(Collection<QEvent> c) {

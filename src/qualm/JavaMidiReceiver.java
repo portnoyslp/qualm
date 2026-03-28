@@ -87,13 +87,11 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
    * @see javax.sound.midi.Receiver#send(javax.sound.midi.MidiMessage, long)
    */
   public void send(MidiMessage message, long timeStamp) {
-    if (message instanceof ShortMessage) {
-      ShortMessage sm = (ShortMessage)message;
+    if (message instanceof ShortMessage sm) {
       MidiCommand mc = new MidiCommand(sm.getChannel(),sm.getCommand(),sm.getData1(),sm.getData2());
       handleCommand(mc);
     }
-    if (message instanceof SysexMessage) {
-      SysexMessage sysex = (SysexMessage)message;
+    if (message instanceof SysexMessage sysex) {
       MidiCommand mc = new MidiCommand();
       /* The sysex we receive should probably keep track of the status byte as well */
       byte[] data = new byte[sysex.getLength()];

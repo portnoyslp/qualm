@@ -35,11 +35,13 @@ public class Cue implements Comparable<Cue> {
 
   public String getCueNumber() { return song + "." + measure; }
   
+  @Override
   public String toString() {
     return "Q[" + getCueNumber() + getTriggers() + 
       " => " + getEvents() + "]";
   }
   
+  @Override
   public boolean equals( Object x ) {
     return getCueNumber().equals( ((Cue)x).getCueNumber() );
   }

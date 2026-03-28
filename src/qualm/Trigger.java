@@ -23,6 +23,7 @@ public class Trigger {
 
   public EventTemplate getTemplate() { return template; }
 
+  @Override
   public String toString() {
     return "trig[" + template + (getReverse()?" rev":"") + (getDelay()>0?" dly"+getDelay():"") + "]";
   }

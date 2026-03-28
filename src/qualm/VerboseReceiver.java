@@ -4,7 +4,7 @@ package qualm;
 
 public class VerboseReceiver extends AbstractQReceiver {
 
-  static boolean debugMIDI;
+  private static boolean debugMIDI;
 
   public VerboseReceiver( QReceiver out ) {
     setTarget( out );

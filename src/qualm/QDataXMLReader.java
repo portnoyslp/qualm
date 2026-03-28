@@ -107,7 +107,7 @@ public class QDataXMLReader implements XMLReader {
             addAttribute("device", dev);
           nl(4);
           startElement("channel", atts);
-          parse(qd.channels[i]);
+          parse(qd.getMidiChannels()[i]);
           endElement("channel");
         }
       }

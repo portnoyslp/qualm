@@ -5,7 +5,7 @@ package qualm;
  */
 
 public class Clock { 
-  public static TimeSource source = null;
+  private static TimeSource source = null;
 
   public static final TimeSource SYSTEMSRC = 
     new TimeSource() {
