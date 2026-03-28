@@ -1,5 +1,7 @@
 package qualm.delegates;
 
+import static qualm.Qualm.LOG;
+
 public class RolandXV5080Delegate extends RolandDelegate {
   protected int[] _bankSelector ( String bankName, int patchNum ) {
     int retvals[] = new int[2];
@@ -15,8 +17,7 @@ public class RolandXV5080Delegate extends RolandDelegate {
 	retvals[1] = Integer.parseInt(lsb);
 	return retvals;
       } catch (NumberFormatException nfe) {
-	System.out.println("Couldn't parse bank specfication: " + 
-			   bankName);
+	LOG.warning("Couldn't parse bank specification: " + bankName);
       }
     }
 
@@ -48,7 +49,7 @@ public class RolandXV5080Delegate extends RolandDelegate {
       try { 
 	expansionNum = Integer.parseInt(bankName.substring(8,10));
       } catch (RuntimeException re) {
-	System.out.println("Couldn't parse expansion board specification: " + bankName);
+	LOG.warning("Couldn't parse expansion board specification: " + bankName);
       }
       // expansion boards increase the bank LSB by one for high-valued patches.
       retvals[1] = (expansionNum - 1) * 2 + (patchNum >= 128 ? 1 : 0);
@@ -63,13 +64,13 @@ public class RolandXV5080Delegate extends RolandDelegate {
 	try {
 	  retvals[1] = Integer.parseInt(bankName.substring(3));
 	} catch (RuntimeException re) {
-	  System.out.println("Couldn't parse GM variant specification: " + bankName);
+	  LOG.warning("Couldn't parse GM variant specification: " + bankName);
 	}
       }
 
     // OK, I give up.
     } else {
-      System.out.println("Couldn't parse bank specification: " + bankName);
+      LOG.warning("Couldn't parse bank specification: " + bankName);
     }
 
     return retvals;

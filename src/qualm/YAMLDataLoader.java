@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static qualm.Qualm.LOG;
+
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -106,7 +108,7 @@ public class YAMLDataLoader {
     String targetId = (String) data.get("target");
     Patch target = qdata.lookupPatch(targetId);
     if (target == null) {
-      System.err.println("WARNING: patch alias '" + id +
+      LOG.warning("patch alias '" + id +
           "' references unknown target '" + targetId + "'");
       return;
     }
@@ -174,7 +176,7 @@ public class YAMLDataLoader {
 
         Cue cue = new Cue(song, measure);
         if (previousCue != null && cue.compareTo(previousCue) < 0) {
-          System.err.println("WARNING: cue \"" + cueKey +
+          LOG.warning("cue \"" + cueKey +
               "\" appears out of order after \"" +
               previousCue.getCueNumber() + "\"");
         }
@@ -298,7 +300,7 @@ public class YAMLDataLoader {
         return sa;
       }
     }
-    System.err.println("WARNING: unrecognized event: " + map);
+    LOG.warning("unrecognized event: " + map);
     return null;
   }
 
@@ -418,7 +420,7 @@ public class YAMLDataLoader {
   private Patch lookupPatchOrWarn(String id, QData qdata, Cue cue) {
     Patch p = qdata.lookupPatch(id);
     if (p == null)
-      System.err.println("WARNING: unknown patch '" + id +
+      LOG.warning("unknown patch '" + id +
           "' in cue " + cue.getCueNumber());
     return p;
   }

@@ -8,6 +8,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.logging.Level;
+import static qualm.Qualm.LOG;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -38,9 +41,9 @@ public class QDataLoader extends DefaultHandler {
       spf.setValidating(validateInput);
       parser = spf.newSAXParser();
     } catch (ParserConfigurationException pce) {
-      System.out.println("Could not configure parser: " + pce);
+      LOG.log(Level.SEVERE, "Could not configure parser", pce);
     } catch (org.xml.sax.SAXException se) {
-      System.out.println("Could not build parser: " + se);
+      LOG.log(Level.SEVERE, "Could not build parser", se);
     }
   }
 
@@ -66,7 +69,7 @@ public class QDataLoader extends DefaultHandler {
       parser.parse( f, this );
       return qdata;
     } catch (Exception e) {
-      System.out.println("Couldn't parse " + f + ": " + e);
+      LOG.log(Level.SEVERE, "Couldn't parse " + f, e);
       return null;
     }
   }
@@ -144,7 +147,7 @@ public class QDataLoader extends DefaultHandler {
       throw new NumberFormatException( "Could not parse `" + currentAttribute
 				       + "' attribute for " + currentElement);
     } catch (NullPointerException npe) {
-      System.out.println("Handling " + currentElement + "/" + currentAttribute);
+      LOG.warning("Handling " + currentElement + "/" + currentAttribute);
       npe.printStackTrace();
       throw npe;
     }
@@ -176,7 +179,7 @@ public class QDataLoader extends DefaultHandler {
     String targetID = attributes.getValue("target");
     Patch targetPatch = qdata.lookupPatch( targetID );
     if (targetPatch == null) {
-      System.err.println("WARNING: could not find patch with id " + targetID);
+      LOG.warning("could not find patch with id " + targetID);
     } else {
       patch = new Patch( attributes.getValue("id"), targetPatch.getNumber() );
       patch.setBank( targetPatch.getBank() );
@@ -209,7 +212,7 @@ public class QDataLoader extends DefaultHandler {
     String patchID = attributes.getValue("patch");
     Patch foundPatch = qdata.lookupPatch(patchID);
     if (foundPatch == null) {
-      System.err.println("WARNING: could not find patch with id " + patchID);
+      LOG.warning("could not find patch with id " + patchID);
     }
     eventSet.add(new ProgramChangeEvent(ch, curQ, foundPatch));
   }
@@ -230,7 +233,7 @@ public class QDataLoader extends DefaultHandler {
     if (top != null)
       topNote = Utilities.noteNameToMidi(top);
     if (bottom == null && top == null) {
-      System.err.println("WARNING: found note-window-change specifying neither top nor bottom");
+      LOG.warning("found note-window-change specifying neither top nor bottom");
     }
     eventSet.add(new NoteWindowChangeEvent(ch, curQ, bottomNote, topNote));
   }
@@ -386,18 +389,18 @@ public class QDataLoader extends DefaultHandler {
   // handle validation errors if appropriate
   public void error(org.xml.sax.SAXParseException err) {
     if (validateInput) {
-      Qualm.LOG.severe("Validation Error: "
+      LOG.severe("Validation Error: "
 		       + ", line " + err.getLineNumber()
 		       + ", uri " + err.getSystemId());
-      Qualm.LOG.severe("   " + err.getMessage());
+      LOG.severe("   " + err.getMessage());
     }
   }
   public void warning(org.xml.sax.SAXParseException err) {
     if (validateInput) {
-      Qualm.LOG.warning("Validation warning: "
+      LOG.warning("Validation warning: "
 		        + ", line " + err.getLineNumber()
 		        + ", uri " + err.getSystemId());
-      Qualm.LOG.warning("   " + err.getMessage());
+      LOG.warning("   " + err.getMessage());
     }
   }
 

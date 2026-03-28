@@ -1,6 +1,7 @@
 package qualm.delegates;
 
 import qualm.ChangeDelegate;
+import static qualm.Qualm.LOG;
 import qualm.MidiCommand;
 import qualm.Patch;
 import qualm.ProgramChangeEvent;
@@ -39,8 +40,7 @@ public class RolandDelegate extends ChangeDelegate {
 	bank = (Integer.parseInt(msb)-0x50) * 8 +
 	  Integer.parseInt(lsb);
       } catch (NumberFormatException nfe) {
-	System.out.println("Couldn't parse bank specfication: " + 
-			   bankName);
+	LOG.warning("Couldn't parse bank specification: " + bankName);
       }
     }
     

@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import qualm.Cue;
+import static qualm.Qualm.LOG;
 import qualm.EventMapper;
 import qualm.EventTemplate;
 import qualm.MasterController;
@@ -28,7 +29,7 @@ public class NetworkNotifier extends BaseQualmNotifier
     try {
       serverSocket = new ServerSocket(NetworkNotificationProtocol.PORT);
     } catch (IOException e) {
-      System.out.println( logHeader() + "Could not start; unable to listen on port" );
+      LOG.severe(logHeader() + "Could not start; unable to listen on port");
     }
   }
 
@@ -42,7 +43,7 @@ public class NetworkNotifier extends BaseQualmNotifier
               Socket clientSocket = serverSocket.accept();
 	      sockets.add(clientSocket);
             } catch (IOException e) {
-              System.out.println( logHeader() + "Failed to accept connection" );
+              LOG.warning(logHeader() + "Failed to accept connection");
             }
           }
         }
@@ -117,7 +118,7 @@ public class NetworkNotifier extends BaseQualmNotifier
 	PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
 	out.println(output);
       } catch (IOException ioe) { 
-	System.out.println("Couldn't send output '" + output + "': " + ioe);
+	LOG.warning("Couldn't send output '" + output + "': " + ioe);
       }
     }
   }
@@ -131,7 +132,7 @@ public class NetworkNotifier extends BaseQualmNotifier
 	sockIter.next().close();
       }
     } catch (IOException ioe) {
-      System.out.println("Couldn't shut down sockets: " + ioe);
+      LOG.warning("Couldn't shut down sockets: " + ioe);
     }
   }
 

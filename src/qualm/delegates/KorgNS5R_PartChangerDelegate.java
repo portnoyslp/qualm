@@ -1,8 +1,11 @@
 package qualm.delegates;
 
+import java.util.logging.Level;
+
 import javax.sound.midi.InvalidMidiDataException;
 
 import qualm.MidiCommand;
+import static qualm.Qualm.LOG;
 import qualm.Patch;
 import qualm.ProgramChangeEvent;
 import qualm.QReceiver;
@@ -138,10 +141,9 @@ public class KorgNS5R_PartChangerDelegate extends KorgDelegate
       }
 
     } catch (InvalidMidiDataException e) {
-      System.out.println("Unable to send Program Change: " + pce);
-      System.out.println(e);
+      LOG.log(Level.SEVERE, "Unable to send Program Change: " + pce, e);
     } catch (Exception e2) {
-      e2.printStackTrace();
+      LOG.log(Level.SEVERE, "Error during patch change", e2);
     }
   }
 

@@ -1,6 +1,7 @@
 package qualm.delegates;
 
 import qualm.ChangeDelegate;
+import static qualm.Qualm.LOG;
 import qualm.MidiCommand;
 import qualm.Patch;
 import qualm.ProgramChangeEvent;
@@ -16,7 +17,7 @@ public class StandardDelegate extends ChangeDelegate {
     int patchNum = patch.getNumber()-1;
 
     if (patch.getBank() != null) {
-      System.out.println("Unable to switch to a new bank using the standard delegate.");
+      LOG.warning("Unable to switch to a new bank using the standard delegate.");
     }
 
     // we do this for all the messages

@@ -1,6 +1,9 @@
 package qualm.delegates;
 
+import java.util.logging.Level;
+
 import qualm.ChangeDelegate;
+import static qualm.Qualm.LOG;
 import qualm.MidiCommand;
 import qualm.NoteWindowChangeEvent;
 import qualm.Patch;
@@ -116,7 +119,7 @@ public class KorgDelegate extends ChangeDelegate
       }
 
     } catch (Exception e2) {
-      e2.printStackTrace();
+      LOG.log(Level.SEVERE, "Error during patch change", e2);
     }
   }
 
@@ -157,7 +160,7 @@ public class KorgDelegate extends ChangeDelegate
 	  midiOut.handleMidiCommand(sysex);
       }
     } catch (Exception e2) {
-      e2.printStackTrace();
+      LOG.log(Level.SEVERE, "Error during note window change", e2);
     }
   }
 

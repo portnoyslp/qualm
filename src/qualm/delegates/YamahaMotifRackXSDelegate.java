@@ -1,8 +1,11 @@
 package qualm.delegates;
 
+import java.util.logging.Level;
+
 import javax.sound.midi.InvalidMidiDataException;
 
 import qualm.ChangeDelegate;
+import static qualm.Qualm.LOG;
 import qualm.MidiCommand;
 import qualm.NoteWindowChangeEvent;
 import qualm.Patch;
@@ -109,10 +112,9 @@ public class YamahaMotifRackXSDelegate extends ChangeDelegate
       }
 
     } catch (InvalidMidiDataException e) {
-      System.out.println("Unable to send Program Change: " + pce);
-      System.out.println(e);
+      LOG.log(Level.SEVERE, "Unable to send Program Change: " + pce, e);
     } catch (Exception e2) {
-      e2.printStackTrace();
+      LOG.log(Level.SEVERE, "Error during patch change", e2);
     }
   }
 
@@ -155,7 +157,7 @@ public class YamahaMotifRackXSDelegate extends ChangeDelegate
           midiOut.handleMidiCommand(sysex);
       }
     } catch (Exception e2) {
-      e2.printStackTrace();
+      LOG.log(Level.SEVERE, "Error during note window change", e2);
     }
   }
 
