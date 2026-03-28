@@ -240,31 +240,30 @@ public class QDataYAMLWriter {
       MidiCommand cmd = me.getMidiCommand();
       int ch = cmd.getChannel();
       switch (cmd.getType()) {
-        case MidiCommand.NOTE_ON:
+        case MidiCommand.NOTE_ON -> {
           out.println(indent + "- note_on:");
           if (ch != defaultChannel)
             out.println(indent + "    channel: " + (ch + 1));
           out.println(indent + "    note: " +
               Utilities.midiNumberToNoteName(cmd.getData1()).toLowerCase());
-          break;
-        case MidiCommand.NOTE_OFF:
+        }
+        case MidiCommand.NOTE_OFF -> {
           out.println(indent + "- note_off:");
           if (ch != defaultChannel)
             out.println(indent + "    channel: " + (ch + 1));
           out.println(indent + "    note: " +
               Utilities.midiNumberToNoteName(cmd.getData1()).toLowerCase());
-          break;
-        case MidiCommand.CONTROL_CHANGE:
+        }
+        case MidiCommand.CONTROL_CHANGE -> {
           out.println(indent + "- control_change:");
           if (ch != defaultChannel)
             out.println(indent + "    channel: " + (ch + 1));
           out.println(indent + "    control: " + cmd.getData1());
           out.println(indent + "    value: " + cmd.getData2());
-          break;
-        case MidiCommand.SYSEX:
+        }
+        case MidiCommand.SYSEX ->
           out.println(indent + "- sysex: \"" + cmd.hexData() + "\"");
-          break;
-        default:
+        default ->
           out.println(indent + "# unrecognized event type: " + cmd.getType());
       }
     } else if (ev instanceof StreamAdvance sa) {
@@ -366,12 +365,12 @@ public class QDataYAMLWriter {
   // --- helpers ---
 
   private String getTypeName(int midiType) {
-    switch (midiType) {
-      case MidiCommand.NOTE_ON:        return "note_on";
-      case MidiCommand.NOTE_OFF:       return "note_off";
-      case MidiCommand.CONTROL_CHANGE: return "control_change";
-      default:                         return "unknown_" + midiType;
-    }
+    return switch (midiType) {
+      case MidiCommand.NOTE_ON        -> "note_on";
+      case MidiCommand.NOTE_OFF       -> "note_off";
+      case MidiCommand.CONTROL_CHANGE -> "control_change";
+      default                         -> "unknown_" + midiType;
+    };
   }
 
   private String quoteString(String s) {

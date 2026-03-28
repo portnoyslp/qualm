@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +51,8 @@ public class QDataLoader extends DefaultHandler {
   public QData load(String fileSpecification) throws IOException {
     URL inputURL;
     try {
-      inputURL = new URL(fileSpecification);
-    } catch (MalformedURLException e) {
+      inputURL = URI.create(fileSpecification).toURL();
+    } catch (IllegalArgumentException | MalformedURLException e) {
       // not a URL, treat it as a filename.
       try {
         inputURL = new java.io.File(fileSpecification)
@@ -92,10 +93,10 @@ public class QDataLoader extends DefaultHandler {
   }
 
   String[] auxValue = new String[2];
-  List<QEvent> eventSet = new ArrayList<QEvent>();
-  List<Trigger> triggers = new ArrayList<Trigger>();
-  List<Trigger> globalTriggers = new ArrayList<Trigger>();
-  List<EventMapper> globalMaps = new ArrayList<EventMapper>();
+  List<QEvent> eventSet = new ArrayList<>();
+  List<Trigger> triggers = new ArrayList<>();
+  List<Trigger> globalTriggers = new ArrayList<>();
+  List<EventMapper> globalMaps = new ArrayList<>();
   boolean reverseTrigger = false;
   int triggerDelay = 0;
   String content;
@@ -104,7 +105,7 @@ public class QDataLoader extends DefaultHandler {
   Patch patch;
   EventMapper curMapper = null;
   boolean buildingEvents = false;
-  List<EventMapper> eventMaps = new ArrayList<EventMapper>();
+  List<EventMapper> eventMaps = new ArrayList<>();
   QStream qstream;
   String currentElement;
   String currentAttribute;
@@ -200,7 +201,7 @@ public class QDataLoader extends DefaultHandler {
   }
 
   private void handleCue(Attributes attributes) {
-    eventSet = new ArrayList<QEvent>();
+    eventSet = new ArrayList<>();
     curQ = new Cue( attributes.getValue("song"),
 		    attributes.getValue("measure"));
   }
@@ -345,21 +346,21 @@ public class QDataLoader extends DefaultHandler {
   }
 
   private void endCue() {
-    ArrayList<Trigger> l = new ArrayList<Trigger>();
+    ArrayList<Trigger> l = new ArrayList<>();
     l.addAll(globalTriggers);
     l.addAll(triggers);
     curQ.setTriggers( l );
 
-    ArrayList<EventMapper> em = new ArrayList<EventMapper>();
+    ArrayList<EventMapper> em = new ArrayList<>();
     em.addAll(globalMaps);
     em.addAll(eventMaps);
     curQ.setEventMaps(em);
 
     curQ.setEvents(eventSet);
 
-    triggers = new ArrayList<Trigger>();
-    eventMaps = new ArrayList<EventMapper>();
-    eventSet = new ArrayList<QEvent>();
+    triggers = new ArrayList<>();
+    eventMaps = new ArrayList<>();
+    eventSet = new ArrayList<>();
 
     qstream.addCue( curQ );
   }
@@ -367,8 +368,8 @@ public class QDataLoader extends DefaultHandler {
   private void endGlobal() {
     globalTriggers = triggers;
     globalMaps = eventMaps;
-    triggers = new ArrayList<Trigger>();
-    eventMaps = new ArrayList<EventMapper>();
+    triggers = new ArrayList<>();
+    eventMaps = new ArrayList<>();
   }
 
   @Override

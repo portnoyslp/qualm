@@ -12,9 +12,9 @@ import qualm.notification.PatchChange;
 import qualm.notification.QualmNotifier;
 
 public class NotificationManager {
-  private Collection<CueChange> cueNotifiers = new ArrayList<CueChange>();
-  private Collection<PatchChange> patchNotifiers = new ArrayList<PatchChange>();
-  private Collection<EventMapActivation> mapNotifiers = new ArrayList<EventMapActivation>();
+  private Collection<CueChange> cueNotifiers = new ArrayList<>();
+  private Collection<PatchChange> patchNotifiers = new ArrayList<>();
+  private Collection<EventMapActivation> mapNotifiers = new ArrayList<>();
   
   public Collection<CueChange> getCueNotifiers() {
     return cueNotifiers;
@@ -93,7 +93,7 @@ public class NotificationManager {
   }
 
   public Set<QualmNotifier> removeNotification(String name) {
-    Set<QualmNotifier> removed = new HashSet<QualmNotifier>();
+    Set<QualmNotifier> removed = new HashSet<>();
   
     Iterator<CueChange> cueNotificationIter = getCueNotifiers().iterator();
     while(cueNotificationIter.hasNext()) {
@@ -135,7 +135,7 @@ public class NotificationManager {
   }
 
   private Set<QualmNotifier> getAllNotifiers() {
-    Set<QualmNotifier> allNotifiers = new HashSet<QualmNotifier>();
+    Set<QualmNotifier> allNotifiers = new HashSet<>();
     allNotifiers.addAll(cueNotifiers);
     allNotifiers.addAll(patchNotifiers);
     allNotifiers.addAll(mapNotifiers);

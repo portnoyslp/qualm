@@ -123,7 +123,7 @@ public class JavaMidiReceiverFactory implements AbstractQReceiverFactory {
     if (midiDeviceCache != null)
       return midiDeviceCache;
 
-    List<MidiDevice.Info> midiports = new ArrayList<MidiDevice.Info>();
+    List<MidiDevice.Info> midiports = new ArrayList<>();
     MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
 
     if (infos.length == 0) {
@@ -162,12 +162,12 @@ public class JavaMidiReceiverFactory implements AbstractQReceiverFactory {
     if (midiDeviceCache == null)
       throw new RuntimeException("MIDI device cache not yet built.");
 
-    deviceDescriptionMap = new HashMap<MidiDevice.Info, String>();
+    deviceDescriptionMap = new HashMap<>();
 
     Map<Integer, String> alsaClientMap = 
       (useAlsaPorts ? parseAlsaClients() : null);
 
-    List<String> portDescriptions = new ArrayList<String>();
+    List<String> portDescriptions = new ArrayList<>();
     for (MidiDevice.Info info : midiDeviceCache) {
       String dev = info.getName();
       String cName = info.getDescription();
@@ -246,7 +246,7 @@ public class JavaMidiReceiverFactory implements AbstractQReceiverFactory {
    * description
    */
   private static Map<Integer, String> parseAlsaClients() {
-    Map<Integer, String> ret = new HashMap<Integer, String>();
+    Map<Integer, String> ret = new HashMap<>();
     try {
       BufferedReader br = new BufferedReader(new FileReader(ALSA_CLIENTS_FILE));
       String lin = br.readLine();

@@ -89,30 +89,18 @@ public class MidiCommand {
     return hex.toString();
   }
   
+  @Override
   public String toString() {
-    String cStr = "UNKNOWN";
-    switch (type) {
-    case CONTROL_CHANGE:
-      cStr = "ControlChange";
-      break;
-    case NOTE_OFF:
-      cStr = "NoteOff";
-      break;
-    case NOTE_ON:
-      cStr = "NoteOn";
-      break;
-    case PITCH_BEND:
-      cStr = "PitchBend";
-      break;
-    case PROGRAM_CHANGE:
-      cStr = "ProgramChange";
-      break;
-    }
-    
-    if (cStr.equals("UNKNOWN")) {
+    String cStr = switch (type) {
+      case CONTROL_CHANGE -> "ControlChange";
+      case NOTE_OFF       -> "NoteOff";
+      case NOTE_ON        -> "NoteOn";
+      case PITCH_BEND     -> "PitchBend";
+      case PROGRAM_CHANGE -> "ProgramChange";
+      default             -> null;
+    };
+    if (cStr == null)
       return "[DATA: " + hexData() + "]";
-    }
-    
     return "[" + cStr + " chan:" + (channel + 1) + " d1:" + getData1() + " d2:"
         + getData2() + "]";
   }

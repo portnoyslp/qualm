@@ -34,7 +34,7 @@ public class MasterController implements QReceiver {
   
   public MasterController( QReceiver out ) {
     midiOut = new VerboseReceiver(out);
-    controllers = new TreeMap<String, QController>();
+    controllers = new TreeMap<>();
     setNotificationManager(new NotificationManager());
     preferencesManager.setController(this);
   }
@@ -76,7 +76,7 @@ public class MasterController implements QReceiver {
   
   public void gotoCue(String cueName) {
     // send all controllers to the cue number named in the line
-    Collection<QEvent> sentPCs = new ArrayList<QEvent>();
+    Collection<QEvent> sentPCs = new ArrayList<>();
 
     Collection<QEvent> changes = changesForCue( cueName );
 

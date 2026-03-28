@@ -318,19 +318,14 @@ public class QDataXMLReader implements XMLReader {
   }
   
   public void parse(EventTemplate et) throws SAXException {
-    String elementName;
-    switch (et.getType()) {
-    case MidiCommand.NOTE_ON: 
-      elementName = "note-on"; break;
-    case MidiCommand.NOTE_OFF:
-      elementName = "note-off"; break;
-    case MidiCommand.CONTROL_CHANGE:
-      elementName = "control-change"; break;
-    case MidiCommand.SYSEX:
-      elementName = "sysex"; break;
-    default:
-      throw new SAXException("Could not process template of type '" + et.getTypeDesc() + "'");
-    }
+    String elementName = switch (et.getType()) {
+      case MidiCommand.NOTE_ON        -> "note-on";
+      case MidiCommand.NOTE_OFF       -> "note-off";
+      case MidiCommand.CONTROL_CHANGE -> "control-change";
+      case MidiCommand.SYSEX          -> "sysex";
+      default -> throw new SAXException(
+          "Could not process template of type '" + et.getTypeDesc() + "'");
+    };
     
     atts.clear();
     addAttribute("channel", Integer.toString(et.channel()+1));

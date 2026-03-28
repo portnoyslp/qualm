@@ -26,8 +26,8 @@ public class QData {
     title = null;
     channels = new String[16];
     channelDeviceTypes = new String[16];
-    patches = new HashMap<String, Patch>();
-    cueStreams = new ArrayList<QStream>();
+    patches = new HashMap<>();
+    cueStreams = new ArrayList<>();
   }
 
   public String getTitle() { return title; }

@@ -107,9 +107,9 @@ public class Cue implements Comparable<Cue> {
   
   public static class Builder {
     String cueNum = null;
-    Collection<Trigger> triggers = new ArrayList<Trigger>();
-    Collection<QEvent> events = new ArrayList<QEvent>();
-    Collection<EventMapper> eventMaps = new ArrayList<EventMapper>();
+    Collection<Trigger> triggers = new ArrayList<>();
+    Collection<QEvent> events = new ArrayList<>();
+    Collection<EventMapper> eventMaps = new ArrayList<>();
 
     public Builder setCueNumber(String cNum) {
       this.cueNum = cNum;

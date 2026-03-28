@@ -70,7 +70,7 @@ public class QAdvancer {
       return events;
 
     } else {
-      return new ArrayList<QEvent>(); 
+      return new ArrayList<>(); 
     }
 
   } 
@@ -90,7 +90,7 @@ public class QAdvancer {
 
     Cue previousCue = head.last();
 
-    List<QEvent> out = new ArrayList<QEvent>();
+    List<QEvent> out = new ArrayList<>();
     for (QEvent obj : currentCue.getEvents()) {
       if (obj instanceof ProgramChangeEvent pce) {
         Patch prior = findEffectivePatch(previousCue, pce.getChannel());
@@ -208,7 +208,7 @@ public class QAdvancer {
       loopQ = headset.isEmpty() ? null : headset.last();
     }
 
-    List<QEvent> out = new ArrayList<QEvent>();
+    List<QEvent> out = new ArrayList<>();
     for (int i = 0; i < pceEvents.length; i++) {
       if (pceEvents[i] != null) out.add(pceEvents[i]);
     }

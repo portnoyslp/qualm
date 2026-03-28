@@ -3,6 +3,7 @@ package qualm;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,8 @@ public class YAMLDataLoader {
   public QData load(String fileSpecification) throws IOException {
     URL inputURL;
     try {
-      inputURL = new URL(fileSpecification);
-    } catch (MalformedURLException e) {
+      inputURL = URI.create(fileSpecification).toURL();
+    } catch (IllegalArgumentException | MalformedURLException e) {
       try {
         inputURL = new java.io.File(fileSpecification).toURI().toURL();
       } catch (MalformedURLException e1) {
@@ -147,8 +148,8 @@ public class YAMLDataLoader {
     if (data.containsKey("channel"))
       defaultChannel = ((Number) data.get("channel")).intValue() - 1;
 
-    List<Trigger> globalTriggers = new ArrayList<Trigger>();
-    List<EventMapper> globalMaps = new ArrayList<EventMapper>();
+    List<Trigger> globalTriggers = new ArrayList<>();
+    List<EventMapper> globalMaps = new ArrayList<>();
     Map<String, Object> globalData = (Map<String, Object>) data.get("global");
     if (globalData != null) {
       globalTriggers = parseTriggers(
@@ -198,7 +199,7 @@ public class YAMLDataLoader {
       List<Trigger> globalTriggers, List<EventMapper> globalMaps,
       int defaultChannel, QData qdata) {
 
-    List<QEvent> events = new ArrayList<QEvent>();
+    List<QEvent> events = new ArrayList<>();
 
     // pc: shorthand — program changes prepended before events
     Object pc = data.get("pc");
@@ -308,7 +309,7 @@ public class YAMLDataLoader {
 
   @SuppressWarnings("unchecked")
   private List<Trigger> parseTriggers(List<Object> list, int defaultChannel) {
-    List<Trigger> result = new ArrayList<Trigger>();
+    List<Trigger> result = new ArrayList<>();
     if (list == null) return result;
     for (Object item : list) {
       if (item instanceof String) {
@@ -390,7 +391,7 @@ public class YAMLDataLoader {
   @SuppressWarnings("unchecked")
   private List<EventMapper> parseEventMaps(List<Object> list,
       int defaultChannel) {
-    List<EventMapper> result = new ArrayList<EventMapper>();
+    List<EventMapper> result = new ArrayList<>();
     if (list == null) return result;
     for (Object item : list) {
       Map<String, Object> mapData = (Map<String, Object>) item;

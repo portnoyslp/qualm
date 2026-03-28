@@ -39,7 +39,7 @@ public class QController extends AbstractQReceiver {
       th.interrupt();
     triggerThreads.clear();
 
-    triggers = new ArrayList<Trigger>();
+    triggers = new ArrayList<>();
     addCurrentTriggers();
     buildTriggerCache();
   }
@@ -141,7 +141,7 @@ public class QController extends AbstractQReceiver {
   final List<TriggerDelayThread> triggerThreads = new CopyOnWriteArrayList<>();
 
   private void buildTriggerCache() {
-    List<Trigger> l = new ArrayList<Trigger>();
+    List<Trigger> l = new ArrayList<>();
     l.addAll(triggers);
     cachedTriggers = (Trigger[]) l.toArray(new Trigger[]{});
   }
