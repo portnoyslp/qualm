@@ -219,6 +219,7 @@ public class JavaMidiReceiverFactory implements AbstractQReceiverFactory {
     try {
       md = MidiSystem.getMidiDevice(info);
     } catch (MidiUnavailableException mue) {
+      Qualm.LOG.fine("MIDI device unavailable: " + info.getName() + ": " + mue);
     }
 
     if (inputPort != null) {

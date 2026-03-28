@@ -57,7 +57,9 @@ public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Re
               while (Clock.asMillis() < nextSysexTime) {
                 Thread.sleep(minimalSleepMsec);
               }
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+              Thread.currentThread().interrupt();
+            }
           }
           // note earliest time at which a subsequent SysEx may be sent
           nextSysexTime = Clock.asMillis() + sysexDelayMillis;
