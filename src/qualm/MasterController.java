@@ -10,6 +10,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import static qualm.Qualm.LOG;
+
 import qualm.notification.QualmNotifier;
 
 /**
@@ -244,11 +246,31 @@ public class MasterController implements QReceiver {
     return notificationManager.removeNotification(name);
   }
   
+  private static QData loadQData(String filename) throws IOException {
+    String lower = filename.toLowerCase();
+    boolean looksLikeYaml = lower.endsWith(".yaml") || lower.endsWith(".yml");
+    if (looksLikeYaml) {
+      try {
+        return new YAMLDataLoader().load(filename);
+      } catch (Exception e) {
+        LOG.warning("YAML load failed, trying XML: " + e.getMessage());
+        return new QDataLoader().load(filename);
+      }
+    } else {
+      try {
+        return new QDataLoader().load(filename);
+      } catch (Exception e) {
+        LOG.warning("XML load failed, trying YAML: " + e.getMessage());
+        return new YAMLDataLoader().load(filename);
+      }
+    }
+  }
+
   public void loadFilename( String filename ) throws IOException {
     // remove existing controllers
     removeControllers();
 
-    QData qdata = QDataLoader.loadQDataFromFilename(filename);
+    QData qdata = loadQData(filename);
     setQData(qdata);
 
     // For each cue stream, start a controller
