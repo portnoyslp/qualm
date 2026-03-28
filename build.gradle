@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 repositories {
@@ -20,6 +21,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
+application {
+    mainClass = 'qualm.Qualm'
+}
+
 sourceSets {
     main {
         java { srcDirs = ['src'] }
@@ -31,6 +36,19 @@ sourceSets {
     }
 }
 
+tasks.register('xmlToYamlStartScripts', CreateStartScripts) {
+    mainClass = 'qualm.QualmXMLToYAML'
+    applicationName = 'qualm-xml-to-yaml'
+    outputDir = startScripts.outputDir
+    classpath = startScripts.classpath
+}
+
+startScripts.dependsOn('xmlToYamlStartScripts')
+
+run {
+    standardInput = System.in
+}
+
 test {
     // run from project root so relative paths in tests (e.g. "tests/qualm/qdl-1.yaml") resolve
     workingDir = projectDir
@@ -38,6 +56,6 @@ test {
     exclude '**/StressTest.class'
     testLogging {
         events 'passed', 'failed', 'skipped'
-        exceptionFormat 'full'
+        exceptionFormat = 'full'
     }
 }
