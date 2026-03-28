@@ -177,7 +177,7 @@ public class JavaMidiReceiverFactory implements AbstractQReceiverFactory {
         // the Alsa client map to get the true description.
         dev = dev.substring(dev.indexOf('(') + 1);
         dev = dev.substring(0, dev.lastIndexOf(':'));
-        cName = (String) alsaClientMap.get(dev);
+        cName = (String) alsaClientMap.get(Integer.valueOf(dev));
         deviceDescriptionMap.put(info, cName);
       }
 

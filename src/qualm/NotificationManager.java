@@ -64,7 +64,7 @@ public class NotificationManager {
     try {
       cls = Class.forName(name);
       if (QualmNotifier.class.isAssignableFrom(cls)) {
-        boolean added = addNotifier((QualmNotifier)cls.newInstance());
+        boolean added = addNotifier((QualmNotifier)cls.getDeclaredConstructor().newInstance());
         if (added) {
           return;
         }

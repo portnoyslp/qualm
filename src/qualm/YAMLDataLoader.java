@@ -351,7 +351,6 @@ public class YAMLDataLoader {
     return t;
   }
 
-  @SuppressWarnings("unchecked")
   private Trigger triggerFromMap(Map<String, Object> map, int defaultChannel) {
     boolean reverse = Boolean.TRUE.equals(map.get("reverse"));
     int delay = map.containsKey("delay") ?

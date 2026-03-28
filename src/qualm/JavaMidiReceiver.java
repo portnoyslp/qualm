@@ -11,7 +11,7 @@ import javax.sound.midi.Transmitter;
  * Adaptor for translating between javax.sound.midi messages and Qualm messaging.
  */
 
-public class JavaMidiReceiver extends AbstractQReceiver implements QReceiver, Receiver {
+public class JavaMidiReceiver extends AbstractQReceiver implements Receiver {
   public Transmitter midiIn;
   public Receiver midiOut;
   private int sysexDelayMillis = 0;
