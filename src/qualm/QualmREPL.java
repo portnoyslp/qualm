@@ -147,7 +147,7 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
   void processLine( String line ) {
     readlineHandlesPrompt = true;
 
-    if (line == null || line.trim().equals("") ||
+    if (line == null || line.isBlank() ||
 	line.trim().startsWith("\\") ||
 	line.trim().startsWith("]")) {
       // advance the "mainline" patch

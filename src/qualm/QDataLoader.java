@@ -317,7 +317,7 @@ public class QDataLoader extends DefaultHandler {
   }
 
   private void endPatch() {
-    if (content != null && !"".equals(content))
+    if (!content.isBlank())
       patch.setDescription(content);
     else
       patch.setDescription(patch.getID());
