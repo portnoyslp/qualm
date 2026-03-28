@@ -3,9 +3,9 @@ package qualm.delegates;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import qualm.ChangeDelegate;
 import qualm.MidiCommand;
@@ -19,7 +19,7 @@ public class YamahaMotifRackXSDelegateTest {
   QReceiver mockQR;
   ChangeDelegate delegate;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     mockQR = mock(QReceiver.class);
     delegate = new YamahaMotifRackXSDelegate();
@@ -57,7 +57,7 @@ public class YamahaMotifRackXSDelegateTest {
     return mc;
   }
 
-  @Ignore("Test doesn't pass, but action does do the right thing")
+  @Disabled("Test doesn't pass, but action does do the right thing")
   public void simpleBankName() {
     Patch patch = new Patch("Pre4/10", 10);
     patch.setBank("Pre4"); // MSB 63, LSB 3
@@ -68,7 +68,7 @@ public class YamahaMotifRackXSDelegateTest {
     verify(mockQR).handleMidiCommand(sysexForPatch(9));
   }
 
-  @Ignore("Test doesn't pass, but action does do the right thing")
+  @Disabled("Test doesn't pass, but action does do the right thing")
   public void testGMBankName() {
     Patch patch = new Patch("GM 10", 10);
     patch.setBank("GM"); // MSB 0 LSB 0

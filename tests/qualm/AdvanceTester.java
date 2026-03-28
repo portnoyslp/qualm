@@ -2,9 +2,9 @@ package qualm;
 
 import static javax.sound.midi.ShortMessage.NOTE_ON;
 import static javax.sound.midi.ShortMessage.PROGRAM_CHANGE;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import qualm.testing.FakeMIDI;
 

@@ -1,18 +1,19 @@
 package qualm;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class PatchChangerTest {
 
   PatchChanger patchChanger;
   ChangeDelegate mockDelegate;
 
-  @Before
+  @BeforeEach
   public void setup() {
     patchChanger = new PatchChanger();
     mockDelegate = mock(ChangeDelegate.class);
@@ -38,10 +39,12 @@ public class PatchChangerTest {
     verify(mockDelegate).noteWindowChange( nwce, null );
   }
 
-  @Test(expected=RuntimeException.class)
+  @Test
   public void exceptionForUnknownChannel() {
-    ProgramChangeEvent pce = new ProgramChangeEvent( 1, null, null );
-    patchChanger.patchChange(pce, null);
+    assertThrows(RuntimeException.class, () -> {
+      ProgramChangeEvent pce = new ProgramChangeEvent( 1, null, null );
+      patchChanger.patchChange(pce, null);
+    });
   }
 
   @Test
@@ -50,8 +53,9 @@ public class PatchChangerTest {
     assertEquals(qualm.delegates.AlesisDelegate.class, patchChanger.delegateForChannel(1).getClass());
   }
 
-  @Test(expected=RuntimeException.class)
+  @Test
   public void unknownDelegate() {
-    patchChanger.addPatchChanger(1, "Foobar Baz");
+    assertThrows(RuntimeException.class, () ->
+        patchChanger.addPatchChanger(1, "Foobar Baz"));
   }
 }

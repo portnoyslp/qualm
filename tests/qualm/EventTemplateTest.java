@@ -1,13 +1,13 @@
 package qualm;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static qualm.EventTemplate.DONT_CARE;
 import static qualm.MidiCommand.CONTROL_CHANGE;
 import static qualm.MidiCommand.NOTE_OFF;
 import static qualm.MidiCommand.NOTE_ON;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class EventTemplateTest {
 

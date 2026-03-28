@@ -1,11 +1,11 @@
 package qualm;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Properties;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *  Unit tests for class {@link JavaMidiReceiverFactory}.
@@ -14,18 +14,16 @@ import org.junit.Test;
 public class JavaMidiReceiverFactoryTest {
   Properties props;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     props = new Properties();
   }
 
-  // TODO: expectedexception rule
-  @Test(expected=RuntimeException.class)
-  public void unknownDevice() throws Exception {
-    props.setProperty("inputPort", "FOOBAR");
-    JavaMidiReceiver jmr = new JavaMidiReceiverFactory().buildFromProperties(props);
-    assertNotNull(jmr);
-  }
-  
   // TODO: Add tests for checking that JMR is correctly built from real data.
+  @Test
+  public void unknownDevice() {
+    props.setProperty("inputPort", "FOOBAR");
+    assertThrows(RuntimeException.class, () ->
+        new JavaMidiReceiverFactory().buildFromProperties(props));
+  }
 }

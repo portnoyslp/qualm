@@ -1,15 +1,15 @@
 package qualm;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for YAMLDataLoader, mirroring QDataLoaderTest against qdl-1.yaml
@@ -20,7 +20,7 @@ public class YAMLDataLoaderTest {
   QData qd;
   String fname;
 
-  @Before
+  @BeforeEach
   public void loadQDL1() throws Exception {
     fname = "tests/qualm/qdl-1.yaml";
     qd = new YAMLDataLoader().load(fname);

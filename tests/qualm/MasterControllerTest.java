@@ -6,8 +6,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import qualm.notification.CueChange;
 
@@ -15,7 +15,7 @@ public class MasterControllerTest {
   MasterController mc;
   QReceiver mockQR;
   
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     mockQR = mock(QReceiver.class);
     mc = new MasterController(mockQR);

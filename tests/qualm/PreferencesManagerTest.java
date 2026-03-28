@@ -1,7 +1,7 @@
 package qualm;
 
-import static org.junit.matchers.JUnitMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import qualm.notification.BaseQualmNotifier;
@@ -25,7 +25,7 @@ public class PreferencesManagerTest {
   @Mock NotificationManager pluginManager;
   PreferencesManager preferencesManager;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     // set up system preferences to use testing class
     System.setProperty("java.util.prefs.PreferencesFactory", "qualm.testing.MapPreferencesFactory");

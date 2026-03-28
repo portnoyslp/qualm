@@ -1,6 +1,6 @@
 package qualm;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -15,8 +15,8 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.SysexMessage;
 import javax.sound.midi.Transmitter;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 
 /**
@@ -30,7 +30,7 @@ public class JavaMidiReceiverTest {
   JavaMidiReceiver jmr;
   TestTimeSource timeSource = new TestTimeSource();
   
-  @Before
+  @BeforeEach
   public void setUp() {
     mockTransmitter = mock(Transmitter.class);
     mockReceiver = mock(Receiver.class);

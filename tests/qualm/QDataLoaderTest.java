@@ -1,8 +1,8 @@
 package qualm;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
 
 public class QDataLoaderTest {
@@ -21,7 +21,7 @@ public class QDataLoaderTest {
   QData qd;
   String fname;
   
-  @Before
+  @BeforeEach
   public void loadQDL1() throws Exception {
     fname = "tests/qualm/qdl-1.xml";
     qd = new QDataLoader().load( fname );

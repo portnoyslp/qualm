@@ -1,12 +1,12 @@
 package qualm;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static qualm.MidiCommand.NOTE_OFF;
 import static qualm.MidiCommand.NOTE_ON;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class EventMapperTest {
 

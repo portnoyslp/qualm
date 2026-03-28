@@ -5,8 +5,8 @@ import static org.mockito.Mockito.verify;
 import static qualm.MidiCommand.CONTROL_CHANGE;
 import static qualm.MidiCommand.PROGRAM_CHANGE;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import qualm.ChangeDelegate;
 import qualm.MidiCommand;
@@ -19,7 +19,7 @@ public class StandardDelegateTest {
   QReceiver mockQR;
   ChangeDelegate delegate;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     mockQR = mock(QReceiver.class);
     delegate = new StandardDelegate();

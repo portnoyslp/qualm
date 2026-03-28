@@ -1,11 +1,12 @@
 package qualm;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import qualm.notification.BaseQualmNotifier;
 import qualm.notification.CueChange;
@@ -17,7 +18,7 @@ public class NotificationManagerTest {
 
   private NotificationManager notificationMgr;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     notificationMgr = new NotificationManager();
   }
@@ -29,7 +30,7 @@ public class NotificationManagerTest {
     assertEquals(1, notificationMgr.getPatchNotifiers().size());
     assertEquals(1, notificationMgr.getMapNotifiers().size());
   }
-  
+
   @Test
   public void removeFromAllLists() throws Exception {
     addToAllLists();
@@ -46,22 +47,23 @@ public class NotificationManagerTest {
     assertEquals(1, notificationMgr.getCueNotifiers().size());
     assertEquals(plugin, notificationMgr.getCueNotifiers().iterator().next());
   }
-  
-  @Test(expected=IllegalArgumentException.class)
-  public void unknownClass() throws Exception {
-    notificationMgr.addNotification("qualm.UnknownPlugin");
+
+  @Test
+  public void unknownClass() {
+    assertThrows(IllegalArgumentException.class, () ->
+        notificationMgr.addNotification("qualm.UnknownPlugin"));
   }
-  
+
   @Test
   public void handleCueChanges() throws Exception {
     CueChange ccn = mock(CueChange.class);
     notificationMgr.addNotifier(ccn);
     MasterController mc = mock(MasterController.class);
-    
+
     notificationMgr.handleCueChanges(mc);
     verify(ccn).cueChange(mc);
   }
-  
+
   @Test
   public void handlePatchChanges() throws Exception {
     PatchChange pcn = mock(PatchChange.class);
@@ -70,12 +72,12 @@ public class NotificationManagerTest {
     notificationMgr.handlePatchChanges(1, "K1", p);
     verify(pcn).patchChange(1, "K1", p);
   }
-  
+
   @Test
   public void handleMapActivations() throws Exception {
     EventMapActivation emn = mock(EventMapActivation.class);
     notificationMgr.addNotifier(emn);
-    
+
     MasterController mc = mock(MasterController.class);
     notificationMgr.handleMapActivations(mc);
     verify(emn).activeEventMapper(mc);

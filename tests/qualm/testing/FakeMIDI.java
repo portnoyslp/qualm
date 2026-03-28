@@ -10,7 +10,7 @@ import qualm.QReceiver;
 import qualm.QStream;
 import qualm.VerboseReceiver;
 
-import junit.framework.Assert;
+import org.junit.jupiter.api.Assertions;
 
 /*
  * A "fake" midi transmitter/receiver which can be given a set of
@@ -103,27 +103,22 @@ public class FakeMIDI implements QReceiver {
   // assertion test
   public static void assertMIDI(Object msg, int command, int channel, int data1, int data2) {
     MidiCommand m = (MidiCommand) (((TimestampedMsg)msg).msg);
-    Assert.assertEquals("Command for " + m + 
-			" not expected value " + command,
-			m.getType(), command);
-    Assert.assertEquals("Channel for " + m + 
-			" not expected value " + channel,
-			m.getChannel(), channel);
-    Assert.assertEquals("Data1 for " + m + 
-			" not expected value " + data1,
-			m.getData1(), data1);
-    Assert.assertEquals("Data2 for " + m + 
-			" not expected value " + data2,
-			m.getData2(), data2);
+    Assertions.assertEquals(m.getType(), command,
+        "Command for " + m + " not expected value " + command);
+    Assertions.assertEquals(m.getChannel(), channel,
+        "Channel for " + m + " not expected value " + channel);
+    Assertions.assertEquals(m.getData1(), data1,
+        "Data1 for " + m + " not expected value " + data1);
+    Assertions.assertEquals(m.getData2(), data2,
+        "Data2 for " + m + " not expected value " + data2);
   }
 
   // assertion: ensure that a timestamp is past a certain minimum value
   public static void assertTS(Object msg, long minValue) {
     long ts = ((TimestampedMsg)msg).timestamp;
     MidiCommand m = ((TimestampedMsg)msg).msg;
-    Assert.assertTrue( "Timestamp for " + m +
-                       " not after " + minValue,
-                       ts > minValue );
+    Assertions.assertTrue( ts > minValue,
+                           "Timestamp for " + m + " not after " + minValue );
   }
   
 

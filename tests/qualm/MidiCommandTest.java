@@ -1,11 +1,11 @@
 package qualm;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.HashMap;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MidiCommandTest {
 
@@ -20,7 +20,7 @@ public class MidiCommandTest {
   public void trivialEquality() {
     MidiCommand noteOff = new MidiCommand( 1, MidiCommand.NOTE_OFF, 60 );
     assertEquals(noteOff, noteOff);
-    Assert.assertFalse(noteOff.equals(null));
+    assertFalse(noteOff.equals(null));
   }
 
   @Test

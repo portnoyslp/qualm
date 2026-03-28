@@ -1,10 +1,10 @@
 package qualm;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.sound.midi.ShortMessage;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import qualm.testing.FakeMIDI;
 

@@ -1,19 +1,19 @@
 package qualm;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class QDataTest {
 
   QData testData;
 
-  @Before
+  @BeforeEach
   public void setup() {
     testData = new QDataBuilder()
       .addMidiChannel( 0, null, "Ch1")
@@ -40,7 +40,7 @@ public class QDataTest {
   @Test	public void dumpWorks() {
     StringWriter sw = new StringWriter();
     testData.dump(new PrintWriter(sw));
-    Assert.assertTrue(sw.toString().startsWith("Data dump for null"));
+    assertTrue(sw.toString().startsWith("Data dump for null"));
   }
 
   @Test

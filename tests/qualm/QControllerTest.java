@@ -1,6 +1,6 @@
 package qualm;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -13,9 +13,9 @@ import static qualm.MidiCommand.NOTE_ON;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 
 public class QControllerTest {
@@ -25,7 +25,7 @@ public class QControllerTest {
   MasterController mockMaster;
   TestTimeSource timeSource;
 
-  @Before
+  @BeforeEach
   public void setup() {
     mockReceiver = mock(QReceiver.class);
     mockMaster = mock(MasterController.class);
@@ -47,7 +47,7 @@ public class QControllerTest {
     Clock.setTimeSource(timeSource);
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     Clock.reset();
   }
