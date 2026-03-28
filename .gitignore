@@ -6,3 +6,6 @@ build/*
 bin/*
 coverage/*
 .gradle/
+.classpath
+.project
+.settings/
