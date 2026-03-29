@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import qualm.notification.BaseQualmNotifier;
 import qualm.notification.CueChange;
 import qualm.notification.EventMapActivation;
+import qualm.notification.NoteWindowChange;
 import qualm.notification.PatchChange;
 
 
@@ -29,6 +30,7 @@ public class NotificationManagerTest {
     assertEquals(1, notificationMgr.getCueNotifiers().size());
     assertEquals(1, notificationMgr.getPatchNotifiers().size());
     assertEquals(1, notificationMgr.getMapNotifiers().size());
+    assertEquals(1, notificationMgr.getNoteWindowNotifiers().size());
   }
 
   @Test
@@ -38,6 +40,7 @@ public class NotificationManagerTest {
     assertEquals(0, notificationMgr.getCueNotifiers().size());
     assertEquals(0, notificationMgr.getPatchNotifiers().size());
     assertEquals(0, notificationMgr.getMapNotifiers().size());
+    assertEquals(0, notificationMgr.getNoteWindowNotifiers().size());
   }
 
   @Test
@@ -83,11 +86,20 @@ public class NotificationManagerTest {
     verify(emn).activeEventMapper(mc);
   }
 
+  @Test
+  public void handleNoteWindowChanges() throws Exception {
+    NoteWindowChange nwcn = mock(NoteWindowChange.class);
+    notificationMgr.addNotifier(nwcn);
+    notificationMgr.handleNoteWindowChanges(1, "K1", 30, 60);
+    verify(nwcn).noteWindowChange(1, "K1", 30, 60);
+  }
+
   private static class AllNotifications extends BaseQualmNotifier
-  implements CueChange, PatchChange, EventMapActivation {
+  implements CueChange, PatchChange, EventMapActivation, NoteWindowChange {
     public AllNotifications() { }
     @Override public void cueChange(MasterController mc) { }
     @Override public void patchChange(int channel, String channelName, Patch patch) { }
     @Override public void activeEventMapper(MasterController mc) { }
+    @Override public void noteWindowChange(int channel, String channelName, Integer bottomNote, Integer topNote) { }
   }
 }

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import qualm.notification.CueChange;
 import qualm.notification.EventMapActivation;
+import qualm.notification.NoteWindowChange;
 import qualm.notification.PatchChange;
 import qualm.notification.QualmNotifier;
 
@@ -15,29 +16,38 @@ public class NotificationManager {
   private Collection<CueChange> cueNotifiers = new ArrayList<>();
   private Collection<PatchChange> patchNotifiers = new ArrayList<>();
   private Collection<EventMapActivation> mapNotifiers = new ArrayList<>();
-  
+  private Collection<NoteWindowChange> noteWindowNotifiers = new ArrayList<>();
+
   public Collection<CueChange> getCueNotifiers() {
     return cueNotifiers;
   }
-  
+
   public Collection<PatchChange> getPatchNotifiers() {
     return patchNotifiers;
   }
-  
+
   public Collection<EventMapActivation> getMapNotifiers() {
     return mapNotifiers;
   }
-  
+
+  public Collection<NoteWindowChange> getNoteWindowNotifiers() {
+    return noteWindowNotifiers;
+  }
+
   private void addCueNotifier(CueChange notifier) {
     cueNotifiers.add(notifier);
   }
-  
+
   private void addPatchNotifier(PatchChange notifier) {
     patchNotifiers.add(notifier);
   }
-  
+
   private void addMapNotifier(EventMapActivation notifier) {
     mapNotifiers.add(notifier);
+  }
+
+  private void addNoteWindowNotifier(NoteWindowChange notifier) {
+    noteWindowNotifiers.add(notifier);
   }
 
   public void handleCueChanges(MasterController masterController) {
@@ -55,6 +65,12 @@ public class NotificationManager {
   public void handleMapActivations(MasterController masterController) {
     for (EventMapActivation activation : getMapNotifiers()) {
       activation.activeEventMapper(masterController);
+    }
+  }
+
+  public void handleNoteWindowChanges(int ch, String channelName, Integer bottomNote, Integer topNote) {
+    for (NoteWindowChange change : getNoteWindowNotifiers()) {
+      change.noteWindowChange(ch, channelName, bottomNote, topNote);
     }
   }
   
@@ -89,6 +105,10 @@ public class NotificationManager {
       addMapNotifier( (EventMapActivation) qp );
       added = true;
     }
+    if (NoteWindowChange.class.isAssignableFrom(cls)) {
+      addNoteWindowNotifier( (NoteWindowChange) qp );
+      added = true;
+    }
     return added;
   }
 
@@ -119,6 +139,14 @@ public class NotificationManager {
         mapNotificationIter.remove();
       }
     }
+    Iterator<NoteWindowChange> noteWindowNotificationIter = getNoteWindowNotifiers().iterator();
+    while(noteWindowNotificationIter.hasNext()) {
+      NoteWindowChange obj = noteWindowNotificationIter.next();
+      if (obj.getClass().getName().equals( name )) {
+        removed.add(obj);
+        noteWindowNotificationIter.remove();
+      }
+    }
     return removed;
   }
 
@@ -139,6 +167,7 @@ public class NotificationManager {
     allNotifiers.addAll(cueNotifiers);
     allNotifiers.addAll(patchNotifiers);
     allNotifiers.addAll(mapNotifiers);
+    allNotifiers.addAll(noteWindowNotifiers);
     return allNotifiers;
   }
 

@@ -208,7 +208,8 @@ public class MasterController implements QReceiver {
           getNotificationManager().handlePatchChanges( ch, qdata.getMidiChannels()[ch], patch);
         }
         case NoteWindowChangeEvent nwce -> {
-          // TODO: new notification for NWCEs?
+          int ch = nwce.getChannel();
+          getNotificationManager().handleNoteWindowChanges(ch, qdata.getMidiChannels()[ch], nwce.getBottomNote(), nwce.getTopNote());
         }
         case MidiEvent me   -> {}
         case StreamAdvance sa -> {}

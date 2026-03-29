@@ -22,7 +22,7 @@ import qualm.Utilities;
  */
 
 public class NetworkNotifier extends BaseQualmNotifier
-  implements CueChange,PatchChange,EventMapActivation {
+  implements CueChange,PatchChange,EventMapActivation,NoteWindowChange {
 
   public NetworkNotifier() {
     sockets = new ArrayList<Socket>();
@@ -56,7 +56,10 @@ public class NetworkNotifier extends BaseQualmNotifier
     return "NetworkNotifier plugin[" + NetworkNotificationProtocol.PORT + "]: "; 
   }
 
-  public void patchChange(int channel, String channelName, Patch patch) { 
+  public void noteWindowChange(int channel, String channelName, Integer bottomNote, Integer topNote) {
+    broadcast(NetworkNotificationProtocol.sendNoteWindow(channel, channelName, bottomNote, topNote));
+  }
+  public void patchChange(int channel, String channelName, Patch patch) {
     broadcast(NetworkNotificationProtocol.sendPatch(channel, 
 						    channelName, 
 						    patch.getDescription()));
