@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.Set;
 
 import qualm.notification.CueChange;
@@ -75,19 +77,15 @@ public class NotificationManager {
   }
   
   public void addNotification(String name) {
-    // should be a class spec; try instantiating an object for this
-    Class<?> cls;
-    try {
-      cls = Class.forName(name);
-      if (QualmNotifier.class.isAssignableFrom(cls)) {
-        boolean added = addNotifier((QualmNotifier)cls.getDeclaredConstructor().newInstance());
-        if (added) {
-          return;
-        }
-      }
-    } catch (Exception e) { }
-    
-    throw new IllegalArgumentException("Could not start plugin '" + name + "'");
+    Optional<QualmNotifier> found = ServiceLoader.load(QualmNotifier.class)
+        .stream()
+        .filter(p -> p.type().getName().equals(name) || p.type().getSimpleName().equals(name))
+        .map(ServiceLoader.Provider::get)
+        .findFirst();
+
+    if (found.isEmpty() || !addNotifier(found.get())) {
+      throw new IllegalArgumentException("Could not start plugin '" + name + "'");
+    }
   }
 
   public boolean addNotifier(QualmNotifier qp) {

@@ -9,12 +9,14 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import qualm.notification.CueChange;
 import qualm.notification.EventMapActivation;
+import qualm.notification.NoteWindowChange;
 import qualm.notification.PatchChange;
 import qualm.notification.QualmNotifier;
 
@@ -223,8 +225,6 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
   }
 
   private void parsePluginLine(String line) {
-    // XXX there's probably a better way to handle plugins.  Checkout 
-    // http://jpf.sourceforge.net
     StringTokenizer st = new StringTokenizer(line);
     String tok = st.nextToken();
     if (!tok.equals("plugin")) {
@@ -255,19 +255,27 @@ public class QualmREPL extends Thread implements CueChange, PatchChange {
   }
 
   private void displayPluginList() {
-    NotificationManager pm = controller.getNotificationManager();
-    NotificationMap notifiers = new NotificationMap();
-    for (CueChange ccn : pm.getCueNotifiers())
-      notifiers.add(ccn.getClass().getName(), "cue"); 
-    
-    for (PatchChange pcn : pm.getPatchNotifiers())
-      notifiers.add(pcn.getClass().getName(), "patch");
+    output.println("Available plugins:");
+    ServiceLoader.load(QualmNotifier.class)
+        .stream()
+        .map(p -> p.type().getSimpleName())
+        .sorted()
+        .forEach(name -> output.println("  " + name));
 
+    NotificationManager pm = controller.getNotificationManager();
+    NotificationMap running = new NotificationMap();
+    for (CueChange ccn : pm.getCueNotifiers())
+      running.add(ccn.getClass().getName(), "cue");
+    for (PatchChange pcn : pm.getPatchNotifiers())
+      running.add(pcn.getClass().getName(), "patch");
     for (EventMapActivation emn : pm.getMapNotifiers())
-      notifiers.add(emn.getClass().getName(), "mapper");
-    
-    for (String name : notifiers.keySet()) {
-      output.print(name + ": " + notifiers.joinedValues(name, ", "));
+      running.add(emn.getClass().getName(), "mapper");
+    for (NoteWindowChange nwcn : pm.getNoteWindowNotifiers())
+      running.add(nwcn.getClass().getName(), "noteWindow");
+
+    output.println("Running plugins:");
+    for (String name : running.keySet()) {
+      output.println("  " + name + ": " + running.joinedValues(name, ", "));
     }
   }
 

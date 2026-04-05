@@ -26,7 +26,7 @@ public class NotificationManagerTest {
 
   @Test
   public void addToAllLists() throws Exception {
-    notificationMgr.addNotification(AllNotifications.class.getName());
+    notificationMgr.addNotifier(new AllNotifications());
     assertEquals(1, notificationMgr.getCueNotifiers().size());
     assertEquals(1, notificationMgr.getPatchNotifiers().size());
     assertEquals(1, notificationMgr.getMapNotifiers().size());
